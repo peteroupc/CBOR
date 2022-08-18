@@ -19,8 +19,8 @@ namespace PeterO.Cbor
     {
         private const string HexAlphabet = "0123456789ABCDEF";
 
-        private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
-        private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
+        private const long DoubleNegInfinity = unchecked(0xfffL << 52);
+        private const long DoublePosInfinity = unchecked(0x7ffL << 52);
 
         internal static string ToStringHelper(CBORObject obj, int depth)
         {
@@ -149,8 +149,8 @@ namespace PeterO.Cbor
                                 sb.Append(HexAlphabet[cp & 15]);
                                 ++i;
                             }
-                            else if (cp >= 0x7F || cp < 0x20 || cp == (int)'\\' || cp ==
-                (int)'\"')
+                            else if (cp >= 0x7F || cp < 0x20 || cp == '\\' || cp ==
+                '\"')
                             {
                                 sb.Append("\\u");
                                 sb.Append(HexAlphabet[(cp >> 12) & 15]);

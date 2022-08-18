@@ -60,12 +60,12 @@ namespace PeterO
                 {
                     throw new CBORException("Premature end of data");
                 }
-                if (c >= (int)'0' && c <= (int)'9')
+                if (c >= '0' && c <= '9')
                 {
                     builder.Append((char)c);
                     start = false;
                 }
-                else if (c == (int)'e')
+                else if (c == 'e')
                 {
                     break;
                 }
@@ -154,14 +154,14 @@ namespace PeterO
             {
                 return "0";
             }
-            return (longValue == (long)Int32.MinValue) ? "-2147483648" :
+            return (longValue == int.MinValue) ? "-2147483648" :
       EInteger.FromInt64(longValue).ToString();
         }
 
         private static CBORObject ReadString(Stream stream, char firstChar)
         {
             var builder = new StringBuilder();
-            if (firstChar < (int)'0' && firstChar > (int)'9')
+            if (firstChar < '0' && firstChar > '9')
             {
                 throw new CBORException("Invalid integer encoding");
             }
@@ -173,11 +173,11 @@ namespace PeterO
                 {
                     throw new CBORException("Premature end of data");
                 }
-                if (c >= (int)'0' && c <= (int)'9')
+                if (c >= '0' && c <= '9')
                 {
                     builder.Append((char)c);
                 }
-                else if (c == (int)':')
+                else if (c == ':')
                 {
                     break;
                 }
@@ -223,9 +223,9 @@ namespace PeterO
                 {
                     throw new ArgumentNullException(nameof(stream));
                 }
-                stream.WriteByte(unchecked((byte)((byte)0x69)));
+                stream.WriteByte(unchecked(0x69));
                 WriteUtf8(obj.ToObject(typeof(EInteger)).ToString(), stream);
-                stream.WriteByte(unchecked((byte)((byte)0x65)));
+                stream.WriteByte(unchecked(0x65));
             }
             else if (obj.Type == CBORType.TextString)
             {
@@ -240,7 +240,7 @@ namespace PeterO
                 {
                     throw new ArgumentNullException(nameof(stream));
                 }
-                stream.WriteByte(unchecked((byte)((byte)':')));
+                stream.WriteByte(unchecked((byte)':'));
                 WriteUtf8(s, stream);
             }
             else if (obj.Type == CBORType.Map)
@@ -271,7 +271,7 @@ namespace PeterO
                     {
                         throw new ArgumentNullException(nameof(stream));
                     }
-                    stream.WriteByte(unchecked((byte)((byte)0x64)));
+                    stream.WriteByte(unchecked(0x64));
                     foreach (KeyValuePair<string, CBORObject> entry in valueSMap)
                     {
                         string key = entry.Key;
@@ -284,11 +284,11 @@ namespace PeterO
                         WriteUtf8(
                           LongToString(length),
                           stream);
-                        stream.WriteByte(unchecked((byte)((byte)':')));
+                        stream.WriteByte(unchecked((byte)':'));
                         WriteUtf8(key, stream);
                         Write(value, stream);
                     }
-                    stream.WriteByte(unchecked((byte)((byte)0x65)));
+                    stream.WriteByte(unchecked(0x65));
                 }
                 else
                 {
@@ -296,7 +296,7 @@ namespace PeterO
                     {
                         throw new ArgumentNullException(nameof(stream));
                     }
-                    stream.WriteByte(unchecked((byte)((byte)0x64)));
+                    stream.WriteByte(unchecked(0x64));
                     foreach (CBORObject key in obj.Keys)
                     {
                         string str = key.AsString();
@@ -306,11 +306,11 @@ namespace PeterO
                             throw new CBORException("invalid string");
                         }
                         WriteUtf8(LongToString(length), stream);
-                        stream.WriteByte(unchecked((byte)((byte)':')));
+                        stream.WriteByte(unchecked((byte)':'));
                         WriteUtf8(str, stream);
                         Write(obj[key], stream);
                     }
-                    stream.WriteByte(unchecked((byte)((byte)0x65)));
+                    stream.WriteByte(unchecked(0x65));
                 }
             }
             else if (obj.Type == CBORType.Array)
@@ -319,12 +319,12 @@ namespace PeterO
                 {
                     throw new ArgumentNullException(nameof(stream));
                 }
-                stream.WriteByte(unchecked((byte)((byte)0x6c)));
+                stream.WriteByte(unchecked(0x6c));
                 for (var i = 0; i < obj.Count; ++i)
                 {
                     Write(obj[i], stream);
                 }
-                stream.WriteByte(unchecked((byte)((byte)0x65)));
+                stream.WriteByte(unchecked(0x65));
             }
             else
             {
@@ -339,7 +339,7 @@ namespace PeterO
                 {
                     throw new ArgumentNullException(nameof(stream));
                 }
-                stream.WriteByte(unchecked((byte)((byte)':')));
+                stream.WriteByte(unchecked((byte)':'));
                 WriteUtf8(str, stream);
             }
         }

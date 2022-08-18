@@ -81,7 +81,7 @@ namespace PeterO.Cbor
             {
                 tag = 267;
             }
-            return CBORObject.FromObjectAndTag(uriString, (int)tag);
+            return CBORObject.FromObjectAndTag(uriString, tag);
         }
     }
 }

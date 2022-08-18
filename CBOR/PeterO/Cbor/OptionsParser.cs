@@ -53,7 +53,7 @@ namespace PeterO.Cbor
                     index = index2 + delimLength;
                 }
             }
-            return (string[])strings.ToArray();
+            return strings.ToArray();
         }
 
         public OptionsParser(string options)

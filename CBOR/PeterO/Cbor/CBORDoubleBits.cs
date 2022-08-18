@@ -134,7 +134,7 @@ namespace PeterO.Cbor
                 return origbits;
             }
             // Infinity and NaN
-            if (bits >= unchecked((long)(0x7ffL << 52)))
+            if (bits >= unchecked(0x7ffL << 52))
             {
                 return origbits;
             }

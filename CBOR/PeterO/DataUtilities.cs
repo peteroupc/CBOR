@@ -1011,7 +1011,7 @@ namespace PeterO
             endpointer = offset + bytesCount;
             while (pointer < endpointer)
             {
-                b = data[pointer] & (int)0xff;
+                b = data[pointer] & 0xff;
                 ++pointer;
                 if (bytesNeeded == 0)
                 {

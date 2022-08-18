@@ -41,25 +41,25 @@ namespace Test
 
         public CBORWriterHelper WriteStartArray()
         {
-            this.outputStream.WriteByte((int)0x9f);
+            this.outputStream.WriteByte(0x9f);
             return this;
         }
 
         public CBORWriterHelper WriteStartMap()
         {
-            this.outputStream.WriteByte((int)0xbf);
+            this.outputStream.WriteByte(0xbf);
             return this;
         }
 
         public CBORWriterHelper WriteEndArray()
         {
-            this.outputStream.WriteByte((int)0xff);
+            this.outputStream.WriteByte(0xff);
             return this;
         }
 
         public CBORWriterHelper WriteEndMap()
         {
-            this.outputStream.WriteByte((int)0xff);
+            this.outputStream.WriteByte(0xff);
             return this;
         }
 

@@ -280,7 +280,7 @@ namespace PeterO.Cbor
         internal decimal AsDecimalLegacy()
         {
             return (this.ItemType == CBORObjectTypeInteger) ?
-      ((decimal)(long)this.ThisItem) : ((this.HasOneTag(30) ||
+      (long)this.ThisItem : ((this.HasOneTag(30) ||
 
                   this.HasOneTag(270)) ? (decimal)this.ToObject<ERational>() :
                 (decimal)this.ToObject<EDecimal>());
@@ -344,7 +344,7 @@ namespace PeterO.Cbor
             }
             else
             {
-                stream.WriteByte((byte)27);
+                stream.WriteByte(27);
                 stream.WriteByte((byte)((value >> 56) & 0xff));
                 stream.WriteByte((byte)((value >> 48) & 0xff));
                 stream.WriteByte((byte)((value >> 40) & 0xff));
@@ -409,7 +409,7 @@ namespace PeterO.Cbor
             data[5] = (byte)((uvalue >> 40) & 0xff);
             data[6] = (byte)((uvalue >> 48) & 0xff);
             data[7] = (byte)((uvalue >> 56) & 0xff);
-            data[8] = (byte)0;
+            data[8] = 0;
             return EInteger.FromBytes(data, true);
         }
 
@@ -430,7 +430,7 @@ namespace PeterO.Cbor
         [CLSCompliant(false)]
         public static CBORObject FromObject(uint value)
         {
-            return FromObject((long)(Int64)value);
+            return FromObject((Int64)value);
         }
 
         /// <summary>Converts a 16-bit unsigned integer to a CBOR
@@ -440,7 +440,7 @@ namespace PeterO.Cbor
         [CLSCompliant(false)]
         public static CBORObject FromObject(ushort value)
         {
-            return FromObject((long)(Int64)value);
+            return FromObject((Int64)value);
         }
 
         /// <summary>Generates a CBOR object from this one, but gives the

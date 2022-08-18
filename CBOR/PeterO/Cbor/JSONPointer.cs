@@ -305,13 +305,13 @@ namespace PeterO.Cbor
                     return false;
                 }
                 EInteger eivalue = EInteger.FromString(this.refValue);
-                int icount = ((CBORObject)this.jsonobj).Count;
+                int icount = jsonobj.Count;
                 return eivalue.Sign >= 0 &&
                   eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
             }
             else if (this.jsonobj.Type == CBORType.Map)
             {
-                return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
+                return jsonobj.ContainsKey(this.refValue);
             }
             else
             {
@@ -329,10 +329,10 @@ namespace PeterO.Cbor
             {
                 if (this.refValue.Equals("-", StringComparison.Ordinal))
                 {
-                    return ((CBORObject)this.jsonobj).Count;
+                    return jsonobj.Count;
                 }
                 EInteger value = EInteger.FromString(this.refValue);
-                int icount = ((CBORObject)this.jsonobj).Count;
+                int icount = jsonobj.Count;
                 return (value.Sign < 0) ? (-1) :
         ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
 
@@ -365,7 +365,7 @@ namespace PeterO.Cbor
             if (this.jsonobj.Type == CBORType.Array)
             {
                 int index = this.GetIndex();
-                if (index >= 0 && index < ((CBORObject)this.jsonobj).Count)
+                if (index >= 0 && index < jsonobj.Count)
                 {
                     tmpcbor = this.jsonobj;
                     return tmpcbor[index];
@@ -508,7 +508,7 @@ namespace PeterO.Cbor
         {
             if (root.Type == CBORType.Map)
             {
-                var rootObj = (CBORObject)root;
+                var rootObj = root;
                 if (rootObj.ContainsKey(keyToFind))
                 {
                     // Key found in this object,

@@ -168,21 +168,21 @@ namespace Test
             }
             {
                 string stringTemp =
-                  ToObjectTest.TestToFromObjectRoundTrip((float)328323f)
+                  ToObjectTest.TestToFromObjectRoundTrip(328323f)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "328323",
                   stringTemp);
             }
             {
-                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip((double)0.75)
+                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(0.75)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "0",
                   stringTemp);
             }
             {
-                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip((double)0.99)
+                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(0.99)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "0",
@@ -190,28 +190,28 @@ namespace Test
             }
             {
                 string stringTemp =
-                  ToObjectTest.TestToFromObjectRoundTrip((double)0.0000000000000001)
+                  ToObjectTest.TestToFromObjectRoundTrip(0.0000000000000001)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "0",
                   stringTemp);
             }
             {
-                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip((double)0.5)
+                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(0.5)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "0",
                   stringTemp);
             }
             {
-                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip((double)1.5)
+                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(1.5)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "1",
                   stringTemp);
             }
             {
-                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip((double)2.5)
+                string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(2.5)
                   .ToObject(typeof(EInteger)).ToString();
                 Assert.AreEqual(
                   "2",
@@ -323,14 +323,14 @@ namespace Test
             Assert.AreEqual(true, CBORObject.True.ToObject(typeof(bool)));
             {
                 object objectTemp = true;
-                var objectTemp2 = (object)ToObjectTest.TestToFromObjectRoundTrip(0)
+                var objectTemp2 = ToObjectTest.TestToFromObjectRoundTrip(0)
                   .ToObject(typeof(bool));
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = true;
                 var objectTemp2 =
-                  (object)ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                  ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
 
                   .ToObject(typeof(bool));
                 Assert.AreEqual(objectTemp, objectTemp2);
@@ -446,11 +446,11 @@ namespace Test
                   ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
                       (string)numberinfo["number"].ToObject(typeof(string))));
 
-                if ((bool)numberinfo["byte"].AsBoolean())
+                if (numberinfo["byte"].AsBoolean())
                 {
                     int i1 = TestCommon.StringToInt((string)numberinfo["integer"]
                         .ToObject(typeof(string)));
-                    int i2 = ((int)(Byte)cbornumber.ToObject(typeof(byte))) & 0xff;
+                    int i2 = (Byte)cbornumber.ToObject(typeof(byte)) & 0xff;
                     Assert.AreEqual(i1, i2);
                 }
                 else
@@ -922,7 +922,7 @@ namespace Test
                   ToObjectTest.TestToFromObjectRoundTrip(
                     EDecimal.FromString((string)numberinfo["number"].ToObject(
                         typeof(string))));
-                if ((bool)numberinfo["int16"].AsBoolean())
+                if (numberinfo["int16"].AsBoolean())
                 {
                     var sh = (short)TestCommon.StringToInt(
                         (string)numberinfo["integer"].ToObject(typeof(string)));
@@ -1047,14 +1047,14 @@ namespace Test
           EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
                 CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(edec);
                 bool isdouble;
-                isdouble = (bool)numberinfo["double"].AsBoolean();
+                isdouble = numberinfo["double"].AsBoolean();
                 CBORObject cbornumberdouble =
                   ToObjectTest.TestToFromObjectRoundTrip(edec.ToDouble());
                 bool issingle;
-                issingle = (bool)numberinfo["single"].AsBoolean();
+                issingle = numberinfo["single"].AsBoolean();
                 CBORObject cbornumbersingle =
                   ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
-                if ((bool)numberinfo["int32"].AsBoolean())
+                if (numberinfo["int32"].AsBoolean())
                 {
                     object o = cbornumber.ToObject(typeof(int));
                     Assert.AreEqual(
@@ -1229,14 +1229,14 @@ namespace Test
           EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
                 CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(edec);
                 bool isdouble;
-                isdouble = (bool)numberinfo["double"].AsBoolean();
+                isdouble = numberinfo["double"].AsBoolean();
                 CBORObject cbornumberdouble =
                   ToObjectTest.TestToFromObjectRoundTrip(edec.ToDouble());
                 bool issingle;
-                issingle = (bool)numberinfo["single"].AsBoolean();
+                issingle = numberinfo["single"].AsBoolean();
                 CBORObject cbornumbersingle =
                   ToObjectTest.TestToFromObjectRoundTrip(edec.ToSingle());
-                if ((bool)numberinfo["int64"].AsBoolean())
+                if (numberinfo["int64"].AsBoolean())
                 {
                     object o = cbornumber.ToObject(typeof(long));
                     Assert.AreEqual(
@@ -1416,7 +1416,7 @@ namespace Test
                   (float)EDecimal.FromString((string)numberinfo["number"].ToObject(
                       typeof(string))).ToSingle();
                 Object f2 = cbornumber.ToObject(typeof(float));
-                if (!((object)f1).Equals(f2))
+                if (!f1.Equals(f2))
                 {
                     Assert.Fail();
                 }

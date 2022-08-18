@@ -85,8 +85,8 @@ namespace Test
                         if (rg.GetInt32(100) < 5)
                         {
                             // 0x80, to help detect ASCII off-by-one errors
-                            ms.WriteByte((byte)0xc2);
-                            ms.WriteByte((byte)0x80);
+                            ms.WriteByte(0xc2);
+                            ms.WriteByte(0x80);
                         }
                         else
                         {
@@ -97,9 +97,9 @@ namespace Test
                     else
                     {
                         int ch = rg.GetInt32(0x80);
-                        if (jsonSafe && (ch == (int)'\\' || ch == (int)'\"' || ch < 0x20))
+                        if (jsonSafe && (ch == '\\' || ch == '\"' || ch < 0x20))
                         {
-                            ch = (int)'?';
+                            ch = '?';
                         }
                         ms.WriteByte((byte)ch);
                     }
@@ -200,10 +200,10 @@ namespace Test
         public static int RandomInt32(IRandomGenExtended rand)
         {
             byte[] bytes = RandomByteString(rand, 4);
-            int ret = ((int)bytes[0]) & 0xff;
-            ret |= (((int)bytes[1]) & 0xff) << 8;
-            ret |= (((int)bytes[2]) & 0xff) << 16;
-            ret |= (((int)bytes[3]) & 0xff) << 24;
+            int ret = bytes[0] & 0xff;
+            ret |= (bytes[1] & 0xff) << 8;
+            ret |= (bytes[2] & 0xff) << 16;
+            ret |= (bytes[3] & 0xff) << 24;
             return ret;
         }
 
@@ -247,7 +247,7 @@ namespace Test
             }
             r &= ~0x7ff0000000000000L; // clear exponent
             r |= ((long)exponent) << 52; // set exponent
-            return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
+            return BitConverter.ToDouble(BitConverter.GetBytes(r), 0);
         }
 
         public static double RandomFiniteDouble(IRandomGenExtended rand)
@@ -257,19 +257,19 @@ namespace Test
             {
                 r = RandomInt64(rand);
             } while (((r >> 52) & 0x7ff) == 0x7ff);
-            return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
+            return BitConverter.ToDouble(BitConverter.GetBytes(r), 0);
         }
 
         public static double RandomDouble(IRandomGenExtended rand)
         {
             long r = RandomInt64(rand);
-            return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
+            return BitConverter.ToDouble(BitConverter.GetBytes(r), 0);
         }
 
         public static float RandomSingle(IRandomGenExtended rand)
         {
             int r = RandomInt32(rand);
-            return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
+            return BitConverter.ToSingle(BitConverter.GetBytes(r), 0);
         }
 
         public static float RandomSingle(IRandomGenExtended rand, int exponent)
@@ -289,11 +289,11 @@ namespace Test
             int r = rand.GetInt32(0x10000);
             if (rand.GetInt32(2) == 0)
             {
-                r |= ((int)rand.GetInt32(0x10000)) << 16;
+                r |= rand.GetInt32(0x10000) << 16;
             }
             r &= ~0x7f800000; // clear exponent
-            r |= ((int)exponent) << 23; // set exponent
-            return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
+            r |= exponent << 23; // set exponent
+            return BitConverter.ToSingle(BitConverter.GetBytes(r), 0);
         }
 
         public static string RandomDecimalStringShort(
@@ -644,7 +644,7 @@ namespace Test
                     var i = 0;
                     while (i < buflen && count > 0)
                     {
-                        int x = ((int)buffer[i]) & 31;
+                        int x = buffer[i] & 31;
                         if (x < 30)
                         {
                             sb.Append(charTable[x]);
@@ -653,7 +653,7 @@ namespace Test
                         }
                         else if (count >= 40 && i + 1 < buflen)
                         {
-                            int y = (((int)buffer[i + 1]) & 0xff) %
+                            int y = (buffer[i + 1] & 0xff) %
                               valueSpecialDecimals2.Length;
                             sb.Append(valueSpecialDecimals2[y]);
                             count -= 40;
@@ -661,7 +661,7 @@ namespace Test
                         }
                         else if (count >= 10 && i + 1 < buflen)
                         {
-                            int y = (((int)buffer[i + 1]) & 0xff) %
+                            int y = (buffer[i + 1] & 0xff) %
                               valueSpecialDecimals.Length;
                             sb.Append(valueSpecialDecimals[y]);
                             count -= 10;
@@ -705,7 +705,7 @@ namespace Test
             }
             long count = ((long)r.GetInt32(MaxNumberLength) *
                 r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-            count = ((long)count * r.GetInt32(MaxNumberLength)) / MaxNumberLength;
+            count = (count * r.GetInt32(MaxNumberLength)) / MaxNumberLength;
             count = Math.Max(1, count);
             long afterPointCount = 0;
             long exponentCount = 0;
@@ -714,7 +714,7 @@ namespace Test
             {
                 afterPointCount = ((long)r.GetInt32(MaxNumberLength) *
                     r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-                afterPointCount = ((long)afterPointCount *
+                afterPointCount = (afterPointCount *
                     r.GetInt32(MaxNumberLength)) / MaxNumberLength;
                 afterPointCount = Math.Max(1, afterPointCount);
             }
@@ -728,9 +728,9 @@ namespace Test
                 {
                     exponentCount = ((long)r.GetInt32(MaxNumberLength) *
                         r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-                    exponentCount = ((long)exponentCount *
+                    exponentCount = (exponentCount *
                         r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-                    exponentCount = ((long)exponentCount *
+                    exponentCount = (exponentCount *
                         r.GetInt32(MaxNumberLength)) / MaxNumberLength;
                     exponentCount = Math.Max(1, exponentCount);
                 }

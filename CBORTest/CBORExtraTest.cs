@@ -29,17 +29,17 @@ namespace Test
         {
             var x = new int[4];
             int r = rand.UniformInt(0x10000);
-            r |= ((int)rand.UniformInt(0x10000)) << 16;
+            r |= rand.UniformInt(0x10000) << 16;
             x[0] = r;
             if (rand.UniformInt(2) == 0)
             {
                 r = rand.UniformInt(0x10000);
-                r |= ((int)rand.UniformInt(0x10000)) << 16;
+                r |= rand.UniformInt(0x10000) << 16;
                 x[1] = r;
                 if (rand.UniformInt(2) == 0)
                 {
                     r = rand.UniformInt(0x10000);
-                    r |= ((int)rand.UniformInt(0x10000)) << 16;
+                    r |= rand.UniformInt(0x10000) << 16;
                     x[2] = r;
                 }
             }
@@ -613,7 +613,7 @@ namespace Test
             Assert.AreEqual(10, obj.Count);
             Assert.AreEqual(0, obj[0].AsInt32());
             Assert.AreEqual(1, obj[1].AsInt32());
-            obj = CBORObject.FromObject((object)RangeExclusive(0, 10));
+            obj = CBORObject.FromObject(RangeExclusive(0, 10));
 
             Assert.AreEqual(10, obj.Count);
             Assert.AreEqual(0, obj[0].AsInt32());
@@ -9193,13 +9193,13 @@ namespace Test
         {
             int t;
             var dividendHigh = 0;
-            int intDivisor = ((int)divisor) & 0xffff;
+            int intDivisor = divisor & 0xffff;
             for (var i = 0; i < 32; ++i)
             {
                 t = dividendHigh >> 31;
                 dividendHigh <<= 1;
-                dividendHigh = unchecked((int)(dividendHigh | ((int)((dividendLow >>
-                            31) & 1))));
+                dividendHigh = unchecked(dividendHigh | (dividendLow >>
+                            31) & 1);
                 dividendLow <<= 1;
                 t |= dividendHigh;
                 // unsigned greater-than-or-equal check
@@ -9212,19 +9212,19 @@ namespace Test
                     }
                 }
             }
-            return returnRemainder ? unchecked((short)(((int)dividendHigh) &
-                  0xffff)) : unchecked((short)(((int)dividendLow) & 0xffff));
+            return returnRemainder ? unchecked((short)(dividendHigh &
+                  0xffff)) : unchecked((short)(dividendLow & 0xffff));
         }
 
         private static short DivideUnsigned(int x, short y)
         {
             unchecked
             {
-                int iy = ((int)y) & 0xffff;
+                int iy = y & 0xffff;
                 if ((x >> 31) == 0)
                 {
                     // x is already nonnegative
-                    return (short)(((int)x / iy) & 0xffff);
+                    return (short)((x / iy) & 0xffff);
                 }
                 return Divide32By16(x, y, false);
             }
@@ -9313,14 +9313,14 @@ namespace Test
                   TestCommon.IntToString(i));
                 {
                     CBORObject objectTemp =
-                      ToObjectTest.TestToFromObjectRoundTrip((decimal)i +
+                      ToObjectTest.TestToFromObjectRoundTrip(i +
                         0.1m);
-                    string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
+                    string objectTemp2 = ((EDecimal)(i + 0.1m)).ToString();
                     CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
                 }
                 CBORTestCommon.AssertJSONSer(
-                  ToObjectTest.TestToFromObjectRoundTrip((decimal)i + 0.1111m),
-                  ((EDecimal)((decimal)i + 0.1111m)).ToString());
+                  ToObjectTest.TestToFromObjectRoundTrip(i + 0.1111m),
+                  ((EDecimal)(i + 0.1111m)).ToString());
             }
         }
 

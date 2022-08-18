@@ -96,12 +96,12 @@ namespace Test
                 if (c >= '0' && c <= '9')
                 {
                     int x = c - '0';
-                    if ((long)ret > 922337203685477580L)
+                    if (ret > 922337203685477580L)
                     {
                         throw new FormatException();
                     }
                     ret *= 10;
-                    if ((long)ret == 9223372036854775800L)
+                    if (ret == 9223372036854775800L)
                     {
                         if (neg && x == 8)
                         {
@@ -615,13 +615,13 @@ namespace Test
                 while (value > 9)
                 {
                     int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-                    char digit = Digits[(int)(value - (intdivvalue * 10))];
+                    char digit = Digits[value - (intdivvalue * 10)];
                     chars[count--] = digit;
                     value = intdivvalue;
                 }
                 if (value != 0)
                 {
-                    chars[count--] = Digits[(int)value];
+                    chars[count--] = Digits[value];
                 }
                 if (neg)
                 {
@@ -638,20 +638,20 @@ namespace Test
             while (value >= 163840)
             {
                 int intdivvalue = value / 10;
-                char digit = Digits[(int)(value - (intdivvalue * 10))];
+                char digit = Digits[value - (intdivvalue * 10)];
                 chars[count--] = digit;
                 value = intdivvalue;
             }
             while (value > 9)
             {
                 int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-                char digit = Digits[(int)(value - (intdivvalue * 10))];
+                char digit = Digits[value - (intdivvalue * 10)];
                 chars[count--] = digit;
                 value = intdivvalue;
             }
             if (value != 0)
             {
-                chars[count--] = Digits[(int)value];
+                chars[count--] = Digits[value];
             }
             if (neg)
             {
@@ -678,7 +678,7 @@ namespace Test
             var count = 0;
             char[] chars;
             int intlongValue = unchecked((int)longValue);
-            if ((long)intlongValue == longValue)
+            if (intlongValue == longValue)
             {
                 return IntToString(intlongValue);
             }

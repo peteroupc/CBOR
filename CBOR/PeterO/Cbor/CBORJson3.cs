@@ -52,7 +52,7 @@ namespace PeterO.Cbor
             int idx = this.index;
             while (true)
             {
-                c = idx < ep ? ((int)js[idx++]) & 0xffff : -1;
+                c = idx < ep ? js[idx++] & 0xffff : -1;
                 if (c == -1 || c < 0x20)
                 {
                     this.index = idx;
@@ -78,7 +78,7 @@ namespace PeterO.Cbor
             this.sb.Append(js, startIndex, endIndex - startIndex);
             while (true)
             {
-                c = this.index < ep ? ((int)js[this.index++]) &
+                c = this.index < ep ? js[this.index++] &
                   0xffff : -1;
                 if (c == -1 || c < 0x20)
                 {
@@ -88,7 +88,7 @@ namespace PeterO.Cbor
                 {
                     case '\\':
                         endIndex = this.index - 1;
-                        c = this.index < ep ? ((int)js[this.index++]) &
+                        c = this.index < ep ? js[this.index++] &
                           0xffff : -1;
                         switch (c)
                         {
@@ -120,7 +120,7 @@ namespace PeterO.Cbor
                                     for (var i = 0; i < 4; ++i)
                                     {
                                         int ch = this.index < ep ?
-                                          ((int)js[this.index++]) : -1;
+                                          js[this.index++] : -1;
                                         if (ch >= '0' && ch <= '9')
                                         {
                                             c <<= 4;
@@ -149,9 +149,9 @@ namespace PeterO.Cbor
                                     }
                                     else if ((c & 0xfc00) == 0xd800)
                                     {
-                                        int ch = this.index < ep ? ((int)js[this.index++]) : -1;
+                                        int ch = this.index < ep ? js[this.index++] : -1;
                                         if (ch != '\\' || (this.index < ep ?
-                                            ((int)js[this.index++]) : -1) != 'u')
+                                            js[this.index++] : -1) != 'u')
                                         {
                                             this.RaiseError("Invalid escaped character");
                                         }
@@ -159,7 +159,7 @@ namespace PeterO.Cbor
                                         for (var i = 0; i < 4; ++i)
                                         {
                                             ch = this.index < ep ?
-                                              ((int)js[this.index++]) : -1;
+                                              js[this.index++] : -1;
                                             if (ch >= '0' && ch <= '9')
                                             {
                                                 c2 <<= 4;
@@ -239,7 +239,7 @@ namespace PeterO.Cbor
             // DebugUtility.Log("js=" + (jstring));
             CBORObject obj;
             int numberStartIndex = this.index - 1;
-            int c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+            int c = this.index < this.endPos ? this.jstring[this.index++] &
               0xffff : -1;
             if (c < '0' || c > '9')
             {
@@ -248,7 +248,7 @@ namespace PeterO.Cbor
             if (this.index < this.endPos && c != '0')
             {
                 // Check for negative single-digit
-                int c2 = ((int)this.jstring[this.index]) & 0xffff;
+                int c2 = this.jstring[this.index] & 0xffff;
                 if (c2 == ',' || c2 == ']' || c2 == '}')
                 {
                     ++this.index;
@@ -331,7 +331,7 @@ namespace PeterO.Cbor
             var needObj = true;
             int numberStartIndex = this.index - 1;
             // DebugUtility.Log("js=" + (jstring));
-            c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+            c = this.index < this.endPos ? this.jstring[this.index++] &
               0xffff : -1;
             if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
                 c == 'e' || c == 'E'))
@@ -349,16 +349,16 @@ namespace PeterO.Cbor
                     // Leading zero followed by any digit is not allowed
                     this.RaiseError("JSON number can't be parsed.");
                 }
-                cval = (cval * 10) + (int)(c - '0');
-                c = this.index < this.endPos ? ((int)this.jstring[this.index++]) : -1;
+                cval = (cval * 10) + (c - '0');
+                c = this.index < this.endPos ? this.jstring[this.index++] : -1;
                 if (c >= '0' && c <= '9')
                 {
                     var digits = 2;
                     while (digits < 9 && (c >= '0' && c <= '9'))
                     {
-                        cval = (cval * 10) + (int)(c - '0');
+                        cval = (cval * 10) + (c - '0');
                         c = this.index < this.endPos ?
-                          ((int)this.jstring[this.index++]) : -1;
+                          this.jstring[this.index++] : -1;
                         ++digits;
                     }
                     if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
@@ -484,9 +484,9 @@ namespace PeterO.Cbor
                     {
                         // Parse true
                         if (this.endPos - this.index <= 2 ||
-                          (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
-                          (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
-                          (((int)this.jstring[this.index + 2]) & 0xFF) != 'e')
+                          (this.jstring[this.index] & 0xFF) != 'r' ||
+                          (this.jstring[this.index + 1] & 0xFF) != 'u' ||
+                          (this.jstring[this.index + 2] & 0xFF) != 'e')
                         {
                             this.RaiseError("Value can't be parsed.");
                         }
@@ -498,10 +498,10 @@ namespace PeterO.Cbor
                     {
                         // Parse false
                         if (this.endPos - this.index <= 3 ||
-                          (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
-                          (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-                          (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
-                          (((int)this.jstring[this.index + 3]) & 0xFF) != 'e')
+                          (this.jstring[this.index] & 0xFF) != 'a' ||
+                          (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+                          (this.jstring[this.index + 2] & 0xFF) != 's' ||
+                          (this.jstring[this.index + 3] & 0xFF) != 'e')
                         {
                             this.RaiseError("Value can't be parsed.");
                         }
@@ -513,9 +513,9 @@ namespace PeterO.Cbor
                     {
                         // Parse null
                         if (this.endPos - this.index <= 2 ||
-                          (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
-                          (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-                          (((int)this.jstring[this.index + 2]) & 0xFF) != 'l')
+                          (this.jstring[this.index] & 0xFF) != 'u' ||
+                          (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+                          (this.jstring[this.index + 2] & 0xFF) != 'l')
                         {
                             this.RaiseError("Value can't be parsed.");
                         }

@@ -812,7 +812,7 @@ namespace PeterO.Cbor
             }
             if (this.IsZero())
             {
-                return (byte)0;
+                return 0;
             }
             if (this.IsNegative())
             {
@@ -829,7 +829,7 @@ namespace PeterO.Cbor
         /// number.</returns>
         public static CBORNumber FromByte(byte inputByte)
         {
-            int val = ((int)inputByte) & 0xff;
+            int val = inputByte & 0xff;
             return FromObject((long)val);
         }
 
@@ -915,7 +915,7 @@ namespace PeterO.Cbor
         /// 0 if this value is infinity or not-a-number.</returns>
         public int ToInt32Unchecked()
         {
-            return this.IsFinite() ? this.ToEInteger().ToInt32Unchecked() : (int)0;
+            return this.IsFinite() ? this.ToEInteger().ToInt32Unchecked() : 0;
         }
 
         /// <summary>Converts this number's value to a 32-bit signed integer if
@@ -931,7 +931,7 @@ namespace PeterO.Cbor
             {
                 throw new OverflowException("Value is infinity or NaN");
             }
-            return this.IsZero() ? ((int)0) :
+            return this.IsZero() ? 0 :
               this.ToEIntegerIfExact().ToInt32Checked();
         }
 
@@ -1026,7 +1026,7 @@ namespace PeterO.Cbor
                     int i;
                     for (i = neededLength - data.Length; i < neededLength; ++i)
                     {
-                        bytes[i] ^= (byte)0xff;
+                        bytes[i] ^= 0xff;
                     }
                 }
                 if (extended)
@@ -1505,7 +1505,7 @@ namespace PeterO.Cbor
                 // (// this.IsFinite()) + "/" + (b.IsFinite()));
                 EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
                 EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
-                return new CBORNumber(NumberKind.EInteger, b1 + (EInteger)b2);
+                return new CBORNumber(NumberKind.EInteger, b1 + b2);
             }
         }
 
@@ -1581,7 +1581,7 @@ namespace PeterO.Cbor
                 // (// this.IsFinite()) + "/" + (b.IsFinite()));
                 EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
                 EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
-                return new CBORNumber(NumberKind.EInteger, b1 - (EInteger)b2);
+                return new CBORNumber(NumberKind.EInteger, b1 - b2);
             }
         }
 
@@ -1623,7 +1623,7 @@ namespace PeterO.Cbor
                     // would overflow, convert to EInteger
                     var bvalueA = (EInteger)valueA;
                     var bvalueB = (EInteger)valueB;
-                    return CBORNumber.FromObject(bvalueA * (EInteger)bvalueB);
+                    return CBORNumber.FromObject(bvalueA * bvalueB);
                 }
                 return CBORNumber.FromObject(valueA * valueB);
             }
@@ -1656,7 +1656,7 @@ namespace PeterO.Cbor
                 // (// this.IsFinite()) + "/" + (b.IsFinite()));
                 EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
                 EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
-                return new CBORNumber(NumberKind.EInteger, b1 * (EInteger)b2);
+                return new CBORNumber(NumberKind.EInteger, b1 * b2);
             }
         }
 
@@ -1840,7 +1840,7 @@ namespace PeterO.Cbor
                 // (// this.IsFinite()) + "/" + (b.IsFinite()));
                 EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
                 EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
-                return CBORNumber.FromObject(b1 % (EInteger)b2);
+                return CBORNumber.FromObject(b1 % b2);
             }
         }
 

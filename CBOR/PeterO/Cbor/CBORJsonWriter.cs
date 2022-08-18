@@ -33,8 +33,8 @@ namespace PeterO.Cbor
                 char c = str[i];
                 if (c == '\\' || c == '"')
                 {
-                    sb.WriteCodePoint((int)'\\');
-                    sb.WriteCodePoint((int)c);
+                    sb.WriteCodePoint('\\');
+                    sb.WriteCodePoint(c);
                 }
                 else if (c < 0x20 || (c >= 0x7f && (c == 0x2028 || c == 0x2029 ||
                       (c >= 0x7f && c <= 0xa0) || c == 0xfeff || c == 0xfffe ||
@@ -70,16 +70,16 @@ namespace PeterO.Cbor
                     else if (c >= 0x100)
                     {
                         sb.WriteString("\\u");
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+                        sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
+                        sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
+                        sb.WriteCodePoint(Hex16[(c >> 4) & 15]);
+                        sb.WriteCodePoint(Hex16[c & 15]);
                     }
                     else
                     {
                         sb.WriteString("\\u00");
-                        sb.WriteCodePoint((int)Hex16[(int)(c >> 4)]);
-                        sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+                        sb.WriteCodePoint(Hex16[c >> 4]);
+                        sb.WriteCodePoint(Hex16[c & 15]);
                     }
                 }
                 else if ((c & 0xfc00) == 0xd800)
@@ -103,16 +103,16 @@ namespace PeterO.Cbor
                     {
                         c = str[i];
                         sb.WriteString("\\u");
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+                        sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
+                        sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
+                        sb.WriteCodePoint(Hex16[(c >> 4) & 15]);
+                        sb.WriteCodePoint(Hex16[c & 15]);
                         c = str[i + 1];
                         sb.WriteString("\\u");
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-                        sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+                        sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
+                        sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
+                        sb.WriteCodePoint(Hex16[(c >> 4) & 15]);
+                        sb.WriteCodePoint(Hex16[c & 15]);
                     }
                     else
                     {
@@ -123,14 +123,14 @@ namespace PeterO.Cbor
                 else if (c >= 0x80 && options.WriteBasic)
                 {
                     sb.WriteString("\\u");
-                    sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-                    sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-                    sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-                    sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+                    sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
+                    sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
+                    sb.WriteCodePoint(Hex16[(c >> 4) & 15]);
+                    sb.WriteCodePoint(Hex16[c & 15]);
                 }
                 else
                 {
-                    sb.WriteCodePoint((int)c);
+                    sb.WriteCodePoint(c);
                 }
             }
         }
@@ -237,7 +237,7 @@ namespace PeterO.Cbor
                             writer.WriteString("\"\"");
                             return;
                         }
-                        writer.WriteCodePoint((int)'\"');
+                        writer.WriteCodePoint('\"');
                         if (obj.HasTag(22))
                         {
                             // Base64 with padding
@@ -253,8 +253,8 @@ namespace PeterO.Cbor
                             // Write as base16
                             for (int i = 0; i < byteArray.Length; ++i)
                             {
-                                writer.WriteCodePoint((int)Hex16[(byteArray[i] >> 4) & 15]);
-                                writer.WriteCodePoint((int)Hex16[byteArray[i] & 15]);
+                                writer.WriteCodePoint(Hex16[(byteArray[i] >> 4) & 15]);
+                                writer.WriteCodePoint(Hex16[byteArray[i] & 15]);
                             }
                         }
                         else
@@ -267,7 +267,7 @@ namespace PeterO.Cbor
                               byteArray.Length,
                               false);
                         }
-                        writer.WriteCodePoint((int)'\"');
+                        writer.WriteCodePoint('\"');
                         break;
                     }
                 case CBORType.TextString:
@@ -278,25 +278,25 @@ namespace PeterO.Cbor
                             writer.WriteString("\"\"");
                             return;
                         }
-                        writer.WriteCodePoint((int)'\"');
+                        writer.WriteCodePoint('\"');
                         WriteJSONStringUnquoted(thisString, writer, options);
-                        writer.WriteCodePoint((int)'\"');
+                        writer.WriteCodePoint('\"');
                         break;
                     }
                 case CBORType.Array:
                     {
-                        writer.WriteCodePoint((int)'[');
+                        writer.WriteCodePoint('[');
                         for (var i = 0; i < obj.Count; ++i)
                         {
                             if (i > 0)
                             {
-                                writer.WriteCodePoint((int)',');
+                                writer.WriteCodePoint(',');
                             }
                             bool pop = CheckCircularRef(stack, obj, obj[i]);
                             WriteJSONToInternal(obj[i], writer, options, stack);
                             PopRefIfNeeded(stack, pop);
                         }
-                        writer.WriteCodePoint((int)']');
+                        writer.WriteCodePoint(']');
                         break;
                     }
                 case CBORType.Map:
@@ -319,25 +319,25 @@ namespace PeterO.Cbor
                         }
                         if (!hasNonStringKeys)
                         {
-                            writer.WriteCodePoint((int)'{');
+                            writer.WriteCodePoint('{');
                             foreach (KeyValuePair<CBORObject, CBORObject> entry in entries)
                             {
                                 CBORObject key = entry.Key;
                                 CBORObject value = entry.Value;
                                 if (!first)
                                 {
-                                    writer.WriteCodePoint((int)',');
+                                    writer.WriteCodePoint(',');
                                 }
-                                writer.WriteCodePoint((int)'\"');
+                                writer.WriteCodePoint('\"');
                                 WriteJSONStringUnquoted(key.AsString(), writer, options);
-                                writer.WriteCodePoint((int)'\"');
-                                writer.WriteCodePoint((int)':');
+                                writer.WriteCodePoint('\"');
+                                writer.WriteCodePoint(':');
                                 bool pop = CheckCircularRef(stack, obj, value);
                                 WriteJSONToInternal(value, writer, options, stack);
                                 PopRefIfNeeded(stack, pop);
                                 first = false;
                             }
-                            writer.WriteCodePoint((int)'}');
+                            writer.WriteCodePoint('}');
                         }
                         else
                         {
@@ -382,25 +382,25 @@ namespace PeterO.Cbor
                                 stringMap[str] = value;
                             }
                             first = true;
-                            writer.WriteCodePoint((int)'{');
+                            writer.WriteCodePoint('{');
                             foreach (KeyValuePair<string, CBORObject> entry in stringMap)
                             {
                                 string key = entry.Key;
                                 CBORObject value = entry.Value;
                                 if (!first)
                                 {
-                                    writer.WriteCodePoint((int)',');
+                                    writer.WriteCodePoint(',');
                                 }
-                                writer.WriteCodePoint((int)'\"');
-                                WriteJSONStringUnquoted((string)key, writer, options);
-                                writer.WriteCodePoint((int)'\"');
-                                writer.WriteCodePoint((int)':');
+                                writer.WriteCodePoint('\"');
+                                WriteJSONStringUnquoted(key, writer, options);
+                                writer.WriteCodePoint('\"');
+                                writer.WriteCodePoint(':');
                                 bool pop = CheckCircularRef(stack, obj, value);
                                 WriteJSONToInternal(value, writer, options, stack);
                                 PopRefIfNeeded(stack, pop);
                                 first = false;
                             }
-                            writer.WriteCodePoint((int)'}');
+                            writer.WriteCodePoint('}');
                         }
                         break;
                     }

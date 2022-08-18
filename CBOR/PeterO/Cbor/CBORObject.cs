@@ -1072,7 +1072,7 @@ namespace PeterO.Cbor
                     cborList.Add(obj);
                 }
             }
-            return (CBORObject[])cborList.ToArray();
+            return cborList.ToArray();
         }
 
         /// <summary>Generates a list of CBOR objects from an array of bytes in
@@ -1242,7 +1242,7 @@ namespace PeterO.Cbor
                 }
                 throw new CBORException("data is empty.");
             }
-            var firstbyte = (int)(data[0] & (int)0xff);
+            var firstbyte = data[0] & 0xff;
             int expectedLength = ValueExpectedLengths[firstbyte];
             // if invalid
             if (expectedLength == -1)
@@ -1276,8 +1276,8 @@ namespace PeterO.Cbor
             {
                 CBORObject o = Read(ms, options);
                 CheckCBORLength(
-                  (long)data.Length,
-                  (long)ms.Position);
+                  data.Length,
+                  ms.Position);
                 return o;
             }
         }
@@ -2475,7 +2475,7 @@ namespace PeterO.Cbor
         /// null.</returns>
         public static CBORObject FromObject(EInteger bigintValue)
         {
-            if ((object)bigintValue == (object)null)
+            if (bigintValue == null)
             {
                 return CBORObject.Null;
             }
@@ -2520,7 +2520,7 @@ namespace PeterO.Cbor
         /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
         public static CBORObject FromObject(EFloat bigValue)
         {
-            if ((object)bigValue == (object)null)
+            if (bigValue == null)
             {
                 return CBORObject.Null;
             }
@@ -2586,7 +2586,7 @@ namespace PeterO.Cbor
         /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
         public static CBORObject FromObject(ERational bigValue)
         {
-            if ((object)bigValue == (object)null)
+            if (bigValue == null)
             {
                 return CBORObject.Null;
             }
@@ -2664,7 +2664,7 @@ namespace PeterO.Cbor
         /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
         public static CBORObject FromObject(EDecimal bigValue)
         {
-            if ((object)bigValue == (object)null)
+            if (bigValue == null)
             {
                 return CBORObject.Null;
             }
@@ -2793,7 +2793,7 @@ namespace PeterO.Cbor
         /// <returns>A CBOR object generated from the given integer.</returns>
         public static CBORObject FromObject(byte value)
         {
-            return FromObject(((int)value) & 0xff);
+            return FromObject(value & 0xff);
         }
 
         /// <summary>Generates a CBOR object from a 32-bit floating-point
@@ -3359,7 +3359,7 @@ namespace PeterO.Cbor
                 objret = CBORObject.NewMap();
                 System.Collections.IDictionary objdic =
                   (System.Collections.IDictionary)obj;
-                foreach (object keyPair in (System.Collections.IDictionary)objdic)
+                foreach (object keyPair in objdic)
                 {
                     System.Collections.DictionaryEntry
                     kvp = (System.Collections.DictionaryEntry)keyPair;
@@ -3475,13 +3475,13 @@ namespace PeterO.Cbor
                 byte[] bytes = bigintTag.ToBytes(true);
                 for (var i = 0; i < Math.Min(4, bytes.Length); ++i)
                 {
-                    int b = ((int)bytes[i]) & 0xff;
-                    tagLow = unchecked(tagLow | (((int)b) << (i * 8)));
+                    int b = bytes[i] & 0xff;
+                    tagLow = unchecked(tagLow | (b << (i * 8)));
                 }
                 for (int i = 4; i < Math.Min(8, bytes.Length); ++i)
                 {
-                    int b = ((int)bytes[i]) & 0xff;
-                    tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
+                    int b = bytes[i] & 0xff;
+                    tagHigh = unchecked(tagHigh | (b << (i * 8)));
                 }
                 return new CBORObject(this, tagLow, tagHigh);
             }
@@ -3750,7 +3750,7 @@ namespace PeterO.Cbor
                 }
                 cborList.Add(obj);
             }
-            return (CBORObject[])cborList.ToArray();
+            return cborList.ToArray();
         }
 
         /// <summary>
@@ -3799,7 +3799,7 @@ namespace PeterO.Cbor
                 }
                 cborList.Add(obj);
             }
-            return (CBORObject[])cborList.ToArray();
+            return cborList.ToArray();
         }
 
         /// <summary>
@@ -4620,7 +4620,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            if ((object)bigint == (object)null)
+            if (bigint == null)
             {
                 stream.WriteByte(0xf6);
                 return;
@@ -4630,7 +4630,7 @@ namespace PeterO.Cbor
             {
                 datatype = 1;
                 bigint = bigint.Add(EInteger.One);
-                bigint = -(EInteger)bigint;
+                bigint = -bigint;
             }
             if (bigint.CanFitInInt64())
             {
@@ -4668,7 +4668,7 @@ namespace PeterO.Cbor
                         stream.WriteByte((byte)(datatype << 5));
                         return;
                     case 1:
-                        WritePositiveInt(datatype, ((int)bytes[0]) & 0xff, stream);
+                        WritePositiveInt(datatype, bytes[0] & 0xff, stream);
                         break;
                     case 2:
                         stream.WriteByte((byte)((datatype << 5) | 25));
@@ -4676,7 +4676,7 @@ namespace PeterO.Cbor
                         break;
                     case 3:
                         stream.WriteByte((byte)((datatype << 5) | 26));
-                        stream.WriteByte((byte)0);
+                        stream.WriteByte(0);
                         stream.Write(bytes, 0, byteCount);
                         break;
                     case 4:
@@ -4685,20 +4685,20 @@ namespace PeterO.Cbor
                         break;
                     case 5:
                         stream.WriteByte((byte)((datatype << 5) | 27));
-                        stream.WriteByte((byte)0);
-                        stream.WriteByte((byte)0);
-                        stream.WriteByte((byte)0);
+                        stream.WriteByte(0);
+                        stream.WriteByte(0);
+                        stream.WriteByte(0);
                         stream.Write(bytes, 0, byteCount);
                         break;
                     case 6:
                         stream.WriteByte((byte)((datatype << 5) | 27));
-                        stream.WriteByte((byte)0);
-                        stream.WriteByte((byte)0);
+                        stream.WriteByte(0);
+                        stream.WriteByte(0);
                         stream.Write(bytes, 0, byteCount);
                         break;
                     case 7:
                         stream.WriteByte((byte)((datatype << 5) | 27));
-                        stream.WriteByte((byte)0);
+                        stream.WriteByte(0);
                         stream.Write(bytes, 0, byteCount);
                         break;
                     case 8:
@@ -4835,13 +4835,13 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            if ((((int)value) & 0xff) < 24)
+            if ((value & 0xff) < 24)
             {
                 stream.WriteByte(value);
             }
             else
             {
-                stream.WriteByte((byte)24);
+                stream.WriteByte(24);
                 stream.WriteByte(value);
             }
         }
@@ -6213,7 +6213,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    tagbyte = (byte)(0xc0 + (int)this.tagLow);
+                    tagbyte = (byte)(0xc0 + tagLow);
                 }
             }
             if (!hasComplexTag)
@@ -6224,7 +6224,7 @@ namespace PeterO.Cbor
                     case CBORObjectTypeTextStringAscii:
                         {
                             byte[] ret = GetOptimizedBytesIfShortAscii(
-                                this.AsString(), tagged ? (((int)tagbyte) & 0xff) : -1);
+                                this.AsString(), tagged ? (tagbyte & 0xff) : -1);
                             if (ret != null)
                             {
                                 return ret;
@@ -6244,25 +6244,25 @@ namespace PeterO.Cbor
                         {
                             if (tagged)
                             {
-                                var simpleBytes = new byte[] { tagbyte, (byte)0xf4 };
+                                var simpleBytes = new byte[] { tagbyte, 0xf4 };
                                 if (this.IsFalse)
                                 {
-                                    simpleBytes[1] = (byte)0xf4;
+                                    simpleBytes[1] = 0xf4;
                                     return simpleBytes;
                                 }
                                 if (this.IsTrue)
                                 {
-                                    simpleBytes[1] = (byte)0xf5;
+                                    simpleBytes[1] = 0xf5;
                                     return simpleBytes;
                                 }
                                 if (this.IsNull)
                                 {
-                                    simpleBytes[1] = (byte)0xf6;
+                                    simpleBytes[1] = 0xf6;
                                     return simpleBytes;
                                 }
                                 if (this.IsUndefined)
                                 {
-                                    simpleBytes[1] = (byte)0xf7;
+                                    simpleBytes[1] = 0xf7;
                                     return simpleBytes;
                                 }
                             }
@@ -6316,13 +6316,13 @@ namespace PeterO.Cbor
                             {
                                 return GetDoubleBytes64(
                                     this.AsDoubleBits(),
-                                    ((int)tagbyte) & 0xff);
+                                    tagbyte & 0xff);
                             }
                             else
                             {
                                 return GetDoubleBytes(
                                     this.AsDoubleBits(),
-                                    ((int)tagbyte) & 0xff);
+                                    tagbyte & 0xff);
                             }
                         }
                 }
@@ -6451,7 +6451,7 @@ namespace PeterO.Cbor
         /// isn't.</returns>
         public bool Equals(CBORObject other)
         {
-            var otherValue = other as CBORObject;
+            var otherValue = other;
             if (otherValue == null)
             {
                 return false;
@@ -6616,7 +6616,7 @@ namespace PeterO.Cbor
                         curitem.tagHigh));
                     curitem = (CBORObject)curitem.itemValue;
                 }
-                return (EInteger[])list.ToArray();
+                return list.ToArray();
             }
             return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
         }
@@ -7604,12 +7604,12 @@ namespace PeterO.Cbor
                       CBORUtilities.DoubleToHalfPrecisionIfSameValue(floatingBits);
                     if (bits != -1)
                     {
-                        return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
+                        return WriteFloatingPointBits(outputStream, bits, 2, false);
                     }
                     if (CBORUtilities.DoubleRetainsSameValueInSingle(floatingBits))
                     {
                         bits = CBORUtilities.DoubleToRoundedSinglePrecision(floatingBits);
-                        return WriteFloatingPointBits(outputStream, (long)bits, 4, false);
+                        return WriteFloatingPointBits(outputStream, bits, 4, false);
                     }
                 }
                 else if (byteCount == 4)
@@ -7618,7 +7618,7 @@ namespace PeterO.Cbor
                       CBORUtilities.SingleToHalfPrecisionIfSameValue(floatingBits);
                     if (bits != -1)
                     {
-                        return WriteFloatingPointBits(outputStream, (long)bits, 2, false);
+                        return WriteFloatingPointBits(outputStream, bits, 2, false);
                     }
                 }
             }
@@ -7627,7 +7627,7 @@ namespace PeterO.Cbor
             {
                 case 2:
                     bytes = new byte[] {
-            (byte)0xf9,
+            0xf9,
             (byte)((floatingBits >> 8) & 0xffL),
             (byte)(floatingBits & 0xffL),
           };
@@ -7635,7 +7635,7 @@ namespace PeterO.Cbor
                     return 3;
                 case 4:
                     bytes = new byte[] {
-            (byte)0xfa,
+            0xfa,
             (byte)((floatingBits >> 24) & 0xffL),
             (byte)((floatingBits >> 16) & 0xffL),
             (byte)((floatingBits >> 8) & 0xffL),
@@ -7645,7 +7645,7 @@ namespace PeterO.Cbor
                     return 5;
                 case 8:
                     bytes = new byte[] {
-            (byte)0xfb,
+            0xfb,
             (byte)((floatingBits >> 56) & 0xffL),
             (byte)((floatingBits >> 48) & 0xffL),
             (byte)((floatingBits >> 40) & 0xffL),
@@ -7750,7 +7750,7 @@ namespace PeterO.Cbor
                     bits = BitConverter.ToInt32(
                         BitConverter.GetBytes((float)singleVal),
                         0);
-                    longbits = ((long)bits) & 0xffffffffL;
+                    longbits = bits & 0xffffffffL;
                     return WriteFloatingPointBits(outputStream, longbits, 4);
                 case 8:
                     bits = BitConverter.ToInt32(
@@ -7839,7 +7839,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    outputStream.WriteByte((byte)0xf8);
+                    outputStream.WriteByte(0xf8);
                     outputStream.WriteByte((byte)value);
                     return 2;
                 }
@@ -7951,7 +7951,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    outputStream.WriteByte((byte)0xf8);
+                    outputStream.WriteByte(0xf8);
                     outputStream.WriteByte((byte)value);
                     return 2;
                 }
@@ -8371,17 +8371,17 @@ namespace PeterO.Cbor
                 switch (firstbyte & 0x1f)
                 {
                     case 24:
-                        uadditional = (int)(data[1] & (int)0xff);
+                        uadditional = data[1] & 0xff;
                         break;
                     case 25:
                         uadditional = (data[1] & 0xffL) << 8;
-                        uadditional |= (long)(data[2] & 0xffL);
+                        uadditional |= data[2] & 0xffL;
                         break;
                     case 26:
                         uadditional = (data[1] & 0xffL) << 24;
                         uadditional |= (data[2] & 0xffL) << 16;
                         uadditional |= (data[3] & 0xffL) << 8;
-                        uadditional |= (long)(data[4] & 0xffL);
+                        uadditional |= data[4] & 0xffL;
                         break;
                     case 27:
                         uadditional = (data[1] & 0xffL) << 56;
@@ -8391,7 +8391,7 @@ namespace PeterO.Cbor
                         uadditional |= (data[5] & 0xffL) << 24;
                         uadditional |= (data[6] & 0xffL) << 16;
                         uadditional |= (data[7] & 0xffL) << 8;
-                        uadditional |= (long)(data[8] & 0xffL);
+                        uadditional |= data[8] & 0xffL;
                         break;
                     default:
                         throw new CBORException("Unexpected data encountered");
@@ -8426,13 +8426,13 @@ namespace PeterO.Cbor
                             int high = unchecked((int)((uadditional >> 32) & 0xffffffffL));
                             EInteger bigintAdditional = LowHighToEInteger(low, high);
                             EInteger minusOne = -EInteger.One;
-                            bigintAdditional = minusOne - (EInteger)bigintAdditional;
+                            bigintAdditional = minusOne - bigintAdditional;
                             return FromObject(bigintAdditional);
                         }
                     case 7:
                         if (firstbyte >= 0xf9 && firstbyte <= 0xfb)
                         {
-                            var dblbits = (long)uadditional;
+                            var dblbits = uadditional;
                             if (firstbyte == 0xf9)
                             {
                                 dblbits = CBORUtilities.HalfToDoublePrecision(
@@ -8694,7 +8694,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    bytes[offset] = (byte)0x78;
+                    bytes[offset] = 0x78;
                     bytes[offset + 1] = (byte)str.Length;
                     offset += 2;
                 }
@@ -8724,7 +8724,7 @@ namespace PeterO.Cbor
             int length = data.Length;
             if (length > offset)
             {
-                var nextbyte = (int)(data[offset] & (int)0xff);
+                var nextbyte = data[offset] & 0xff;
                 if (nextbyte >= 0x60 && nextbyte < 0x78)
                 {
                     int offsetp1 = 1 + offset;
@@ -8736,7 +8736,7 @@ namespace PeterO.Cbor
                     // Check for all ASCII text
                     for (int i = offsetp1; i < length; ++i)
                     {
-                        if ((data[i] & ((byte)0x80)) != 0)
+                        if ((data[i] & 0x80) != 0)
                         {
                             return null;
                         }
@@ -8747,7 +8747,7 @@ namespace PeterO.Cbor
                     var c = new char[length - offsetp1];
                     for (int i = offsetp1; i < length; ++i)
                     {
-                        c[i - offsetp1] = (char)(data[i] & (int)0xff);
+                        c[i - offsetp1] = (char)(data[i] & 0xff);
                     }
                     return new String(c);
                 }
@@ -8768,7 +8768,7 @@ namespace PeterO.Cbor
             if (utf8.Length <= 0xffL)
             {
                 bytes = new byte[utf8.Length + 2];
-                bytes[0] = (byte)0x78;
+                bytes[0] = 0x78;
                 bytes[1] = (byte)utf8.Length;
                 Array.Copy(utf8, 0, bytes, 2, utf8.Length);
                 return bytes;
@@ -8776,7 +8776,7 @@ namespace PeterO.Cbor
             if (utf8.Length <= 0xffffL)
             {
                 bytes = new byte[utf8.Length + 3];
-                bytes[0] = (byte)0x79;
+                bytes[0] = 0x79;
                 bytes[1] = (byte)((utf8.Length >> 8) & 0xff);
                 bytes[2] = (byte)(utf8.Length & 0xff);
                 Array.Copy(utf8, 0, bytes, 3, utf8.Length);
@@ -8883,7 +8883,7 @@ namespace PeterO.Cbor
             {
                 fixedObjects[i] = new CBORObject(
                   CBORObjectTypeSimpleValue,
-                  (int)(i - 0xe0));
+                  i - 0xe0);
             }
             return fixedObjects;
         }
@@ -9218,7 +9218,7 @@ namespace PeterO.Cbor
                         // Write bytes retrieved so far
                         if (!streaming)
                         {
-                            stream.WriteByte((byte)0x7f);
+                            stream.WriteByte(0x7f);
                         }
                         WritePositiveInt(3, byteIndex, stream);
                         stream.Write(bytes, 0, byteIndex);
@@ -9236,7 +9236,7 @@ namespace PeterO.Cbor
                         // splitting characters when generating text strings
                         if (!streaming)
                         {
-                            stream.WriteByte((byte)0x7f);
+                            stream.WriteByte(0x7f);
                         }
                         WritePositiveInt(3, byteIndex, stream);
                         stream.Write(bytes, 0, byteIndex);
@@ -9269,7 +9269,7 @@ namespace PeterO.Cbor
                             // splitting characters when generating text strings
                             if (!streaming)
                             {
-                                stream.WriteByte((byte)0x7f);
+                                stream.WriteByte(0x7f);
                             }
                             WritePositiveInt(3, byteIndex, stream);
                             stream.Write(bytes, 0, byteIndex);
@@ -9289,7 +9289,7 @@ namespace PeterO.Cbor
                             // splitting characters when generating text strings
                             if (!streaming)
                             {
-                                stream.WriteByte((byte)0x7f);
+                                stream.WriteByte(0x7f);
                             }
                             WritePositiveInt(3, byteIndex, stream);
                             stream.Write(bytes, 0, byteIndex);
@@ -9307,7 +9307,7 @@ namespace PeterO.Cbor
             stream.Write(bytes, 0, byteIndex);
             if (streaming)
             {
-                stream.WriteByte((byte)0xff);
+                stream.WriteByte(0xff);
             }
         }
 
@@ -9337,20 +9337,20 @@ namespace PeterO.Cbor
                 }
                 else if (high == 0)
                 {
-                    long value = ((long)low) & 0xffffffffL;
+                    long value = low & 0xffffffffL;
                     WritePositiveInt64(6, value, s);
                 }
                 else if ((high >> 16) == 0)
                 {
-                    long value = ((long)low) & 0xffffffffL;
-                    long highValue = ((long)high) & 0xffffffffL;
+                    long value = low & 0xffffffffL;
+                    long highValue = high & 0xffffffffL;
                     value |= highValue << 32;
                     WritePositiveInt64(6, value, s);
                 }
                 else
                 {
                     byte[] arrayToWrite = {
-            (byte)0xdb,
+            0xdb,
             (byte)((high >> 24) & 0xff), (byte)((high >> 16) & 0xff),
             (byte)((high >> 8) & 0xff), (byte)(high & 0xff),
             (byte)((low >> 24) & 0xff), (byte)((low >> 16) & 0xff),

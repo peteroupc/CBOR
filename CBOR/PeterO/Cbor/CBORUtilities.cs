@@ -16,7 +16,7 @@ namespace PeterO.Cbor
     /// CBORObject class.</summary>
     internal static class CBORUtilities
     {
-        private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
+        private const long DoublePosInfinity = unchecked(0x7ffL << 52);
         private const string HexAlphabet = "0123456789ABCDEF";
         // Fractional seconds used in date conversion methods
         public const int FractionalSeconds = 1000 * 1000 * 1000;
@@ -360,7 +360,7 @@ namespace PeterO.Cbor
             {
                 return -1;
             }
-            int c = ((int)utf8[offset]) & 0xff;
+            int c = utf8[offset] & 0xff;
             if (c <= 0x7f)
             {
                 return c;
@@ -369,7 +369,7 @@ namespace PeterO.Cbor
             {
                 ++offset;
                 int c1 = offset < endPos ?
-                  ((int)utf8[offset]) & 0xff : -1;
+                  utf8[offset] & 0xff : -1;
                 return (
                     c1 < 0x80 || c1 > 0xbf) ? -2 : (((c - 0xc0) << 6) |
                     (c1 - 0x80));
@@ -377,8 +377,8 @@ namespace PeterO.Cbor
             else if (c >= 0xe0 && c <= 0xef)
             {
                 ++offset;
-                int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
-                int c2 = offset < endPos ? ((int)utf8[offset]) & 0xff : -1;
+                int c1 = offset < endPos ? utf8[offset++] & 0xff : -1;
+                int c2 = offset < endPos ? utf8[offset] & 0xff : -1;
                 int lower = (c == 0xe0) ? 0xa0 : 0x80;
                 int upper = (c == 0xed) ? 0x9f : 0xbf;
                 return (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) ?
@@ -387,9 +387,9 @@ namespace PeterO.Cbor
             else if (c >= 0xf0 && c <= 0xf4)
             {
                 ++offset;
-                int c1 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
-                int c2 = offset < endPos ? ((int)utf8[offset++]) & 0xff : -1;
-                int c3 = offset < endPos ? ((int)utf8[offset]) & 0xff : -1;
+                int c1 = offset < endPos ? utf8[offset++] & 0xff : -1;
+                int c2 = offset < endPos ? utf8[offset++] & 0xff : -1;
+                int c3 = offset < endPos ? utf8[offset] & 0xff : -1;
                 int lower = (c == 0xf0) ? 0x90 : 0x80;
                 int upper = (c == 0xf4) ? 0x8f : 0xbf;
                 if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
@@ -650,7 +650,7 @@ namespace PeterO.Cbor
                 byte bi = b[i];
                 if (ai != bi)
                 {
-                    return ((((int)ai) & 0xff) < (((int)bi) & 0xff)) ? -1 : 1;
+                    return ((ai & 0xff) < (bi & 0xff)) ? -1 : 1;
                 }
             }
             return (a.Length != b.Length) ? ((a.Length < b.Length) ? -1 : 1) : 0;
@@ -676,7 +676,7 @@ namespace PeterO.Cbor
                 byte bi = b[i];
                 if (ai != bi)
                 {
-                    return ((((int)ai) & 0xff) < (((int)bi) & 0xff)) ? -1 : 1;
+                    return ((ai & 0xff) < (bi & 0xff)) ? -1 : 1;
                 }
             }
             return 0;
@@ -740,7 +740,7 @@ namespace PeterO.Cbor
             {
                 return "0";
             }
-            if (longValue == (long)Int32.MinValue)
+            if (longValue == int.MinValue)
             {
                 return "-2147483648";
             }
@@ -748,7 +748,7 @@ namespace PeterO.Cbor
             var count = 0;
             char[] chars;
             int intlongValue = unchecked((int)longValue);
-            if ((long)intlongValue == longValue)
+            if (intlongValue == longValue)
             {
                 chars = new char[12];
                 count = 11;
@@ -759,22 +759,22 @@ namespace PeterO.Cbor
                 while (intlongValue > 43698)
                 {
                     int intdivValue = intlongValue / 10;
-                    char digit = HexAlphabet[(int)(intlongValue - (intdivValue *
-                            10))];
+                    char digit = HexAlphabet[intlongValue - (intdivValue *
+                            10)];
                     chars[count--] = digit;
                     intlongValue = intdivValue;
                 }
                 while (intlongValue > 9)
                 {
                     int intdivValue = (intlongValue * 26215) >> 18;
-                    char digit = HexAlphabet[(int)(intlongValue - (intdivValue *
-                            10))];
+                    char digit = HexAlphabet[intlongValue - (intdivValue *
+                            10)];
                     chars[count--] = digit;
                     intlongValue = intdivValue;
                 }
                 if (intlongValue != 0)
                 {
-                    chars[count--] = HexAlphabet[(int)intlongValue];
+                    chars[count--] = HexAlphabet[intlongValue];
                 }
                 if (neg)
                 {
@@ -1709,7 +1709,7 @@ namespace PeterO.Cbor
             {
                 charbuf[19] = '.';
                 ++charbufLength;
-                var digitdiv = (int)FractionalSeconds;
+                var digitdiv = FractionalSeconds;
                 digitdiv /= 10;
                 var index = 20;
                 while (digitdiv > 0 && fracSeconds != 0)
@@ -1758,7 +1758,7 @@ namespace PeterO.Cbor
             longmant |= (long)(expo + 1075) << 52;
             if (i < 0)
             {
-                longmant |= unchecked((long)(1L << 63));
+                longmant |= unchecked(1L << 63);
             }
             /*
             DebugUtility.Log("" + i + "->" + (longmant==DoubleToInt64Bits(i)));
@@ -1845,7 +1845,7 @@ namespace PeterO.Cbor
         {
             int value0 = unchecked((int)(lvalue & 0xffffffffL));
             int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
-            var floatExponent = (int)((value1 >> 20) & 0x7ff);
+            var floatExponent = (value1 >> 20) & 0x7ff;
             bool neg = (value1 >> 31) != 0;
             if (floatExponent == 2047)
             {
@@ -1882,7 +1882,7 @@ namespace PeterO.Cbor
             bytes[5] = (byte)((value1 >> 8) & 0xff);
             bytes[6] = (byte)((value1 >> 16) & 0xff);
             bytes[7] = (byte)((value1 >> 24) & 0xff);
-            bytes[8] = (byte)0;
+            bytes[8] = 0;
             bigmantissa = EInteger.FromBytes(bytes, true);
             if (floatExponent == 0)
             {
@@ -1898,7 +1898,7 @@ namespace PeterO.Cbor
                 bigmantissa <<= floatExponent;
                 if (neg)
                 {
-                    bigmantissa = -(EInteger)bigmantissa;
+                    bigmantissa = -bigmantissa;
                 }
                 return bigmantissa;
             }
@@ -1909,7 +1909,7 @@ namespace PeterO.Cbor
                 bigmantissa >>= exp;
                 if (neg)
                 {
-                    bigmantissa = -(EInteger)bigmantissa;
+                    bigmantissa = -bigmantissa;
                 }
                 return bigmantissa;
             }
@@ -1919,14 +1919,14 @@ namespace PeterO.Cbor
         {
             // Is NaN
             bits &= ~(1L << 63);
-            return bits > unchecked((long)(0x7ffL << 52));
+            return bits > unchecked(0x7ffL << 52);
         }
 
         public static bool DoubleBitsFinite(long bits)
         {
             // Neither NaN nor infinity
             bits &= ~(1L << 63);
-            return bits < unchecked((long)(0x7ffL << 52));
+            return bits < unchecked(0x7ffL << 52);
         }
 
         private static int RoundedShift(long mant, int shift)
@@ -2024,13 +2024,13 @@ namespace PeterO.Cbor
         // NOTE: Rounds to nearest, ties to even
         public static int SingleToRoundedHalfPrecision(int bits)
         {
-            int exp = unchecked((int)((bits >> 23) & 0xff));
+            int exp = unchecked((bits >> 23) & 0xff);
             int mant = bits & 0x7fffff;
             int sign = (bits >> 16) & (1 << 15);
             int sexp = exp - 112;
             if (exp == 255)
             { // Infinity and NaN
-                int newmant = unchecked((int)(mant >> 13));
+                int newmant = unchecked(mant >> 13);
                 return (mant != 0 && newmant == 0) ?
                   // signaling NaN truncated to have mantissa 0
                   (sign | 0x7c01) : (sign | 0x7c00 | newmant);

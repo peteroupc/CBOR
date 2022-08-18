@@ -47,80 +47,80 @@ namespace Test
         public void TestCorrectUtf8Specific()
         {
             TestJsonUtf8One(new byte[] {
-        (byte)0xe8,
-        (byte)0xad,
-        (byte)0xbd,
-        (byte)0xf1,
-        (byte)0x81,
-        (byte)0x95,
-        (byte)0xb9,
-        (byte)0xc3, (byte)0x84, (byte)0xcc, (byte)0xb6, (byte)0xcd,
-        (byte)0xa3,
+        0xe8,
+        0xad,
+        0xbd,
+        0xf1,
+        0x81,
+        0x95,
+        0xb9,
+        0xc3, 0x84, 0xcc, 0xb6, 0xcd,
+        0xa3,
       });
             TestJsonUtf8One(new byte[] {
-        (byte)0xe8,
-        (byte)0x89,
-        (byte)0xa0,
-        (byte)0xf2,
-        (byte)0x97,
-        (byte)0x84, (byte)0xbb, 0x3f, (byte)0xd1, (byte)0x83, (byte)0xd1,
-        (byte)0xb9,
+        0xe8,
+        0x89,
+        0xa0,
+        0xf2,
+        0x97,
+        0x84, 0xbb, 0x3f, 0xd1, 0x83, 0xd1,
+        0xb9,
       });
             TestJsonUtf8One(new byte[] {
-        (byte)0xf3,
-        (byte)0xbb,
-        (byte)0x98,
-        (byte)0x8a,
-        (byte)0xc3,
-        (byte)0x9f,
-        (byte)0xe7,
-        (byte)0xa5,
-        (byte)0x96, (byte)0xd9, (byte)0x92, (byte)0xe1, (byte)0xa3,
-        (byte)0xad,
+        0xf3,
+        0xbb,
+        0x98,
+        0x8a,
+        0xc3,
+        0x9f,
+        0xe7,
+        0xa5,
+        0x96, 0xd9, 0x92, 0xe1, 0xa3,
+        0xad,
       });
             TestJsonUtf8One(new byte[] {
-        (byte)0xf0,
-        (byte)0xa7,
-        (byte)0xbf,
-        (byte)0x84, 0x70, 0x55,
-        (byte)0xd0, (byte)0x91, (byte)0xe8, (byte)0xbe, (byte)0x9f,
+        0xf0,
+        0xa7,
+        0xbf,
+        0x84, 0x70, 0x55,
+        0xd0, 0x91, 0xe8, 0xbe, 0x9f,
       });
             TestJsonUtf8One(new byte[] {
-        (byte)0xd9,
-        (byte)0xae,
-        (byte)0xe4,
-        (byte)0xa1,
-        (byte)0xa0,
-        (byte)0xf3,
-        (byte)0x90,
-        (byte)0x94,
-        (byte)0x99,
-        (byte)0xf3,
-        (byte)0xab,
-        (byte)0x8a, (byte)0xad, (byte)0xf4, (byte)0x88, (byte)0x9a,
-        (byte)0x9a,
+        0xd9,
+        0xae,
+        0xe4,
+        0xa1,
+        0xa0,
+        0xf3,
+        0x90,
+        0x94,
+        0x99,
+        0xf3,
+        0xab,
+        0x8a, 0xad, 0xf4, 0x88, 0x9a,
+        0x9a,
       });
             TestJsonUtf8One(new byte[] {
         0x3d,
-        (byte)0xf2,
-        (byte)0x83,
-        (byte)0xa9,
-        (byte)0xbe,
-        (byte)0xea,
-        (byte)0xb9,
-        (byte)0xbd, (byte)0xd7, (byte)0x8b, (byte)0xe7, (byte)0xbc,
-        (byte)0x83,
+        0xf2,
+        0x83,
+        0xa9,
+        0xbe,
+        0xea,
+        0xb9,
+        0xbd, 0xd7, 0x8b, 0xe7, 0xbc,
+        0x83,
       });
             TestJsonUtf8One(new byte[] {
-        (byte)0xc4,
-        (byte)0xab, (byte)0xf4, (byte)0x8e, (byte)0x8a, (byte)0x91, 0x61, 0x4d,
+        0xc4,
+        0xab, 0xf4, 0x8e, 0x8a, 0x91, 0x61, 0x4d,
         0x3b,
       });
             TestJsonUtf8One(new byte[] {
-        (byte)0xf1,
-        (byte)0xae,
-        (byte)0x86, (byte)0xad, 0x5f, (byte)0xd0, (byte)0xb7, 0x6e, (byte)0xda,
-        (byte)0x85,
+        0xf1,
+        0xae,
+        0x86, 0xad, 0x5f, 0xd0, 0xb7, 0x6e, 0xda,
+        0x85,
       });
         }
 
@@ -321,11 +321,11 @@ namespace Test
 
             Assert.IsTrue(cbor.ContainsKey(ToObjectTest.TestToFromObjectRoundTrip(
                   "hello")));
-            Assert.AreEqual((int)2, cbor["hello"].AsInt32Value());
+            Assert.AreEqual(2, cbor["hello"].AsInt32Value());
             cbor.Set(1, 3);
             CBORObject cborone = ToObjectTest.TestToFromObjectRoundTrip(1);
             Assert.IsTrue(cbor.ContainsKey(cborone));
-            Assert.AreEqual((int)3, cbor[cborone].AsInt32Value());
+            Assert.AreEqual(3, cbor[cborone].AsInt32Value());
         }
 
         [Test]
@@ -336,7 +336,7 @@ namespace Test
             cbor.Add(ToObjectTest.TestToFromObjectRoundTrip(4));
             byte[] bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
             TestCommon.AssertByteArraysEqual(
-              new byte[] { (byte)((byte)0x80 | 2), 3, 4 },
+              new byte[] { 0x80 | 2, 3, 4 },
               bytes);
             cbor = CBORObject.FromObject(new[] {
         "a", "b", "c",
@@ -348,9 +348,9 @@ namespace Test
             Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
             CBORTestCommon.AssertRoundTrip(cbor);
             cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0x9f, 0, 1, 2, 3,
+        0x9f, 0, 1, 2, 3,
         4, 5,
-        6, 7, (byte)0xff,
+        6, 7, 0xff,
       });
             {
                 string stringTemp = cbor.ToJSONString();
@@ -414,23 +414,23 @@ namespace Test
         {
             CBORObject o = null;
             o = CBORTestCommon.FromBytesTestAB(new byte[] {
-        (byte)0xc2, 0x41,
-        (byte)0x88,
+        0xc2, 0x41,
+        0x88,
       });
             Assert.AreEqual(
               EInteger.FromRadixString("88", 16),
               o.ToObject(typeof(EInteger)));
             o = CBORTestCommon.FromBytesTestAB(new byte[] {
-        (byte)0xc2, 0x42,
-        (byte)0x88,
+        0xc2, 0x42,
+        0x88,
         0x77,
       });
             Assert.AreEqual(
               EInteger.FromRadixString("8877", 16),
               o.ToObject(typeof(EInteger)));
             o = CBORTestCommon.FromBytesTestAB(new byte[] {
-        (byte)0xc2, 0x44,
-        (byte)0x88, 0x77,
+        0xc2, 0x44,
+        0x88, 0x77,
         0x66,
         0x55,
       });
@@ -438,8 +438,8 @@ namespace Test
               EInteger.FromRadixString("88776655", 16),
               o.ToObject(typeof(EInteger)));
             o = CBORTestCommon.FromBytesTestAB(new byte[] {
-        (byte)0xc2, 0x47,
-        (byte)0x88, 0x77,
+        0xc2, 0x47,
+        0x88, 0x77,
         0x66,
         0x55, 0x44, 0x33, 0x22,
       });
@@ -476,7 +476,7 @@ namespace Test
         public void TestByteStringStream()
         {
             CBORTestCommon.FromBytesTestAB(
-              new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, (byte)0xff });
+              new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, 0xff });
         }
 
         [Test]
@@ -484,17 +484,17 @@ namespace Test
         {
             var bytes = new byte[] {
         0x6a, 0x25, 0x7f, 0x41, 0x58, 0x11, 0x54,
-        (byte)0xc3, (byte)0x94, 0x19, 0x49,
+        0xc3, 0x94, 0x19, 0x49,
       };
             TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
             bytes = new byte[] {
-        (byte)0xfb, 0x61, (byte)0x90, 0x00, 0x00, 0x7c,
+        0xfb, 0x61, 0x90, 0x00, 0x00, 0x7c,
         0x01, 0x5a, 0x0a,
       };
             TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
             bytes = new byte[] {
-        (byte)0xfb, 0x36, (byte)0x90, 0x01, 0x00, 0x3f,
-        (byte)0xd9, 0x2b, (byte)0xdb,
+        0xfb, 0x36, 0x90, 0x01, 0x00, 0x3f,
+        0xd9, 0x2b, 0xdb,
       };
             TestWriteToJSON(CBORObject.DecodeFromBytes(bytes));
         }
@@ -503,15 +503,15 @@ namespace Test
         public void TestEmptyIndefiniteLength()
         {
             CBORObject cbor;
-            cbor = CBORObject.DecodeFromBytes(new byte[] { 0x5f, (byte)0xff });
+            cbor = CBORObject.DecodeFromBytes(new byte[] { 0x5f, 0xff });
             Assert.AreEqual(0, cbor.GetByteString().Length);
-            cbor = CBORObject.DecodeFromBytes(new byte[] { 0x7f, (byte)0xff });
+            cbor = CBORObject.DecodeFromBytes(new byte[] { 0x7f, 0xff });
             string str = cbor.AsString();
             Assert.AreEqual(0, str.Length);
-            cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0x9f, (byte)0xff });
+            cbor = CBORObject.DecodeFromBytes(new byte[] { 0x9f, 0xff });
             Assert.AreEqual(CBORType.Array, cbor.Type);
             Assert.AreEqual(0, cbor.Count);
-            cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xbf, (byte)0xff });
+            cbor = CBORObject.DecodeFromBytes(new byte[] { 0xbf, 0xff });
             Assert.AreEqual(CBORType.Map, cbor.Type);
             Assert.AreEqual(0, cbor.Count);
         }
@@ -523,7 +523,7 @@ namespace Test
             {
                 CBORTestCommon.FromBytesTestAB(new byte[] {
           0x5f, 0x41, 0x20, 0x5f,
-          0x41, 0x20, (byte)0xff, (byte)0xff,
+          0x41, 0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -540,7 +540,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x5f, 0x42, 0x20,
-          0x20, (byte)0xff, (byte)0xff,
+          0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -557,7 +557,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x42, 0x20, 0x20,
-          0x5f, 0x42, 0x20, 0x20, (byte)0xff, (byte)0xff,
+          0x5f, 0x42, 0x20, 0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -574,7 +574,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x7f, 0x62, 0x20,
-          0x20, (byte)0xff, (byte)0xff,
+          0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -591,7 +591,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x5f, 0x5f, 0x41, 0x20,
-          (byte)0xff, 0x41, 0x20, (byte)0xff,
+          0xff, 0x41, 0x20, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -608,7 +608,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x7f, 0x62, 0x20,
-          0x20, (byte)0xff, (byte)0xff,
+          0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -625,7 +625,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x62, 0x20, 0x20,
-          0x7f, 0x62, 0x20, 0x20, (byte)0xff, (byte)0xff,
+          0x7f, 0x62, 0x20, 0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -642,7 +642,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x5f, 0x42, 0x20,
-          0x20, (byte)0xff, (byte)0xff,
+          0x20, 0xff, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -659,7 +659,7 @@ namespace Test
             {
                 CBORObject.DecodeFromBytes(new byte[] {
           0x7f, 0x7f, 0x61, 0x20,
-          (byte)0xff, 0x61, 0x20, (byte)0xff,
+          0xff, 0x61, 0x20, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -674,7 +674,7 @@ namespace Test
             }
             try
             {
-                CBORObject.DecodeFromBytes(new byte[] { 0x5f, 0x00, (byte)0xff });
+                CBORObject.DecodeFromBytes(new byte[] { 0x5f, 0x00, 0xff });
                 Assert.Fail("Should have failed");
             }
             catch (CBORException)
@@ -688,7 +688,7 @@ namespace Test
             }
             try
             {
-                CBORObject.DecodeFromBytes(new byte[] { 0x7f, 0x00, (byte)0xff });
+                CBORObject.DecodeFromBytes(new byte[] { 0x7f, 0x00, 0xff });
                 Assert.Fail("Should have failed");
             }
             catch (CBORException)
@@ -702,7 +702,7 @@ namespace Test
             }
             try
             {
-                CBORObject.DecodeFromBytes(new byte[] { 0x5f, 0x20, (byte)0xff });
+                CBORObject.DecodeFromBytes(new byte[] { 0x5f, 0x20, 0xff });
                 Assert.Fail("Should have failed");
             }
             catch (CBORException)
@@ -716,7 +716,7 @@ namespace Test
             }
             try
             {
-                CBORObject.DecodeFromBytes(new byte[] { 0x7f, 0x20, (byte)0xff });
+                CBORObject.DecodeFromBytes(new byte[] { 0x7f, 0x20, 0xff });
                 Assert.Fail("Should have failed");
             }
             catch (CBORException)
@@ -731,8 +731,8 @@ namespace Test
             try
             {
                 CBORObject.DecodeFromBytes(new byte[] {
-          (byte)0xbf, 0x00,
-          (byte)0xff,
+          0xbf, 0x00,
+          0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -748,8 +748,8 @@ namespace Test
             try
             {
                 CBORObject.DecodeFromBytes(new byte[] {
-          (byte)0xbf, 0x20,
-          (byte)0xff,
+          0xbf, 0x20,
+          0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -771,7 +771,7 @@ namespace Test
             {
                 CBORTestCommon.FromBytesTestAB(new byte[] {
           0x5f, 0x41, 0x20,
-          (byte)0xc2, 0x41, 0x20, (byte)0xff,
+          0xc2, 0x41, 0x20, 0xff,
         });
                 Assert.Fail("Should have failed");
             }
@@ -876,7 +876,7 @@ namespace Test
                 TestCanFitInOne(ed);
             }
             CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfb,
+        0xfb,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       });
             TestCanFitInOne(cbor);
@@ -886,8 +886,8 @@ namespace Test
         public void TestCanFitInSpecificCases()
         {
             CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfb,
-        0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a,
+        0xfb,
+        0x41, 0xe0, 0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a,
       }); // 2217361768.63373
             Assert.AreEqual(
               EInteger.FromString("2217361768"),
@@ -898,7 +898,7 @@ namespace Test
               <= 31);
             Assert.IsFalse(cbor.AsNumber().CanTruncatedIntFitInInt32());
             cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5, (byte)0x82,
+        0xc5, 0x82,
         0x18, 0x2f, 0x32,
       }); // -2674012278751232
             Assert.AreEqual(
@@ -908,7 +908,7 @@ namespace Test
             Assert.IsFalse(ToObjectTest.TestToFromObjectRoundTrip(2554895343L)
               .AsNumber().CanFitInSingle());
             cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5, (byte)0x82,
+        0xc5, 0x82,
         0x10, 0x38, 0x64,
       }); // -6619136
             Assert.AreEqual(EInteger.FromString("-6619136"),
@@ -921,8 +921,8 @@ namespace Test
         public void TestCBOREInteger()
         {
             CBORObject o = CBORObject.DecodeFromBytes(new byte[] {
-        0x3b, (byte)0xce,
-        (byte)0xe2, 0x5a, 0x57, (byte)0xd8, 0x21, (byte)0xb9, (byte)0xa7,
+        0x3b, 0xce,
+        0xe2, 0x5a, 0x57, 0xd8, 0x21, 0xb9, 0xa7,
       });
             Assert.AreEqual(
               EInteger.FromString("-14907577049884506536"),
@@ -1344,7 +1344,7 @@ namespace Test
         [Test]
         public void TestCompareToSpecificA()
         {
-            var bytes = new byte[] { (byte)0xfa, (byte)0xb3, 0x00, 0x00, 0x00 };
+            var bytes = new byte[] { 0xfa, 0xb3, 0x00, 0x00, 0x00 };
             TestCompareToOne(bytes);
         }
 
@@ -1352,24 +1352,24 @@ namespace Test
         public void TestCompareToSpecificE()
         {
             var bytes = new byte[] {
-        (byte)0xbf,
-        (byte)0xf9,
-        (byte)0xce,
-        (byte)0xdc,
-        (byte)0x99, 0x00, 0x01,
-        (byte)0xf8,
-        (byte)0xa0, 0x61, 0x37, 0x12, 0x7f, 0x78, 0x0d, 0x1c, 0x78, 0x4a,
+        0xbf,
+        0xf9,
+        0xce,
+        0xdc,
+        0x99, 0x00, 0x01,
+        0xf8,
+        0xa0, 0x61, 0x37, 0x12, 0x7f, 0x78, 0x0d, 0x1c, 0x78, 0x4a,
         0x48, 0x3e,
-        (byte)0xe1,
-        (byte)0xa5,
-        (byte)0xb2,
-        (byte)0xf4,
-        (byte)0x82,
-        (byte)0x8f,
-        (byte)0x8a, 0x32, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04,
+        0xe1,
+        0xa5,
+        0xb2,
+        0xf4,
+        0x82,
+        0x8f,
+        0x8a, 0x32, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04,
         0x2d, 0x57, 0x55, 0x08, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x02, 0x41, 0x28,
-        (byte)0xff, (byte)0xe3, (byte)0xff,
+        0xff, 0xe3, 0xff,
       };
             TestCompareToOne(bytes);
         }
@@ -1378,20 +1378,20 @@ namespace Test
         public void TestCompareToSpecificC()
         {
             var bytes = new byte[] {
-        (byte)0xb9, 0x00, 0x02,
-        (byte)0xfa,
-        (byte)0x93,
-        (byte)0x96,
-        (byte)0xf3,
-        (byte)0xcb, 0x1b,
-        (byte)0xe7, 0x65, 0x72,
-        (byte)0x83,
-        (byte)0xa0, 0x39,
-        (byte)0xa0,
-        (byte)0xfe, 0x7f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+        0xb9, 0x00, 0x02,
+        0xfa,
+        0x93,
+        0x96,
+        0xf3,
+        0xcb, 0x1b,
+        0xe7, 0x65, 0x72,
+        0x83,
+        0xa0, 0x39,
+        0xa0,
+        0xfe, 0x7f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
         0x2e, 0x7a, 0x00, 0x00, 0x00, 0x03, 0x1e, 0x33, 0x52, 0x60, 0x7a, 0x00,
         0x00, 0x00, 0x03, 0x62, 0x1e, 0x23,
-        (byte)0xff, 0x18, (byte)0x89,
+        0xff, 0x18, 0x89,
       };
             TestCompareToOne(bytes);
         }
@@ -1400,14 +1400,14 @@ namespace Test
         public void TestCompareToSpecificD()
         {
             var bytes = new byte[] {
-        (byte)0xbf, 0x00, 0x00,
-        (byte)0xe0, 0x00, 0x7f, 0x78, 0x10, 0x64, 0x6b, 0x05, 0x77, 0x38, 0x3c,
+        0xbf, 0x00, 0x00,
+        0xe0, 0x00, 0x7f, 0x78, 0x10, 0x64, 0x6b, 0x05, 0x77, 0x38, 0x3c,
         0x51, 0x66, 0x7c, 0x02, 0x31, 0x51, 0x56, 0x33, 0x56, 0x6a, 0x7b, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x70, 0x16, 0x20, 0x2f, 0x29,
         0x1a, 0x1f, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78,
         0x01, 0x5c,
-        (byte)0xff, (byte)0xfa, (byte)0xa1, (byte)0xeb, (byte)0xc3, 0x1d,
-        (byte)0xff,
+        0xff, 0xfa, 0xa1, 0xeb, 0xc3, 0x1d,
+        0xff,
       };
             TestCompareToOne(bytes);
         }
@@ -1416,21 +1416,21 @@ namespace Test
         public void TestCompareToSpecificB()
         {
             var bytes = new byte[] {
-        (byte)0xa4,
-        (byte)0xe3,
-        (byte)0xf8, 0x70,
-        (byte)0xdb, 0x02, 0x2d, 0x0d, 0x30, 0x39, 0x14,
-        (byte)0xf5,
-        (byte)0x8c, 0x39, 0x56, 0x1c, 0x3a,
-        (byte)0x92, 0x27, 0x00, 0x04, 0x39, 0x1e, 0x05,
-        (byte)0xf9, 0x73,
-        (byte)0xac, 0x7f, 0x78, 0x05, 0x2d,
-        (byte)0xe5,
-        (byte)0xad,
-        (byte)0xb8, 0x0b, 0x63, 0x27, 0x50, 0x7e, 0x78, 0x02, 0x04, 0x56,
-        (byte)0xff, 0x1b,
-        (byte)0x9d, (byte)0x8c, 0x66, (byte)0xaf, 0x18, 0x1d, 0x01,
-        (byte)0x8e,
+        0xa4,
+        0xe3,
+        0xf8, 0x70,
+        0xdb, 0x02, 0x2d, 0x0d, 0x30, 0x39, 0x14,
+        0xf5,
+        0x8c, 0x39, 0x56, 0x1c, 0x3a,
+        0x92, 0x27, 0x00, 0x04, 0x39, 0x1e, 0x05,
+        0xf9, 0x73,
+        0xac, 0x7f, 0x78, 0x05, 0x2d,
+        0xe5,
+        0xad,
+        0xb8, 0x0b, 0x63, 0x27, 0x50, 0x7e, 0x78, 0x02, 0x04, 0x56,
+        0xff, 0x1b,
+        0x9d, 0x8c, 0x66, 0xaf, 0x18, 0x1d, 0x01,
+        0x8e,
       };
             TestCompareToOne(bytes);
         }
@@ -1440,22 +1440,22 @@ namespace Test
         {
             byte[] bytes;
             bytes = new byte[] {
-        (byte)0xa2,
-        (byte)0xf8,
-        (byte)0xf7, 0x19,
-        (byte)0xde,
-        (byte)0x91, 0x7f, 0x79, 0x00, 0x11, 0x7b, 0x1b, 0x29, 0x59, 0x57, 0x6a,
+        0xa2,
+        0xf8,
+        0xf7, 0x19,
+        0xde,
+        0x91, 0x7f, 0x79, 0x00, 0x11, 0x7b, 0x1b, 0x29, 0x59, 0x57, 0x6a,
         0x70, 0x68,
-        (byte)0xe3,
-        (byte)0x98,
-        (byte)0xba, 0x6a, 0x49, 0x50, 0x54, 0x0b, 0x21, 0x62, 0x32, 0x17, 0x7b,
+        0xe3,
+        0x98,
+        0xba, 0x6a, 0x49, 0x50, 0x54, 0x0b, 0x21, 0x62, 0x32, 0x17, 0x7b,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x67, 0x43, 0x37, 0x42,
         0x5f, 0x22, 0x7c, 0x0e, 0x68, 0x13, 0x74, 0x43, 0x1e, 0x4c, 0x5b, 0x2b,
         0x6c, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7a, 0x00,
         0x00, 0x00, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x78, 0x01, 0x38, 0x78, 0x00, 0x78, 0x00, 0x7b, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x01, 0x39,
-        (byte)0xff, (byte)0x9f, (byte)0xff,
+        0xff, 0x9f, 0xff,
       };
             TestCompareToOne(bytes);
         }
@@ -1466,65 +1466,65 @@ namespace Test
             byte[] bytes;
             CBORObject o;
             bytes = new byte[] {
-        (byte)0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x02,
-        (byte)0xf8, 0x2d, 0x11, 0x7f, 0x79, 0x00, 0x2e, 0x7c, 0x2c, 0x18, 0x40,
+        0xf8, 0x2d, 0x11, 0x7f, 0x79, 0x00, 0x2e, 0x7c, 0x2c, 0x18, 0x40,
         0x3e,
-        (byte)0xc7,
-        (byte)0xa9, 0x0c, 0x57, 0x50, 0x63, 0x30, 0x0f, 0x07, 0x76, 0x14, 0x31,
+        0xc7,
+        0xa9, 0x0c, 0x57, 0x50, 0x63, 0x30, 0x0f, 0x07, 0x76, 0x14, 0x31,
         0x52, 0x5c, 0x0a, 0x43, 0x4a, 0x6f, 0x08, 0x11, 0x25, 0x0b, 0x1a, 0x10,
         0x74,
-        (byte)0xf1,
-        (byte)0x84,
-        (byte)0xbd,
-        (byte)0x93, 0x4f, 0x74, 0x23, 0x5b, 0x7c, 0x5c, 0x76, 0x70, 0x0a,
-        (byte)0xde,
-        (byte)0xa3, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0b,
+        0xf1,
+        0x84,
+        0xbd,
+        0x93, 0x4f, 0x74, 0x23, 0x5b, 0x7c, 0x5c, 0x76, 0x70, 0x0a,
+        0xde,
+        0xa3, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0b,
         0x76,
-        (byte)0xf0,
-        (byte)0xad,
-        (byte)0xbf,
-        (byte)0xba, 0x14, 0x45, 0x0d, 0x2e, 0x6e, 0x62, 0x62, 0x10, 0x63,
-        (byte)0xff, 0x35,
+        0xf0,
+        0xad,
+        0xbf,
+        0xba, 0x14, 0x45, 0x0d, 0x2e, 0x6e, 0x62, 0x62, 0x10, 0x63,
+        0xff, 0x35,
       };
             o = CBORObject.DecodeFromBytes(bytes, new
                 CBOREncodeOptions("allowduplicatekeys=1"));
             CBORTestCommon.AssertRoundTrip(o);
             bytes = new byte[] {
-        (byte)0xd9, 0x0e, 0x02,
-        (byte)0xbf, 0x7f, 0x78, 0x07, 0x12, 0x45, 0x2f, 0x48,
-        (byte)0xc8,
-        (byte)0xb7, 0x5a, 0x79, 0x00, 0x01, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00,
+        0xd9, 0x0e, 0x02,
+        0xbf, 0x7f, 0x78, 0x07, 0x12, 0x45, 0x2f, 0x48,
+        0xc8,
+        0xb7, 0x5a, 0x79, 0x00, 0x01, 0x5e, 0x7b, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x01, 0x72, 0x78, 0x00, 0x7a, 0x00, 0x00, 0x00, 0x01,
         0x49, 0x61, 0x6d, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
         0x13,
-        (byte)0xff,
-        (byte)0xed,
-        (byte)0xfb,
-        (byte)0x82, 0x18,
-        (byte)0xc9, 0x6c, 0x3b, (byte)0xc0, 0x53, 0x1f, (byte)0xeb,
-        (byte)0xff,
+        0xff,
+        0xed,
+        0xfb,
+        0x82, 0x18,
+        0xc9, 0x6c, 0x3b, 0xc0, 0x53, 0x1f, 0xeb,
+        0xff,
       };
             o = CBORObject.DecodeFromBytes(bytes, new
                 CBOREncodeOptions("allowduplicatekeys=1"));
             CBORTestCommon.AssertRoundTrip(o);
             bytes = new byte[] {
-        (byte)0xbf,
-        (byte)0xfa,
-        (byte)0xc5, 0x7f, 0x16,
-        (byte)0xe2,
-        (byte)0xf9, 0x05, 0x2d, 0x7f, 0x79, 0x00, 0x02, 0x4f, 0x0a, 0x67, 0x1a,
+        0xbf,
+        0xfa,
+        0xc5, 0x7f, 0x16,
+        0xe2,
+        0xf9, 0x05, 0x2d, 0x7f, 0x79, 0x00, 0x02, 0x4f, 0x0a, 0x67, 0x1a,
         0x17, 0x17, 0x1d, 0x0a, 0x74, 0x0a, 0x79, 0x00, 0x0e, 0x48, 0x23, 0x4e,
         0x32, 0x53, 0x74, 0x78,
-        (byte)0xf0,
-        (byte)0xa9,
-        (byte)0x8b,
-        (byte)0xb9, 0x03, 0x68, 0x3b, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0xf0,
+        0xa9,
+        0x8b,
+        0xb9, 0x03, 0x68, 0x3b, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x02, 0x67, 0x0e, 0x7a, 0x00, 0x00, 0x00, 0x02, 0x74, 0x37, 0x79,
         0x00, 0x09, 0x6f, 0x11, 0x60, 0x3c, 0x24, 0x13, 0x16, 0x25, 0x35, 0x78,
         0x01, 0x6a,
-        (byte)0xff, (byte)0xf9, (byte)0xc0, 0x69, 0x19, 0x0b, (byte)0x8a, 0x05,
-        (byte)0xff,
+        0xff, 0xf9, 0xc0, 0x69, 0x19, 0x0b, 0x8a, 0x05,
+        0xff,
       };
             o = CBORObject.DecodeFromBytes(bytes, new
                 CBOREncodeOptions("allowduplicatekeys=1"));
@@ -1536,7 +1536,7 @@ namespace Test
         {
             {
                 string stringTemp = CBORObject.DecodeFromBytes(new byte[] {
-          (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00,
+          0xfa, 0x7f, 0x80, 0x00, 0x00,
         }).ToObject(typeof(ERational)).ToString();
                 Assert.AreEqual(
                   "Infinity",
@@ -1544,21 +1544,21 @@ namespace Test
             }
             {
                 CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
-          (byte)0xc5, (byte)0x82, 0x38, (byte)0xc7, 0x3b, 0x00, 0x00, 0x08,
-          (byte)0xbf, (byte)0xda, (byte)0xaf, 0x73, 0x46,
+          0xc5, 0x82, 0x38, 0xc7, 0x3b, 0x00, 0x00, 0x08,
+          0xbf, 0xda, 0xaf, 0x73, 0x46,
         });
                 CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-          0x3b, 0x5a, (byte)0x9b, (byte)0x9a, (byte)0x9c, (byte)0xb4, (byte)0x95,
-          (byte)0xbf, 0x71,
+          0x3b, 0x5a, 0x9b, 0x9a, 0x9c, 0xb4, 0x95,
+          0xbf, 0x71,
         });
                 AddSubCompare(objectTemp, objectTemp2);
             }
             {
                 CBORObject objectTemp = CBORObject.DecodeFromBytes(new byte[] {
-          (byte)0xfa, 0x1f, (byte)0x80, (byte)0xdb, (byte)0x9b,
+          0xfa, 0x1f, 0x80, 0xdb, 0x9b,
         });
                 CBORObject objectTemp2 = CBORObject.DecodeFromBytes(new byte[] {
-          (byte)0xfb, 0x31, (byte)0x90, (byte)0xea, 0x16, (byte)0xbe, (byte)0x80,
+          0xfb, 0x31, 0x90, 0xea, 0x16, 0xbe, 0x80,
           0x0b, 0x37,
         });
                 AddSubCompare(objectTemp, objectTemp2);
@@ -1591,9 +1591,9 @@ namespace Test
             var jsonBytes = new byte[] {
         0x22, 0x48, 0x54, 0x30, 0x43, 0x5c, 0x75,
         0x64, 0x61, 0x62, 0x43, 0x5c, 0x75, 0x64, 0x64, 0x32, 0x39, 0x48,
-        (byte)0xdc,
-        (byte)0x9a, 0x4e,
-        (byte)0xc2, (byte)0xa3, 0x49, 0x4d, 0x43, 0x40, 0x25, 0x31, 0x3b,
+        0xdc,
+        0x9a, 0x4e,
+        0xc2, 0xa3, 0x49, 0x4d, 0x43, 0x40, 0x25, 0x31, 0x3b,
         0x22,
       };
             TestEquivJSONOne(jsonBytes);
@@ -1601,7 +1601,7 @@ namespace Test
         0x22, 0x35, 0x54, 0x30, 0x4d, 0x2d, 0x2b, 0x5c,
         0x75, 0x64, 0x38, 0x36, 0x38, 0x5c, 0x75, 0x44, 0x63, 0x46, 0x32, 0x4f,
         0x34, 0x4e, 0x34,
-        (byte)0xe0, (byte)0xa3, (byte)0xac, 0x2b, 0x31, 0x23, 0x22,
+        0xe0, 0xa3, 0xac, 0x2b, 0x31, 0x23, 0x22,
       };
             TestEquivJSONOne(jsonBytes);
         }
@@ -1612,16 +1612,16 @@ namespace Test
             CBORObject o1 = null;
             CBORObject o2 = null;
             o1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfb, (byte)0x8b,
+        0xfb, 0x8b,
         0x44,
-        (byte)0xf2, (byte)0xa9, 0x0c, 0x27, 0x42, 0x28,
+        0xf2, 0xa9, 0x0c, 0x27, 0x42, 0x28,
       });
             o2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5, (byte)0x82,
+        0xc5, 0x82,
         0x38,
-        (byte)0xa4, (byte)0xc3, 0x50, 0x02, (byte)0x98, (byte)0xc5, (byte)0xa8,
-        0x02, (byte)0xc1, (byte)0xf6, (byte)0xc0, 0x1a, (byte)0xbe, 0x08,
-        0x04, (byte)0x86, (byte)0x99, 0x3e, (byte)0xf1,
+        0xa4, 0xc3, 0x50, 0x02, 0x98, 0xc5, 0xa8,
+        0x02, 0xc1, 0xf6, 0xc0, 0x1a, 0xbe, 0x08,
+        0x04, 0x86, 0x99, 0x3e, 0xf1,
       });
             AddSubCompare(o1, o2);
         }
@@ -1630,7 +1630,7 @@ namespace Test
         public void TestDecimalFrac()
         {
             CBORObject obj = CBORTestCommon.FromBytesTestAB(
-                new byte[] { (byte)0xc4, (byte)0x82, 0x3, 0x1a, 1, 2, 3, 4 });
+                new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
             try
             {
                 Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
@@ -1646,8 +1646,8 @@ namespace Test
         public void TestDecimalFracExactlyTwoElements()
         {
             CBORObject obj = CBORTestCommon.FromBytesTestAB(new byte[] {
-        (byte)0xc4, (byte)0x81,
-        (byte)0xc2, 0x41,
+        0xc4, 0x81,
+        0xc2, 0x41,
         1,
       });
             try
@@ -1670,9 +1670,9 @@ namespace Test
         public void TestDecimalFracExponentMustNotBeBignum()
         {
             CBORObject obj = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82,
-        (byte)0xc2, 0x41, 1,
+        0xc4,
+        0x82,
+        0xc2, 0x41, 1,
         0x1a,
         1, 2, 3, 4,
       });
@@ -1696,9 +1696,9 @@ namespace Test
         public void TestBigFloatExponentMustNotBeBignum()
         {
             CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82,
-        (byte)0xc2, 0x41, 1,
+        0xc5,
+        0x82,
+        0xc2, 0x41, 1,
         0x1a,
         1, 2, 3, 4,
       });
@@ -1722,7 +1722,7 @@ namespace Test
         public void TestDecimalFracMantissaMayBeBignum()
         {
             CBORObject o = CBORTestCommon.FromBytesTestAB(
-                new byte[] { (byte)0xc4, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
+                new byte[] { 0xc4, 0x82, 0x3, 0xc2, 0x41, 1 });
             Assert.AreEqual(
               EDecimal.FromString("1e3"),
               o.ToObject(typeof(EDecimal)));
@@ -1732,7 +1732,7 @@ namespace Test
         public void TestBigFloatFracMantissaMayBeBignum()
         {
             CBORObject o = CBORTestCommon.FromBytesTestAB(
-                new byte[] { (byte)0xc5, (byte)0x82, 0x3, (byte)0xc2, 0x41, 1 });
+                new byte[] { 0xc5, 0x82, 0x3, 0xc2, 0x41, 1 });
             {
                 long numberTemp = EFloat.FromString("8").CompareTo(
                     (EFloat)o.ToObject(typeof(EFloat)));
@@ -1860,17 +1860,17 @@ namespace Test
             // for all these test cases
             CBORObject obj;
             obj = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4, (byte)0x82,
-        0x3a, 0x00, 0x1c, 0x2d, 0x0d, 0x1a, 0x13, 0x6c, (byte)0xa1,
-        (byte)0x97,
+        0xc4, 0x82,
+        0x3a, 0x00, 0x1c, 0x2d, 0x0d, 0x1a, 0x13, 0x6c, 0xa1,
+        0x97,
       });
             CBORTestCommon.AssertRoundTrip(obj);
             obj = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xda, 0x00, 0x14,
-        0x57, (byte)0xce, (byte)0xc5, (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
-        (byte)0x87, (byte)0xc3, 0x50, 0x5e, (byte)0xec, (byte)0xfd, 0x73,
-        0x50, 0x64, (byte)0xa1, 0x1f, 0x10, (byte)0xc4, (byte)0xff,
-        (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65, 0x12,
+        0xda, 0x00, 0x14,
+        0x57, 0xce, 0xc5, 0x82, 0x1a, 0x46, 0x5a, 0x37,
+        0x87, 0xc3, 0x50, 0x5e, 0xec, 0xfd, 0x73,
+        0x50, 0x64, 0xa1, 0x1f, 0x10, 0xc4, 0xff,
+        0xf2, 0xc4, 0xc9, 0x65, 0x12,
       });
             CBORTestCommon.AssertRoundTrip(obj);
         }
@@ -1920,25 +1920,25 @@ namespace Test
         public void TestHalfPrecision()
         {
             CBORObject o = CBORObject.DecodeFromBytes(
-                new byte[] { (byte)0xf9, 0x7c, 0x00 });
+                new byte[] { 0xf9, 0x7c, 0x00 });
             if (o.AsSingle() != Single.PositiveInfinity)
             {
                 Assert.Fail();
             }
             o = CBORObject.DecodeFromBytes(
-                new byte[] { (byte)0xf9, 0x00, 0x00 });
+                new byte[] { 0xf9, 0x00, 0x00 });
             if (o.AsSingle() != 0f)
             {
                 Assert.Fail();
             }
             o = CBORObject.DecodeFromBytes(
-                new byte[] { (byte)0xf9, (byte)0xfc, 0x00 });
+                new byte[] { 0xf9, 0xfc, 0x00 });
             if (o.AsSingle() != Single.NegativeInfinity)
             {
                 Assert.Fail();
             }
             o = CBORObject.DecodeFromBytes(
-                new byte[] { (byte)0xf9, 0x7e, 0x00 });
+                new byte[] { 0xf9, 0x7e, 0x00 });
             Assert.IsTrue(Single.IsNaN(o.AsSingle()));
         }
 
@@ -2032,9 +2032,9 @@ namespace Test
         public void TestRoundTripNaN()
         {
             long doublennan = unchecked((long)0xfff8000000000000L);
-            long doublepnan = unchecked((long)0x7ff8000000000000L);
+            long doublepnan = unchecked(0x7ff8000000000000L);
             int singlennan = unchecked((int)0xffc00000);
-            int singlepnan = unchecked((int)0x7fc00000);
+            int singlepnan = unchecked(0x7fc00000);
             var halfnnan = 0xfe00;
             var halfpnan = 0x7e00;
             {
@@ -2100,7 +2100,7 @@ namespace Test
             Assert.AreEqual(String.Empty, o[5].AsString());
             o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
             double actual = o[0].AsDouble();
-            Assert.AreEqual((double)1.5, actual);
+            Assert.AreEqual(1.5, actual);
             using (var ms2a = new Test.DelayingStream(new byte[] { }))
             {
                 try
@@ -2308,8 +2308,8 @@ namespace Test
             }
             Assert.AreEqual(0, CBORObject.True.Count);
             cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xbf, 0x61, 0x61, 2,
-        0x61, 0x62, 4, (byte)0xff,
+        0xbf, 0x61, 0x61, 2,
+        0x61, 0x62, 4, 0xff,
       });
             Assert.AreEqual(2, cbor.Count);
             TestCommon.AssertEqualsHashCode(
@@ -2659,7 +2659,7 @@ namespace Test
             var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
             // Shared ref is integer
             bytes = new byte[] {
-        (byte)0x82, (byte)0xd8, 0x1c, 0x00, (byte)0xd8,
+        0x82, 0xd8, 0x1c, 0x00, 0xd8,
         0x1d, 0x00,
       };
             try
@@ -2673,7 +2673,7 @@ namespace Test
             }
             // Shared ref is negative
             bytes = new byte[] {
-        (byte)0x82, (byte)0xd8, 0x1c, 0x00, (byte)0xd8,
+        0x82, 0xd8, 0x1c, 0x00, 0xd8,
         0x1d, 0x20,
       };
             try
@@ -2692,9 +2692,9 @@ namespace Test
             }
             // Shared ref is non-integer
             bytes = new byte[] {
-        (byte)0x82, (byte)0xd8, 0x1c, 0x00, (byte)0xd8,
-        0x1d, (byte)0xc4, (byte)0x82,
-        0x27, 0x19, (byte)0xff, (byte)0xff,
+        0x82, 0xd8, 0x1c, 0x00, 0xd8,
+        0x1d, 0xc4, 0x82,
+        0x27, 0x19, 0xff, 0xff,
       };
             try
             {
@@ -2712,7 +2712,7 @@ namespace Test
             }
             // Shared ref is non-number
             bytes = new byte[] {
-        (byte)0x82, (byte)0xd8, 0x1c, 0x00, (byte)0xd8,
+        0x82, 0xd8, 0x1c, 0x00, 0xd8,
         0x1d, 0x61, 0x41,
       };
             try
@@ -2731,7 +2731,7 @@ namespace Test
             }
             // Shared ref is out of range
             bytes = new byte[] {
-        (byte)0x82, (byte)0xd8, 0x1c, 0x00, (byte)0xd8,
+        0x82, 0xd8, 0x1c, 0x00, 0xd8,
         0x1d, 0x01,
       };
             try
@@ -3002,7 +3002,7 @@ namespace Test
               ToObjectTest.TestToFromObjectRoundTrip(false),
               "false");
             CBORTestCommon.AssertJSONSer(
-              ToObjectTest.TestToFromObjectRoundTrip((object)null),
+              ToObjectTest.TestToFromObjectRoundTrip(null),
               "null");
         }
 
@@ -3138,39 +3138,39 @@ namespace Test
         public void TestRational1()
         {
             var eb1 = new byte[] {
-        (byte)0xd8, 0x1e,
-        (byte)0x82,
-        (byte)0xc2, 0x58, 0x22, 0x24,
-        (byte)0xba, 0x21,
-        (byte)0xf3,
-        (byte)0xa9,
-        (byte)0xfb, 0x1c,
-        (byte)0xde,
-        (byte)0xc5, 0x49,
-        (byte)0xd2, 0x2c,
-        (byte)0x94, 0x27,
-        (byte)0xb1, 0x0d, 0x36,
-        (byte)0xea, 0x1c,
-        (byte)0xcb, 0x5d,
-        (byte)0xe9, 0x13,
-        (byte)0xef,
-        (byte)0xf2, 0x2c,
-        (byte)0xbf,
-        (byte)0xc8,
-        (byte)0xad, 0x42,
-        (byte)0x8a,
-        (byte)0xae, 0x65,
-        (byte)0x85,
-        (byte)0xc2, 0x58, 0x19, 0x74,
-        (byte)0xf5, 0x20, 0x74, 0x43,
-        (byte)0xd4,
-        (byte)0xdf,
-        (byte)0x93, 0x12,
-        (byte)0xc3,
-        (byte)0x89,
-        (byte)0xdd, 0x53, 0x62,
-        (byte)0xdf, 0x5c, 0x66, 0x2f, 0x4d,
-        (byte)0xbd, 0x7e, 0x57, (byte)0xdd, (byte)0x91, 0x6c,
+        0xd8, 0x1e,
+        0x82,
+        0xc2, 0x58, 0x22, 0x24,
+        0xba, 0x21,
+        0xf3,
+        0xa9,
+        0xfb, 0x1c,
+        0xde,
+        0xc5, 0x49,
+        0xd2, 0x2c,
+        0x94, 0x27,
+        0xb1, 0x0d, 0x36,
+        0xea, 0x1c,
+        0xcb, 0x5d,
+        0xe9, 0x13,
+        0xef,
+        0xf2, 0x2c,
+        0xbf,
+        0xc8,
+        0xad, 0x42,
+        0x8a,
+        0xae, 0x65,
+        0x85,
+        0xc2, 0x58, 0x19, 0x74,
+        0xf5, 0x20, 0x74, 0x43,
+        0xd4,
+        0xdf,
+        0x93, 0x12,
+        0xc3,
+        0x89,
+        0xdd, 0x53, 0x62,
+        0xdf, 0x5c, 0x66, 0x2f, 0x4d,
+        0xbd, 0x7e, 0x57, 0xdd, 0x91, 0x6c,
       };
             Console.WriteLine(String.Empty +
               CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
@@ -3181,22 +3181,22 @@ namespace Test
         public void TestRational2()
         {
             var eb1 = new byte[] {
-        (byte)0xd8, 0x1e,
-        (byte)0x82,
-        (byte)0xc2, 0x58, 0x18, 0x2d,
-        (byte)0x8e, 0x6b, 0x70, 0x4e,
-        (byte)0xf2,
-        (byte)0xc9, 0x15,
-        (byte)0xe3, 0x34, 0x5f, 0x7c,
-        (byte)0xbb, 0x07, 0x22,
-        (byte)0xd3, 0x40, 0x37, 0x52,
-        (byte)0xbd, 0x75, 0x3a, 0x4b,
-        (byte)0xe0,
-        (byte)0xc2, 0x51, 0x28, 0x42,
-        (byte)0x81,
-        (byte)0x93, 0x22, 0x6e,
-        (byte)0x94, 0x4d,
-        (byte)0xff, (byte)0xdb, 0x45, (byte)0x97, 0x0c, 0x56, 0x04, (byte)0xe3,
+        0xd8, 0x1e,
+        0x82,
+        0xc2, 0x58, 0x18, 0x2d,
+        0x8e, 0x6b, 0x70, 0x4e,
+        0xf2,
+        0xc9, 0x15,
+        0xe3, 0x34, 0x5f, 0x7c,
+        0xbb, 0x07, 0x22,
+        0xd3, 0x40, 0x37, 0x52,
+        0xbd, 0x75, 0x3a, 0x4b,
+        0xe0,
+        0xc2, 0x51, 0x28, 0x42,
+        0x81,
+        0x93, 0x22, 0x6e,
+        0x94, 0x4d,
+        0xff, 0xdb, 0x45, 0x97, 0x0c, 0x56, 0x04, 0xe3,
         0x21,
       };
             Console.WriteLine(String.Empty +
@@ -3208,20 +3208,20 @@ namespace Test
         public void TestRational3()
         {
             var eb1 = new byte[] {
-        (byte)0xd8, 0x1e,
-        (byte)0x82, 0x1b, 0x00, 0x00, 0x26,
-        (byte)0xbd, 0x75, 0x51,
-        (byte)0x9a, 0x7b,
-        (byte)0xc2, 0x57, 0x0c,
-        (byte)0xb4, 0x04,
-        (byte)0xe3, 0x21,
-        (byte)0xf0,
-        (byte)0xb6, 0x2d,
-        (byte)0xd3, 0x6b,
-        (byte)0xd8, 0x4e,
-        (byte)0xf2,
-        (byte)0xc9, 0x15, (byte)0xe3, 0x34, (byte)0xa2, 0x16, 0x07, 0x07, 0x0d,
-        (byte)0xd3,
+        0xd8, 0x1e,
+        0x82, 0x1b, 0x00, 0x00, 0x26,
+        0xbd, 0x75, 0x51,
+        0x9a, 0x7b,
+        0xc2, 0x57, 0x0c,
+        0xb4, 0x04,
+        0xe3, 0x21,
+        0xf0,
+        0xb6, 0x2d,
+        0xd3, 0x6b,
+        0xd8, 0x4e,
+        0xf2,
+        0xc9, 0x15, 0xe3, 0x34, 0xa2, 0x16, 0x07, 0x07, 0x0d,
+        0xd3,
       };
             Console.WriteLine(String.Empty +
               CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
@@ -3233,55 +3233,55 @@ namespace Test
         public void TestAsNumberAddSubtractSpecific()
         {
             var eb1 = new byte[] {
-        (byte)0xd9, 0x01, 0x08,
-        (byte)0x82,
-        (byte)0xc3, 0x57, 0x0f,
-        (byte)0xf2,
-        (byte)0xa2,
-        (byte)0x97, 0x0b,
-        (byte)0xee,
-        (byte)0xa8,
-        (byte)0x9c,
-        (byte)0xa1, 0x3f, 0x7b, 0x22, 0x5f,
-        (byte)0x82, 0x4f,
-        (byte)0xfa, 0x3d,
-        (byte)0xaa,
-        (byte)0xfc, 0x27, 0x64,
-        (byte)0xf0, 0x2f,
-        (byte)0xc2, 0x58, 0x19, 0x16, 0x01,
-        (byte)0xe6, 0x6a, 0x7f,
-        (byte)0xe4,
-        (byte)0x90,
-        (byte)0x9e, 0x28, 0x33, 0x1d,
-        (byte)0x87,
-        (byte)0xcd, 0x1e, 0x37,
-        (byte)0xdb, 0x5d,
-        (byte)0xd1, (byte)0xc2, (byte)0xc9, 0x40, (byte)0xa6, 0x1b,
-        (byte)0xb5, (byte)0x87,
+        0xd9, 0x01, 0x08,
+        0x82,
+        0xc3, 0x57, 0x0f,
+        0xf2,
+        0xa2,
+        0x97, 0x0b,
+        0xee,
+        0xa8,
+        0x9c,
+        0xa1, 0x3f, 0x7b, 0x22, 0x5f,
+        0x82, 0x4f,
+        0xfa, 0x3d,
+        0xaa,
+        0xfc, 0x27, 0x64,
+        0xf0, 0x2f,
+        0xc2, 0x58, 0x19, 0x16, 0x01,
+        0xe6, 0x6a, 0x7f,
+        0xe4,
+        0x90,
+        0x9e, 0x28, 0x33, 0x1d,
+        0x87,
+        0xcd, 0x1e, 0x37,
+        0xdb, 0x5d,
+        0xd1, 0xc2, 0xc9, 0x40, 0xa6, 0x1b,
+        0xb5, 0x87,
       };
             var eb2 = new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x18,
-        (byte)0xbe,
-        (byte)0xc2, 0x58, 0x26, 0x06, 0x5d, 0x42,
-        (byte)0xc3,
-        (byte)0x88,
-        (byte)0xbe,
-        (byte)0x86,
-        (byte)0xbe, 0x15,
-        (byte)0x9f,
-        (byte)0x99,
-        (byte)0x81,
-        (byte)0x96,
-        (byte)0xa6,
-        (byte)0xac, 0x4b, 0x37,
-        (byte)0xb4, 0x43,
-        (byte)0xf8, 0x17, 0x6d, 0x7e, 0x10, 0x38,
-        (byte)0xda, 0x65,
-        (byte)0x90,
-        (byte)0xa9,
-        (byte)0x80, (byte)0xef, (byte)0xa3, 0x65, (byte)0xca, 0x7d, 0x4f,
-        (byte)0xa8, 0x27,
+        0xc5,
+        0x82, 0x18,
+        0xbe,
+        0xc2, 0x58, 0x26, 0x06, 0x5d, 0x42,
+        0xc3,
+        0x88,
+        0xbe,
+        0x86,
+        0xbe, 0x15,
+        0x9f,
+        0x99,
+        0x81,
+        0x96,
+        0xa6,
+        0xac, 0x4b, 0x37,
+        0xb4, 0x43,
+        0xf8, 0x17, 0x6d, 0x7e, 0x10, 0x38,
+        0xda, 0x65,
+        0x90,
+        0xa9,
+        0x80, 0xef, 0xa3, 0x65, 0xca, 0x7d, 0x4f,
+        0xa8, 0x27,
       };
             CBORObject cbor1 = CBORObject.DecodeFromBytes(eb1);
             CBORObject cbor2 = CBORObject.DecodeFromBytes(eb2);
@@ -3297,14 +3297,14 @@ namespace Test
         public void TestAsNumberAddSubtractSpecific2()
         {
             var eb1 = new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x6e, 0x1c, 0x51, 0x6c, 0x6e,
-        (byte)0xc3, 0x4f, 0x7c, 0x0f, 0x6e, 0x1d,
-        (byte)0x89, 0x26,
-        (byte)0x8d, 0x57, (byte)0xec, 0x00, 0x54, (byte)0xb9, 0x51,
-        (byte)0xae, 0x43,
+        0xc4,
+        0x82, 0x1b, 0x00, 0x00, 0x00, 0x6e, 0x1c, 0x51, 0x6c, 0x6e,
+        0xc3, 0x4f, 0x7c, 0x0f, 0x6e, 0x1d,
+        0x89, 0x26,
+        0x8d, 0x57, 0xec, 0x00, 0x54, 0xb9, 0x51,
+        0xae, 0x43,
       };
-            var eb2 = new byte[] { (byte)0xfa, 0x75, 0x00, 0x57, (byte)0xbe };
+            var eb2 = new byte[] { 0xfa, 0x75, 0x00, 0x57, 0xbe };
             CBORObject cbor1 = CBORObject.DecodeFromBytes(eb1);
             CBORObject cbor2 = CBORObject.DecodeFromBytes(eb2);
             EDecimal ed1 = AsED(cbor1);
@@ -3453,10 +3453,10 @@ namespace Test
         public void TestAsNumberMultiplyDivide()
         {
             var bo1 = new byte[] {
-        0x1b, 0x75, (byte)0xdd, (byte)0xb0,
-        (byte)0xcc, 0x50, (byte)0x9b, (byte)0xd0, 0x2b,
+        0x1b, 0x75, 0xdd, 0xb0,
+        0xcc, 0x50, 0x9b, 0xd0, 0x2b,
       };
-            var bo2 = new byte[] { (byte)0xc5, (byte)0x82, 0x23, 0x00 };
+            var bo2 = new byte[] { 0xc5, 0x82, 0x23, 0x00 };
             CBORObject cbor1 = CBORObject.DecodeFromBytes(bo1);
             CBORObject cbor2 = CBORObject.DecodeFromBytes(bo2);
             TestAsNumberMultiplyDivideOne(cbor1, cbor2);
@@ -3722,7 +3722,7 @@ namespace Test
         {
             for (var i = 0; i <= 0x1f; ++i)
             {
-                var bytes = new byte[] { (byte)0xf8, (byte)i };
+                var bytes = new byte[] { 0xf8, (byte)i };
                 try
                 {
                     CBORObject.DecodeFromBytes(bytes);
@@ -3855,7 +3855,7 @@ namespace Test
                     Assert.Fail(ex.ToString());
                     throw new InvalidOperationException(String.Empty, ex);
                 }
-                bytes = new byte[] { (byte)(0x19 + eb), 0, (byte)0xff };
+                bytes = new byte[] { (byte)(0x19 + eb), 0, 0xff };
                 try
                 {
                     CBORObject.DecodeFromBytes(bytes, options);
@@ -3880,7 +3880,7 @@ namespace Test
                     Assert.Fail(ex.ToString());
                     throw new InvalidOperationException(String.Empty, ex);
                 }
-                bytes = new byte[] { (byte)(0x1a + eb), 0, 0, (byte)0xff, (byte)0xff };
+                bytes = new byte[] { (byte)(0x1a + eb), 0, 0, 0xff, 0xff };
                 try
                 {
                     CBORObject.DecodeFromBytes(bytes, options);
@@ -3906,8 +3906,8 @@ namespace Test
                     throw new InvalidOperationException(String.Empty, ex);
                 }
                 bytes = new byte[] {
-          (byte)(0x1b + eb), 0, 0, 0, 0, (byte)0xff,
-          (byte)0xff, (byte)0xff, (byte)0xff,
+          (byte)(0x1b + eb), 0, 0, 0, 0, 0xff,
+          0xff, 0xff, 0xff,
         };
                 try
                 {
@@ -4008,7 +4008,7 @@ namespace Test
                     throw new InvalidOperationException(String.Empty, ex);
                 }
             }
-            bytes = new byte[] { (byte)0xc0, 0 };
+            bytes = new byte[] { 0xc0, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4023,7 +4023,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xd7, 0 };
+            bytes = new byte[] { 0xd7, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4038,7 +4038,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xd8, (byte)0xff, 0 };
+            bytes = new byte[] { 0xd8, 0xff, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4053,7 +4053,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xd9, (byte)0xff, (byte)0xff, 0 };
+            bytes = new byte[] { 0xd9, 0xff, 0xff, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4069,8 +4069,8 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             bytes = new byte[] {
-        (byte)0xda, (byte)0xff, (byte)0xff, (byte)0xff,
-        (byte)0xff, 0,
+        0xda, 0xff, 0xff, 0xff,
+        0xff, 0,
       };
             try
             {
@@ -4087,9 +4087,9 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             bytes = new byte[] {
-        (byte)0xdb, (byte)0xff, (byte)0xff, (byte)0xff,
-        (byte)0xff, (byte)0xff, (byte)0xff, (byte)0xff,
-        (byte)0xff, 0,
+        0xdb, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff,
+        0xff, 0,
       };
             try
             {
@@ -4106,7 +4106,7 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             // Nesting depth
-            bytes = new byte[] { (byte)0x81, (byte)0x81, (byte)0x81, (byte)0x80 };
+            bytes = new byte[] { 0x81, 0x81, 0x81, 0x80 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4116,7 +4116,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0x81, (byte)0x81, (byte)0x81, (byte)0x81, 0 };
+            bytes = new byte[] { 0x81, 0x81, 0x81, 0x81, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4127,7 +4127,7 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             bytes = new byte[] {
-        (byte)0x81, (byte)0x81, (byte)0x81, (byte)0xa1,
+        0x81, 0x81, 0x81, 0xa1,
         0, 0,
       };
             try
@@ -4140,8 +4140,8 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             bytes = new byte[] {
-        (byte)0x81, (byte)0x81, (byte)0x81, (byte)0x81,
-        (byte)0x80,
+        0x81, 0x81, 0x81, 0x81,
+        0x80,
       };
             try
             {
@@ -4158,7 +4158,7 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             bytes = new byte[] {
-        (byte)0x81, (byte)0x81, (byte)0x81, (byte)0xa1,
+        0x81, 0x81, 0x81, 0xa1,
         0, 0,
       };
             try
@@ -4171,12 +4171,12 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             bytes = new byte[] {
-        (byte)0x81, (byte)0x81, (byte)0x81, (byte)0x81,
-        (byte)0xa0,
+        0x81, 0x81, 0x81, 0x81,
+        0xa0,
       };
             TestFailingDecode(bytes, options);
             // Floating Point Numbers
-            bytes = new byte[] { (byte)0xf9, 8, 8 };
+            bytes = new byte[] { 0xf9, 8, 8 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4186,7 +4186,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xfa, 8, 8, 8, 8 };
+            bytes = new byte[] { 0xfa, 8, 8, 8, 8 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4196,7 +4196,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xfb, 8, 8, 8, 8, 8, 8, 8, 8 };
+            bytes = new byte[] { 0xfb, 8, 8, 8, 8, 8, 8, 8, 8 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4207,7 +4207,7 @@ namespace Test
                 throw new InvalidOperationException(String.Empty, ex);
             }
             // Map Key Ordering
-            bytes = new byte[] { (byte)0xa2, 0, 0, 1, 0 };
+            bytes = new byte[] { 0xa2, 0, 0, 1, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4217,9 +4217,9 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xa2, 1, 0, 0, 0 };
+            bytes = new byte[] { 0xa2, 1, 0, 0, 0 };
             TestFailingDecode(bytes, options);
-            bytes = new byte[] { (byte)0xa2, 0, 0, 0x20, 0 };
+            bytes = new byte[] { 0xa2, 0, 0, 0x20, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4229,9 +4229,9 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xa2, 0x20, 0, 0, 0 };
+            bytes = new byte[] { 0xa2, 0x20, 0, 0, 0 };
             TestFailingDecode(bytes, options);
-            bytes = new byte[] { (byte)0xa2, 0, 0, 0x38, (byte)0xff, 0 };
+            bytes = new byte[] { 0xa2, 0, 0, 0x38, 0xff, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4241,9 +4241,9 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xa2, 0x38, (byte)0xff, 0, 0, 0 };
+            bytes = new byte[] { 0xa2, 0x38, 0xff, 0, 0, 0 };
             TestFailingDecode(bytes, options);
-            bytes = new byte[] { (byte)0xa2, 0x41, (byte)0xff, 0, 0x42, 0, 0, 0 };
+            bytes = new byte[] { 0xa2, 0x41, 0xff, 0, 0x42, 0, 0, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4253,9 +4253,9 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xa2, 0x42, 0, 0, 0, 0x41, (byte)0xff, 0 };
+            bytes = new byte[] { 0xa2, 0x42, 0, 0, 0, 0x41, 0xff, 0 };
             TestFailingDecode(bytes, options);
-            bytes = new byte[] { (byte)0xa2, 0x61, 0x7f, 0, 0x62, 0, 0, 0 };
+            bytes = new byte[] { 0xa2, 0x61, 0x7f, 0, 0x62, 0, 0, 0 };
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -4265,7 +4265,7 @@ namespace Test
                 Assert.Fail(ex.ToString());
                 throw new InvalidOperationException(String.Empty, ex);
             }
-            bytes = new byte[] { (byte)0xa2, 0x62, 0, 0, 0, 0x61, 0x7f, 0 };
+            bytes = new byte[] { 0xa2, 0x62, 0, 0, 0, 0x61, 0x7f, 0 };
             TestFailingDecode(bytes, options);
         }
 
@@ -4883,16 +4883,16 @@ namespace Test
             CBORObject cbor;
             // Tag 264
             cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xd9, 0x01, 0x08,
-        (byte)0x82,
-        (byte)0xc2, 0x42, 2, 2, (byte)0xc2, 0x42, 2, 2,
+        0xd9, 0x01, 0x08,
+        0x82,
+        0xc2, 0x42, 2, 2, 0xc2, 0x42, 2, 2,
       });
             CBORTestCommon.AssertRoundTrip(cbor);
             // Tag 265
             cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xd9, 0x01, 0x09,
-        (byte)0x82,
-        (byte)0xc2, 0x42, 2, 2, (byte)0xc2, 0x42, 2, 2,
+        0xd9, 0x01, 0x09,
+        0x82,
+        0xc2, 0x42, 2, 2, 0xc2, 0x42, 2, 2,
       });
             CBORTestCommon.AssertRoundTrip(cbor);
         }
@@ -4900,14 +4900,14 @@ namespace Test
         [Test]
         public void TestTagThenBreak()
         {
-            TestFailingDecode(new byte[] { (byte)0xd1, (byte)0xff });
+            TestFailingDecode(new byte[] { 0xd1, 0xff });
         }
 
         [Test]
         public void TestTextStringStream()
         {
             CBORObject cbor = CBORTestCommon.FromBytesTestAB(
-                new byte[] { 0x7f, 0x61, 0x2e, 0x61, 0x2e, (byte)0xff });
+                new byte[] { 0x7f, 0x61, 0x2e, 0x61, 0x2e, 0xff });
             {
                 string stringTemp = cbor.AsString();
                 Assert.AreEqual(
@@ -4937,7 +4937,7 @@ namespace Test
         {
             TestFailingDecode(new byte[] {
         0x7f, 0x61, 0x20, 0x7f, 0x61, 0x20,
-        (byte)0xff, (byte)0xff,
+        0xff, 0xff,
       });
         }
 
@@ -4947,8 +4947,8 @@ namespace Test
             CBORObject cbor;
             // 0 versus 0.0
             cbor = CBORObject.NewMap();
-            cbor.Set((int)0, CBORObject.FromObject("testzero"));
-            cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
+            cbor.Set(0, CBORObject.FromObject("testzero"));
+            cbor.Set(0.0, CBORObject.FromObject("testpointzero"));
             Assert.AreEqual(2, cbor.Count);
             {
                 string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
@@ -4964,8 +4964,8 @@ namespace Test
                   stringTemp);
             }
             cbor = CBORObject.NewMap();
-            cbor.Set((double)0.0, CBORObject.FromObject("testpointzero"));
-            cbor.Set((int)0, CBORObject.FromObject("testzero"));
+            cbor.Set(0.0, CBORObject.FromObject("testpointzero"));
+            cbor.Set(0, CBORObject.FromObject("testzero"));
             Assert.AreEqual(2, cbor.Count);
             {
                 string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
@@ -4982,8 +4982,8 @@ namespace Test
             }
             // 3 versus 3.0
             cbor = CBORObject.NewMap();
-            cbor.Set((int)3, CBORObject.FromObject("testzero"));
-            cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
+            cbor.Set(3, CBORObject.FromObject("testzero"));
+            cbor.Set(3.0, CBORObject.FromObject("testpointzero"));
             Assert.AreEqual(2, cbor.Count);
             {
                 string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
@@ -4999,8 +4999,8 @@ namespace Test
                   stringTemp);
             }
             cbor = CBORObject.NewMap();
-            cbor.Set((double)3.0, CBORObject.FromObject("testpointzero"));
-            cbor.Set((int)3, CBORObject.FromObject("testzero"));
+            cbor.Set(3.0, CBORObject.FromObject("testpointzero"));
+            cbor.Set(3, CBORObject.FromObject("testzero"));
             Assert.AreEqual(2, cbor.Count);
             {
                 string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
@@ -5249,20 +5249,20 @@ namespace Test
         public void TestCtap2CanonicalDecodeEncodeSpecific1()
         {
             var bytes = new byte[] {
-        (byte)0xa2, (byte)0x82, (byte)0xf6,
-        (byte)0x82,
-        (byte)0xfb, 0x3c,
-        (byte)0xf0, 0x03, 0x42,
-        (byte)0xcb, 0x54, 0x6c,
-        (byte)0x85,
-        (byte)0x82,
-        (byte)0xc5,
-        (byte)0x82, 0x18,
-        (byte)0xba, 0x0a,
-        (byte)0xfa,
-        (byte)0x84,
-        (byte)0xa0, 0x57,
-        (byte)0x97, 0x42, 0x00, 0x01, 0x65, 0x62, 0x7d, 0x45, 0x20, 0x6c, 0x41,
+        0xa2, 0x82, 0xf6,
+        0x82,
+        0xfb, 0x3c,
+        0xf0, 0x03, 0x42,
+        0xcb, 0x54, 0x6c,
+        0x85,
+        0x82,
+        0xc5,
+        0x82, 0x18,
+        0xba, 0x0a,
+        0xfa,
+        0x84,
+        0xa0, 0x57,
+        0x97, 0x42, 0x00, 0x01, 0x65, 0x62, 0x7d, 0x45, 0x20, 0x6c, 0x41,
         0x00,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
@@ -5317,12 +5317,12 @@ namespace Test
         public void TestCtap2CanonicalDecodeEncodeSpecific2()
         {
             var bytes = new byte[] {
-        (byte)0x82,
-        (byte)0x82,
-        (byte)0xf5,
-        (byte)0x82,
-        (byte)0x81,
-        (byte)0xd8, 0x1e, (byte)0x82, 0x29, 0x01, (byte)0x80, 0x43, 0x01, 0x01,
+        0x82,
+        0x82,
+        0xf5,
+        0x82,
+        0x81,
+        0xd8, 0x1e, 0x82, 0x29, 0x01, 0x80, 0x43, 0x01, 0x01,
         0x00,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
@@ -5377,16 +5377,16 @@ namespace Test
         public void TestCtap2CanonicalDecodeEncodeSpecific3()
         {
             var bytes = new byte[] {
-        (byte)0x82,
-        (byte)0xfa,
-        (byte)0xe0,
-        (byte)0xa0,
-        (byte)0x9d,
-        (byte)0xba,
-        (byte)0x82,
-        (byte)0x82,
-        (byte)0xf7, (byte)0xa2, (byte)0xa0, (byte)0xf7, 0x60, 0x41, 0x00,
-        (byte)0xf4,
+        0x82,
+        0xfa,
+        0xe0,
+        0xa0,
+        0x9d,
+        0xba,
+        0x82,
+        0x82,
+        0xf7, 0xa2, 0xa0, 0xf7, 0x60, 0x41, 0x00,
+        0xf4,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
             var options = new CBOREncodeOptions("ctap2canonical=true");
@@ -5440,11 +5440,11 @@ namespace Test
         public void TestCtap2CanonicalDecodeEncodeSpecific4()
         {
             var bytes = new byte[] {
-        (byte)0x81,
-        (byte)0x82,
-        (byte)0xda, 0x00, 0x0d, 0x77, 0x09,
-        (byte)0xf4, (byte)0x82, (byte)0x82, (byte)0xf4, (byte)0xa0,
-        (byte)0xf6,
+        0x81,
+        0x82,
+        0xda, 0x00, 0x0d, 0x77, 0x09,
+        0xf4, 0x82, 0x82, 0xf4, 0xa0,
+        0xf6,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
             var options = new CBOREncodeOptions("ctap2canonical=true");
@@ -5498,9 +5498,9 @@ namespace Test
         public void TestCtap2CanonicalDecodeEncodeSpecific5()
         {
             var bytes = new byte[] {
-        (byte)0xa2,
-        (byte)0xda, 0x00, 0x03, 0x69,
-        (byte)0x95, (byte)0xf6, (byte)0xf7, (byte)0xf6, (byte)0xf4,
+        0xa2,
+        0xda, 0x00, 0x03, 0x69,
+        0x95, 0xf6, 0xf7, 0xf6, 0xf4,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
             var options = new CBOREncodeOptions("ctap2canonical=true");
@@ -5616,7 +5616,7 @@ namespace Test
             {
                 CBORTestCommon.FromBytesTestAB(new byte[] {
           0x7f, 0x61, 0x20,
-          (byte)0xc0, 0x61, 0x20, (byte)0xff,
+          0xc0, 0x61, 0x20, 0xff,
         });
                 Assert.Fail("Should have failed");
             }

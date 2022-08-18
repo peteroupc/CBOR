@@ -244,10 +244,10 @@ namespace Test
         {
             Assert.AreEqual(
               CBORObject.Null,
-              ToObjectTest.TestToFromObjectRoundTrip((byte[])null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
             Assert.AreEqual(
               CBORObject.Null,
-              ToObjectTest.TestToFromObjectRoundTrip((CBORObject[])null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
             Assert.AreEqual(
               CBORObject.True,
               ToObjectTest.TestToFromObjectRoundTrip(true));
@@ -514,12 +514,12 @@ namespace Test
                         for (var i = 0; i < 2000; ++i)
                         {
                             // Write beginning of indefinite-length array
-                            ms.WriteByte((byte)0x9f);
+                            ms.WriteByte(0x9f);
                         }
                         for (var i = 0; i < 2000; ++i)
                         {
                             // Write end of indefinite-length array
-                            ms.WriteByte((byte)0xff);
+                            ms.WriteByte(0xff);
                         }
                         // Assert throwing CBOR exception for reaching maximum
                         // nesting depth
@@ -545,12 +545,12 @@ namespace Test
                         for (var i = 0; i < 495; ++i)
                         {
                             // Write beginning of indefinite-length array
-                            ms.WriteByte((byte)0x9f);
+                            ms.WriteByte(0x9f);
                         }
                         for (var i = 0; i < 495; ++i)
                         {
                             // Write end of indefinite-length array
-                            ms.WriteByte((byte)0xff);
+                            ms.WriteByte(0xff);
                         }
                         // Maximum nesting depth not reached, so shouldn't throw
                         try

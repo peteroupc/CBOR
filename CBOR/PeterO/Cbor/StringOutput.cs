@@ -35,7 +35,7 @@ namespace PeterO.Cbor
             {
                 if (str.Length == 1)
                 {
-                    this.WriteCodePoint((int)str[0]);
+                    this.WriteCodePoint(str[0]);
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace PeterO.Cbor
             {
                 if (length == 1)
                 {
-                    this.WriteCodePoint((int)str[index]);
+                    this.WriteCodePoint(str[index]);
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace PeterO.Cbor
                 for (var i = 0; i < length; ++i)
                 {
                     byte b = bytes[i + index];
-                    if ((((int)b) & 0x7f) != b)
+                    if ((b & 0x7f) != b)
                     {
                         throw new ArgumentException("str is non-ASCII");
                     }

@@ -33,7 +33,7 @@ namespace PeterO.Cbor
         public CBORObject ToCBORObject(Guid obj)
         {
             byte[] bytes = PropertyMap.UUIDToBytes(obj);
-            return CBORObject.FromObjectAndTag(bytes, (int)37);
+            return CBORObject.FromObjectAndTag(bytes, 37);
         }
 
         public Guid FromCBORObject(CBORObject obj)
@@ -53,8 +53,8 @@ namespace PeterO.Cbor
                 {
                     guidChars[index++] = '-';
                 }
-                guidChars[index++] = hex[(int)(bytes[i] >> 4) & 15];
-                guidChars[index++] = hex[(int)bytes[i] & 15];
+                guidChars[index++] = hex[bytes[i] >> 4 & 15];
+                guidChars[index++] = hex[bytes[i] & 15];
             }
             string guidString = new String(guidChars);
             return new Guid(guidString);

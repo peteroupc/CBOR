@@ -601,7 +601,7 @@ namespace PeterO
                 case 256:
                     {
                         this.valueIrg.GetBytes(b, 0, 1);
-                        return (int)b[0] & 1;
+                        return b[0] & 1;
                     }
                 default:
                     {

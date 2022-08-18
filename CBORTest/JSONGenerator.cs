@@ -54,8 +54,8 @@ namespace Test
     };
 
         private static int[] valueEscapes = {
-      (int)'\\', (int)'/', (int)'\"',
-      (int)'b', (int)'f', (int)'n', (int)'r', (int)'t', (int)'u',
+      '\\', '/', '\"',
+      'b', 'f', 'n', 'r', 't', 'u',
     };
 
         private static char[] valueEscapeChars = {
@@ -103,8 +103,8 @@ namespace Test
                 {
                     sb.Append((char)rc);
                 }
-                bs.Write((int)'\\');
-                bs.Write((int)'u');
+                bs.Write('\\');
+                bs.Write('u');
                 rc = ((r - 0x10000) & 0x3ff) | 0xdc00;
                 GenerateCodeUnit(ra, bs, rc);
                 if (sb != null)
@@ -147,7 +147,7 @@ namespace Test
         {
             if (ra.GetInt32(2) == 0)
             {
-                bs.Write((int)'-');
+                bs.Write('-');
             }
             bool shortLen = ra.GetInt32(100) < 75;
             var len = 0;
@@ -183,15 +183,15 @@ namespace Test
                 int rr = ra.GetInt32(3);
                 if (rr == 0)
                 {
-                    bs.Write((int)'E');
+                    bs.Write('E');
                 }
                 else if (rr == 1)
                 {
-                    bs.Write((int)'E').Write((int)'+');
+                    bs.Write('E').Write('+');
                 }
                 else if (rr == 2)
                 {
-                    bs.Write((int)'E').Write((int)'-');
+                    bs.Write('E').Write('-');
                 }
                 len = 1 + ra.GetInt32(5);
                 if (ra.GetInt32(10) == 0)
@@ -289,14 +289,14 @@ namespace Test
                     if (r > 2)
                     {
                         int x = 0x20 + ra.GetInt32(60);
-                        if (x == (int)'\"')
+                        if (x == '\"')
                         {
-                            bs.Write((int)'\\').Write(x);
+                            bs.Write('\\').Write(x);
                             sb.Append('\"');
                         }
-                        else if (x == (int)'\\')
+                        else if (x == '\\')
                         {
-                            bs.Write((int)'\\').Write(x);
+                            bs.Write('\\').Write(x);
                             sb.Append('\\');
                         }
                         else
@@ -308,11 +308,11 @@ namespace Test
                     }
                     else if (r == 1)
                     {
-                        bs.Write((int)'\\');
+                        bs.Write('\\');
                         int escindex = ra.GetInt32(valueEscapes.Length);
                         int esc = valueEscapes[escindex];
-                        bs.Write((int)esc);
-                        if (esc == (int)'u')
+                        bs.Write(esc);
+                        if (esc == 'u')
                         {
                             GenerateUtf16(ra, bs, sb);
                         }
@@ -334,7 +334,7 @@ namespace Test
                     byte[] bytes = bs.ToBytes();
                     for (int i = 0; i < bytes.Length; ++i)
                     {
-                        bskey.Write(((int)bytes[i]) & 0xff);
+                        bskey.Write(bytes[i] & 0xff);
                     }
                     return;
                 }
@@ -361,13 +361,13 @@ namespace Test
                 if (r > 2)
                 {
                     int x = 0x20 + ra.GetInt32(60);
-                    if (x == (int)'\"')
+                    if (x == '\"')
                     {
-                        bs.Write((int)'\\').Write(x);
+                        bs.Write('\\').Write(x);
                     }
-                    else if (x == (int)'\\')
+                    else if (x == '\\')
                     {
-                        bs.Write((int)'\\').Write(x);
+                        bs.Write('\\').Write(x);
                     }
                     else
                     {
@@ -377,10 +377,10 @@ namespace Test
                 }
                 else if (r == 1)
                 {
-                    bs.Write((int)'\\');
+                    bs.Write('\\');
                     int esc = valueEscapes[ra.GetInt32(valueEscapes.Length)];
-                    bs.Write((int)esc);
-                    if (esc == (int)'u')
+                    bs.Write(esc);
+                    if (esc == 'u')
                     {
                         GenerateUtf16(ra, bs, null);
                     }
@@ -415,18 +415,18 @@ namespace Test
                 switch (r.GetInt32(3))
                 {
                     case 0:
-                        bs.Write((int)'t').Write((int)'r').Write((int)'u').Write(
-                          (int)'e');
+                        bs.Write('t').Write('r').Write('u').Write(
+                          'e');
                         break;
                     case 1:
-                        bs.Write((int)'n').Write((int)'u').Write((int)'l').Write(
-                          (int)'l');
+                        bs.Write('n').Write('u').Write('l').Write(
+                          'l');
                         break;
                     case 2:
 
-                        bs.Write((int)'f').Write((int)'a').Write((int)'l').Write(
-              (int)'s').Write(
-                                (int)'e');
+                        bs.Write('f').Write('a').Write('l').Write(
+              's').Write(
+                                'e');
                         break;
                 }
             }
@@ -448,35 +448,35 @@ namespace Test
                 }
                 if (majorType == 4)
                 {
-                    bs.Write((int)'[');
+                    bs.Write('[');
                     for (int i = 0; i < len; ++i)
                     {
                         if (i > 0)
                         {
-                            bs.Write((int)',');
+                            bs.Write(',');
                         }
                         this.Generate(r, depth + 1, bs);
                     }
-                    bs.Write((int)']');
+                    bs.Write(']');
                 }
                 if (majorType == 5)
                 {
-                    bs.Write((int)'{');
+                    bs.Write('{');
                     var keys = new Dictionary<string, string>();
                     for (int i = 0; i < len; ++i)
                     {
                         if (i > 0)
                         {
-                            bs.Write((int)',');
+                            bs.Write(',');
                         }
                         GenerateWhitespace(r, bs);
                         GenerateJsonKey(r, bs, depth, keys);
                         GenerateWhitespace(r, bs);
-                        bs.Write((int)':');
+                        bs.Write(':');
                         GenerateWhitespace(r, bs);
                         this.Generate(r, depth + 1, bs);
                     }
-                    bs.Write((int)'}');
+                    bs.Write('}');
                 }
             }
             GenerateWhitespace(r, bs);

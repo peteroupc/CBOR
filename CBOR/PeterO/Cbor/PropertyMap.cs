@@ -1722,7 +1722,7 @@ namespace PeterO.Cbor
           CBORTypeMapper.ConverterInfo convinfo,
           CBORObject obj)
         {
-            return (object)PropertyMap.InvokeOneArgumentMethod(
+            return PropertyMap.InvokeOneArgumentMethod(
                 convinfo.FromObject,
                 convinfo.Converter,
                 obj);
@@ -1800,8 +1800,8 @@ namespace PeterO.Cbor
                 dt[2],
                 dt[3],
                 dt[4],
-                DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] /
-                  TicksDivFracSeconds));
+                DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks(dt[5] /
+                  TicksDivFracSeconds);
         }
     }
 }

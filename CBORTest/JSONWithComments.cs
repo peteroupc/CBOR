@@ -57,7 +57,7 @@ namespace Test
             var escaped = false;
             while (true)
             {
-                c = idx < ep ? ((int)js[idx++]) & 0xffff : -1;
+                c = idx < ep ? js[idx++] & 0xffff : -1;
                 if (c == -1 || c < 0x20)
                 {
                     this.index = idx;
@@ -94,7 +94,7 @@ namespace Test
             int c;
             while (true)
             {
-                c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+                c = this.index < this.endPos ? this.jstring[this.index++] &
                   0xffff : -1;
                 if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
                     c == 'e' || c == 'E'))
@@ -168,9 +168,9 @@ namespace Test
                     {
                         // Parse true
                         if (this.endPos - this.index <= 2 ||
-                          (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
-                          (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
-                          (((int)this.jstring[this.index + 2]) & 0xFF) != 'e')
+                          (this.jstring[this.index] & 0xFF) != 'r' ||
+                          (this.jstring[this.index + 1] & 0xFF) != 'u' ||
+                          (this.jstring[this.index + 2] & 0xFF) != 'e')
                         {
                             this.RaiseError("Value can't be parsed.");
                         }
@@ -182,10 +182,10 @@ namespace Test
                     {
                         // Parse false
                         if (this.endPos - this.index <= 3 ||
-                          (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
-                          (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-                          (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
-                          (((int)this.jstring[this.index + 3]) & 0xFF) != 'e')
+                          (this.jstring[this.index] & 0xFF) != 'a' ||
+                          (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+                          (this.jstring[this.index + 2] & 0xFF) != 's' ||
+                          (this.jstring[this.index + 3] & 0xFF) != 'e')
                         {
                             this.RaiseError("Value can't be parsed.");
                         }
@@ -197,9 +197,9 @@ namespace Test
                     {
                         // Parse null
                         if (this.endPos - this.index <= 2 ||
-                          (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
-                          (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-                          (((int)this.jstring[this.index + 2]) & 0xFF) != 'l')
+                          (this.jstring[this.index] & 0xFF) != 'u' ||
+                          (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+                          (this.jstring[this.index + 2] & 0xFF) != 'l')
                         {
                             this.RaiseError("Value can't be parsed.");
                         }

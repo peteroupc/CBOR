@@ -324,7 +324,7 @@ namespace Test
             try
             {
                 ToObjectTest.TestToFromObjectRoundTrip(
-                  (object)null).AsNumber().ToEInteger();
+                  null).AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
             catch (InvalidOperationException)
@@ -505,7 +505,7 @@ namespace Test
                 string stringTemp =
 
                   ToObjectTest.TestToFromObjectRoundTrip(
-                    (float)328323f).AsNumber().ToEInteger().ToString();
+                    328323f).AsNumber().ToEInteger().ToString();
                 Assert.AreEqual(
                   "328323",
                   stringTemp);
@@ -513,7 +513,7 @@ namespace Test
             {
                 string stringTemp =
                   ToObjectTest.TestToFromObjectRoundTrip(
-                    (double)0.75).AsNumber().ToEInteger()
+                    0.75).AsNumber().ToEInteger()
                   .ToString();
                 Assert.AreEqual(
                   "0",
@@ -521,14 +521,14 @@ namespace Test
             }
             {
                 string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-                    (double)0.99).AsNumber().ToEInteger().ToString();
+                    0.99).AsNumber().ToEInteger().ToString();
                 Assert.AreEqual(
                   "0",
                   stringTemp);
             }
             {
                 string stringTemp =
-                  ToObjectTest.TestToFromObjectRoundTrip((double)0.0000000000000001)
+                  ToObjectTest.TestToFromObjectRoundTrip(0.0000000000000001)
                   .AsNumber().ToEInteger().ToString();
                 Assert.AreEqual(
                   "0",
@@ -536,7 +536,7 @@ namespace Test
             }
             {
                 string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-                    (double)0.5).AsNumber().ToEInteger().ToString();
+                    0.5).AsNumber().ToEInteger().ToString();
                 Assert.AreEqual(
                   "0",
                   stringTemp);
@@ -544,7 +544,7 @@ namespace Test
             {
                 string stringTemp =
                   ToObjectTest.TestToFromObjectRoundTrip(
-                    (double)1.5).AsNumber().ToEInteger()
+                    1.5).AsNumber().ToEInteger()
                   .ToString();
                 Assert.AreEqual(
                   "1",
@@ -552,7 +552,7 @@ namespace Test
             }
             {
                 string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-                    (double)2.5).AsNumber().ToEInteger().ToString();
+                    2.5).AsNumber().ToEInteger().ToString();
                 Assert.AreEqual(
                   "2",
                   stringTemp);

@@ -52,7 +52,7 @@ namespace Test
                     index = index2 + delimLength;
                 }
             }
-            return (string[])strings.ToArray();
+            return strings.ToArray();
         }
 
         private static int ToHexNumber(int c)
@@ -299,7 +299,7 @@ namespace Test
                 }
                 ++index; // move to after the start bracket
             }
-            return (string[])path.ToArray();
+            return path.ToArray();
         }
 
         private static readonly string Digits = "0123456789";
@@ -336,13 +336,13 @@ namespace Test
                 while (value > 9)
                 {
                     int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-                    char digit = Digits[(int)(value - (intdivvalue * 10))];
+                    char digit = Digits[value - (intdivvalue * 10)];
                     chars[count--] = digit;
                     value = intdivvalue;
                 }
                 if (value != 0)
                 {
-                    chars[count--] = Digits[(int)value];
+                    chars[count--] = Digits[value];
                 }
                 if (neg)
                 {
@@ -359,20 +359,20 @@ namespace Test
             while (value >= 163840)
             {
                 int intdivvalue = value / 10;
-                char digit = Digits[(int)(value - (intdivvalue * 10))];
+                char digit = Digits[value - (intdivvalue * 10)];
                 chars[count--] = digit;
                 value = intdivvalue;
             }
             while (value > 9)
             {
                 int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-                char digit = Digits[(int)(value - (intdivvalue * 10))];
+                char digit = Digits[value - (intdivvalue * 10)];
                 chars[count--] = digit;
                 value = intdivvalue;
             }
             if (value != 0)
             {
-                chars[count--] = Digits[(int)value];
+                chars[count--] = Digits[value];
             }
             if (neg)
             {

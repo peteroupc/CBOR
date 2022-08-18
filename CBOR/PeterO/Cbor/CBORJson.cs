@@ -452,7 +452,7 @@ namespace PeterO.Cbor
                                 // Leading zero followed by any digit is not allowed
                                 this.RaiseError("JSON number can't be parsed.");
                             }
-                            cval = (cval * 10) + (int)(c - '0');
+                            cval = (cval * 10) + (c - '0');
                             c = this.ReadChar();
                             if (c >= '0' && c <= '9')
                             {
@@ -462,7 +462,7 @@ namespace PeterO.Cbor
                                 ctmp[1] = csecond;
                                 while (digits < 9 && (c >= '0' && c <= '9'))
                                 {
-                                    cval = (cval * 10) + (int)(c - '0');
+                                    cval = (cval * 10) + (c - '0');
                                     ctmp[digits++] = c;
                                     c = this.ReadChar();
                                 }
@@ -714,7 +714,7 @@ namespace PeterO.Cbor
                     }
                 }
             }
-            return (CBORObject[])list.ToArray();
+            return list.ToArray();
         }
 
         private CBORObject ParseJSONObject(int depth)
