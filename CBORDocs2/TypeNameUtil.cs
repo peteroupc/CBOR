@@ -16,8 +16,10 @@ namespace PeterO.DocGen
             else
             {
                 Type nt = t;
-                var types = new List<Type>();
-                types.Add(t);
+                var types = new List<Type>
+                {
+                    t
+                };
                 var sb = new StringBuilder().Append(t.Namespace);
                 while (nt != null && nt.IsNested)
                 {
@@ -69,8 +71,10 @@ namespace PeterO.DocGen
             {
                 sb.Append(t.Namespace);
                 Type nt = t;
-                var types = new List<Type>();
-                types.Add(t);
+                var types = new List<Type>
+                {
+                    t
+                };
                 while (nt != null && nt.IsNested)
                 {
                     types.Add(nt.DeclaringType);

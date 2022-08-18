@@ -520,7 +520,7 @@ namespace PeterO
                 return null;
             }
             var len = str.Length;
-            var c = (char)0;
+            char c;
             var hasUpperCase = false;
             for (var i = 0; i < len; ++i)
             {
@@ -565,7 +565,7 @@ namespace PeterO
                 return null;
             }
             var len = str.Length;
-            var c = (char)0;
+            char c;
             var hasLowerCase = false;
             for (var i = 0; i < len; ++i)
             {

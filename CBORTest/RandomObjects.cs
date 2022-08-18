@@ -33,79 +33,77 @@ namespace Test
           IRandomGenExtended rg,
           bool jsonSafe)
         {
-            using (var ms = new Test.DelayingStream())
+            using var ms = new Test.DelayingStream();
+            if (rg == null)
             {
-                if (rg == null)
+                throw new ArgumentNullException(nameof(rg));
+            }
+            int length = 1 + rg.GetInt32(6);
+            for (var i = 0; i < length; ++i)
+            {
+                int v = rg.GetInt32(4);
+                if (v == 0)
                 {
-                    throw new ArgumentNullException(nameof(rg));
-                }
-                int length = 1 + rg.GetInt32(6);
-                for (var i = 0; i < length; ++i)
-                {
-                    int v = rg.GetInt32(4);
-                    if (v == 0)
+                    int b = 0xe0 + rg.GetInt32(0xee - 0xe1);
+                    ms.WriteByte((byte)b);
+                    if (b == 0xe0)
                     {
-                        int b = 0xe0 + rg.GetInt32(0xee - 0xe1);
-                        ms.WriteByte((byte)b);
-                        if (b == 0xe0)
-                        {
-                            ms.WriteByte((byte)(0xa0 + rg.GetInt32(0x20)));
-                        }
-                        else if (b == 0xed)
-                        {
-                            ms.WriteByte((byte)(0x80 + rg.GetInt32(0x20)));
-                        }
-                        else
-                        {
-                            ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-                        }
-                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+                        ms.WriteByte((byte)(0xa0 + rg.GetInt32(0x20)));
                     }
-                    else if (v == 1)
+                    else if (b == 0xed)
                     {
-                        int b = 0xf0 + rg.GetInt32(0xf5 - 0xf0);
-                        ms.WriteByte((byte)b);
-                        if (b == 0xf0)
-                        {
-                            ms.WriteByte((byte)(0x90 + rg.GetInt32(0x30)));
-                        }
-                        else if (b == 0xf4)
-                        {
-                            ms.WriteByte((byte)(0x80 + rg.GetInt32(0x10)));
-                        }
-                        else
-                        {
-                            ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-                        }
-                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-                    }
-                    else if (v == 2)
-                    {
-                        if (rg.GetInt32(100) < 5)
-                        {
-                            // 0x80, to help detect ASCII off-by-one errors
-                            ms.WriteByte(0xc2);
-                            ms.WriteByte(0x80);
-                        }
-                        else
-                        {
-                            ms.WriteByte((byte)(0xc2 + rg.GetInt32(0xe0 - 0xc2)));
-                            ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
-                        }
+                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x20)));
                     }
                     else
                     {
-                        int ch = rg.GetInt32(0x80);
-                        if (jsonSafe && (ch == '\\' || ch == '\"' || ch < 0x20))
-                        {
-                            ch = '?';
-                        }
-                        ms.WriteByte((byte)ch);
+                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+                    }
+                    ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+                }
+                else if (v == 1)
+                {
+                    int b = 0xf0 + rg.GetInt32(0xf5 - 0xf0);
+                    ms.WriteByte((byte)b);
+                    if (b == 0xf0)
+                    {
+                        ms.WriteByte((byte)(0x90 + rg.GetInt32(0x30)));
+                    }
+                    else if (b == 0xf4)
+                    {
+                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x10)));
+                    }
+                    else
+                    {
+                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+                    }
+                    ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+                    ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
+                }
+                else if (v == 2)
+                {
+                    if (rg.GetInt32(100) < 5)
+                    {
+                        // 0x80, to help detect ASCII off-by-one errors
+                        ms.WriteByte(0xc2);
+                        ms.WriteByte(0x80);
+                    }
+                    else
+                    {
+                        ms.WriteByte((byte)(0xc2 + rg.GetInt32(0xe0 - 0xc2)));
+                        ms.WriteByte((byte)(0x80 + rg.GetInt32(0x40)));
                     }
                 }
-                return ms.ToArray();
+                else
+                {
+                    int ch = rg.GetInt32(0x80);
+                    if (jsonSafe && (ch == '\\' || ch == '\"' || ch < 0x20))
+                    {
+                        ch = '?';
+                    }
+                    ms.WriteByte((byte)ch);
+                }
             }
+            return ms.ToArray();
         }
 
         public static byte[] RandomByteString(IRandomGenExtended rand)

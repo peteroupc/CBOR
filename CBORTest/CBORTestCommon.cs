@@ -469,15 +469,13 @@ namespace Test
 
         private static CBORObject FromBytesB(byte[] b, CBOREncodeOptions options)
         {
-            using (var ms = new Test.DelayingStream(b))
+            using var ms = new Test.DelayingStream(b);
+            CBORObject o = CBORObject.Read(ms, options);
+            if (ms.Position != ms.Length)
             {
-                CBORObject o = CBORObject.Read(ms, options);
-                if (ms.Position != ms.Length)
-                {
-                    throw new CBORException("not at EOF");
-                }
-                return o;
+                throw new CBORException("not at EOF");
             }
+            return o;
         }
 
         // Tests the equivalence of the DecodeFromBytes and Read methods.
@@ -499,15 +497,13 @@ namespace Test
 
         private static CBORObject FromBytesB(byte[] b)
         {
-            using (var ms = new Test.DelayingStream(b))
+            using var ms = new Test.DelayingStream(b);
+            CBORObject o = CBORObject.Read(ms);
+            if (ms.Position != ms.Length)
             {
-                CBORObject o = CBORObject.Read(ms);
-                if (ms.Position != ms.Length)
-                {
-                    throw new CBORException("not at EOF");
-                }
-                return o;
+                throw new CBORException("not at EOF");
             }
+            return o;
         }
     }
 }

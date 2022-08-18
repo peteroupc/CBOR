@@ -279,8 +279,10 @@ namespace Test
             { // start bracket not found
                 return new string[] { s };
             }
-            var path = new List<string>();
-            path.Add(s.Substring(0, index - 0));
+            var path = new List<string>
+            {
+                s.Substring(0, index - 0)
+            };
             ++index; // move to after the bracket
             while (true)
             {

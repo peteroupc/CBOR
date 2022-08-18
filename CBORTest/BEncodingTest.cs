@@ -13,10 +13,8 @@ namespace Test
         {
             try
             {
-                using (var s = new Test.DelayingStream(b))
-                {
-                    return BEncoding.Read(s);
-                }
+                using var s = new Test.DelayingStream(b);
+                return BEncoding.Read(s);
             }
             catch (IOException ex)
             {
@@ -28,11 +26,9 @@ namespace Test
         {
             try
             {
-                using (var ms = new Test.DelayingStream())
-                {
-                    BEncoding.Write(b, ms);
-                    return ms.ToArray();
-                }
+                using var ms = new Test.DelayingStream();
+                BEncoding.Write(b, ms);
+                return ms.ToArray();
             }
             catch (IOException ex)
             {

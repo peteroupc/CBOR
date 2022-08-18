@@ -2499,11 +2499,9 @@ namespace Test
             }
             try
             {
-                using (var lms = new Test.DelayingStream())
-                {
-                    root.WriteTo(lms, encodeOptions);
-                    Assert.Fail("Should have failed");
-                }
+                using var lms = new Test.DelayingStream();
+                root.WriteTo(lms, encodeOptions);
+                Assert.Fail("Should have failed");
             }
             catch (CBORException)
             {
@@ -2569,11 +2567,9 @@ namespace Test
             }
             try
             {
-                using (var lms = new LimitedMemoryStream(100000))
-                {
-                    root.WriteTo(lms);
-                    Assert.Fail("Should have failed");
-                }
+                using var lms = new LimitedMemoryStream(100000);
+                root.WriteTo(lms);
+                Assert.Fail("Should have failed");
             }
             catch (NotSupportedException)
             {
@@ -2586,10 +2582,8 @@ namespace Test
             }
             try
             {
-                using (var lms = new LimitedMemoryStream(100000))
-                {
-                    origroot.WriteTo(lms);
-                }
+                using var lms = new LimitedMemoryStream(100000);
+                origroot.WriteTo(lms);
             }
             catch (Exception ex)
             {
@@ -2623,11 +2617,9 @@ namespace Test
             }
             try
             {
-                using (var lms = new LimitedMemoryStream(100000))
-                {
-                    root.WriteJSONTo(lms);
-                    Assert.Fail("Should have failed");
-                }
+                using var lms = new LimitedMemoryStream(100000);
+                root.WriteJSONTo(lms);
+                Assert.Fail("Should have failed");
             }
             catch (NotSupportedException)
             {
@@ -2640,10 +2632,8 @@ namespace Test
             }
             try
             {
-                using (var lms = new LimitedMemoryStream(100000))
-                {
-                    origroot.WriteJSONTo(lms);
-                }
+                using var lms = new LimitedMemoryStream(100000);
+                origroot.WriteJSONTo(lms);
             }
             catch (Exception ex)
             {
@@ -2796,79 +2786,77 @@ namespace Test
 
         public static void TestRandomOne(byte[] array)
         {
-            using (var inputStream = new Test.DelayingStream(array))
+            using var inputStream = new Test.DelayingStream(array);
+            while (inputStream.Position != inputStream.Length)
             {
-                while (inputStream.Position != inputStream.Length)
+                long oldPos = 0L;
+                try
                 {
-                    long oldPos = 0L;
+                    CBORObject o;
+                    oldPos = inputStream.Position;
+                    o = CBORObject.Read(inputStream);
+                    long cborlen = inputStream.Position - oldPos;
+                    // if (cborlen > 3000) {
+                    // Console.WriteLine("pos=" + inputStream.Position + " of " +
+                    // inputStream.Length + ", cborlen=" + cborlen);
+                    // }
+                    byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
                     try
                     {
-                        CBORObject o;
-                        oldPos = inputStream.Position;
-                        o = CBORObject.Read(inputStream);
-                        long cborlen = inputStream.Position - oldPos;
-                        // if (cborlen > 3000) {
-                        // Console.WriteLine("pos=" + inputStream.Position + " of " +
-                        // inputStream.Length + ", cborlen=" + cborlen);
-                        // }
-                        byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
-                        try
+                        CBORObject.DecodeFromBytes(encodedBytes);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException(ex.Message, ex);
+                    }
+                    String jsonString = String.Empty;
+                    try
+                    {
+                        if (o == null)
                         {
-                            CBORObject.DecodeFromBytes(encodedBytes);
+                            Assert.Fail("object is null");
                         }
-                        catch (Exception ex)
+                        if (o != null)
                         {
-                            throw new InvalidOperationException(ex.Message, ex);
-                        }
-                        String jsonString = String.Empty;
-                        try
-                        {
-                            if (o == null)
+                            try
                             {
-                                Assert.Fail("object is null");
+                                jsonString = o.ToJSONString();
                             }
-                            if (o != null)
+                            catch (CBORException ex)
                             {
-                                try
-                                {
-                                    jsonString = o.ToJSONString();
-                                }
-                                catch (CBORException ex)
-                                {
-                                    Console.WriteLine(ex.Message);
-                                    jsonString = String.Empty;
-                                }
-                                if (jsonString.Length > 0)
-                                {
-                                    CBORObject.FromJSONString(jsonString);
-                                    TestWriteToJSON(o);
-                                }
+                                Console.WriteLine(ex.Message);
+                                jsonString = String.Empty;
+                            }
+                            if (jsonString.Length > 0)
+                            {
+                                CBORObject.FromJSONString(jsonString);
+                                TestWriteToJSON(o);
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            throw new InvalidOperationException(ex.Message, ex);
-                        }
                     }
-                    catch (CBORException ex)
+                    catch (Exception ex)
                     {
-                        // Expected exception
-                        Console.Write(ex.Message.Substring(0, 0));
+                        throw new InvalidOperationException(ex.Message, ex);
                     }
-                    catch (InvalidOperationException ex)
-                    {
-                        string failString = ex.ToString() +
-                          (ex.InnerException == null ? String.Empty : "\n" +
-                            ex.InnerException.ToString());
-                        failString += "\nlength: " + array.Length + " bytes";
-                        failString += "\nstart pos: " + oldPos + ", truelen=" +
-                          (inputStream.Position - oldPos);
-                        failString += "\n" + TestCommon.ToByteArrayString(array);
-                        failString = failString.Substring(
-                            0,
-                            Math.Min(2000, failString.Length));
-                        throw new InvalidOperationException(failString, ex);
-                    }
+                }
+                catch (CBORException ex)
+                {
+                    // Expected exception
+                    Console.Write(ex.Message.Substring(0, 0));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    string failString = ex.ToString() +
+                      (ex.InnerException == null ? String.Empty : "\n" +
+                        ex.InnerException.ToString());
+                    failString += "\nlength: " + array.Length + " bytes";
+                    failString += "\nstart pos: " + oldPos + ", truelen=" +
+                      (inputStream.Position - oldPos);
+                    failString += "\n" + TestCommon.ToByteArrayString(array);
+                    failString = failString.Substring(
+                        0,
+                        Math.Min(2000, failString.Length));
+                    throw new InvalidOperationException(failString, ex);
                 }
             }
         }
@@ -2892,32 +2880,24 @@ namespace Test
             try
             {
                 {
-                    using (var ms = new Test.DelayingStream())
-                    {
-                        MiniCBOR.WriteInt32(val, ms);
-                        byte[] msarray = ms.ToArray();
-                        using (var ms2 = new Test.DelayingStream(msarray))
-                        {
-                            Assert.AreEqual(
-                              val,
-                              MiniCBOR.ReadInt32(ms2),
-                              TestCommon.ToByteArrayString(msarray));
-                        }
-                    }
+                    using var ms = new Test.DelayingStream();
+                    MiniCBOR.WriteInt32(val, ms);
+                    byte[] msarray = ms.ToArray();
+                    using var ms2 = new Test.DelayingStream(msarray);
+                    Assert.AreEqual(
+                      val,
+                      MiniCBOR.ReadInt32(ms2),
+                      TestCommon.ToByteArrayString(msarray));
                 }
                 {
-                    using (var ms = new Test.DelayingStream())
-                    {
-                        CBORObject.Write(val, ms);
-                        byte[] msarray = ms.ToArray();
-                        using (var ms2 = new Test.DelayingStream(msarray))
-                        {
-                            Assert.AreEqual(
-                              val,
-                              MiniCBOR.ReadInt32(ms2),
-                              TestCommon.ToByteArrayString(msarray));
-                        }
-                    }
+                    using var ms = new Test.DelayingStream();
+                    CBORObject.Write(val, ms);
+                    byte[] msarray = ms.ToArray();
+                    using var ms2 = new Test.DelayingStream(msarray);
+                    Assert.AreEqual(
+                      val,
+                      MiniCBOR.ReadInt32(ms2),
+                      TestCommon.ToByteArrayString(msarray));
                 }
             }
             catch (IOException ioex)
@@ -5141,29 +5121,27 @@ namespace Test
                         Assert.AreEqual(CBORType.Integer, cbor[0].Type);
                         Assert.AreEqual(0, cbor[0].TagCount);
                     }
-                    using (var ms2 = new Test.DelayingStream())
+                    using var ms2 = new Test.DelayingStream();
+                    CBORObject.Write(ed, ms2);
+                    cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
+                    Assert.IsTrue(cbor.IsNumber, cbor.ToString());
+                    if (isPastCbor[i])
                     {
-                        CBORObject.Write(ed, ms2);
-                        cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
-                        Assert.IsTrue(cbor.IsNumber, cbor.ToString());
-                        if (isPastCbor[i])
+                        Assert.IsTrue(cbor.HasOneTag(264));
+                        if (isNegative)
                         {
-                            Assert.IsTrue(cbor.HasOneTag(264));
-                            if (isNegative)
-                            {
-                                Assert.IsTrue(cbor[0].HasOneTag(3));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(cbor[0].HasOneTag(2));
-                            }
+                            Assert.IsTrue(cbor[0].HasOneTag(3));
                         }
                         else
                         {
-                            Assert.IsTrue(cbor.HasOneTag(4));
-                            Assert.AreEqual(CBORType.Integer, cbor[0].Type);
-                            Assert.AreEqual(0, cbor[0].TagCount);
+                            Assert.IsTrue(cbor[0].HasOneTag(2));
                         }
+                    }
+                    else
+                    {
+                        Assert.IsTrue(cbor.HasOneTag(4));
+                        Assert.AreEqual(CBORType.Integer, cbor[0].Type);
+                        Assert.AreEqual(0, cbor[0].TagCount);
                     }
                 }
                 catch (IOException ioe)

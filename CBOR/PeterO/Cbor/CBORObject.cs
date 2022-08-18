@@ -3681,9 +3681,11 @@ namespace PeterO.Cbor
 
         internal static CBORObject NewArray(CBORObject o1, CBORObject o2)
         {
-            var list = new List<CBORObject>(2);
-            list.Add(o1);
-            list.Add(o2);
+            var list = new List<CBORObject>(2)
+            {
+                o1,
+                o2
+            };
             return new CBORObject(CBORObjectTypeArray, list);
         }
 
@@ -3692,10 +3694,12 @@ namespace PeterO.Cbor
           CBORObject o2,
           CBORObject o3)
         {
-            var list = new List<CBORObject>(2);
-            list.Add(o1);
-            list.Add(o2);
-            list.Add(o3);
+            var list = new List<CBORObject>(2)
+            {
+                o1,
+                o2,
+                o3
+            };
             return new CBORObject(CBORObjectTypeArray, list);
         }
 
@@ -9039,8 +9043,10 @@ namespace PeterO.Cbor
         {
             if (stack == null)
             {
-                stack = new List<object>(4);
-                stack.Add(parent);
+                stack = new List<object>(4)
+                {
+                    parent
+                };
             }
             foreach (object o in stack)
             {

@@ -509,59 +509,55 @@ namespace Test
             try
             {
                 {
-                    using (var ms = new Test.DelayingStream())
+                    using var ms = new Test.DelayingStream();
+                    for (var i = 0; i < 2000; ++i)
                     {
-                        for (var i = 0; i < 2000; ++i)
-                        {
-                            // Write beginning of indefinite-length array
-                            ms.WriteByte(0x9f);
-                        }
-                        for (var i = 0; i < 2000; ++i)
-                        {
-                            // Write end of indefinite-length array
-                            ms.WriteByte(0xff);
-                        }
-                        // Assert throwing CBOR exception for reaching maximum
-                        // nesting depth
-                        try
-                        {
-                            CBORObject.DecodeFromBytes(ms.ToArray());
-                            Assert.Fail("Should have failed");
-                        }
-                        catch (CBORException)
-                        {
-                            // NOTE: Intentionally empty
-                        }
-                        catch (Exception ex)
-                        {
-                            Assert.Fail(ex.ToString());
-                            throw new InvalidOperationException(String.Empty, ex);
-                        }
+                        // Write beginning of indefinite-length array
+                        ms.WriteByte(0x9f);
+                    }
+                    for (var i = 0; i < 2000; ++i)
+                    {
+                        // Write end of indefinite-length array
+                        ms.WriteByte(0xff);
+                    }
+                    // Assert throwing CBOR exception for reaching maximum
+                    // nesting depth
+                    try
+                    {
+                        CBORObject.DecodeFromBytes(ms.ToArray());
+                        Assert.Fail("Should have failed");
+                    }
+                    catch (CBORException)
+                    {
+                        // NOTE: Intentionally empty
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail(ex.ToString());
+                        throw new InvalidOperationException(String.Empty, ex);
                     }
                 }
                 {
-                    using (var ms = new Test.DelayingStream())
+                    using var ms = new Test.DelayingStream();
+                    for (var i = 0; i < 495; ++i)
                     {
-                        for (var i = 0; i < 495; ++i)
-                        {
-                            // Write beginning of indefinite-length array
-                            ms.WriteByte(0x9f);
-                        }
-                        for (var i = 0; i < 495; ++i)
-                        {
-                            // Write end of indefinite-length array
-                            ms.WriteByte(0xff);
-                        }
-                        // Maximum nesting depth not reached, so shouldn't throw
-                        try
-                        {
-                            CBORObject.DecodeFromBytes(ms.ToArray());
-                        }
-                        catch (Exception ex)
-                        {
-                            Assert.Fail(ex.ToString());
-                            throw new InvalidOperationException(String.Empty, ex);
-                        }
+                        // Write beginning of indefinite-length array
+                        ms.WriteByte(0x9f);
+                    }
+                    for (var i = 0; i < 495; ++i)
+                    {
+                        // Write end of indefinite-length array
+                        ms.WriteByte(0xff);
+                    }
+                    // Maximum nesting depth not reached, so shouldn't throw
+                    try
+                    {
+                        CBORObject.DecodeFromBytes(ms.ToArray());
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail(ex.ToString());
+                        throw new InvalidOperationException(String.Empty, ex);
                     }
                 }
             }
@@ -971,10 +967,8 @@ namespace Test
                     Assert.AreEqual(-1 - 7, MiniCBOR.ReadInt32(ms5));
                 }
                 bytes = new byte[] { 0x37 };
-                using (var ms6 = new Test.DelayingStream(bytes))
-                {
-                    Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
-                }
+                using var ms6 = new Test.DelayingStream(bytes);
+                Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
             }
             catch (IOException ioex)
             {
@@ -1117,8 +1111,10 @@ namespace Test
         [Test]
         public void TestCPOD()
         {
-            var m = new CPOD();
-            m.Aa = "Test";
+            var m = new CPOD
+            {
+                Aa = "Test"
+            };
             CBORObject cbor = CBORObject.FromObject(m);
             Assert.IsFalse(cbor.ContainsKey("bb"), cbor.ToString());
             Assert.AreEqual("Test", cbor["aa"].AsString(), cbor.ToString());

@@ -1918,10 +1918,12 @@ namespace Test
                 {
                     throw new CBORException();
                 }
-                var ret = new CPOD3();
-                ret.Aa = obj[0].AsString();
-                ret.Bb = obj[1].AsString();
-                ret.Cc = obj[2].AsString();
+                var ret = new CPOD3
+                {
+                    Aa = obj[0].AsString(),
+                    Bb = obj[1].AsString(),
+                    Cc = obj[2].AsString()
+                };
                 return ret;
             }
         }
@@ -1929,14 +1931,18 @@ namespace Test
         [Test]
         public void TestCBORTypeMapper()
         {
-            var cp = new CPOD3();
-            cp.Aa = "aa";
-            cp.Bb = "bb";
-            cp.Cc = "cc";
-            var cp2 = new CPOD3();
-            cp2.Aa = "AA";
-            cp2.Bb = "BB";
-            cp2.Cc = "CC";
+            var cp = new CPOD3
+            {
+                Aa = "aa",
+                Bb = "bb",
+                Cc = "cc"
+            };
+            var cp2 = new CPOD3
+            {
+                Aa = "AA",
+                Bb = "BB",
+                Cc = "CC"
+            };
             var tm = new CBORTypeMapper().AddConverter(
               typeof(CPOD3),
               new CPOD3Converter());

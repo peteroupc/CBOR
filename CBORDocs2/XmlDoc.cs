@@ -277,39 +277,35 @@ namespace PeterO.DocGen
         public XmlDoc(string xmlFilename)
         {
             this.memberNodes = new Dictionary<string, INode>();
-            using (var stream = new FileStream(xmlFilename, FileMode.Open))
+            using var stream = new FileStream(xmlFilename, FileMode.Open);
+            using var reader = XmlReader.Create(stream);
+            reader.Read();
+            reader.ReadStartElement("doc");
+            while (reader.IsStartElement())
             {
-                using (var reader = XmlReader.Create(stream))
+                // Console.WriteLine(reader.LocalName);
+                if (reader.LocalName.Equals("members", StringComparison.Ordinal))
                 {
                     reader.Read();
-                    reader.ReadStartElement("doc");
                     while (reader.IsStartElement())
                     {
-                        // Console.WriteLine(reader.LocalName);
-                        if (reader.LocalName.Equals("members", StringComparison.Ordinal))
+                        if (reader.LocalName.Equals("member",
+                             StringComparison.Ordinal))
                         {
-                            reader.Read();
-                            while (reader.IsStartElement())
-                            {
-                                if (reader.LocalName.Equals("member",
-                                     StringComparison.Ordinal))
-                                {
-                                    string memberName = reader.GetAttribute("name");
-                                    var node = ReadNode(reader);
-                                    this.memberNodes[memberName] = node;
-                                }
-                                else
-                                {
-                                    reader.Skip();
-                                }
-                            }
-                            reader.Skip();
+                            string memberName = reader.GetAttribute("name");
+                            var node = ReadNode(reader);
+                            this.memberNodes[memberName] = node;
                         }
                         else
                         {
                             reader.Skip();
                         }
                     }
+                    reader.Skip();
+                }
+                else
+                {
+                    reader.Skip();
                 }
             }
         }

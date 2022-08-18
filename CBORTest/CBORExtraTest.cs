@@ -354,10 +354,12 @@ namespace Test
         [Test]
         public void TestCustomCollection()
         {
-            var clist = new CustomCollection();
-            clist.Add(CustomEnum.A);
-            clist.Add(CustomEnum.B);
-            clist.Add(CustomEnum.C);
+            var clist = new CustomCollection
+            {
+                CustomEnum.A,
+                CustomEnum.B,
+                CustomEnum.C
+            };
             var cbor = CBORObject.FromObject(clist);
             Console.WriteLine(cbor);
             if (cbor == null)
@@ -373,8 +375,10 @@ namespace Test
             {
                 Assert.Fail();
             }
-            var clc = new CustomCollectionContainer();
-            clc.CList = clist2;
+            var clc = new CustomCollectionContainer
+            {
+                CList = clist2
+            };
             cbor = CBORObject.FromObject(clc);
             Console.WriteLine(cbor);
             if (cbor == null)
@@ -422,9 +426,11 @@ namespace Test
         [Test]
         public void TestCPOD2()
         {
-            var m = new CPOD2();
-            m.Aa = "Test";
-            m.IsAa = false;
+            var m = new CPOD2
+            {
+                Aa = "Test",
+                IsAa = false
+            };
             CBORObject cbor = CBORObject.FromObject(m);
             // ambiguous properties
             Assert.IsFalse(cbor.ContainsKey("aa"), cbor.ToString());
@@ -765,10 +771,12 @@ namespace Test
         [Test]
         public void TestReadOnlyDictionary()
         {
-            var dict = new Dictionary<string, int>();
-            dict["a"] = 1;
-            dict["b"] = 2;
-            dict["c"] = 3;
+            var dict = new Dictionary<string, int>
+            {
+                ["a"] = 1,
+                ["b"] = 2,
+                ["c"] = 3
+            };
             IReadOnlyDictionary<string, int> roc = new
       ReadOnlyDictionary<string, int>(dict);
             CBORObject cbor;

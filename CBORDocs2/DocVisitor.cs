@@ -768,22 +768,20 @@ namespace PeterO.DocGen
 
         public void VisitException(INode node)
         {
-            using (var ch = this.Change(this.exceptionStr))
+            using var ch = this.Change(this.exceptionStr);
+            var cref = node.GetAttribute("cref");
+            if (cref == null)
             {
-                var cref = node.GetAttribute("cref");
-                if (cref == null)
-                {
-                    cref = String.Empty;
-                    Console.WriteLine("Warning: cref attribute absent in <exception>");
-                }
-                if (cref.StartsWith("T:", StringComparison.Ordinal))
-                {
-                    cref = cref.Substring(2);
-                }
-                this.WriteLine(" * " + cref + ": ");
-                XmlDoc.VisitInnerNode(node, this);
-                this.WriteLine("\r\n\r\n");
+                cref = String.Empty;
+                Console.WriteLine("Warning: cref attribute absent in <exception>");
             }
+            if (cref.StartsWith("T:", StringComparison.Ordinal))
+            {
+                cref = cref.Substring(2);
+            }
+            this.WriteLine(" * " + cref + ": ");
+            XmlDoc.VisitInnerNode(node, this);
+            this.WriteLine("\r\n\r\n");
         }
 
         public void VisitSee(INode see)
@@ -853,45 +851,43 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using (var ch = this.AddMember(info))
+                using var ch = this.AddMember(info);
+                signature = FormatMethod(method, false);
+                this.WriteLine("<a id=\"" +
+                          MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+                this.WriteLine("### " + Heading(info) +
+                          "\r\n\r\n" + signature + "\r\n\r\n");
+                var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+                  ObsoleteAttribute;
+                if (attr != null)
                 {
-                    signature = FormatMethod(method, false);
-                    this.WriteLine("<a id=\"" +
-                              MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
-                    this.WriteLine("### " + Heading(info) +
-                              "\r\n\r\n" + signature + "\r\n\r\n");
-                    var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                      ObsoleteAttribute;
-                    if (attr != null)
-                    {
-                        this.WriteLine("<b>Deprecated.</b> " +
-            DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
-                    }
-                    var cattr =
-          method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                      CLSCompliantAttribute;
-                    if (cattr != null && !cattr.IsCompliant)
-                    {
-                        this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-                    }
-                    this.paramStr.Clear();
-                    this.returnStr.Clear();
-                    this.exceptionStr.Clear();
-                    XmlDoc.VisitInnerNode(mnm, this);
-                    if (this.paramStr.Length > 0)
-                    {
-                        this.Write("<b>Parameters:</b>\r\n\r\n");
-                        var paramString = this.paramStr.ToString();
-                        // Decrease spacing between list items
-                        paramString = paramString.Replace("\r\n * ", " * ");
-                        this.Write(paramString);
-                    }
-                    this.Write(this.returnStr.ToString());
-                    if (this.exceptionStr.Length > 0)
-                    {
-                        this.Write("<b>Exceptions:</b>\r\n\r\n");
-                        this.Write(this.exceptionStr.ToString());
-                    }
+                    this.WriteLine("<b>Deprecated.</b> " +
+        DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
+                }
+                var cattr =
+      method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+                  CLSCompliantAttribute;
+                if (cattr != null && !cattr.IsCompliant)
+                {
+                    this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+                }
+                this.paramStr.Clear();
+                this.returnStr.Clear();
+                this.exceptionStr.Clear();
+                XmlDoc.VisitInnerNode(mnm, this);
+                if (this.paramStr.Length > 0)
+                {
+                    this.Write("<b>Parameters:</b>\r\n\r\n");
+                    var paramString = this.paramStr.ToString();
+                    // Decrease spacing between list items
+                    paramString = paramString.Replace("\r\n * ", " * ");
+                    this.Write(paramString);
+                }
+                this.Write(this.returnStr.ToString());
+                if (this.exceptionStr.Length > 0)
+                {
+                    this.Write("<b>Exceptions:</b>\r\n\r\n");
+                    this.Write(this.exceptionStr.ToString());
                 }
             }
             else if (info is Type)
@@ -907,34 +903,32 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using (var ch = this.AddMember(info))
+                using var ch = this.AddMember(info);
+                this.WriteLine("## " + Heading(type) + "\r\n\r\n");
+                this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
+                var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+                  ObsoleteAttribute;
+                if (attr != null)
                 {
-                    this.WriteLine("## " + Heading(type) + "\r\n\r\n");
-                    this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-                    var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                      ObsoleteAttribute;
-                    if (attr != null)
-                    {
-                        this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-                    }
-                    var cattr = type.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                      CLSCompliantAttribute;
-                    if (cattr != null && !cattr.IsCompliant)
-                    {
-                        this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-                    }
-                    this.paramStr.Clear();
-                    XmlDoc.VisitInnerNode(mnm, this);
-                    this.Write("\r\n\r\n");
-                    this.WriteLine("<<<MEMBER_SUMMARY>>>");
-                    if (this.paramStr.Length > 0)
-                    {
-                        this.Write("<b>Parameters:</b>\r\n\r\n");
-                        var paramString = this.paramStr.ToString();
-                        // Decrease spacing between list items
-                        paramString = paramString.Replace("\r\n * ", " * ");
-                        this.Write(paramString);
-                    }
+                    this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+                }
+                var cattr = type.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+                  CLSCompliantAttribute;
+                if (cattr != null && !cattr.IsCompliant)
+                {
+                    this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+                }
+                this.paramStr.Clear();
+                XmlDoc.VisitInnerNode(mnm, this);
+                this.Write("\r\n\r\n");
+                this.WriteLine("<<<MEMBER_SUMMARY>>>");
+                if (this.paramStr.Length > 0)
+                {
+                    this.Write("<b>Parameters:</b>\r\n\r\n");
+                    var paramString = this.paramStr.ToString();
+                    // Decrease spacing between list items
+                    paramString = paramString.Replace("\r\n * ", " * ");
+                    this.Write(paramString);
                 }
             }
             else if (info is PropertyInfo)
@@ -951,41 +945,39 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using (var ch = this.AddMember(info))
+                using var ch = this.AddMember(info);
+                signature = FormatProperty(property);
+                this.WriteLine("<a id=\"" +
+                          MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+                this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
+                          "\r\n\r\n");
+                var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+                  ObsoleteAttribute;
+                if (attr != null)
                 {
-                    signature = FormatProperty(property);
-                    this.WriteLine("<a id=\"" +
-                              MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
-                    this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
-                              "\r\n\r\n");
-                    var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                      ObsoleteAttribute;
-                    if (attr != null)
-                    {
-                        this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-                    }
-                    var cattr =
-          property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                      CLSCompliantAttribute;
-                    if (cattr != null && !cattr.IsCompliant)
-                    {
-                        this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-                    }
-                    this.paramStr.Clear();
-                    this.returnStr.Clear();
-                    this.exceptionStr.Clear();
-                    XmlDoc.VisitInnerNode(mnm, this);
-                    if (this.paramStr.Length > 0)
-                    {
-                        this.Write("<b>Parameters:</b>\r\n\r\n");
-                        this.Write(this.paramStr.ToString());
-                    }
-                    this.Write(this.returnStr.ToString());
-                    if (this.exceptionStr.Length > 0)
-                    {
-                        this.Write("<b>Exceptions:</b>\r\n\r\n");
-                        this.Write(this.exceptionStr.ToString());
-                    }
+                    this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+                }
+                var cattr =
+      property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+                  CLSCompliantAttribute;
+                if (cattr != null && !cattr.IsCompliant)
+                {
+                    this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+                }
+                this.paramStr.Clear();
+                this.returnStr.Clear();
+                this.exceptionStr.Clear();
+                XmlDoc.VisitInnerNode(mnm, this);
+                if (this.paramStr.Length > 0)
+                {
+                    this.Write("<b>Parameters:</b>\r\n\r\n");
+                    this.Write(this.paramStr.ToString());
+                }
+                this.Write(this.returnStr.ToString());
+                if (this.exceptionStr.Length > 0)
+                {
+                    this.Write("<b>Exceptions:</b>\r\n\r\n");
+                    this.Write(this.exceptionStr.ToString());
                 }
             }
             else if (info is FieldInfo)
@@ -1001,27 +993,25 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using (var ch = this.AddMember(info))
+                using var ch = this.AddMember(info);
+                signature = FormatField(field);
+                this.WriteLine("<a id=\"" +
+                          MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+                this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
+                          "\r\n\r\n");
+                var attr = field.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+                  ObsoleteAttribute;
+                if (attr != null)
                 {
-                    signature = FormatField(field);
-                    this.WriteLine("<a id=\"" +
-                              MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
-                    this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
-                              "\r\n\r\n");
-                    var attr = field.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                      ObsoleteAttribute;
-                    if (attr != null)
-                    {
-                        this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-                    }
-                    var cattr = field.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                      CLSCompliantAttribute;
-                    if (cattr != null && !cattr.IsCompliant)
-                    {
-                        this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-                    }
-                    XmlDoc.VisitInnerNode(mnm, this);
+                    this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
                 }
+                var cattr = field.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
+                  CLSCompliantAttribute;
+                if (cattr != null && !cattr.IsCompliant)
+                {
+                    this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+                }
+                XmlDoc.VisitInnerNode(mnm, this);
             }
         }
 
@@ -1033,12 +1023,10 @@ namespace PeterO.DocGen
 
         public void VisitParam(INode node)
         {
-            using (var ch = this.Change(this.paramStr))
-            {
-                this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
-                XmlDoc.VisitInnerNode(node, this);
-                this.WriteLine("\r\n\r\n");
-            }
+            using var ch = this.Change(this.paramStr);
+            this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
+            XmlDoc.VisitInnerNode(node, this);
+            this.WriteLine("\r\n\r\n");
         }
 
         public void VisitParamRef(INode node)
@@ -1049,32 +1037,26 @@ namespace PeterO.DocGen
 
         public void VisitReturns(INode node)
         {
-            using (var ch = this.Change(this.returnStr))
-            {
-                this.WriteLine("<b>Return Value:</b>\r\n");
-                XmlDoc.VisitInnerNode(node, this);
-                this.WriteLine("\r\n\r\n");
-            }
+            using var ch = this.Change(this.returnStr);
+            this.WriteLine("<b>Return Value:</b>\r\n");
+            XmlDoc.VisitInnerNode(node, this);
+            this.WriteLine("\r\n\r\n");
         }
 
         public void VisitTypeParam(INode node)
         {
-            using (var ch = this.Change(this.paramStr))
-            {
-                this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
-                XmlDoc.VisitInnerNode(node, this);
-                this.WriteLine("\r\n\r\n");
-            }
+            using var ch = this.Change(this.paramStr);
+            this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
+            XmlDoc.VisitInnerNode(node, this);
+            this.WriteLine("\r\n\r\n");
         }
 
         public void VisitValue(INode node)
         {
-            using (var ch = this.Change(this.returnStr))
-            {
-                this.WriteLine("<b>Returns:</b>\r\n");
-                XmlDoc.VisitInnerNode(node, this);
-                this.WriteLine("\r\n\r\n");
-            }
+            using var ch = this.Change(this.returnStr);
+            this.WriteLine("<b>Returns:</b>\r\n");
+            XmlDoc.VisitInnerNode(node, this);
+            this.WriteLine("\r\n\r\n");
         }
 
         private static string Heading(MemberInfo info)
@@ -1148,31 +1130,33 @@ namespace PeterO.DocGen
 
         private static IDictionary<string, string> OperatorList()
         {
-            var ops = new Dictionary<string, string>();
-            ops["op_Addition"] = "+";
-            ops["op_UnaryPlus"] = "+";
-            ops["op_Subtraction"] = "-";
-            ops["op_UnaryNegation"] = "-";
-            ops["op_Multiply"] = "*";
-            ops["op_Division"] = "/";
-            ops["op_LeftShift"] = "<<";
-            ops["op_RightShift"] = ">>";
-            ops["op_BitwiseAnd"] = "&";
-            ops["op_BitwiseOr"] = "|";
-            ops["op_ExclusiveOr"] = "^";
-            ops["op_LogicalNot"] = "!";
-            ops["op_OnesComplement"] = "~";
-            ops["op_True"] = "true";
-            ops["op_False"] = "false";
-            ops["op_Modulus"] = "%";
-            ops["op_Decrement"] = "--";
-            ops["op_Increment"] = "++";
-            ops["op_Equality"] = "==";
-            ops["op_Inequality"] = "!=";
-            ops["op_GreaterThan"] = ">";
-            ops["op_GreaterThanOrEqual"] = ">=";
-            ops["op_LessThan"] = "<";
-            ops["op_LessThanOrEqual"] = "<=";
+            var ops = new Dictionary<string, string>
+            {
+                ["op_Addition"] = "+",
+                ["op_UnaryPlus"] = "+",
+                ["op_Subtraction"] = "-",
+                ["op_UnaryNegation"] = "-",
+                ["op_Multiply"] = "*",
+                ["op_Division"] = "/",
+                ["op_LeftShift"] = "<<",
+                ["op_RightShift"] = ">>",
+                ["op_BitwiseAnd"] = "&",
+                ["op_BitwiseOr"] = "|",
+                ["op_ExclusiveOr"] = "^",
+                ["op_LogicalNot"] = "!",
+                ["op_OnesComplement"] = "~",
+                ["op_True"] = "true",
+                ["op_False"] = "false",
+                ["op_Modulus"] = "%",
+                ["op_Decrement"] = "--",
+                ["op_Increment"] = "++",
+                ["op_Equality"] = "==",
+                ["op_Inequality"] = "!=",
+                ["op_GreaterThan"] = ">",
+                ["op_GreaterThanOrEqual"] = ">=",
+                ["op_LessThan"] = "<",
+                ["op_LessThanOrEqual"] = "<="
+            };
             return ops;
         }
 

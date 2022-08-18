@@ -54,12 +54,14 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(converter));
             }
-            var ci = new ConverterInfo();
-            ci.Converter = converter;
-            ci.ToObject = PropertyMap.FindOneArgumentMethod(
+            var ci = new ConverterInfo
+            {
+                Converter = converter,
+                ToObject = PropertyMap.FindOneArgumentMethod(
               converter,
               "ToCBORObject",
-              type);
+              type)
+            };
             if (ci.ToObject == null)
             {
                 throw new ArgumentException(

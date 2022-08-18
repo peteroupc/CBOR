@@ -1041,8 +1041,10 @@ namespace PeterO.Cbor
                 return new int[] { obj.Count };
             }
             // Complex cases
-            var list = new List<int>();
-            list.Add(obj.Count);
+            var list = new List<int>
+            {
+                obj.Count
+            };
             while (obj.Type == CBORType.Array &&
               obj.Count > 0 && obj[0].Type == CBORType.Array)
             {
