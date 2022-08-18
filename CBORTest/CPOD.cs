@@ -7,16 +7,20 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
  */
 
-namespace Test {
-  public sealed class CPOD {
-    public string Aa {
-      get;
-      set;
-    }
+namespace Test
+{
+    public sealed class CPOD
+    {
+        public string Aa
+        {
+            get;
+            set;
+        }
 
-    private string Bb {
-      get;
-      set;
+        private string Bb
+        {
+            get;
+            set;
+        }
     }
-  }
 }
