@@ -51,8 +51,8 @@ namespace PeterO
 
         private static CBORObject ReadInteger(Stream stream)
         {
-            var builder = new StringBuilder();
-            var start = true;
+            StringBuilder builder = new();
+            bool start = true;
             while (true)
             {
                 int c = stream.ReadByte();
@@ -60,7 +60,7 @@ namespace PeterO
                 {
                     throw new CBORException("Premature end of data");
                 }
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     builder.Append((char)c);
                     start = false;
@@ -135,7 +135,7 @@ namespace PeterO
             {
                 return ReadInteger(stream);
             }
-            if (c >= '0' && c <= '9')
+            if (c is >= '0' and <= '9')
             {
                 return ReadString(stream, (char)c);
             }
@@ -146,7 +146,7 @@ namespace PeterO
 
         public static string LongToString(long longValue)
         {
-            if (longValue == Int64.MinValue)
+            if (longValue == long.MinValue)
             {
                 return "-9223372036854775808";
             }
@@ -160,8 +160,8 @@ namespace PeterO
 
         private static CBORObject ReadString(Stream stream, char firstChar)
         {
-            var builder = new StringBuilder();
-            if (firstChar < '0' && firstChar > '9')
+            StringBuilder builder = new();
+            if (firstChar is < '0' and > '9')
             {
                 throw new CBORException("Invalid integer encoding");
             }
@@ -173,7 +173,7 @@ namespace PeterO
                 {
                     throw new CBORException("Premature end of data");
                 }
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     builder.Append((char)c);
                 }
@@ -197,18 +197,16 @@ namespace PeterO
                 throw new CBORException("Length too long");
             }
             builder = new StringBuilder();
-            switch (DataUtilities.ReadUtf8(
+            return DataUtilities.ReadUtf8(
               stream,
               numlength.ToInt32Checked(),
               builder,
-              false))
+              false) switch
             {
-                case -2:
-                    throw new CBORException("Premature end of data");
-                case -1:
-                    throw new CBORException("Invalid UTF-8");
-            }
-            return CBORObject.FromObject(builder.ToString());
+                -2 => throw new CBORException("Premature end of data"),
+                -1 => throw new CBORException("Invalid UTF-8"),
+                _ => CBORObject.FromObject(builder.ToString()),
+            };
         }
 
         public static void Write(CBORObject obj, Stream stream)
@@ -245,7 +243,7 @@ namespace PeterO
             }
             else if (obj.Type == CBORType.Map)
             {
-                var hasNonStringKeys = false;
+                bool hasNonStringKeys = false;
                 foreach (CBORObject key in obj.Keys)
                 {
                     if (key.Type != CBORType.TextString)
@@ -256,7 +254,7 @@ namespace PeterO
                 }
                 if (hasNonStringKeys)
                 {
-                    var valueSMap = new Dictionary<String, CBORObject>();
+                    Dictionary<string, CBORObject> valueSMap = new();
                     // Copy to a map with String keys, since
                     // some keys could be duplicates
                     // when serialized to strings
@@ -320,7 +318,7 @@ namespace PeterO
                     throw new ArgumentNullException(nameof(stream));
                 }
                 stream.WriteByte(unchecked(0x6c));
-                for (var i = 0; i < obj.Count; ++i)
+                for (int i = 0; i < obj.Count; ++i)
                 {
                     Write(obj[i], stream);
                 }

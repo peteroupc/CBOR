@@ -22,10 +22,10 @@ namespace Test
             }
             if (s == null || s.Length == 0)
             {
-                return new string[] { String.Empty };
+                return new string[] { string.Empty };
             }
-            var index = 0;
-            var first = true;
+            int index = 0;
+            bool first = true;
             List<string> strings = null;
             int delimLength = delimiter.Length;
             while (true)
@@ -37,7 +37,7 @@ namespace Test
                     {
                         return new string[] { s };
                     }
-                    strings.Add(s.Substring(index));
+                    strings.Add(s[index..]);
                     break;
                 }
                 else
@@ -47,7 +47,7 @@ namespace Test
                         strings = new List<string>();
                         first = false;
                     }
-                    string newstr = s.Substring(index, index2 - index);
+                    string newstr = s[index..index2];
                     strings.Add(newstr);
                     index = index2 + delimLength;
                 }
@@ -57,23 +57,23 @@ namespace Test
 
         private static int ToHexNumber(int c)
         {
-            if (c >= 'A' && c <= 'Z')
+            if (c is >= 'A' and <= 'Z')
             {
                 return 10 + c - 'A';
             }
-            else if (c >= 'a' && c <= 'z')
+            else if (c is >= 'a' and <= 'z')
             {
                 return 10 + c - 'a';
             }
             else
             {
-                return (c >= '0' && c <= '9') ? (c - '0') : (-1);
+                return (c is >= '0' and <= '9') ? (c - '0') : (-1);
             }
         }
         private static string PercentDecodeUTF8(string str)
         {
             int len = str.Length;
-            var percent = false;
+            bool percent = false;
             for (int i = 0; i < len; ++i)
             {
                 char c = str[i];
@@ -91,13 +91,13 @@ namespace Test
             {
                 return str; // return early if there are no percent decodings
             }
-            var cp = 0;
-            var bytesSeen = 0;
-            var bytesNeeded = 0;
-            var lower = 0x80;
-            var upper = 0xbf;
-            var markedPos = -1;
-            var retString = new StringBuilder();
+            int cp = 0;
+            int bytesSeen = 0;
+            int bytesNeeded = 0;
+            int lower = 0x80;
+            int upper = 0xbf;
+            int markedPos = -1;
+            StringBuilder retString = new();
             for (int i = 0; i < len; ++i)
             {
                 int c = str[i];
@@ -120,13 +120,13 @@ namespace Test
                                     retString.Append((char)b);
                                     continue;
                                 }
-                                else if (b >= 0xc2 && b <= 0xdf)
+                                else if (b is >= 0xc2 and <= 0xdf)
                                 {
                                     markedPos = i;
                                     bytesNeeded = 1;
                                     cp = b - 0xc0;
                                 }
-                                else if (b >= 0xe0 && b <= 0xef)
+                                else if (b is >= 0xe0 and <= 0xef)
                                 {
                                     markedPos = i;
                                     lower = (b == 0xe0) ? 0xa0 : 0x80;
@@ -134,7 +134,7 @@ namespace Test
                                     bytesNeeded = 2;
                                     cp = b - 0xe0;
                                 }
-                                else if (b >= 0xf0 && b <= 0xf4)
+                                else if (b is >= 0xf0 and <= 0xf4)
                                 {
                                     markedPos = i;
                                     lower = (b == 0xf0) ? 0x90 : 0x80;
@@ -227,11 +227,7 @@ namespace Test
             {
                 throw new ArgumentNullException(nameof(input));
             }
-            if (delimiter == null)
-            {
-                // set default delimiter to ampersand
-                delimiter = "&";
-            }
+            delimiter ??= "&";
             // Check input for non-ASCII characters
             for (int i = 0; i < input.Length; ++i)
             {
@@ -242,8 +238,8 @@ namespace Test
             }
             // split on delimiter
             string[] strings = SplitAt(input, delimiter);
-            List<string[]> pairs = new List<string[]>();
-            foreach (var str in strings)
+            List<string[]> pairs = new();
+            foreach (string str in strings)
             {
                 if (str.Length == 0)
                 {
@@ -252,15 +248,15 @@ namespace Test
                 // split on key
                 int index = str.IndexOf('=');
                 string name = str;
-                string value = String.Empty; // value is empty if there is no key
+                string value = string.Empty; // value is empty if there is no key
                 if (index >= 0)
                 {
-                    name = str.Substring(0, index - 0);
-                    value = str.Substring(index + 1);
+                    name = str[..index];
+                    value = str[(index + 1)..];
                 }
                 name = name.Replace('+', ' ');
                 value = value.Replace('+', ' ');
-                var pair = new string[] { name, value };
+                string[] pair = new string[] { name, value };
                 pairs.Add(pair);
             }
             foreach (string[] pair in pairs)
@@ -279,9 +275,9 @@ namespace Test
             { // start bracket not found
                 return new string[] { s };
             }
-            var path = new List<string>
+            List<string> path = new()
             {
-                s.Substring(0, index - 0)
+                s[..index ]
             };
             ++index; // move to after the bracket
             while (true)
@@ -289,10 +285,10 @@ namespace Test
                 int endBracket = s.IndexOf(']', index);
                 if (endBracket < 0)
                 { // end bracket not found
-                    path.Add(s.Substring(index));
+                    path.Add(s[index..]);
                     break;
                 }
-                path.Add(s.Substring(index, endBracket - index));
+                path.Add(s[index..endBracket]);
                 index = endBracket + 1; // move to after the end bracket
                 index = s.IndexOf('[', index);
                 if (index < 0)
@@ -312,7 +308,7 @@ namespace Test
             {
                 return "0";
             }
-            if (value == Int32.MinValue)
+            if (value == int.MinValue)
             {
                 return "-2147483648";
             }
@@ -354,7 +350,7 @@ namespace Test
                 {
                     ++count;
                 }
-                return new String(chars, count, chars.Length - count);
+                return new string(chars, count, chars.Length - count);
             }
             chars = new char[12];
             count = 11;
@@ -384,16 +380,16 @@ namespace Test
             {
                 ++count;
             }
-            return new String(chars, count, 12 - count);
+            return new string(chars, count, 12 - count);
         }
 
-        private static bool IsList(IDictionary<string, Object> dict)
+        private static bool IsList(IDictionary<string, object> dict)
         {
             if (dict == null)
             {
                 return false;
             }
-            var index = 0;
+            int index = 0;
             int count = dict.Count;
             if (count == 0)
             {
@@ -414,11 +410,11 @@ namespace Test
             }
         }
 
-        private static IList<Object> ConvertToList(IDictionary<string, Object>
+        private static IList<object> ConvertToList(IDictionary<string, object>
           dict)
         {
-            var ret = new List<Object>();
-            var index = 0;
+            List<object> ret = new();
+            int index = 0;
             int count = dict.Count;
             while (index < count)
             {
@@ -433,18 +429,18 @@ namespace Test
             return ret;
         }
 
-        private static CBORObject ConvertListsToCBOR(IList<Object> dict)
+        private static CBORObject ConvertListsToCBOR(IList<object> dict)
         {
             CBORObject cbor = CBORObject.NewArray();
             for (int i = 0; i < dict.Count; ++i)
             {
                 object di = dict[i];
-                IDictionary<string, Object> value = di as IDictionary<string, Object>;
+                IDictionary<string, object> value = di as IDictionary<string, object>;
                 // A list contains only indexes 0, 1, 2, and so on,
                 // with no gaps.
                 if (IsList(value))
                 {
-                    IList<Object> newList = ConvertToList(value);
+                    IList<object> newList = ConvertToList(value);
                     cbor.Add(ConvertListsToCBOR(newList));
                 }
                 else if (value != null)
@@ -461,19 +457,19 @@ namespace Test
             return cbor;
         }
 
-        private static CBORObject ConvertListsToCBOR(IDictionary<string, Object>
+        private static CBORObject ConvertListsToCBOR(IDictionary<string, object>
           dict)
         {
             CBORObject cbor = CBORObject.NewMap();
             foreach (string key in new List<string>(dict.Keys))
             {
                 object di = dict[key];
-                IDictionary<string, Object> value = di as IDictionary<string, Object>;
+                IDictionary<string, object> value = di as IDictionary<string, object>;
                 // A list contains only indexes 0, 1, 2, and so on,
                 // with no gaps.
                 if (IsList(value))
                 {
-                    IList<Object> newList = ConvertToList(value);
+                    IList<object> newList = ConvertToList(value);
                     cbor.Add(key, ConvertListsToCBOR(newList));
                 }
                 else if (value != null)
@@ -490,17 +486,17 @@ namespace Test
             return cbor;
         }
 
-        private static void ConvertLists(IList<Object> list)
+        private static void ConvertLists(IList<object> list)
         {
             for (int i = 0; i < list.Count; ++i)
             {
                 object di = list[i];
-                IDictionary<string, Object> value = di as IDictionary<string, Object>;
+                IDictionary<string, object> value = di as IDictionary<string, object>;
                 // A list contains only indexes 0, 1, 2, and so on,
                 // with no gaps.
                 if (IsList(value))
                 {
-                    IList<Object> newList = ConvertToList(value);
+                    IList<object> newList = ConvertToList(value);
                     list[i] = newList;
                     ConvertLists(newList);
                 }
@@ -513,18 +509,18 @@ namespace Test
             }
         }
 
-        private static IDictionary<string, Object> ConvertLists(
-          IDictionary<string, Object> dict)
+        private static IDictionary<string, object> ConvertLists(
+          IDictionary<string, object> dict)
         {
             foreach (string key in new List<string>(dict.Keys))
             {
                 object di = dict[key];
-                IDictionary<string, Object> value = di as IDictionary<string, Object>;
+                IDictionary<string, object> value = di as IDictionary<string, object>;
                 // A list contains only indexes 0, 1, 2, and so on,
                 // with no gaps.
                 if (IsList(value))
                 {
-                    IList<Object> newList = ConvertToList(value);
+                    IList<object> newList = ConvertToList(value);
                     dict[key] = newList;
                     ConvertLists(newList);
                 }
@@ -543,26 +539,26 @@ namespace Test
             return QueryStringToCBOR(query, "&");
         }
 
-        public static IDictionary<string, Object> QueryStringToDict(string query)
+        public static IDictionary<string, object> QueryStringToDict(string query)
         {
             return QueryStringToDict(query, "&");
         }
 
-        private static IDictionary<string, Object> QueryStringToDictInternal(
+        private static IDictionary<string, object> QueryStringToDictInternal(
           string query,
           string delimiter)
         {
-            IDictionary<string, Object> root = new Dictionary<string, Object>();
+            IDictionary<string, object> root = new Dictionary<string, object>();
             foreach (string[] keyvalue in ParseQueryString(query, delimiter))
             {
                 string[] path = GetKeyPath(keyvalue[0]);
-                IDictionary<string, Object> leaf = root;
+                IDictionary<string, object> leaf = root;
                 for (int i = 0; i < path.Length - 1; ++i)
                 {
                     if (!leaf.ContainsKey(path[i]))
                     {
                         // node doesn't exist so add it
-                        IDictionary<string, Object> newLeaf = new Dictionary<string, Object>();
+                        IDictionary<string, object> newLeaf = new Dictionary<string, object>();
                         if (leaf.ContainsKey(path[i]))
                         {
                             throw new InvalidOperationException();
@@ -573,8 +569,7 @@ namespace Test
                     else
                     {
                         object di = leaf[path[i]];
-                        IDictionary<string, Object> o = di as IDictionary<string, Object>;
-                        if (o != null)
+                        if (di is IDictionary<string, object> o)
                         {
                             leaf = o;
                         }
@@ -587,17 +582,17 @@ namespace Test
                 }
                 if (leaf != null)
                 {
-                    if (leaf.ContainsKey(path[path.Length - 1]))
+                    if (leaf.ContainsKey(path[^1]))
                     {
                         throw new InvalidOperationException();
                     }
-                    leaf.Add(path[path.Length - 1], keyvalue[1]);
+                    leaf.Add(path[^1], keyvalue[1]);
                 }
             }
             return root;
         }
 
-        public static IDictionary<string, Object> QueryStringToDict(string query,
+        public static IDictionary<string, object> QueryStringToDict(string query,
           string delimiter)
         {
             // Convert array-like dictionaries to ILists

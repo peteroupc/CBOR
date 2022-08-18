@@ -13,7 +13,7 @@ namespace PeterO.Cbor
           StringOutput sb,
           JSONOptions options)
         {
-            var i = 0;
+            int i = 0;
             for (; i < str.Length; ++i)
             {
                 char c = str[i];
@@ -142,7 +142,7 @@ namespace PeterO.Cbor
         {
             if (obj.Type == CBORType.Array || obj.Type == CBORType.Map)
             {
-                var stack = new List<CBORObject>();
+                List<CBORObject> stack = new List<CBORObject>();
                 WriteJSONToInternal(obj, writer, options, stack);
             }
             else
@@ -286,7 +286,7 @@ namespace PeterO.Cbor
                 case CBORType.Array:
                     {
                         writer.WriteCodePoint('[');
-                        for (var i = 0; i < obj.Count; ++i)
+                        for (int i = 0; i < obj.Count; ++i)
                         {
                             if (i > 0)
                             {
@@ -301,8 +301,8 @@ namespace PeterO.Cbor
                     }
                 case CBORType.Map:
                     {
-                        var first = true;
-                        var hasNonStringKeys = false;
+                        bool first = true;
+                        bool hasNonStringKeys = false;
                         ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
                           obj.Entries;
                         foreach (KeyValuePair<CBORObject, CBORObject> entry in entries)
@@ -361,8 +361,8 @@ namespace PeterO.Cbor
                                     case CBORType.Array:
                                     case CBORType.Map:
                                         {
-                                            var sb = new StringBuilder();
-                                            var sw = new StringOutput(sb);
+                                            StringBuilder sb = new StringBuilder();
+                                            StringOutput sw = new StringOutput(sb);
                                             bool pop = CheckCircularRef(stack, obj, key);
                                             WriteJSONToInternal(key, sw, options, stack);
                                             PopRefIfNeeded(stack, pop);

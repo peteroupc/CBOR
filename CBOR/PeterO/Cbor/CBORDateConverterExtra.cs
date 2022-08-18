@@ -44,7 +44,7 @@ ICBORToFromConverter<DateTime>
                 year = null;
                 return false;
             }
-            var eint = new EInteger[1];
+            EInteger[] eint = new EInteger[1];
             bool ret = this.TryGetDateTimeFields(obj, eint, lesserFields);
             year = eint[0];
             return ret;

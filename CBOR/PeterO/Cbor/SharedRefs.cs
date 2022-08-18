@@ -7,7 +7,6 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
  */
 using PeterO.Numbers;
-using System;
 using System.Collections.Generic;
 
 namespace PeterO.Cbor
@@ -32,12 +31,12 @@ namespace PeterO.Cbor
             {
                 throw new CBORException("Unexpected index");
             }
-            if (smallIndex > Int32.MaxValue)
+            if (smallIndex > int.MaxValue)
             {
                 throw new CBORException("Index " + smallIndex +
                   " is bigger than supported ");
             }
-            var index = (int)smallIndex;
+            int index = (int)smallIndex;
             if (index >= this.sharedObjects.Count)
             {
                 throw new CBORException("Index " + index + " is not valid");
@@ -56,7 +55,7 @@ namespace PeterO.Cbor
                 throw new CBORException("Index " + bigIndex +
                   " is bigger than supported ");
             }
-            var index = (int)bigIndex;
+            int index = (int)bigIndex;
             if (index >= this.sharedObjects.Count)
             {
                 throw new CBORException("Index " + index + " is not valid");

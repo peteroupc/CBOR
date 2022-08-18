@@ -56,7 +56,7 @@ namespace PeterO
             {
                 throw new ArgumentNullException(nameof(bytes));
             }
-            var b = new StringBuilder();
+            StringBuilder b = new StringBuilder();
             if (ReadUtf8FromBytes(bytes, 0, bytes.Length, b, replace) != 0)
             {
                 throw new ArgumentException("Invalid UTF-8");
@@ -80,8 +80,8 @@ namespace PeterO
             {
                 throw new ArgumentNullException(nameof(str));
             }
-            var i = 0;
-            var count = 0;
+            int i = 0;
+            int count = 0;
             while (i < str.Length)
             {
                 int c = CodePointAt(str, i);
@@ -147,7 +147,7 @@ namespace PeterO
                 throw new ArgumentException("bytes's length minus " + offset + "(" +
                   (bytes.Length - offset) + ") is less than " + bytesCount);
             }
-            var b = new StringBuilder();
+            StringBuilder b = new StringBuilder();
             if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0)
             {
                 throw new ArgumentException("Invalid UTF-8");
@@ -267,7 +267,7 @@ namespace PeterO
             }
             try
             {
-                using (var ms = new MemoryStream())
+                using (MemoryStream ms = new MemoryStream())
                 {
                     if (WriteUtf8(str, 0, str.Length, ms, replace, lenientLineBreaks) !=
                       0)
@@ -302,7 +302,7 @@ namespace PeterO
                 throw new ArgumentNullException(nameof(str));
             }
             long size = 0;
-            for (var i = 0; i < str.Length; ++i)
+            for (int i = 0; i < str.Length; ++i)
             {
                 int c = str[i];
                 if (c <= 0x7f)
@@ -519,10 +519,10 @@ namespace PeterO
             {
                 return null;
             }
-            var len = str.Length;
+            int len = str.Length;
             char c;
-            var hasUpperCase = false;
-            for (var i = 0; i < len; ++i)
+            bool hasUpperCase = false;
+            for (int i = 0; i < len; ++i)
             {
                 c = str[i];
                 if (c >= 'A' && c <= 'Z')
@@ -535,8 +535,8 @@ namespace PeterO
             {
                 return str;
             }
-            var builder = new StringBuilder();
-            for (var i = 0; i < len; ++i)
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < len; ++i)
             {
                 c = str[i];
                 if (c >= 'A' && c <= 'Z')
@@ -564,10 +564,10 @@ namespace PeterO
             {
                 return null;
             }
-            var len = str.Length;
+            int len = str.Length;
             char c;
-            var hasLowerCase = false;
-            for (var i = 0; i < len; ++i)
+            bool hasLowerCase = false;
+            for (int i = 0; i < len; ++i)
             {
                 c = str[i];
                 if (c >= 'a' && c <= 'z')
@@ -580,8 +580,8 @@ namespace PeterO
             {
                 return str;
             }
-            var builder = new StringBuilder();
-            for (var i = 0; i < len; ++i)
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < len; ++i)
             {
                 c = str[i];
                 if (c >= 'a' && c <= 'z')
@@ -620,7 +620,7 @@ namespace PeterO
             }
             int len, ca, cb;
             len = Math.Min(strA.Length, strB.Length);
-            for (var i = 0; i < len; ++i)
+            for (int i = 0; i < len; ++i)
             {
                 ca = strA[i];
                 cb = strB[i];
@@ -632,7 +632,7 @@ namespace PeterO
                     {
                         continue;
                     }
-                    var incindex = false;
+                    bool incindex = false;
                     if (i + 1 < strA.Length && (strA[i + 1] & 0xfc00) == 0xdc00)
                     {
                         ca = 0x10000 + ((ca & 0x3ff) << 10) + (strA[i + 1] & 0x3ff);
@@ -782,7 +782,7 @@ namespace PeterO
             }
             int endIndex, c;
             byte[] bytes;
-            var retval = 0;
+            int retval = 0;
             // Take string portion's length into account when allocating
             // stream buffer, in case it's much smaller than the usual stream
             // string buffer length and to improve performance on small strings
@@ -794,7 +794,7 @@ namespace PeterO
                   bufferLength * 3);
             }
             bytes = new byte[bufferLength];
-            var byteIndex = 0;
+            int byteIndex = 0;
             endIndex = offset + length;
             for (int index = offset; index < endIndex; ++index)
             {
@@ -1001,11 +1001,11 @@ namespace PeterO
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            var cp = 0;
-            var bytesSeen = 0;
-            var bytesNeeded = 0;
-            var lower = 0x80;
-            var upper = 0xbf;
+            int cp = 0;
+            int bytesSeen = 0;
+            int bytesNeeded = 0;
+            int lower = 0x80;
+            int upper = 0xbf;
             int pointer, endpointer, b;
             pointer = offset;
             endpointer = offset + bytesCount;
@@ -1141,7 +1141,7 @@ namespace PeterO
           int bytesCount,
           bool replace)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             if (DataUtilities.ReadUtf8(stream, bytesCount, builder, replace) == -1)
             {
                 throw new IOException(
@@ -1187,12 +1187,12 @@ namespace PeterO
                 throw new ArgumentNullException(nameof(builder));
             }
             int b;
-            var cp = 0;
-            var bytesSeen = 0;
-            var bytesNeeded = 0;
-            var lower = 0x80;
-            var upper = 0xbf;
-            var pointer = 0;
+            int cp = 0;
+            int bytesSeen = 0;
+            int bytesNeeded = 0;
+            int lower = 0x80;
+            int upper = 0xbf;
+            int pointer = 0;
             while (pointer < bytesCount || bytesCount < 0)
             {
                 b = stream.ReadByte();

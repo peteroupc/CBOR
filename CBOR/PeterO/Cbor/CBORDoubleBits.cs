@@ -74,13 +74,13 @@ namespace PeterO.Cbor
             }
             if (neg && b == (0x43eL << 52))
             {
-                return Int64.MinValue;
+                return long.MinValue;
             }
             if ((b >> 52) >= 0x43e)
             {
                 throw new OverflowException("This object's value is out of range");
             }
-            var exp = (int)(b >> 52);
+            int exp = (int)(b >> 52);
             long mant = b & ((1L << 52) - 1);
             mant |= 1L << 52;
             int shift = 52 - (exp - 0x3ff);
@@ -148,7 +148,7 @@ namespace PeterO.Cbor
             {
                 return (origbits >> 63) != 0 ? (1L << 63) : 0;
             }
-            var exp = (int)(bits >> 52);
+            int exp = (int)(bits >> 52);
             long mant = bits & ((1L << 52) - 1);
             int shift = 52 - (exp - 0x3ff);
             return ((mant >> shift) << shift) | (origbits & (0xfffL << 52));
@@ -208,7 +208,7 @@ namespace PeterO.Cbor
             {
                 throw new OverflowException("This object's value is out of range");
             }
-            var exp = (int)(b >> 52);
+            int exp = (int)(b >> 52);
             long mant = b & ((1L << 52) - 1);
             mant |= 1L << 52;
             int shift = 52 - (exp - 0x3ff);

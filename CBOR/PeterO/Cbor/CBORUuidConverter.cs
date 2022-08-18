@@ -44,19 +44,19 @@ namespace PeterO.Cbor
             }
             ValidateObject(obj);
             byte[] bytes = obj.GetByteString();
-            var guidChars = new char[36];
+            char[] guidChars = new char[36];
             string hex = "0123456789abcdef";
-            var index = 0;
-            for (var i = 0; i < 16; ++i)
+            int index = 0;
+            for (int i = 0; i < 16; ++i)
             {
                 if (i == 4 || i == 6 || i == 8 || i == 10)
                 {
                     guidChars[index++] = '-';
                 }
-                guidChars[index++] = hex[bytes[i] >> 4 & 15];
+                guidChars[index++] = hex[(bytes[i] >> 4) & 15];
                 guidChars[index++] = hex[bytes[i] & 15];
             }
-            string guidString = new String(guidChars);
+            string guidString = new string(guidChars);
             return new Guid(guidString);
         }
     }

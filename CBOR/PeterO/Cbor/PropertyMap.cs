@@ -69,7 +69,7 @@ namespace PeterO.Cbor
             {
                 get
                 {
-                    TValue v = default(TValue);
+                    TValue v = default;
                     // NOTE: Don't use dict[key], since if it fails it could
                     // print the key in the exception's message, which could
                     // cause an infinite loop
@@ -106,7 +106,7 @@ namespace PeterO.Cbor
             }
             public void CopyTo(KeyValuePair<TKey, TValue>[] a, int off)
             {
-                foreach (var kv in this)
+                foreach (KeyValuePair<TKey, TValue> kv in this)
                 {
                     a[off++] = kv;
                 }
@@ -152,25 +152,13 @@ namespace PeterO.Cbor
             {
                 return this.dict.TryGetValue(key, out val);
             }
-            public int Count
-            {
-                get
-                {
-                    return this.dict.Count;
-                }
-            }
-            public bool IsReadOnly
-            {
-                get
-                {
-                    return false;
-                }
-            }
+            public int Count => this.dict.Count;
+            public bool IsReadOnly => false;
 
             [System.Diagnostics.Conditional("DEBUG")]
             private void CheckKeyExists(TKey key)
             {
-                TValue v = default(TValue);
+                TValue v = default;
                 if (!this.dict.ContainsKey(key))
                 {
                     /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
@@ -199,7 +187,7 @@ namespace PeterO.Cbor
             [System.Diagnostics.Conditional("DEBUG")]
             private void CheckKeyDoesNotExist(TKey key)
             {
-                TValue v = default(TValue);
+                TValue v = default;
                 // NOTE: Don't use dict[k], since if it fails it could
                 // print the key in the exception's message, which could
                 // cause an infinite loop
@@ -210,35 +198,17 @@ namespace PeterO.Cbor
                 throw new ArgumentException("key found");
             }
 
-            public ICollection<TKey> Keys
-            {
-                get
-                {
-                    return new KeyWrapper<TKey, TValue>(this.dict, this.list);
-                }
-            }
+            public ICollection<TKey> Keys => new KeyWrapper<TKey, TValue>(this.dict, this.list);
 
-            public ICollection<TKey> SortedKeys
-            {
-                get
-                {
-                    return this.dict.Keys;
-                }
-            }
+            public ICollection<TKey> SortedKeys => this.dict.Keys;
 
-            public ICollection<TValue> Values
-            {
-                get
-                {
-                    return new ValueWrapper<TKey, TValue>(this.dict, this.list);
-                }
-            }
+            public ICollection<TValue> Values => new ValueWrapper<TKey, TValue>(this.dict, this.list);
 
             private IEnumerable<KeyValuePair<TKey, TValue>> Iterate()
             {
-                foreach (var k in this.list)
+                foreach (TKey k in this.list)
                 {
-                    TValue v = default(TValue);
+                    TValue v = default;
                     // DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
                     // CBORObject).Type) + "]");
                     // NOTE: Don't use dict[k], since if it fails it could
@@ -282,7 +252,7 @@ namespace PeterO.Cbor
             }
             public void CopyTo(TValue[] a, int off)
             {
-                foreach (var k in this.list)
+                foreach (TKey k in this.list)
                 {
                     a[off++] = this.dict[k];
                 }
@@ -293,7 +263,7 @@ namespace PeterO.Cbor
             }
             public bool Contains(TValue v)
             {
-                foreach (var k in this.list)
+                foreach (TKey k in this.list)
                 {
                     if (this.dict[k].Equals(v))
                     {
@@ -302,24 +272,12 @@ namespace PeterO.Cbor
                 }
                 return false;
             }
-            public int Count
-            {
-                get
-                {
-                    return this.dict.Count;
-                }
-            }
-            public bool IsReadOnly
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public int Count => this.dict.Count;
+            public bool IsReadOnly => true;
 
             private IEnumerable<TValue> Iterate()
             {
-                foreach (var k in this.list)
+                foreach (TKey k in this.list)
                 {
                     yield return this.dict[k];
                 }
@@ -364,20 +322,8 @@ namespace PeterO.Cbor
             {
                 return this.dict.ContainsKey(v);
             }
-            public int Count
-            {
-                get
-                {
-                    return this.dict.Count;
-                }
-            }
-            public bool IsReadOnly
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public int Count => this.dict.Count;
+            public bool IsReadOnly => true;
             public IEnumerator<TKey> GetEnumerator()
             {
                 return this.list.GetEnumerator();
@@ -415,20 +361,8 @@ namespace PeterO.Cbor
             {
                 return this.o.Contains(v);
             }
-            public int Count
-            {
-                get
-                {
-                    return this.o.Count;
-                }
-            }
-            public bool IsReadOnly
-            {
-                get
-                {
-                    return true;
-                }
-            }
+            public int Count => this.o.Count;
+            public bool IsReadOnly => true;
             public IEnumerator<T> GetEnumerator()
             {
                 return this.o.GetEnumerator();
@@ -445,13 +379,7 @@ namespace PeterO.Cbor
             private readonly MemberInfo prop;
             private readonly string adjustedName;
             private readonly string adjustedNameCamelCase;
-            public string Name
-            {
-                get
-                {
-                    return this.name;
-                }
-            }
+            public string Name => this.name;
 
             public PropertyData(string name, MemberInfo prop)
             {
@@ -465,36 +393,32 @@ namespace PeterO.Cbor
             {
                 get
                 {
-                    var pr = this.prop as PropertyInfo;
-                    if (pr != null)
+                    if (this.prop is PropertyInfo pr)
                     {
                         return pr.PropertyType;
                     }
-                    var fi = this.prop as FieldInfo;
-                    return (fi != null) ? fi.FieldType : null;
+                    FieldInfo fi = this.prop as FieldInfo;
+                    return fi?.FieldType;
                 }
             }
 
             public object GetValue(object obj)
             {
-                var pr = this.prop as PropertyInfo;
-                if (pr != null)
+                if (this.prop is PropertyInfo pr)
                 {
                     return pr.GetValue(obj, null);
                 }
-                var fi = this.prop as FieldInfo;
-                return (fi != null) ? fi.GetValue(obj) : null;
+                FieldInfo fi = this.prop as FieldInfo;
+                return fi?.GetValue(obj);
             }
 
             public void SetValue(object obj, object value)
             {
-                var pr = this.prop as PropertyInfo;
-                if (pr != null)
+                if (this.prop is PropertyInfo pr)
                 {
                     pr.SetValue(obj, value, null);
                 }
-                var fi = this.prop as FieldInfo;
-                if (fi != null)
+                if (this.prop is FieldInfo fi)
                 {
                     fi.SetValue(obj, value);
                 }
@@ -525,25 +449,21 @@ namespace PeterO.Cbor
 #endif
             public bool HasUsableGetter()
             {
-                var pr = this.prop as PropertyInfo;
-                if (pr != null)
+                if (this.prop is PropertyInfo pr)
                 {
                     return HasUsableGetter(pr);
                 }
-                var fi = this.prop as FieldInfo;
-                return fi != null && fi.IsPublic && !fi.IsStatic &&
+                return this.prop is FieldInfo fi && fi.IsPublic && !fi.IsStatic &&
                   !fi.IsInitOnly && !fi.IsLiteral;
             }
 
             public bool HasUsableSetter()
             {
-                var pr = this.prop as PropertyInfo;
-                if (pr != null)
+                if (this.prop is PropertyInfo pr)
                 {
                     return HasUsableSetter(pr);
                 }
-                var fi = this.prop as FieldInfo;
-                return fi != null && fi.IsPublic && !fi.IsStatic &&
+                return this.prop is FieldInfo fi && fi.IsPublic && !fi.IsStatic &&
                   !fi.IsInitOnly && !fi.IsLiteral;
             }
 
@@ -571,13 +491,7 @@ namespace PeterO.Cbor
                 return thisName;
             }
 
-            public MemberInfo Prop
-            {
-                get
-                {
-                    return this.prop;
-                }
-            }
+            public MemberInfo Prop => this.prop;
         }
 
 #if NET40 || NET20
@@ -676,7 +590,7 @@ namespace PeterO.Cbor
           Type t,
           string name)
         {
-            foreach (var attr in t.GetTypeInfo().GetCustomAttributes())
+            foreach (Attribute attr in t.GetTypeInfo().GetCustomAttributes())
             {
                 if (attr.GetType().FullName.Equals(name, StringComparison.Ordinal))
                 {
@@ -713,10 +627,10 @@ namespace PeterO.Cbor
                   HasCustomAttribute(
                     t,
                     "Microsoft.FSharp.Core.CompilationMappingAttribute");
-                var names = new SortedDictionary<string, int>();
+                SortedDictionary<string, int> names = new SortedDictionary<string, int>();
                 foreach (PropertyInfo pi in GetTypeProperties(t))
                 {
-                    var pn = RemoveIsPrefix(pi.Name);
+                    string pn = RemoveIsPrefix(pi.Name);
                     if (names.ContainsKey(pn))
                     {
                         ++names[pn];
@@ -728,7 +642,7 @@ namespace PeterO.Cbor
                 }
                 foreach (FieldInfo pi in GetTypeFields(t))
                 {
-                    var pn = RemoveIsPrefix(pi.Name);
+                    string pn = RemoveIsPrefix(pi.Name);
                     if (names.ContainsKey(pn))
                     {
                         ++names[pn];
@@ -743,7 +657,7 @@ namespace PeterO.Cbor
                     PropertyData pd = new PropertyMap.PropertyData(fi.Name, fi);
                     if (pd.HasUsableGetter() || pd.HasUsableSetter())
                     {
-                        var pn = RemoveIsPrefix(pd.Name);
+                        string pn = RemoveIsPrefix(pd.Name);
                         // Ignore ambiguous properties
                         if (names.ContainsKey(pn) && names[pn] > 1)
                         {
@@ -760,7 +674,7 @@ namespace PeterO.Cbor
                         if (PropertyData.HasUsableGetter(pi) ||
                           PropertyData.HasUsableSetter(pi))
                         {
-                            var pn = RemoveIsPrefix(pi.Name);
+                            string pn = RemoveIsPrefix(pi.Name);
                             // Ignore ambiguous properties
                             if (names.ContainsKey(pn) && names[pn] > 1)
                             {
@@ -799,7 +713,7 @@ namespace PeterO.Cbor
 
         public static bool FirstElement(int[] dimensions)
         {
-            foreach (var d in dimensions)
+            foreach (int d in dimensions)
             {
                 if (d == 0)
                 {
@@ -811,7 +725,7 @@ namespace PeterO.Cbor
 
         public static bool NextElement(int[] index, int[] dimensions)
         {
-            for (var i = dimensions.Length - 1; i >= 0; --i)
+            for (int i = dimensions.Length - 1; i >= 0; --i)
             {
                 if (dimensions[i] > 0)
                 {
@@ -832,7 +746,7 @@ namespace PeterO.Cbor
         public static CBORObject BuildCBORArray(int[] dimensions)
         {
             int zeroPos = dimensions.Length;
-            for (var i = 0; i < dimensions.Length; ++i)
+            for (int i = 0; i < dimensions.Length; ++i)
             {
                 if (dimensions[i] == 0)
                 {
@@ -847,13 +761,13 @@ namespace PeterO.Cbor
             {
                 return CBORObject.NewArray();
             }
-            var stack = new CBORObject[zeroPos];
-            var index = new int[zeroPos];
-            var stackpos = 0;
+            CBORObject[] stack = new CBORObject[zeroPos];
+            int[] index = new int[zeroPos];
+            int stackpos = 0;
             CBORObject ret = CBORObject.NewArray();
             stack[0] = ret;
             index[0] = 0;
-            for (var i = 0; i < dimensions[0]; ++i)
+            for (int i = 0; i < dimensions[0]; ++i)
             {
                 ret.Add(CBORObject.NewArray());
             }
@@ -868,7 +782,7 @@ namespace PeterO.Cbor
                     {
                         stack[stackpos] = subobj;
                         index[stackpos] = 0;
-                        for (var i = 0; i < dimensions[stackpos]; ++i)
+                        for (int i = 0; i < dimensions[stackpos]; ++i)
                         {
                             subobj.Add(CBORObject.NewArray());
                         }
@@ -889,12 +803,12 @@ namespace PeterO.Cbor
         }
 
         public static CBORObject FromArray(
-          Object arrObj,
+          object arrObj,
           PODOptions options,
           CBORTypeMapper mapper,
           int depth)
         {
-            var arr = (Array)arrObj;
+            Array arr = (Array)arrObj;
             int rank = arr.Rank;
             if (rank == 0)
             {
@@ -906,7 +820,7 @@ namespace PeterO.Cbor
                 // Most common case: the array is one-dimensional
                 obj = CBORObject.NewArray();
                 int len = arr.GetLength(0);
-                for (var i = 0; i < len; ++i)
+                for (int i = 0; i < len; ++i)
                 {
                     obj.Add(
                       CBORObject.FromObject(
@@ -917,9 +831,9 @@ namespace PeterO.Cbor
                 }
                 return obj;
             }
-            var index = new int[rank];
-            var dimensions = new int[rank];
-            for (var i = 0; i < rank; ++i)
+            int[] index = new int[rank];
+            int[] dimensions = new int[rank];
+            for (int i = 0; i < rank; ++i)
             {
                 dimensions[i] = arr.GetLength(i);
             }
@@ -943,7 +857,7 @@ namespace PeterO.Cbor
         private static CBORObject GetCBORObject(CBORObject cbor, int[] index)
         {
             CBORObject ret = cbor;
-            foreach (var i in index)
+            foreach (int i in index)
             {
                 ret = ret[i];
             }
@@ -956,7 +870,7 @@ namespace PeterO.Cbor
           CBORObject obj)
         {
             CBORObject ret = cbor;
-            for (var i = 0; i < index.Length - 1; ++i)
+            for (int i = 0; i < index.Length - 1; ++i)
             {
                 ret = ret[index[i]];
             }
@@ -986,7 +900,7 @@ namespace PeterO.Cbor
             if (rank == 1)
             {
                 int len = arr.GetLength(0);
-                for (var i = 0; i < len; ++i)
+                for (int i = 0; i < len; ++i)
                 {
                     object item = cbor[i].ToObject(
                         elementType,
@@ -999,9 +913,9 @@ namespace PeterO.Cbor
                 }
                 return arr;
             }
-            var index = new int[rank];
-            var dimensions = new int[rank];
-            for (var i = 0; i < rank; ++i)
+            int[] index = new int[rank];
+            int[] dimensions = new int[rank];
+            for (int i = 0; i < rank; ++i)
             {
                 dimensions[i] = arr.GetLength(i);
             }
@@ -1041,7 +955,7 @@ namespace PeterO.Cbor
                 return new int[] { obj.Count };
             }
             // Complex cases
-            var list = new List<int>
+            List<int> list = new List<int>
             {
                 obj.Count
             };
@@ -1075,8 +989,8 @@ namespace PeterO.Cbor
             }
             else if (obj.Type == CBORType.TextString)
             {
-                var nameString = obj.AsString();
-                foreach (var name in Enum.GetNames(enumType))
+                string nameString = obj.AsString();
+                foreach (string name in Enum.GetNames(enumType))
                 {
                     if (nameString.Equals(name, StringComparison.Ordinal))
                     {
@@ -1117,13 +1031,11 @@ namespace PeterO.Cbor
         GetSortedKeys<TKey, TValue>(
           IDictionary<TKey, TValue> dict)
         {
-            var odict = dict as OrderedDictionary<TKey, TValue>;
-            if (odict != null)
+            if (dict is OrderedDictionary<TKey, TValue> odict)
             {
                 return odict.SortedKeys;
             }
-            var sdict = dict as SortedDictionary<TKey, TValue>;
-            if (sdict != null)
+            if (dict is SortedDictionary<TKey, TValue> sdict)
             {
                 return sdict.Keys;
             }
@@ -1135,7 +1047,7 @@ namespace PeterO.Cbor
         GetEntries<TKey, TValue>(
           IDictionary<TKey, TValue> dict)
         {
-            var c = (ICollection<KeyValuePair<TKey, TValue>>)dict;
+            ICollection<KeyValuePair<TKey, TValue>> c = dict;
             return new ReadOnlyWrapper<KeyValuePair<TKey, TValue>>(c);
         }
 
@@ -1157,14 +1069,14 @@ namespace PeterO.Cbor
           object obj,
           object argument)
         {
-            var mi = (MethodInfo)methodInfo;
+            MethodInfo mi = (MethodInfo)methodInfo;
             return mi.Invoke(obj, new[] { argument });
         }
 
         public static byte[] UUIDToBytes(Guid guid)
         {
-            var bytes2 = new byte[16];
-            var bytes = guid.ToByteArray();
+            byte[] bytes2 = new byte[16];
+            byte[] bytes = guid.ToByteArray();
             Array.Copy(bytes, bytes2, 16);
             // Swap the bytes to conform with the UUID RFC
             bytes2[0] = bytes[3];
@@ -1346,7 +1258,7 @@ namespace PeterO.Cbor
                 if (t.Equals(typeof(byte[])))
                 {
                     byte[] bytes = objThis.GetByteString();
-                    var byteret = new byte[bytes.Length];
+                    byte[] byteret = new byte[bytes.Length];
                     Array.Copy(bytes, 0, byteret, 0, byteret.Length);
                     return byteret;
                 }
@@ -1354,8 +1266,8 @@ namespace PeterO.Cbor
             if (objThis.Type == CBORType.Array)
             {
                 Type objectType = typeof(object);
-                var isList = false;
-                var isReadOnlyCollection = false;
+                bool isList = false;
+                bool isReadOnlyCollection = false;
                 object listObject = null;
                 object genericListObject = null;
                 if (IsAssignableFrom(typeof(Array), t))
@@ -1440,8 +1352,8 @@ namespace PeterO.Cbor
                     }
                     else if (IsClassOrValueType(t))
                     {
-                        var implementsList = false;
-                        foreach (var interf in GetTypeInterfaces(t))
+                        bool implementsList = false;
+                        foreach (Type interf in GetTypeInterfaces(t))
                         {
                             if (IsGenericType(interf) &&
                               interf.GetGenericTypeDefinition().Equals(typeof(IList<>)))
@@ -1508,8 +1420,8 @@ namespace PeterO.Cbor
             }
             if (objThis.Type == CBORType.Map)
             {
-                var isDict = false;
-                var isReadOnlyDict = false;
+                bool isDict = false;
+                bool isReadOnlyDict = false;
                 Type keyType = null;
                 Type valueType = null;
                 object dictObject = null;
@@ -1621,8 +1533,8 @@ namespace PeterO.Cbor
                           " not supported");
                     }
                 }
-                var values = new List<KeyValuePair<string, CBORObject>>();
-                var propNames = PropertyMap.GetPropertyNames(
+                List<KeyValuePair<string, CBORObject>> values = new List<KeyValuePair<string, CBORObject>>();
+                IEnumerable<string> propNames = PropertyMap.GetPropertyNames(
                     t,
                     options == null || options.UseCamelCase);
                 foreach (string key in propNames)
@@ -1630,7 +1542,7 @@ namespace PeterO.Cbor
                     if (objThis.ContainsKey(key))
                     {
                         CBORObject cborValue = objThis[key];
-                        var dict = new KeyValuePair<string, CBORObject>(
+                        KeyValuePair<string, CBORObject> dict = new KeyValuePair<string, CBORObject>(
                           key,
                           cborValue);
                         values.Add(dict);
@@ -1674,10 +1586,10 @@ namespace PeterO.Cbor
             try
             {
                 object o = Activator.CreateInstance(t);
-                var dict = new SortedDictionary<string, CBORObject>();
-                foreach (var kv in keysValues)
+                SortedDictionary<string, CBORObject> dict = new SortedDictionary<string, CBORObject>();
+                foreach (KeyValuePair<string, CBORObject> kv in keysValues)
                 {
-                    var name = kv.Key;
+                    string name = kv.Key;
                     dict[name] = kv.Value;
                 }
                 foreach (PropertyData key in GetPropertyList(o.GetType()))
@@ -1688,8 +1600,7 @@ namespace PeterO.Cbor
                         // a getter to be eligible for setting
                         continue;
                     }
-                    var name = key.GetAdjustedName(options != null ?
-                        options.UseCamelCase : true);
+                    string name = key.GetAdjustedName(options == null || options.UseCamelCase);
                     if (dict.ContainsKey(name))
                     {
                         object dobj = dict[name].ToObject(
@@ -1731,7 +1642,7 @@ namespace PeterO.Cbor
         }
 
         public static IEnumerable<KeyValuePair<string, object>> GetProperties(
-          Object o)
+          object o)
         {
             return GetProperties(o, true);
         }
@@ -1746,7 +1657,7 @@ namespace PeterO.Cbor
         }
 
         public static IEnumerable<KeyValuePair<string, object>> GetProperties(
-          Object o,
+          object o,
           bool useCamelCase)
         {
             foreach (PropertyData key in GetPropertyList(o.GetType()))

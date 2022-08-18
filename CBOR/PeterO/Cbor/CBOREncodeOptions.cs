@@ -21,7 +21,7 @@ namespace PeterO.Cbor
         /// <summary>Initializes a new instance of the
         /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class with all the
         /// default options.</summary>
-        public CBOREncodeOptions() : this(String.Empty)
+        public CBOREncodeOptions() : this(string.Empty)
         {
         }
 
@@ -106,7 +106,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(paramString));
             }
-            var parser = new OptionsParser(paramString);
+            OptionsParser parser = new OptionsParser(paramString);
             this.ResolveReferences = parser.GetBoolean("resolvereferences",
                 false);
             this.UseIndefLengthStrings = parser.GetBoolean(

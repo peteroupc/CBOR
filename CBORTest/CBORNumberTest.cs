@@ -181,7 +181,7 @@ namespace Test
             Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().IsNaN());
             Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().IsNaN());
             Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
-            Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+            Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(double.NaN)
               .AsNumber().IsNaN());
         }
 
@@ -223,10 +223,10 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
-            var r = new RandomGenerator();
-            for (var i = 0; i < 3000; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 3000; ++i)
             {
                 CBORObject o1 = CBORTestCommon.RandomNumber(r);
                 CBORObject o2 = CBORTestCommon.RandomNumber(r);
@@ -259,7 +259,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -278,7 +278,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -334,7 +334,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -348,7 +348,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -362,7 +362,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -376,7 +376,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -390,7 +390,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -404,7 +404,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -418,7 +418,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             CBORObject numbers = CBORObjectTest.GetNumberData();
             for (int i = 0; i < numbers.Count; ++i)
@@ -448,7 +448,7 @@ namespace Test
                     catch (Exception ex)
                     {
                         Assert.Fail(ex.ToString());
-                        throw new InvalidOperationException(String.Empty, ex);
+                        throw new InvalidOperationException(string.Empty, ex);
                     }
                 }
             }
@@ -567,7 +567,7 @@ namespace Test
             }
             try
             {
-                ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                ToObjectTest.TestToFromObjectRoundTrip(float.PositiveInfinity)
                 .AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
@@ -578,11 +578,11 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
-                ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                ToObjectTest.TestToFromObjectRoundTrip(float.NegativeInfinity)
                 .AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
@@ -593,12 +593,12 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
                 ToObjectTest.TestToFromObjectRoundTrip(
-                  Single.NaN).AsNumber().ToEInteger();
+                  float.NaN).AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
             catch (OverflowException)
@@ -608,11 +608,11 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
-                ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                ToObjectTest.TestToFromObjectRoundTrip(double.PositiveInfinity)
                 .AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
@@ -623,11 +623,11 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
-                ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity)
                 .AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
@@ -638,12 +638,12 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
                 ToObjectTest.TestToFromObjectRoundTrip(
-                  Double.NaN).AsNumber().ToEInteger();
+                  double.NaN).AsNumber().ToEInteger();
                 Assert.Fail("Should have failed");
             }
             catch (OverflowException)
@@ -653,7 +653,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -663,40 +663,40 @@ namespace Test
             {
                 object objectTemp = CBORTestCommon.DecPosInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(float.PositiveInfinity)
                   .AsNumber().ToEDecimal();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.DecNegInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(float.NegativeInfinity)
                   .AsNumber().ToEDecimal();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.DecPosInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(double.PositiveInfinity)
                   .AsNumber().ToEDecimal();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.DecNegInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity)
                   .AsNumber().ToEDecimal();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 bool bo = ToObjectTest.TestToFromObjectRoundTrip(
-                    Double.NaN).AsNumber().ToEDecimal().IsNaN();
+                    double.NaN).AsNumber().ToEDecimal().IsNaN();
                 Assert.IsTrue(bo);
             }
             {
                 bool bo =
                   ToObjectTest.TestToFromObjectRoundTrip(
-                    Single.NaN).AsNumber().ToEDecimal().IsNaN();
+                    float.NaN).AsNumber().ToEDecimal().IsNaN();
                 Assert.IsTrue(bo);
             }
             try
@@ -711,7 +711,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -725,7 +725,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -739,7 +739,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -753,7 +753,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -767,12 +767,12 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
                 ToObjectTest.TestToFromObjectRoundTrip(
-                  String.Empty).AsNumber().ToEDecimal();
+                  string.Empty).AsNumber().ToEDecimal();
                 Assert.Fail("Should have failed");
             }
             catch (InvalidOperationException)
@@ -782,7 +782,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -792,30 +792,30 @@ namespace Test
             {
                 object objectTemp = CBORTestCommon.FloatPosInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(float.PositiveInfinity)
                   .AsNumber().ToEFloat();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.FloatNegInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(float.NegativeInfinity)
                   .AsNumber().ToEFloat();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
-            Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+            Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(float.NaN)
               .AsNumber().IsNaN());
             {
                 object objectTemp = CBORTestCommon.FloatPosInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(double.PositiveInfinity)
                   .AsNumber().ToEFloat();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.FloatNegInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity)
                   .AsNumber().ToEFloat();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
@@ -827,38 +827,38 @@ namespace Test
             {
                 object objectTemp = CBORTestCommon.RatPosInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(float.PositiveInfinity)
                   .AsNumber().ToERational();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.RatNegInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(float.NegativeInfinity)
                   .AsNumber().ToERational();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
 
             Assert.IsTrue(
               ToObjectTest.TestToFromObjectRoundTrip(
-                ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+                ToObjectTest.TestToFromObjectRoundTrip(float.NaN)
                 .AsNumber().ToERational()).AsNumber().IsNaN());
             {
                 object objectTemp = CBORTestCommon.RatPosInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(double.PositiveInfinity)
                   .AsNumber().ToERational();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             {
                 object objectTemp = CBORTestCommon.RatNegInf;
                 object objectTemp2 =
-                  ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+                  ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity)
                   .AsNumber().ToERational();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
             Assert.IsTrue(
-              ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+              ToObjectTest.TestToFromObjectRoundTrip(double.NaN)
               .AsNumber().ToERational().IsNaN());
         }
     }

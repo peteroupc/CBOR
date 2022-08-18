@@ -15,7 +15,7 @@ namespace PeterO
 {
     internal static class DebugUtility
     {
-        private static readonly object WriterLock = new Object();
+        private static readonly object WriterLock = new object();
         private static Action<string> writer;
 
         [System.Diagnostics.Conditional("DEBUG")]
@@ -71,8 +71,8 @@ namespace PeterO
 #endif
                 }
             }
-            var types = new[] { typeof(string) };
-            var typeMethod = GetTypeMethod(type, "WriteLine", types);
+            Type[] types = new[] { typeof(string) };
+            MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", types);
             if (typeMethod != null)
             {
                 typeMethod.Invoke(
@@ -88,7 +88,7 @@ namespace PeterO
         [System.Diagnostics.Conditional("DEBUG")]
         public static void Log(string format, params object[] args)
         {
-            Log(String.Format(
+            Log(string.Format(
               System.Globalization.CultureInfo.CurrentCulture,
               format,
               args));

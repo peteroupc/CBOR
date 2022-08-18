@@ -55,7 +55,7 @@ namespace Test
                   "-0.0",
                   stringTemp);
             }
-            var assertNegatives = new string[] {
+            string[] assertNegatives = new string[] {
         "-0",
         "-0.0",
         "-0.0000",
@@ -78,7 +78,7 @@ namespace Test
         "-0.000e+999999999999",
         "-0.000e-999999999999",
       };
-            foreach (var str in assertNegatives)
+            foreach (string str in assertNegatives)
             {
                 cbor = CBORDataUtilities.ParseJSONNumber(str, false, false, true);
                 AssertNegative(cbor);
@@ -102,21 +102,21 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         [Test]
         public void TestParseJSONNumberNegativeZero()
         {
-            var strings = new string[] {
+            string[] strings = new string[] {
         "-0", "0", "-0E+0", "0", "-0E-0", "0", "-0E-1", "0.0",
         "-0.00", "0.00", "-0.00E+0", "0.00", "-0.00E-0", "0.00",
         "-0.00E-1", "0.000",
       };
-            for (var i = 0; i < strings.Length; i += 2)
+            for (int i = 0; i < strings.Length; i += 2)
             {
-                var jsonDecimal = (EDecimal)CBORDataUtilities
+                EDecimal jsonDecimal = (EDecimal)CBORDataUtilities
                   .ParseJSONNumber(strings[i]).ToObject(typeof(EDecimal));
                 Assert.AreEqual(
                   strings[i + 1],
@@ -136,7 +136,7 @@ namespace Test
       null, "100.", "-100.", "100.e+20", "-100.e+20",
       "100.e20", "+0.1", "0.", "-0.", "+0",
       "=0g.1", "0g.1", "0.e+20", "-0.e20", "-0.e+20",
-      "0.e20", String.Empty, "xyz", "Infinity", "-Infinity",
+      "0.e20", string.Empty, "xyz", "Infinity", "-Infinity",
       "true", ".1", ".01", "-.1", "-.01", "-xyz", "-true",
       "0..1", "-0..1", "0xyz", "-0xyz",
       "0.1xyz", "0.xyz", "0.5exyz", "0.5q+88",
@@ -161,7 +161,7 @@ namespace Test
         [Test]
         public void TestParseJSONNumberObsolete()
         {
-            foreach (var str in BadJsonNumbers)
+            foreach (string str in BadJsonNumbers)
             {
                 if (CBORDataUtilities.ParseJSONNumber(str, false, false, true) !=
                   null)
@@ -169,7 +169,7 @@ namespace Test
                     Assert.Fail(str);
                 }
             }
-            foreach (var str in GoodJsonNumbers)
+            foreach (string str in GoodJsonNumbers)
             {
                 if (CBORDataUtilities.ParseJSONNumber(str, false, false) == null)
                 {
@@ -181,7 +181,7 @@ namespace Test
         [Test]
         public void TestParseJSONNumber()
         {
-            foreach (var str in BadJsonNumbers)
+            foreach (string str in BadJsonNumbers)
             {
                 if (CBORDataUtilities.ParseJSONNumber(str) != null)
                 {
@@ -205,7 +205,7 @@ namespace Test
             }
             CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
             CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
-            foreach (var str in GoodJsonNumbers)
+            foreach (string str in GoodJsonNumbers)
             {
                 if (CBORDataUtilities.ParseJSONNumber(str) == null)
                 {

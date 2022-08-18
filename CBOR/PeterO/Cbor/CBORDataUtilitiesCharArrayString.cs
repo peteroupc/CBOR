@@ -40,20 +40,20 @@ namespace PeterO.Cbor
             JSONOptions.ConversionMode kind = options.NumberConversion;
             int endPos = offset + count;
             int initialOffset = offset;
-            var negative = false;
+            bool negative = false;
             if (chars[initialOffset] == '-')
             {
                 ++offset;
                 negative = true;
             }
             int numOffset = offset;
-            var haveDecimalPoint = false;
-            var haveDigits = false;
-            var haveDigitsAfterDecimal = false;
-            var haveNonzeroDigits = false;
-            var haveExponent = false;
+            bool haveDecimalPoint = false;
+            bool haveDigits = false;
+            bool haveDigitsAfterDecimal = false;
+            bool haveNonzeroDigits = false;
+            bool haveExponent = false;
             int i = offset;
-            var decimalPointPos = -1;
+            int decimalPointPos = -1;
             // Check syntax
             int k = i;
             if (endPos - 1 > k && chars[k] == '0' && chars[k + 1] >= '0' &&
@@ -128,8 +128,8 @@ namespace PeterO.Cbor
                 }
                 return null;
             }
-            var exponentPos = -1;
-            var negativeExp = false;
+            int exponentPos = -1;
+            bool negativeExp = false;
             if (haveExponent)
             {
                 haveDigits = false;
@@ -311,7 +311,7 @@ namespace PeterO.Cbor
                     long lv = 0L;
                     int expo = -(endPos - (decimalPointPos + 1));
                     int vi = numOffset;
-                    var digitCount = 0;
+                    int digitCount = 0;
                     for (; vi < decimalPointPos; ++vi)
                     {
                         if (digitCount < 0 || digitCount >= 18)

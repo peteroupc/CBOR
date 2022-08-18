@@ -33,7 +33,7 @@ namespace Test
             {
                 return a.Length < b.Length ? -1 : 1;
             }
-            for (var i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
                 if (a[i] != b[i])
                 {
@@ -131,10 +131,10 @@ namespace Test
                 throw new ArgumentNullException(nameof(bytes));
             }
             string str = DataUtilities.GetUtf8String(bytes, false);
-            var bytes2 = new byte[bytes.Length + 2];
+            byte[] bytes2 = new byte[bytes.Length + 2];
             bytes2[0] = 0x22;
             Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
-            bytes2[bytes2.Length - 1] = 0x22;
+            bytes2[^1] = 0x22;
             string str2 = CBORObject.FromJSONBytes(bytes2)
               .AsString();
             if (!str.Equals(str2, StringComparison.Ordinal))
@@ -149,8 +149,8 @@ namespace Test
         [Test]
         public void TestCorrectUtf8()
         {
-            var rg = new RandomGenerator();
-            for (var i = 0; i < 500; ++i)
+            RandomGenerator rg = new();
+            for (int i = 0; i < 500; ++i)
             {
                 TestJsonUtf8One(RandomObjects.RandomUtf8Bytes(rg, true));
             }
@@ -159,7 +159,7 @@ namespace Test
         [Test]
         public void TestLexOrderSpecific1()
         {
-            var bytes1 = new byte[] {
+            byte[] bytes1 = new byte[] {
         129, 165, 27, 0, 0, 65, 2, 0, 0, 144, 172, 71,
         125, 0, 14, 204, 3, 19, 214, 67, 93, 67, 70, 101, 123, 121, 96, 44,
         68, 69,
@@ -167,7 +167,7 @@ namespace Test
         72, 58,
         134, 85, 244, 83, 100, 92, 115, 76, 82, 99, 80, 122, 94,
       };
-            var bytes2 = new byte[] {
+            byte[] bytes2 = new byte[] {
         129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100,
         69, 167, 15, 101, 37, 18, 69, 230, 236, 57, 241, 146, 101, 120, 80,
         66, 115,
@@ -176,7 +176,7 @@ namespace Test
         80, 162, 211, 214, 105, 122, 59, 65, 32, 80, 70, 47, 90, 113, 66, 187,
         69,
       };
-            var bytes3 = new byte[] {
+            byte[] bytes3 = new byte[] {
         129, 165, 67, 93, 67, 70, 101, 123, 121, 96,
         44, 68, 100, 92, 115, 76, 82, 99, 80, 122, 94, 27, 0, 0, 65, 2, 0,
         0, 144,
@@ -184,7 +184,7 @@ namespace Test
         69, 158,
         1, 193, 250, 21, 59, 122, 166, 24, 16, 141, 232, 48, 145,
       };
-            var bytes4 = new byte[] {
+            byte[] bytes4 = new byte[] {
         129, 165, 27, 0, 0, 127, 163, 0, 0, 137, 100,
         69, 167, 15, 101, 37, 18, 98, 91, 105, 100, 102, 102, 78, 106, 69,
         230, 236,
@@ -206,7 +206,7 @@ namespace Test
         [Test]
         public void TestLexOrderSpecific2()
         {
-            var bytes1 = new byte[] {
+            byte[] bytes1 = new byte[] {
         129, 165, 59, 72, 110, 0, 0, 122, 250, 251,
         131, 71, 22, 187, 235, 209, 143, 30, 146, 69, 36, 230, 134, 20, 97,
         100, 78,
@@ -216,7 +216,7 @@ namespace Test
         37, 80,
         108, 40, 133,
       };
-            var bytes2 = new byte[] {
+            byte[] bytes2 = new byte[] {
         129, 165, 67, 62, 217, 7, 69, 113, 188, 156,
         26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186,
         9, 69,
@@ -224,7 +224,7 @@ namespace Test
         114,
         227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95,
       };
-            var bytes3 = new byte[] {
+            byte[] bytes3 = new byte[] {
         129, 165, 72, 58, 42, 171, 177, 73, 245, 198,
         139, 99, 36, 116, 76, 69, 36, 230, 134, 20, 97, 100, 78, 112, 92,
         101, 70,
@@ -234,7 +234,7 @@ namespace Test
         219, 37,
         80, 108, 40, 133,
       };
-            var bytes4 = new byte[] {
+            byte[] bytes4 = new byte[] {
         129, 165, 69, 70, 71, 152, 50, 17, 67, 231,
         129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62,
         217, 7,
@@ -255,7 +255,7 @@ namespace Test
         [Test]
         public void TestLexOrderSpecific3()
         {
-            var bytes1 = new byte[] {
+            byte[] bytes1 = new byte[] {
         129, 165, 67, 62, 217, 7, 69, 113, 188, 156,
         26, 34, 69, 32, 101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186,
         9, 69,
@@ -263,7 +263,7 @@ namespace Test
         114,
         227, 101, 209, 244, 103, 91, 37, 62, 59, 78, 124, 95,
       };
-            var bytes2 = new byte[] {
+            byte[] bytes2 = new byte[] {
         129, 165, 67, 64, 196, 213, 217, 43, 37, 27,
         37, 184, 58, 144, 176, 207, 252, 194, 68, 43, 68, 5, 219, 27, 0, 0, 126,
         173, 36, 137, 166, 19, 69, 27, 99, 166, 37, 216, 101, 87, 91, 80,
@@ -271,7 +271,7 @@ namespace Test
         69, 217, 77, 189, 138, 22, 101, 40, 93, 54, 59, 73, 97, 60, 99, 69,
         35, 66,
       };
-            var bytes3 = new byte[] {
+            byte[] bytes3 = new byte[] {
         129, 165, 69, 70, 71, 152, 50, 17, 67, 231,
         129, 240, 100, 79, 116, 84, 81, 69, 188, 114, 227, 101, 209, 67, 62,
         217, 7,
@@ -279,7 +279,7 @@ namespace Test
         69, 32,
         101, 130, 188, 201, 27, 122, 228, 0, 0, 0, 0, 186, 9,
       };
-            var bytes4 = new byte[] {
+            byte[] bytes4 = new byte[] {
         129, 165, 67, 64, 196, 213, 217, 43, 37, 27,
         37, 184, 58, 144, 176, 207, 252, 194, 69, 27, 99, 166, 37, 216, 101,
         87, 91,
@@ -365,8 +365,8 @@ namespace Test
         [Test]
         public void TestEInteger()
         {
-            var r = new RandomGenerator();
-            for (var i = 0; i < 500; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 500; ++i)
             {
                 EInteger bi = RandomObjects.RandomEInteger(r);
                 CBORTestCommon.AssertJSONSer(
@@ -392,7 +392,7 @@ namespace Test
         EInteger.FromString("18446744073709551103"),
         EInteger.FromString("18446744073709552127"),
       };
-            for (var i = 0; i < ranges.Length; i += 2)
+            for (int i = 0; i < ranges.Length; i += 2)
             {
                 EInteger bigintTemp = ranges[i];
                 while (true)
@@ -451,7 +451,7 @@ namespace Test
         [Test]
         public void TestByte()
         {
-            for (var i = 0; i <= 255; ++i)
+            for (int i = 0; i <= 255; ++i)
             {
                 CBORTestCommon.AssertJSONSer(
                   ToObjectTest.TestToFromObjectRoundTrip((byte)i),
@@ -482,7 +482,7 @@ namespace Test
         [Test]
         public void TestWriteToJSONSpecific()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0x6a, 0x25, 0x7f, 0x41, 0x58, 0x11, 0x54,
         0xc3, 0x94, 0x19, 0x49,
       };
@@ -534,7 +534,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -551,7 +551,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -568,7 +568,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -585,7 +585,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -602,7 +602,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -619,7 +619,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -636,7 +636,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -653,7 +653,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -670,7 +670,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -684,7 +684,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -698,7 +698,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -712,7 +712,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -726,7 +726,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -743,7 +743,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -760,7 +760,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -782,7 +782,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -808,12 +808,12 @@ namespace Test
             CBORNumber edNumber = ed.AsNumber();
             EDecimal edNumberED = AsED(ed);
             ed2 = EDecimal.FromDouble(edNumberED.ToDouble());
-            if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInDouble())
+            if (edNumberED.CompareTo(ed2) == 0 != edNumber.CanFitInDouble())
             {
                 Assert.Fail(ObjectMessage(ed) + "\n// CanFitInDouble");
             }
             ed2 = EDecimal.FromSingle(AsED(ed).ToSingle());
-            if ((edNumberED.CompareTo(ed2) == 0) != edNumber.CanFitInSingle())
+            if (edNumberED.CompareTo(ed2) == 0 != edNumber.CanFitInSingle())
             {
                 Assert.Fail(ObjectMessage(ed) + "\n// CanFitInSingle");
             }
@@ -869,8 +869,8 @@ namespace Test
         [Timeout(10000)]
         public void TestCanFitIn()
         {
-            var r = new RandomGenerator();
-            for (var i = 0; i < 5000; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 5000; ++i)
             {
                 CBORObject ed = CBORTestCommon.RandomNumber(r);
                 TestCanFitInOne(ed);
@@ -944,7 +944,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -958,7 +958,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -967,7 +967,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -981,7 +981,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -995,7 +995,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -1009,11 +1009,11 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
-                ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+                ToObjectTest.TestToFromObjectRoundTrip(string.Empty)
                 .Remove(CBORObject.True);
                 Assert.Fail("Should have failed");
             }
@@ -1024,7 +1024,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -1038,7 +1038,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -1052,7 +1052,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -1066,7 +1066,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -1080,7 +1080,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -1094,12 +1094,12 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
                 ToObjectTest.TestToFromObjectRoundTrip(
-                  String.Empty).ToObject(typeof(EFloat));
+                  string.Empty).ToObject(typeof(EFloat));
                 Assert.Fail("Should have failed");
             }
             catch (InvalidOperationException)
@@ -1109,7 +1109,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -1165,10 +1165,10 @@ namespace Test
               ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf));
 
             CBORTestCommon.AssertRoundTrip(
-              ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity));
+              ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity));
 
             CBORTestCommon.AssertRoundTrip(
-              ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity));
+              ToObjectTest.TestToFromObjectRoundTrip(float.NegativeInfinity));
 
             CBORTestCommon.AssertRoundTrip(
               ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf));
@@ -1177,10 +1177,10 @@ namespace Test
               ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf));
 
             CBORTestCommon.AssertRoundTrip(
-              ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity));
+              ToObjectTest.TestToFromObjectRoundTrip(double.PositiveInfinity));
 
             CBORTestCommon.AssertRoundTrip(
-              ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity));
+              ToObjectTest.TestToFromObjectRoundTrip(float.PositiveInfinity));
         }
 
         [Test]
@@ -1246,17 +1246,16 @@ namespace Test
             {
                 return false;
             }
-            if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-'))
+            if (bytes[0] is not ((>= 0x30 and <= 0x39) or ((byte)'-')))
             {
                 return false;
             }
-            if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <=
-                0x39))
+            if (bytes[^1] is not (>= 0x30 and <= 0x39))
             {
                 return false;
             }
             CBORObject cbor, cbor2, cbored, cbor3;
-            var jsoptions = new JSONOptions("numberconversion=full");
+            JSONOptions jsoptions = new("numberconversion=full");
             string str = DataUtilities.GetUtf8String(bytes, true);
             EDecimal ed = EDecimal.FromString(str);
             // Test consistency between JSON conversion methods
@@ -1283,17 +1282,16 @@ namespace Test
             {
                 return false;
             }
-            if (!((bytes[0] >= 0x30 && bytes[0] <= 0x39) || bytes[0] == (byte)'-'))
+            if (bytes[0] is not ((>= 0x30 and <= 0x39) or ((byte)'-')))
             {
                 return false;
             }
-            if (!(bytes[bytes.Length - 1] >= 0x30 && bytes[bytes.Length - 1] <=
-                0x39))
+            if (bytes[^1] is not (>= 0x30 and <= 0x39))
             {
                 return false;
             }
             CBORObject cbor, cbor2, cbored, cbor3;
-            var jsoptions = new JSONOptions("numberconversion=decimal128");
+            JSONOptions jsoptions = new("numberconversion=decimal128");
             string str = DataUtilities.GetUtf8String(bytes, true);
             // Test consistency between JSON conversion methods
             EDecimal ed = EDecimal.FromString(str, EContext.Decimal128);
@@ -1344,14 +1342,14 @@ namespace Test
         [Test]
         public void TestCompareToSpecificA()
         {
-            var bytes = new byte[] { 0xfa, 0xb3, 0x00, 0x00, 0x00 };
+            byte[] bytes = new byte[] { 0xfa, 0xb3, 0x00, 0x00, 0x00 };
             TestCompareToOne(bytes);
         }
 
         [Test]
         public void TestCompareToSpecificE()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0xbf,
         0xf9,
         0xce,
@@ -1377,7 +1375,7 @@ namespace Test
         [Test]
         public void TestCompareToSpecificC()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0xb9, 0x00, 0x02,
         0xfa,
         0x93,
@@ -1399,7 +1397,7 @@ namespace Test
         [Test]
         public void TestCompareToSpecificD()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0xbf, 0x00, 0x00,
         0xe0, 0x00, 0x7f, 0x78, 0x10, 0x64, 0x6b, 0x05, 0x77, 0x38, 0x3c,
         0x51, 0x66, 0x7c, 0x02, 0x31, 0x51, 0x56, 0x33, 0x56, 0x6a, 0x7b, 0x00,
@@ -1415,7 +1413,7 @@ namespace Test
         [Test]
         public void TestCompareToSpecificB()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0xa4,
         0xe3,
         0xf8, 0x70,
@@ -1564,11 +1562,11 @@ namespace Test
                 AddSubCompare(objectTemp, objectTemp2);
             }
             CBORObject cbor = CBORObject.FromObjectAndTag(
-                Double.NegativeInfinity,
+                double.NegativeInfinity,
                 1956611);
             CBORTestCommon.AssertRoundTrip(cbor);
             cbor = CBORObject.FromObjectAndTag(
-                ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity),
+                ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity),
                 1956611);
             CBORTestCommon.AssertRoundTrip(cbor);
             cbor = CBORObject.FromObjectAndTag(
@@ -1588,7 +1586,7 @@ namespace Test
         [Test]
         public void TestEquivJSON()
         {
-            var jsonBytes = new byte[] {
+            byte[] jsonBytes = new byte[] {
         0x22, 0x48, 0x54, 0x30, 0x43, 0x5c, 0x75,
         0x64, 0x61, 0x62, 0x43, 0x5c, 0x75, 0x64, 0x64, 0x32, 0x39, 0x48,
         0xdc,
@@ -1633,12 +1631,12 @@ namespace Test
                 new byte[] { 0xc4, 0x82, 0x3, 0x1a, 1, 2, 3, 4 });
             try
             {
-                Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
+                Console.WriteLine(string.Empty + obj.ToObject(typeof(EDecimal)));
             }
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -1652,7 +1650,7 @@ namespace Test
       });
             try
             {
-                Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
+                Console.WriteLine(string.Empty + obj.ToObject(typeof(EDecimal)));
                 Assert.Fail("Should have failed");
             }
             catch (InvalidOperationException)
@@ -1662,7 +1660,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -1678,7 +1676,7 @@ namespace Test
       });
             try
             {
-                Console.WriteLine(String.Empty + obj.ToObject(typeof(EDecimal)));
+                Console.WriteLine(string.Empty + obj.ToObject(typeof(EDecimal)));
                 Assert.Fail("Should have failed");
             }
             catch (InvalidOperationException)
@@ -1688,7 +1686,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -1704,7 +1702,7 @@ namespace Test
       });
             try
             {
-                Console.WriteLine(String.Empty + cbor.ToObject(typeof(EFloat)));
+                Console.WriteLine(string.Empty + cbor.ToObject(typeof(EFloat)));
                 Assert.Fail("Should have failed");
             }
             catch (InvalidOperationException)
@@ -1714,7 +1712,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -1744,8 +1742,8 @@ namespace Test
         [Test]
         public void TestDivide()
         {
-            var r = new RandomGenerator();
-            for (var i = 0; i < 3000; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 3000; ++i)
             {
                 CBORObject o1 =
                   ToObjectTest.TestToFromObjectRoundTrip(
@@ -1789,7 +1787,7 @@ namespace Test
         public void TestDouble()
         {
             if (!ToObjectTest.TestToFromObjectRoundTrip(
-                Double.PositiveInfinity).AsNumber().IsPositiveInfinity())
+                double.PositiveInfinity).AsNumber().IsPositiveInfinity())
             {
                 Assert.Fail("Not positive infinity");
             }
@@ -1797,16 +1795,16 @@ namespace Test
             Assert.IsTrue(
               (
                 (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-                  Double.PositiveInfinity)
+                  double.PositiveInfinity)
                 .ToObject(typeof(EDecimal))).IsPositiveInfinity());
 
             Assert.IsTrue(
               (
                 (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-                  Double.NegativeInfinity)
+                  double.NegativeInfinity)
                 .ToObject(typeof(EDecimal))).IsNegativeInfinity());
             Assert.IsTrue(
-              ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Double.NaN)
+              ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(double.NaN)
 
                 .ToObject(typeof(EDecimal))).IsNaN());
             for (int i = -65539; i <= 65539; ++i)
@@ -1894,15 +1892,15 @@ namespace Test
             Assert.IsTrue(
               (
                 (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-                  Single.PositiveInfinity)
+                  float.PositiveInfinity)
                 .ToObject(typeof(EDecimal))).IsPositiveInfinity());
             Assert.IsTrue(
               (
                 (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-                  Single.NegativeInfinity)
+                  float.NegativeInfinity)
                 .ToObject(typeof(EDecimal))).IsNegativeInfinity());
             Assert.IsTrue(
-              ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(Single.NaN)
+              ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(float.NaN)
 
                 .ToObject(typeof(EDecimal))).IsNaN());
             for (int i = -65539; i <= 65539; ++i)
@@ -1921,7 +1919,7 @@ namespace Test
         {
             CBORObject o = CBORObject.DecodeFromBytes(
                 new byte[] { 0xf9, 0x7c, 0x00 });
-            if (o.AsSingle() != Single.PositiveInfinity)
+            if (o.AsSingle() != float.PositiveInfinity)
             {
                 Assert.Fail();
             }
@@ -1933,13 +1931,13 @@ namespace Test
             }
             o = CBORObject.DecodeFromBytes(
                 new byte[] { 0xf9, 0xfc, 0x00 });
-            if (o.AsSingle() != Single.NegativeInfinity)
+            if (o.AsSingle() != float.NegativeInfinity)
             {
                 Assert.Fail();
             }
             o = CBORObject.DecodeFromBytes(
                 new byte[] { 0xf9, 0x7e, 0x00 });
-            Assert.IsTrue(Single.IsNaN(o.AsSingle()));
+            Assert.IsTrue(float.IsNaN(o.AsSingle()));
         }
 
         [Test]
@@ -1947,7 +1945,7 @@ namespace Test
         {
             CBORObject cbor;
             CBORObject cbortag;
-            for (var tag = 268; tag <= 269; ++tag)
+            for (int tag = 268; tag <= 269; ++tag)
             {
                 cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(0);
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
@@ -1956,7 +1954,7 @@ namespace Test
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
                 try
                 {
-                    Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
+                    Console.WriteLine(string.Empty + cbortag.ToObject(typeof(EDecimal)));
                     Assert.Fail("Should have failed " + cbortag.ToString());
                 }
                 catch (InvalidOperationException)
@@ -1966,7 +1964,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(1);
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
@@ -1975,7 +1973,7 @@ namespace Test
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
                 try
                 {
-                    Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
+                    Console.WriteLine(string.Empty + cbortag.ToObject(typeof(EDecimal)));
                     Assert.Fail("Should have failed " + cbortag.ToString());
                 }
                 catch (InvalidOperationException)
@@ -1985,13 +1983,13 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
                 try
                 {
-                    Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
+                    Console.WriteLine(string.Empty + cbortag.ToObject(typeof(EDecimal)));
                     Assert.Fail("Should have failed " + cbortag.ToString());
                 }
                 catch (InvalidOperationException)
@@ -2001,7 +1999,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 cbor = CBORObject.NewArray().Add(0).Add(0).Add(2);
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
@@ -2013,7 +2011,7 @@ namespace Test
                 cbortag = CBORObject.FromObjectAndTag(cbor, tag);
                 try
                 {
-                    Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
+                    Console.WriteLine(string.Empty + cbortag.ToObject(typeof(EDecimal)));
                     Assert.Fail("Should have failed " + cbortag.ToString());
                 }
                 catch (InvalidOperationException)
@@ -2023,7 +2021,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
         }
@@ -2035,8 +2033,8 @@ namespace Test
             long doublepnan = unchecked(0x7ff8000000000000L);
             int singlennan = unchecked((int)0xffc00000);
             int singlepnan = unchecked(0x7fc00000);
-            var halfnnan = 0xfe00;
-            var halfpnan = 0x7e00;
+            int halfnnan = 0xfe00;
+            int halfpnan = 0x7e00;
             {
                 object objectTemp = doublennan;
                 object objectTemp2 = CBORObject.FromFloatingPointBits(doublennan,
@@ -2097,11 +2095,11 @@ namespace Test
             Assert.AreEqual(CBORObject.Null, o[2]);
             Assert.AreEqual(CBORObject.True, o[3]);
             Assert.AreEqual(CBORObject.False, o[4]);
-            Assert.AreEqual(String.Empty, o[5].AsString());
+            Assert.AreEqual(string.Empty, o[5].AsString());
             o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
             double actual = o[0].AsDouble();
             Assert.AreEqual(1.5, actual);
-            using (var ms2a = new Test.DelayingStream(new byte[] { }))
+            using (DelayingStream ms2a = new(new byte[] { }))
             {
                 try
                 {
@@ -2115,10 +2113,10 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
-            using (var ms2b = new Test.DelayingStream(new byte[] { 0x20 }))
+            using (DelayingStream ms2b = new(new byte[] { 0x20 }))
             {
                 try
                 {
@@ -2132,12 +2130,12 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
             try
             {
-                CBORObject.FromJSONString(String.Empty);
+                CBORObject.FromJSONString(string.Empty);
                 Assert.Fail("Should have failed C");
             }
             catch (CBORException)
@@ -2147,7 +2145,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -2161,7 +2159,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -2175,7 +2173,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -2189,7 +2187,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             {
                 string stringTemp = CBORObject.FromJSONString(" true ").ToJSONString();
@@ -2250,13 +2248,13 @@ namespace Test
         {
             long[] ranges = {
         0, 65539, 0xfffff000L, 0x100000400L,
-        Int64.MaxValue - 1000,
-        Int64.MaxValue,
-        Int64.MinValue,
-        Int64.MinValue + 1000,
+        long.MaxValue - 1000,
+        long.MaxValue,
+        long.MinValue,
+        long.MinValue + 1000,
       };
             ranges[0] = -65539;
-            for (var i = 0; i < ranges.Length; i += 2)
+            for (int i = 0; i < ranges.Length; i += 2)
             {
                 long j = ranges[i];
                 while (true)
@@ -2402,8 +2400,8 @@ namespace Test
         [Test]
         public void TestParseDecimalStrings()
         {
-            var rand = new RandomGenerator();
-            for (var i = 0; i < 3000; ++i)
+            RandomGenerator rand = new();
+            for (int i = 0; i < 3000; ++i)
             {
                 TestParseDecimalStringsOne(RandomObjects.RandomDecimalString(rand));
             }
@@ -2413,13 +2411,13 @@ namespace Test
         [Timeout(200000)]
         public void TestRandomData()
         {
-            var rand = new RandomGenerator();
+            RandomGenerator rand = new();
             CBORObject obj;
-            for (var i = 0; i < 1000; ++i)
+            for (int i = 0; i < 1000; ++i)
             {
                 obj = CBORTestCommon.RandomCBORObject(rand);
                 CBORTestCommon.AssertRoundTrip(obj);
-                string jsonString = String.Empty;
+                string jsonString = string.Empty;
                 try
                 {
                     jsonString = obj.ToJSONString();
@@ -2431,7 +2429,7 @@ namespace Test
                 }
                 catch (CBORException)
                 {
-                    jsonString = String.Empty;
+                    jsonString = string.Empty;
                 }
                 if (jsonString.Length > 0)
                 {
@@ -2455,7 +2453,7 @@ namespace Test
             arr = CBORObject.FromObjectAndTag(arr, 28);
             root.Add(arr);
             CBORObject refobj;
-            for (var i = 0; i <= nests; ++i)
+            for (int i = 0; i <= nests; ++i)
             {
                 refobj = CBORObject.FromObjectAndTag(i, 29);
                 arr = CBORObject.FromObject(new CBORObject[] {
@@ -2472,7 +2470,7 @@ namespace Test
         [Timeout(5000)]
         public void TestCtap2CanonicalReferenceTest()
         {
-            for (var i = 4; i <= 60; ++i)
+            for (int i = 4; i <= 60; ++i)
             {
                 // has high recursive reference depths, higher than
                 // Ctap2Canonical supports, which is 4
@@ -2490,7 +2488,7 @@ namespace Test
             // NOTE: root has a nesting depth of more than four, so
             // encoding it should fail with Ctap2Canonical
             CBORObject origroot = root;
-            var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+            CBOREncodeOptions encodeOptions = new("resolvereferences=true");
             root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
             encodeOptions = new CBOREncodeOptions("ctap2canonical=true");
             if (root == null)
@@ -2499,7 +2497,7 @@ namespace Test
             }
             try
             {
-                using var lms = new Test.DelayingStream();
+                using DelayingStream lms = new();
                 root.WriteTo(lms, encodeOptions);
                 Assert.Fail("Should have failed");
             }
@@ -2510,7 +2508,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -2518,7 +2516,7 @@ namespace Test
         [Timeout(50000)]
         public void TestNoRecursiveExpansion()
         {
-            for (var i = 5; i <= 60; ++i)
+            for (int i = 5; i <= 60; ++i)
             {
                 // has high recursive reference depths
                 // var sw = new System.Diagnostics.Stopwatch();sw.Start();
@@ -2532,7 +2530,7 @@ namespace Test
         [Timeout(50000)]
         public void TestNoRecursiveExpansionJSON()
         {
-            for (var i = 5; i <= 60; ++i)
+            for (int i = 5; i <= 60; ++i)
             {
                 // has high recursive reference depths
                 // var sw = new System.Diagnostics.Stopwatch();sw.Start();
@@ -2550,7 +2548,7 @@ namespace Test
             }
             CBORObject origroot = root;
             byte[] bytes = CBORTestCommon.CheckEncodeToBytes(root);
-            var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
+            CBOREncodeOptions encodeOptions = new("resolvereferences=false");
             root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
             encodeOptions = new CBOREncodeOptions("resolvereferences=true");
             root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
@@ -2567,7 +2565,7 @@ namespace Test
             }
             try
             {
-                using var lms = new LimitedMemoryStream(100000);
+                using LimitedMemoryStream lms = new(100000);
                 root.WriteTo(lms);
                 Assert.Fail("Should have failed");
             }
@@ -2578,17 +2576,17 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
-                using var lms = new LimitedMemoryStream(100000);
+                using LimitedMemoryStream lms = new(100000);
                 origroot.WriteTo(lms);
             }
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -2600,7 +2598,7 @@ namespace Test
             }
             CBORObject origroot = root;
             byte[] bytes = CBORTestCommon.CheckEncodeToBytes(root);
-            var encodeOptions = new CBOREncodeOptions("resolvereferences=false");
+            CBOREncodeOptions encodeOptions = new("resolvereferences=false");
             root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
             encodeOptions = new CBOREncodeOptions("resolvereferences=true");
             root = CBORObject.DecodeFromBytes(bytes, encodeOptions);
@@ -2617,7 +2615,7 @@ namespace Test
             }
             try
             {
-                using var lms = new LimitedMemoryStream(100000);
+                using LimitedMemoryStream lms = new(100000);
                 root.WriteJSONTo(lms);
                 Assert.Fail("Should have failed");
             }
@@ -2628,17 +2626,17 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
-                using var lms = new LimitedMemoryStream(100000);
+                using LimitedMemoryStream lms = new(100000);
                 origroot.WriteJSONTo(lms);
             }
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -2646,7 +2644,7 @@ namespace Test
         public void TestSharedRefValidInteger()
         {
             byte[] bytes;
-            var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
+            CBOREncodeOptions encodeOptions = new("resolvereferences=true");
             // Shared ref is integer
             bytes = new byte[] {
         0x82, 0xd8, 0x1c, 0x00, 0xd8,
@@ -2659,7 +2657,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // Shared ref is negative
             bytes = new byte[] {
@@ -2678,7 +2676,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // Shared ref is non-integer
             bytes = new byte[] {
@@ -2698,7 +2696,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // Shared ref is non-number
             bytes = new byte[] {
@@ -2717,7 +2715,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // Shared ref is out of range
             bytes = new byte[] {
@@ -2736,13 +2734,13 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         private static string ToByteArrayStringFrom(byte[] array, int pos)
         {
-            var newArray = new byte[array.Length - pos];
+            byte[] newArray = new byte[array.Length - pos];
             Array.Copy(array, pos, newArray, 0, newArray.Length);
             return TestCommon.ToByteArrayString(newArray);
         }
@@ -2751,10 +2749,10 @@ namespace Test
         [Timeout(500000)]
         public void TestRandomNonsense()
         {
-            var rand = new RandomGenerator();
-            for (var i = 0; i < 1000; ++i)
+            RandomGenerator rand = new();
+            for (int i = 0; i < 1000; ++i)
             {
-                var array = new byte[rand.UniformInt(100000) + 1];
+                byte[] array = new byte[rand.UniformInt(100000) + 1];
                 rand.GetBytes(array, 0, array.Length);
                 TestRandomOne(array);
             }
@@ -2769,7 +2767,7 @@ namespace Test
             }
             if (array.Length > 50000)
             {
-                Console.WriteLine(String.Empty + array.Length);
+                Console.WriteLine(string.Empty + array.Length);
             }
             if (rand == null)
             {
@@ -2786,7 +2784,7 @@ namespace Test
 
         public static void TestRandomOne(byte[] array)
         {
-            using var inputStream = new Test.DelayingStream(array);
+            using DelayingStream inputStream = new(array);
             while (inputStream.Position != inputStream.Length)
             {
                 long oldPos = 0L;
@@ -2800,7 +2798,7 @@ namespace Test
                     // Console.WriteLine("pos=" + inputStream.Position + " of " +
                     // inputStream.Length + ", cborlen=" + cborlen);
                     // }
-                    byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
+                    byte[] encodedBytes = o?.EncodeToBytes();
                     try
                     {
                         CBORObject.DecodeFromBytes(encodedBytes);
@@ -2809,7 +2807,7 @@ namespace Test
                     {
                         throw new InvalidOperationException(ex.Message, ex);
                     }
-                    String jsonString = String.Empty;
+                    string jsonString = string.Empty;
                     try
                     {
                         if (o == null)
@@ -2825,7 +2823,7 @@ namespace Test
                             catch (CBORException ex)
                             {
                                 Console.WriteLine(ex.Message);
-                                jsonString = String.Empty;
+                                jsonString = string.Empty;
                             }
                             if (jsonString.Length > 0)
                             {
@@ -2842,20 +2840,19 @@ namespace Test
                 catch (CBORException ex)
                 {
                     // Expected exception
-                    Console.Write(ex.Message.Substring(0, 0));
+                    Console.Write(ex.Message[..0]);
                 }
                 catch (InvalidOperationException ex)
                 {
                     string failString = ex.ToString() +
-                      (ex.InnerException == null ? String.Empty : "\n" +
+                      (ex.InnerException == null ? string.Empty : "\n" +
                         ex.InnerException.ToString());
                     failString += "\nlength: " + array.Length + " bytes";
                     failString += "\nstart pos: " + oldPos + ", truelen=" +
                       (inputStream.Position - oldPos);
                     failString += "\n" + TestCommon.ToByteArrayString(array);
-                    failString = failString.Substring(
-                        0,
-                        Math.Min(2000, failString.Length));
+                    failString = failString[
+..Math.Min(2000, failString.Length)];
                     throw new InvalidOperationException(failString, ex);
                 }
             }
@@ -2864,9 +2861,9 @@ namespace Test
         [Test]
         public void TestRandomSlightlyModified()
         {
-            var rand = new RandomGenerator();
+            RandomGenerator rand = new();
             // Test slightly modified objects
-            for (var i = 0; i < 2000; ++i)
+            for (int i = 0; i < 2000; ++i)
             {
                 CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
                 byte[] array = originalObject.EncodeToBytes();
@@ -2880,20 +2877,20 @@ namespace Test
             try
             {
                 {
-                    using var ms = new Test.DelayingStream();
+                    using DelayingStream ms = new();
                     MiniCBOR.WriteInt32(val, ms);
                     byte[] msarray = ms.ToArray();
-                    using var ms2 = new Test.DelayingStream(msarray);
+                    using DelayingStream ms2 = new(msarray);
                     Assert.AreEqual(
                       val,
                       MiniCBOR.ReadInt32(ms2),
                       TestCommon.ToByteArrayString(msarray));
                 }
                 {
-                    using var ms = new Test.DelayingStream();
+                    using DelayingStream ms = new();
                     CBORObject.Write(val, ms);
                     byte[] msarray = ms.ToArray();
-                    using var ms2 = new Test.DelayingStream(msarray);
+                    using DelayingStream ms2 = new(msarray);
                     Assert.AreEqual(
                       val,
                       MiniCBOR.ReadInt32(ms2),
@@ -2940,21 +2937,21 @@ namespace Test
             TestUnsignedLongOne(0xFFFFFFFFL, "ffffffff");
             TestUnsignedLongOne(-1, "ffffffffffffffff");
             TestUnsignedLongOne(-3, "fffffffffffffffd");
-            TestUnsignedLongOne(Int64.MaxValue, "7fffffffffffffff");
-            TestUnsignedLongOne(Int64.MaxValue - 1, "7ffffffffffffffe");
-            TestUnsignedLongOne(Int64.MinValue, "8000000000000000");
-            TestUnsignedLongOne(Int64.MinValue + 1, "8000000000000001");
+            TestUnsignedLongOne(long.MaxValue, "7fffffffffffffff");
+            TestUnsignedLongOne(long.MaxValue - 1, "7ffffffffffffffe");
+            TestUnsignedLongOne(long.MinValue, "8000000000000000");
+            TestUnsignedLongOne(long.MinValue + 1, "8000000000000001");
         }
 
         [Test]
         public void TestReadWriteInt()
         {
-            var r = new RandomGenerator();
-            for (var i = -70000; i < 70000; ++i)
+            RandomGenerator r = new();
+            for (int i = -70000; i < 70000; ++i)
             {
                 TestReadWriteIntOne(i);
             }
-            for (var i = 0; i < 100000; ++i)
+            for (int i = 0; i < 100000; ++i)
             {
                 int val = unchecked((int)RandomObjects.RandomInt64(r));
                 TestReadWriteIntOne(val);
@@ -2964,7 +2961,7 @@ namespace Test
         [Test]
         public void TestShort()
         {
-            for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i)
+            for (int i = short.MinValue; i <= short.MaxValue; ++i)
             {
                 CBORTestCommon.AssertJSONSer(
                   ToObjectTest.TestToFromObjectRoundTrip((short)i),
@@ -2990,7 +2987,7 @@ namespace Test
         public void TestCtap2NestingLevel()
         {
             CBORObject o;
-            var ctap = new CBOREncodeOptions("ctap2canonical=true");
+            CBOREncodeOptions ctap = new("ctap2canonical=true");
             // 1 nesting level
             o = CBORObject.FromJSONString("[]");
             if (o.EncodeToBytes(ctap) == null)
@@ -3029,7 +3026,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // 4 nesting levels
             o = CBORObject.FromJSONString("[[[[0]]]]");
@@ -3069,7 +3066,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // 4 nesting levels
             o = CBORObject.FromJSONString("[[[{\"x\": 0}]]]");
@@ -3091,13 +3088,13 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         private static string Chop(string str)
         {
-            return (str.Length < 100) ? str : (str.Substring(0, 100) + "...");
+            return (str.Length < 100) ? str : (str[..100] + "...");
         }
 
         private static void VerifyEqual(
@@ -3117,7 +3114,7 @@ namespace Test
         [Test]
         public void TestRational1()
         {
-            var eb1 = new byte[] {
+            byte[] eb1 = new byte[] {
         0xd8, 0x1e,
         0x82,
         0xc2, 0x58, 0x22, 0x24,
@@ -3152,7 +3149,7 @@ namespace Test
         0xdf, 0x5c, 0x66, 0x2f, 0x4d,
         0xbd, 0x7e, 0x57, 0xdd, 0x91, 0x6c,
       };
-            Console.WriteLine(String.Empty +
+            Console.WriteLine(string.Empty +
               CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
             TestRandomOne(eb1);
         }
@@ -3160,7 +3157,7 @@ namespace Test
         [Test]
         public void TestRational2()
         {
-            var eb1 = new byte[] {
+            byte[] eb1 = new byte[] {
         0xd8, 0x1e,
         0x82,
         0xc2, 0x58, 0x18, 0x2d,
@@ -3179,7 +3176,7 @@ namespace Test
         0xff, 0xdb, 0x45, 0x97, 0x0c, 0x56, 0x04, 0xe3,
         0x21,
       };
-            Console.WriteLine(String.Empty +
+            Console.WriteLine(string.Empty +
               CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
             TestRandomOne(eb1);
         }
@@ -3187,7 +3184,7 @@ namespace Test
         [Test]
         public void TestRational3()
         {
-            var eb1 = new byte[] {
+            byte[] eb1 = new byte[] {
         0xd8, 0x1e,
         0x82, 0x1b, 0x00, 0x00, 0x26,
         0xbd, 0x75, 0x51,
@@ -3203,7 +3200,7 @@ namespace Test
         0xc9, 0x15, 0xe3, 0x34, 0xa2, 0x16, 0x07, 0x07, 0x0d,
         0xd3,
       };
-            Console.WriteLine(String.Empty +
+            Console.WriteLine(string.Empty +
               CBORObject.DecodeFromBytes(eb1).ToObject(typeof(ERational)));
             TestRandomOne(eb1);
         }
@@ -3212,7 +3209,7 @@ namespace Test
         [Timeout(60000)]
         public void TestAsNumberAddSubtractSpecific()
         {
-            var eb1 = new byte[] {
+            byte[] eb1 = new byte[] {
         0xd9, 0x01, 0x08,
         0x82,
         0xc3, 0x57, 0x0f,
@@ -3239,7 +3236,7 @@ namespace Test
         0xd1, 0xc2, 0xc9, 0x40, 0xa6, 0x1b,
         0xb5, 0x87,
       };
-            var eb2 = new byte[] {
+            byte[] eb2 = new byte[] {
         0xc5,
         0x82, 0x18,
         0xbe,
@@ -3276,7 +3273,7 @@ namespace Test
         [Timeout(60000)]
         public void TestAsNumberAddSubtractSpecific2()
         {
-            var eb1 = new byte[] {
+            byte[] eb1 = new byte[] {
         0xc4,
         0x82, 0x1b, 0x00, 0x00, 0x00, 0x6e, 0x1c, 0x51, 0x6c, 0x6e,
         0xc3, 0x4f, 0x7c, 0x0f, 0x6e, 0x1d,
@@ -3284,7 +3281,7 @@ namespace Test
         0x8d, 0x57, 0xec, 0x00, 0x54, 0xb9, 0x51,
         0xae, 0x43,
       };
-            var eb2 = new byte[] { 0xfa, 0x75, 0x00, 0x57, 0xbe };
+            byte[] eb2 = new byte[] { 0xfa, 0x75, 0x00, 0x57, 0xbe };
             CBORObject cbor1 = CBORObject.DecodeFromBytes(eb1);
             CBORObject cbor2 = CBORObject.DecodeFromBytes(eb2);
             EDecimal ed1 = AsED(cbor1);
@@ -3298,8 +3295,8 @@ namespace Test
         [Timeout(100000)]
         public void TestAsNumberAddSubtract()
         {
-            var r = new RandomGenerator();
-            for (var i = 0; i < 3000; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 3000; ++i)
             {
                 // NOTE: Avoid generating high-exponent numbers for this test
                 CBORObject o1 = CBORTestCommon.RandomNumber(r, true);
@@ -3432,16 +3429,16 @@ namespace Test
         [Timeout(100000)]
         public void TestAsNumberMultiplyDivide()
         {
-            var bo1 = new byte[] {
+            byte[] bo1 = new byte[] {
         0x1b, 0x75, 0xdd, 0xb0,
         0xcc, 0x50, 0x9b, 0xd0, 0x2b,
       };
-            var bo2 = new byte[] { 0xc5, 0x82, 0x23, 0x00 };
+            byte[] bo2 = new byte[] { 0xc5, 0x82, 0x23, 0x00 };
             CBORObject cbor1 = CBORObject.DecodeFromBytes(bo1);
             CBORObject cbor2 = CBORObject.DecodeFromBytes(bo2);
             TestAsNumberMultiplyDivideOne(cbor1, cbor2);
-            var r = new RandomGenerator();
-            for (var i = 0; i < 3000; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 3000; ++i)
             {
                 CBORObject o1 = CBORTestCommon.RandomNumber(r);
                 CBORObject o2 = CBORTestCommon.RandomNumber(r);
@@ -3604,7 +3601,7 @@ namespace Test
               EInteger.FromString("-1"),
               trueObj.MostInnerTag);
             EInteger[] tagstmp = CBORObject.True.GetAllTags();
-            for (var i = 0; i < ranges.Length; i += 2)
+            for (int i = 0; i < ranges.Length; i += 2)
             {
                 EInteger bigintTemp = ranges[i];
                 while (true)
@@ -3615,12 +3612,12 @@ namespace Test
                       31)
                     {
                         int bc = ei.ToInt32Checked();
-                        if (bc >= -1 && bc <= 37)
+                        if (bc is >= (-1) and <= 37)
                         {
                             bigintTemp = bigintNext;
                             continue;
                         }
-                        if (bc >= 264 && bc <= 270)
+                        if (bc is >= 264 and <= 270)
                         {
                             bigintTemp = bigintNext;
                             continue;
@@ -3700,9 +3697,9 @@ namespace Test
         [Test]
         public void TestOverlongSimpleValues()
         {
-            for (var i = 0; i <= 0x1f; ++i)
+            for (int i = 0; i <= 0x1f; ++i)
             {
-                var bytes = new byte[] { 0xf8, (byte)i };
+                byte[] bytes = new byte[] { 0xf8, (byte)i };
                 try
                 {
                     CBORObject.DecodeFromBytes(bytes);
@@ -3715,7 +3712,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
         }
@@ -3724,10 +3721,10 @@ namespace Test
         public void TestDecodeCtap2Canonical()
         {
             // Tests that the code rejects noncanonical data
-            var options = new CBOREncodeOptions("ctap2canonical=1");
+            CBOREncodeOptions options = new("ctap2canonical=1");
             Assert.IsTrue(options.Ctap2Canonical);
             byte[] bytes;
-            for (var i = 0; i < 2; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 int eb = i == 0 ? 0 : 0x20;
                 bytes = new byte[] { (byte)eb };
@@ -3738,7 +3735,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x17 + eb) };
                 try
@@ -3748,7 +3745,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x18 + eb), 0 };
                 try
@@ -3763,7 +3760,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x19 + eb), 0, 0 };
                 try
@@ -3778,7 +3775,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1a + eb), 0, 0, 0, 0 };
                 try
@@ -3793,7 +3790,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1b + eb), 0, 0, 0, 0, 0, 0, 0, 0 };
                 try
@@ -3808,7 +3805,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x18 + eb), 0x17 };
                 try
@@ -3823,7 +3820,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x18 + eb), 0x18 };
                 try
@@ -3833,7 +3830,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x19 + eb), 0, 0xff };
                 try
@@ -3848,7 +3845,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x19 + eb), 1, 0 };
                 try
@@ -3858,7 +3855,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1a + eb), 0, 0, 0xff, 0xff };
                 try
@@ -3873,7 +3870,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1a + eb), 0, 1, 0, 0 };
                 try
@@ -3883,7 +3880,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] {
           (byte)(0x1b + eb), 0, 0, 0, 0, 0xff,
@@ -3901,7 +3898,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1b + eb), 0, 0, 0, 1, 0, 0, 0, 0 };
                 try
@@ -3911,10 +3908,10 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
-            for (var i = 2; i <= 5; ++i)
+            for (int i = 2; i <= 5; ++i)
             {
                 int eb = 0x20 * i;
                 bytes = new byte[] { (byte)eb };
@@ -3925,7 +3922,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x18 + eb), 0 };
                 try
@@ -3940,7 +3937,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x19 + eb), 0, 0 };
                 try
@@ -3955,7 +3952,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1a + eb), 0, 0, 0, 0 };
                 try
@@ -3970,7 +3967,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 bytes = new byte[] { (byte)(0x1b + eb), 0, 0, 0, 0, 0, 0, 0, 0 };
                 try
@@ -3985,7 +3982,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
             bytes = new byte[] { 0xc0, 0 };
@@ -4001,7 +3998,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xd7, 0 };
             try
@@ -4016,7 +4013,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xd8, 0xff, 0 };
             try
@@ -4031,7 +4028,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xd9, 0xff, 0xff, 0 };
             try
@@ -4046,7 +4043,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] {
         0xda, 0xff, 0xff, 0xff,
@@ -4064,7 +4061,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] {
         0xdb, 0xff, 0xff, 0xff,
@@ -4083,7 +4080,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // Nesting depth
             bytes = new byte[] { 0x81, 0x81, 0x81, 0x80 };
@@ -4094,7 +4091,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0x81, 0x81, 0x81, 0x81, 0 };
             try
@@ -4104,7 +4101,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] {
         0x81, 0x81, 0x81, 0xa1,
@@ -4117,7 +4114,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] {
         0x81, 0x81, 0x81, 0x81,
@@ -4135,7 +4132,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] {
         0x81, 0x81, 0x81, 0xa1,
@@ -4148,7 +4145,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] {
         0x81, 0x81, 0x81, 0x81,
@@ -4164,7 +4161,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xfa, 8, 8, 8, 8 };
             try
@@ -4174,7 +4171,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xfb, 8, 8, 8, 8, 8, 8, 8, 8 };
             try
@@ -4184,7 +4181,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // Map Key Ordering
             bytes = new byte[] { 0xa2, 0, 0, 1, 0 };
@@ -4195,7 +4192,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xa2, 1, 0, 0, 0 };
             TestFailingDecode(bytes, options);
@@ -4207,7 +4204,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xa2, 0x20, 0, 0, 0 };
             TestFailingDecode(bytes, options);
@@ -4219,7 +4216,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xa2, 0x38, 0xff, 0, 0, 0 };
             TestFailingDecode(bytes, options);
@@ -4231,7 +4228,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xa2, 0x42, 0, 0, 0, 0x41, 0xff, 0 };
             TestFailingDecode(bytes, options);
@@ -4243,7 +4240,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             bytes = new byte[] { 0xa2, 0x62, 0, 0, 0, 0x61, 0x7f, 0 };
             TestFailingDecode(bytes, options);
@@ -4463,7 +4460,7 @@ namespace Test
             {
                 Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" +
                   ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -4482,7 +4479,7 @@ namespace Test
             {
                 Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" +
                   ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4496,7 +4493,7 @@ namespace Test
             {
                 Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" +
                   ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -4516,11 +4513,11 @@ namespace Test
             {
                 Assert.Fail(TestCommon.ToByteArrayString(bytes) + "\n" +
                   ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
-        private static int[][] valueBadLesserFields = {
+        private static readonly int[][] valueBadLesserFields = {
       new int[] { 0, 1, 0, 0, 0, 0, 0 },
       new int[] { -1, 1, 0, 0, 0, 0, 0 },
       new int[] { 1, 32, 0, 0, 0, 0, 0 },
@@ -4536,45 +4533,45 @@ namespace Test
       new int[] { 11, 31, 0, 0, 0, 0, 0 },
       new int[] { 12, 32, 0, 0, 0, 0, 0 },
       new int[] { 13, 1, 0, 0, 0, 0, 0 },
-      new int[] { Int32.MinValue, 1, 0, 0, 0, 0, 0 },
-      new int[] { Int32.MaxValue, 1, 0, 0, 0, 0, 0 },
+      new int[] { int.MinValue, 1, 0, 0, 0, 0, 0 },
+      new int[] { int.MaxValue, 1, 0, 0, 0, 0, 0 },
       new int[] { 1, 0, 0, 0, 0, 0, 0 },
       new int[] { 1, -1, 0, 0, 0, 0, 0 },
-      new int[] { 1, Int32.MinValue, 0, 0, 0, 0, 0 },
+      new int[] { 1, int.MinValue, 0, 0, 0, 0, 0 },
       new int[] { 1, 32, 0, 0, 0, 0, 0 },
-      new int[] { 1, Int32.MaxValue, 0, 0, 0, 0, 0 },
+      new int[] { 1, int.MaxValue, 0, 0, 0, 0, 0 },
       new int[] { 1, 1, -1, 0, 0, 0, 0 },
-      new int[] { 1, 1, Int32.MinValue, 0, 0, 0, 0 },
+      new int[] { 1, 1, int.MinValue, 0, 0, 0, 0 },
       new int[] { 1, 1, 24, 0, 0, 0, 0 },
       new int[] { 1, 1, 59, 0, 0, 0, 0 },
       new int[] { 1, 1, 60, 0, 0, 0, 0 },
-      new int[] { 1, 1, Int32.MaxValue, 0, 0, 0, 0 },
+      new int[] { 1, 1, int.MaxValue, 0, 0, 0, 0 },
       new int[] { 1, 1, 0, -1, 0, 0, 0 },
-      new int[] { 1, 1, 0, Int32.MinValue, 0, 0, 0 },
+      new int[] { 1, 1, 0, int.MinValue, 0, 0, 0 },
       new int[] { 1, 1, 0, 60, 0, 0, 0 },
-      new int[] { 1, 1, 0, Int32.MaxValue, 0, 0, 0 },
+      new int[] { 1, 1, 0, int.MaxValue, 0, 0, 0 },
       new int[] { 1, 1, 0, 0, -1, 0, 0 },
-      new int[] { 1, 1, 0, 0, Int32.MinValue, 0, 0 },
+      new int[] { 1, 1, 0, 0, int.MinValue, 0, 0 },
       new int[] { 1, 1, 0, 0, 60, 0, 0 },
-      new int[] { 1, 1, 0, 0, Int32.MaxValue, 0, 0 },
+      new int[] { 1, 1, 0, 0, int.MaxValue, 0, 0 },
       new int[] { 1, 1, 0, 0, 0, -1, 0 },
-      new int[] { 1, 1, 0, 0, 0, Int32.MinValue, 0 },
+      new int[] { 1, 1, 0, 0, 0, int.MinValue, 0 },
       new int[] { 1, 1, 0, 0, 0, 1000 * 1000 * 1000, 0 },
-      new int[] { 1, 1, 0, 0, 0, Int32.MaxValue, 0 },
+      new int[] { 1, 1, 0, 0, 0, int.MaxValue, 0 },
       new int[] { 1, 1, 0, 0, 0, 0, -1440 },
-      new int[] { 1, 1, 0, 0, 0, 0, Int32.MinValue },
+      new int[] { 1, 1, 0, 0, 0, 0, int.MinValue },
       new int[] { 1, 1, 0, 0, 0, 0, 1440 },
-      new int[] { 1, 1, 0, 0, 0, 0, Int32.MaxValue },
+      new int[] { 1, 1, 0, 0, 0, 0, int.MaxValue },
     };
 
         private static void TestBadDateFieldsOne(CBORDateConverter conv)
         {
             EInteger eint = EInteger.FromInt32(2000);
             int[] lesserFields;
-            for (var i = 0; i < valueBadLesserFields.Length; ++i)
+            for (int i = 0; i < valueBadLesserFields.Length; ++i)
             {
                 lesserFields = valueBadLesserFields[i];
-                Assert.AreEqual(7, lesserFields.Length, String.Empty + i);
+                Assert.AreEqual(7, lesserFields.Length, string.Empty + i);
                 if (lesserFields[3] == 0 && lesserFields[4] == 0 &&
                   lesserFields[5] == 0 &&
                   lesserFields[6] == 0 && lesserFields[2] == 0)
@@ -4595,7 +4592,7 @@ namespace Test
                     catch (Exception ex)
                     {
                         Assert.Fail(ex.ToString());
-                        throw new InvalidOperationException(String.Empty, ex);
+                        throw new InvalidOperationException(string.Empty, ex);
                     }
                 }
                 if (lesserFields[5] == 0 && lesserFields[6] == 0)
@@ -4618,7 +4615,7 @@ namespace Test
                     catch (Exception ex)
                     {
                         Assert.Fail(ex.ToString());
-                        throw new InvalidOperationException(String.Empty, ex);
+                        throw new InvalidOperationException(string.Empty, ex);
                     }
                 }
                 try
@@ -4633,7 +4630,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
             lesserFields = null;
@@ -4649,7 +4646,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             // TODO: Make into CBORException in next major version
             lesserFields = new int[] { 1 };
@@ -4665,7 +4662,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             lesserFields = new int[] { 1, 1 };
             try
@@ -4680,7 +4677,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             lesserFields = new int[] { 1, 1, 0 };
             try
@@ -4695,7 +4692,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             lesserFields = new int[] { 1, 1, 0, 0 };
             try
@@ -4710,7 +4707,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             lesserFields = new int[] { 1, 1, 0, 0, 0 };
             try
@@ -4725,7 +4722,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             lesserFields = new int[] { 1, 1, 0, 0, 0, 0 };
             try
@@ -4740,7 +4737,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4754,7 +4751,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4768,7 +4765,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4782,7 +4779,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4791,7 +4788,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4800,7 +4797,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4809,7 +4806,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4818,7 +4815,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4827,7 +4824,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4836,7 +4833,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -4845,7 +4842,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -5018,20 +5015,20 @@ namespace Test
             EInteger pastMinCborInteger =
               EInteger.FromString("-18446744073709551617");
             EInteger pastMinInt64 = EInteger.FromString("-9223372036854775809");
-            var eints = new EInteger[] {
+            EInteger[] eints = new EInteger[] {
         maxCborInteger, maxInt64, minCborInteger,
         minInt64, pastMaxCborInteger, pastMaxInt64, pastMinCborInteger,
         pastMinInt64,
       };
-            var isPastCbor = new bool[] {
+            bool[] isPastCbor = new bool[] {
         false, false, false, false, true, false, true,
         false,
       };
-            var isPastInt64 = new bool[] {
+            bool[] isPastInt64 = new bool[] {
         false, false, false, false, true, true, true,
         true,
       };
-            for (var i = 0; i < eints.Length; ++i)
+            for (int i = 0; i < eints.Length; ++i)
             {
                 CBORObject cbor;
                 bool isNegative = eints[i].Sign < 0;
@@ -5076,7 +5073,7 @@ namespace Test
                 }
                 try
                 {
-                    using (var ms = new Test.DelayingStream())
+                    using (DelayingStream ms = new())
                     {
                         CBORObject.Write(ef, ms);
                         cbor = CBORObject.DecodeFromBytes(ms.ToArray());
@@ -5121,7 +5118,7 @@ namespace Test
                         Assert.AreEqual(CBORType.Integer, cbor[0].Type);
                         Assert.AreEqual(0, cbor[0].TagCount);
                     }
-                    using var ms2 = new Test.DelayingStream();
+                    using DelayingStream ms2 = new();
                     CBORObject.Write(ed, ms2);
                     cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
                     Assert.IsTrue(cbor.IsNumber, cbor.ToString());
@@ -5180,8 +5177,8 @@ namespace Test
         public void TestAllowEmpty()
         {
             CBOREncodeOptions options;
-            var bytes = new byte[0];
-            options = new CBOREncodeOptions(String.Empty);
+            byte[] bytes = new byte[0];
+            options = new CBOREncodeOptions(string.Empty);
             try
             {
                 CBORObject.DecodeFromBytes(bytes, options);
@@ -5194,13 +5191,13 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             options = new CBOREncodeOptions("allowempty=true");
             Assert.AreEqual(null, CBORObject.DecodeFromBytes(bytes, options));
-            using (var ms = new Test.DelayingStream(bytes))
+            using (DelayingStream ms = new(bytes))
             {
-                options = new CBOREncodeOptions(String.Empty);
+                options = new CBOREncodeOptions(string.Empty);
                 try
                 {
                     CBORObject.Read(ms, options);
@@ -5213,10 +5210,10 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
-            using (var ms = new Test.DelayingStream(bytes))
+            using (DelayingStream ms = new(bytes))
             {
                 options = new CBOREncodeOptions("allowempty=true");
                 Assert.AreEqual(null, CBORObject.Read(ms, options));
@@ -5226,7 +5223,7 @@ namespace Test
         [Test]
         public void TestCtap2CanonicalDecodeEncodeSpecific1()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0xa2, 0x82, 0xf6,
         0x82,
         0xfb, 0x3c,
@@ -5244,8 +5241,8 @@ namespace Test
         0x00,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-            var options = new CBOREncodeOptions("ctap2canonical=true");
-            Console.WriteLine(String.Empty + cbor);
+            CBOREncodeOptions options = new("ctap2canonical=true");
+            Console.WriteLine(string.Empty + cbor);
             try
             {
                 cbor.EncodeToBytes(options);
@@ -5258,7 +5255,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5272,7 +5269,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5287,14 +5284,14 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         [Test]
         public void TestCtap2CanonicalDecodeEncodeSpecific2()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0x82,
         0x82,
         0xf5,
@@ -5304,8 +5301,8 @@ namespace Test
         0x00,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-            var options = new CBOREncodeOptions("ctap2canonical=true");
-            Console.WriteLine(String.Empty + cbor);
+            CBOREncodeOptions options = new("ctap2canonical=true");
+            Console.WriteLine(string.Empty + cbor);
             try
             {
                 cbor.EncodeToBytes(options);
@@ -5318,7 +5315,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5332,7 +5329,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5347,14 +5344,14 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         [Test]
         public void TestCtap2CanonicalDecodeEncodeSpecific3()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0x82,
         0xfa,
         0xe0,
@@ -5367,8 +5364,8 @@ namespace Test
         0xf4,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-            var options = new CBOREncodeOptions("ctap2canonical=true");
-            Console.WriteLine(String.Empty + cbor);
+            CBOREncodeOptions options = new("ctap2canonical=true");
+            Console.WriteLine(string.Empty + cbor);
             try
             {
                 cbor.EncodeToBytes(options);
@@ -5381,7 +5378,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5395,7 +5392,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5410,14 +5407,14 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         [Test]
         public void TestCtap2CanonicalDecodeEncodeSpecific4()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0x81,
         0x82,
         0xda, 0x00, 0x0d, 0x77, 0x09,
@@ -5425,8 +5422,8 @@ namespace Test
         0xf6,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-            var options = new CBOREncodeOptions("ctap2canonical=true");
-            Console.WriteLine(String.Empty + cbor);
+            CBOREncodeOptions options = new("ctap2canonical=true");
+            Console.WriteLine(string.Empty + cbor);
             try
             {
                 cbor.EncodeToBytes(options);
@@ -5439,7 +5436,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5453,7 +5450,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5468,21 +5465,21 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         [Test]
         public void TestCtap2CanonicalDecodeEncodeSpecific5()
         {
-            var bytes = new byte[] {
+            byte[] bytes = new byte[] {
         0xa2,
         0xda, 0x00, 0x03, 0x69,
         0x95, 0xf6, 0xf7, 0xf6, 0xf4,
       };
             CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
-            var options = new CBOREncodeOptions("ctap2canonical=true");
-            Console.WriteLine(String.Empty + cbor);
+            CBOREncodeOptions options = new("ctap2canonical=true");
+            Console.WriteLine(string.Empty + cbor);
             try
             {
                 cbor.EncodeToBytes(options);
@@ -5495,7 +5492,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5509,7 +5506,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -5524,14 +5521,14 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
         public static void TestCtap2CanonicalDecodeEncodeOne(
           CBORObject cbor)
         {
-            var options = new CBOREncodeOptions("ctap2canonical=true");
+            CBOREncodeOptions options = new("ctap2canonical=true");
             if (cbor == null)
             {
                 throw new ArgumentNullException(nameof(cbor));
@@ -5550,7 +5547,7 @@ namespace Test
                 catch (Exception ex2)
                 {
                     Assert.Fail(ex2.ToString());
-                    throw new InvalidOperationException(String.Empty, ex2);
+                    throw new InvalidOperationException(string.Empty, ex2);
                 }
                 byte[] bytes2 = cbor2.EncodeToBytes(options);
                 TestCommon.AssertByteArraysEqual(bytes, bytes2);
@@ -5571,7 +5568,7 @@ namespace Test
                 catch (Exception ex3)
                 {
                     Assert.Fail(ex3.ToString() + "\n" + ex4.ToString());
-                    throw new InvalidOperationException(String.Empty, ex3);
+                    throw new InvalidOperationException(string.Empty, ex3);
                 }
             }
         }
@@ -5579,8 +5576,8 @@ namespace Test
         [Test]
         public void TestCtap2CanonicalDecodeEncode()
         {
-            var r = new RandomGenerator();
-            for (var i = 0; i < 3000; ++i)
+            RandomGenerator r = new();
+            for (int i = 0; i < 3000; ++i)
             {
                 TestCtap2CanonicalDecodeEncodeOne(
                   CBORTestCommon.RandomCBORObject(r));
@@ -5605,7 +5602,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail(ex.ToString());
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 
@@ -5680,24 +5677,24 @@ namespace Test
         [Test]
         public void TestWriteBasic()
         {
-            var jsonop1 = new JSONOptions("writebasic=true");
+            JSONOptions jsonop1 = new("writebasic=true");
             string json = CBORObject.FromObject("\uD800\uDC00").ToJSONString(jsonop1);
             Assert.AreEqual("\"\\uD800\\uDC00\"", json);
             json = CBORObject.FromObject("\u0800\u0C00").ToJSONString(jsonop1);
             Assert.AreEqual("\"\\u0800\\u0C00\"", json);
             json = CBORObject.FromObject("\u0085\uFFFF").ToJSONString(jsonop1);
             Assert.AreEqual("\"\\u0085\\uFFFF\"", json);
-            var rg = new RandomGenerator();
-            for (var i = 0; i < 1000; ++i)
+            RandomGenerator rg = new();
+            for (int i = 0; i < 1000; ++i)
             {
                 string rts = RandomObjects.RandomTextString(rg);
                 CBORObject cbor = CBORObject.FromObject(rts);
                 json = cbor.ToJSONString(jsonop1);
                 // Check that the JSON contains only ASCII code points
-                for (var j = 0; j < json.Length; ++j)
+                for (int j = 0; j < json.Length; ++j)
                 {
                     char c = json[j];
-                    if ((c < 0x20 && c != 0x09 && c != 0x0a && c != 0x0d) || c >= 0x7f)
+                    if (c is (< (char)0x20 and not (char)0x09 and not (char)0x0a and not (char)0x0d) or >= (char)0x7f)
                     {
                         Assert.Fail(rts);
                     }
@@ -5710,25 +5707,25 @@ namespace Test
         [Test]
         public void TestJSONOptions()
         {
-            var jsonop1 = new JSONOptions("numberconversion=intorfloat");
+            JSONOptions jsonop1 = new("numberconversion=intorfloat");
             {
                 object objectTemp = jsonop1.ToString();
                 object objectTemp2 = new JSONOptions(jsonop1.ToString()).ToString();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
-            var jsonop2 = new JSONOptions("numberconversion=decimal128");
+            JSONOptions jsonop2 = new("numberconversion=decimal128");
             {
                 object objectTemp = jsonop2.ToString();
                 object objectTemp2 = new JSONOptions(jsonop2.ToString()).ToString();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
-            var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
+            JSONOptions jsonop3 = new("numberconversion=intorfloatfromdouble");
             {
                 object objectTemp = jsonop3.ToString();
                 object objectTemp2 = new JSONOptions(jsonop3.ToString()).ToString();
                 Assert.AreEqual(objectTemp, objectTemp2);
             }
-            var jsonop4 = new JSONOptions("numberconversion=double");
+            JSONOptions jsonop4 = new("numberconversion=double");
             {
                 object objectTemp = jsonop4.ToString();
                 object objectTemp2 = new JSONOptions(jsonop4.ToString()).ToString();
@@ -5762,13 +5759,13 @@ namespace Test
         [Test]
         public void TestRandomJSON()
         {
-            var jsongen = new JSONGenerator();
-            var rg = new RandomGenerator();
-            var jsonop1 = new JSONOptions("numberconversion=intorfloat");
-            var jsonop2 = new JSONOptions("numberconversion=decimal128");
-            var jsonop3 = new JSONOptions("numberconversion=intorfloatfromdouble");
-            var jsonop4 = new JSONOptions("numberconversion=double");
-            for (var i = 0; i < 200; ++i)
+            JSONGenerator jsongen = new();
+            RandomGenerator rg = new();
+            JSONOptions jsonop1 = new("numberconversion=intorfloat");
+            JSONOptions jsonop2 = new("numberconversion=decimal128");
+            JSONOptions jsonop3 = new("numberconversion=intorfloatfromdouble");
+            JSONOptions jsonop4 = new("numberconversion=double");
+            for (int i = 0; i < 200; ++i)
             {
                 byte[] jsonbytes = jsongen.Generate(rg);
                 // Console.WriteLine(String.Empty + i + " len=" + jsonbytes.Length);
@@ -5838,8 +5835,8 @@ namespace Test
         public static void TestWriteToJSON(CBORObject obj)
         {
             CBORObject objA = null;
-            string jsonString = String.Empty;
-            using (var ms = new Test.DelayingStream())
+            string jsonString = string.Empty;
+            using (DelayingStream ms = new())
             {
                 try
                 {

@@ -20,7 +20,7 @@ namespace Test
                 }
                 else
                 {
-                    var newbytes = new byte[this.bytes.Length * 2];
+                    byte[] newbytes = new byte[this.bytes.Length * 2];
                     Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
                     this.bytes = newbytes;
                     this.bytes[this.pos++] = (byte)b;
@@ -28,37 +28,31 @@ namespace Test
                 return this;
             }
 
-            public int ByteLength
-            {
-                get
-                {
-                    return this.pos;
-                }
-            }
+            public int ByteLength => this.pos;
 
             public byte[] ToBytes()
             {
-                var newbytes = new byte[this.pos];
+                byte[] newbytes = new byte[this.pos];
                 Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
                 return newbytes;
             }
         }
 
-        private static int[] valueMajorTypes = {
+        private static readonly int[] valueMajorTypes = {
       0, 1, 3, 4, 5,
     };
 
-        private static int[] valueMajorTypesTop = {
+        private static readonly int[] valueMajorTypesTop = {
       0, 1, 3, 4, 4, 4, 4, 4, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 5, 5, 5,
     };
 
-        private static int[] valueEscapes = {
+        private static readonly int[] valueEscapes = {
       '\\', '/', '\"',
       'b', 'f', 'n', 'r', 't', 'u',
     };
 
-        private static char[] valueEscapeChars = {
+        private static readonly char[] valueEscapeChars = {
       '\\', '/', '\"',
       (char)8, (char)12, '\n', '\r', '\t', (char)0,
     };
@@ -69,7 +63,7 @@ namespace Test
           int cu)
         {
             int c;
-            var shift = 12;
+            int shift = 12;
             for (int i = 0; i < 4; ++i)
             {
                 c = (cu >> shift) & 0xf;
@@ -150,7 +144,7 @@ namespace Test
                 bs.Write('-');
             }
             bool shortLen = ra.GetInt32(100) < 75;
-            var len = 0;
+            int len = 0;
             if (ra.GetInt32(100) < 2)
             {
                 // Integer part is zero
@@ -160,7 +154,7 @@ namespace Test
             {
                 // Integer part
                 len = shortLen ? ra.GetInt32(10) + 1 :
-                   ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+                   (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
                 bs.Write(0x31 + ra.GetInt32(9));
                 for (int i = 0; i < len; ++i)
                 {
@@ -172,7 +166,7 @@ namespace Test
             {
                 bs.Write(0x2e);
                 len = shortLen ? ra.GetInt32(10) + 1 :
-                 ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+                 (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
                 for (int i = 0; i < len; ++i)
                 {
                     bs.Write(0x30 + ra.GetInt32(10));
@@ -196,7 +190,7 @@ namespace Test
                 len = 1 + ra.GetInt32(5);
                 if (ra.GetInt32(10) == 0)
                 {
-                    len = 1 + ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000);
+                    len = 1 + (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000);
                 }
                 for (int i = 0; i < len; ++i)
                 {
@@ -215,7 +209,7 @@ namespace Test
             int r2, r3, r4;
             if (r == 0 && len >= 2)
             {
-                r = 0xc2 + ra.GetInt32((0xdf - 0xc2) + 1);
+                r = 0xc2 + ra.GetInt32(0xdf - 0xc2 + 1);
                 bs.Write(r);
                 r2 = 0x80 + ra.GetInt32(0x40);
                 bs.Write(r2);
@@ -231,7 +225,7 @@ namespace Test
                 bs.Write(r);
                 int lower = (r == 0xe0) ? 0xa0 : 0x80;
                 int upper = (r == 0xed) ? 0x9f : 0xbf;
-                r2 = lower + ra.GetInt32((upper - lower) + 1);
+                r2 = lower + ra.GetInt32(upper - lower + 1);
                 bs.Write(r2);
                 r3 = 0x80 + ra.GetInt32(0x40);
                 bs.Write(r3);
@@ -247,7 +241,7 @@ namespace Test
                 bs.Write(r);
                 int lower = (r == 0xf0) ? 0x90 : 0x80;
                 int upper = (r == 0xf4) ? 0x8f : 0xbf;
-                r2 = lower + ra.GetInt32((upper - lower) + 1);
+                r2 = lower + ra.GetInt32(upper - lower + 1);
                 bs.Write(r2);
                 r3 = 0x80 + ra.GetInt32(0x40);
                 bs.Write(r3);
@@ -272,14 +266,14 @@ namespace Test
         {
             while (true)
             {
-                var sb = new StringBuilder();
-                var bs = new ByteWriter();
+                StringBuilder sb = new();
+                ByteWriter bs = new();
                 int len = ra.GetInt32(1000) * ra.GetInt32(1000);
                 len /= 1000;
                 if (ra.GetInt32(50) == 0 && depth < 2)
                 {
                     // Exponential curve that strongly favors small numbers
-                    var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
+                    long v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
                     len = (int)(v / 1000000);
                 }
                 bs.Write(0x22);
@@ -330,7 +324,7 @@ namespace Test
                 string key = sb.ToString();
                 if (!keys.ContainsKey(key))
                 {
-                    keys[key] = String.Empty;
+                    keys[key] = string.Empty;
                     byte[] bytes = bs.ToBytes();
                     for (int i = 0; i < bytes.Length; ++i)
                     {
@@ -351,7 +345,7 @@ namespace Test
             if (ra.GetInt32(50) == 0 && depth < 2)
             {
                 // Exponential curve that strongly favors small numbers
-                var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
+                long v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
                 len = (int)(v / 1000000);
             }
             bs.Write(0x22);
@@ -434,12 +428,12 @@ namespace Test
             {
                 GenerateJsonString(r, bs, depth);
             }
-            else if (majorType == 4 || majorType == 5)
+            else if (majorType is 4 or 5)
             {
                 int len = r.GetInt32(8);
                 if (r.GetInt32(50) == 0 && depth < 2)
                 {
-                    var v = (long)r.GetInt32(1000) * r.GetInt32(1000);
+                    long v = (long)r.GetInt32(1000) * r.GetInt32(1000);
                     len = (int)(v / 1000);
                 }
                 if (depth > 6)
@@ -462,7 +456,7 @@ namespace Test
                 if (majorType == 5)
                 {
                     bs.Write('{');
-                    var keys = new Dictionary<string, string>();
+                    Dictionary<string, string> keys = new();
                     for (int i = 0; i < len; ++i)
                     {
                         if (i > 0)
@@ -484,7 +478,7 @@ namespace Test
 
         public byte[] Generate(IRandomGenExtended random)
         {
-            var bs = new ByteWriter();
+            ByteWriter bs = new();
             if (random == null)
             {
                 throw new ArgumentNullException(nameof(random));

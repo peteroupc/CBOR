@@ -11,7 +11,7 @@ namespace PeterO.Cbor
         /// <summary>Initializes a new instance of the
         /// <see cref='PeterO.Cbor.PODOptions'/> class with all the default
         /// options.</summary>
-        public PODOptions() : this(String.Empty)
+        public PODOptions() : this(string.Empty)
         {
         }
 
@@ -64,7 +64,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(paramString));
             }
-            var parser = new OptionsParser(paramString);
+            OptionsParser parser = new OptionsParser(paramString);
             this.UseCamelCase = parser.GetBoolean("usecamelcase", true);
         }
 

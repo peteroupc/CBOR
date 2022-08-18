@@ -24,25 +24,25 @@ namespace PeterO.DocGen
         private static readonly IDictionary<string, string> ValueOperators =
               OperatorList();
 
-        private readonly StringBuilder buffer = new StringBuilder();
-        private readonly StringBuilder exceptionStr = new StringBuilder();
+        private readonly StringBuilder buffer = new();
+        private readonly StringBuilder exceptionStr = new();
 
         private readonly IDictionary<string, StringBuilder> members = new
           SortedDictionary<string, StringBuilder>();
 
-        private readonly StringBuilder paramStr = new StringBuilder();
-        private readonly StringBuilder returnStr = new StringBuilder();
+        private readonly StringBuilder paramStr = new();
+        private readonly StringBuilder returnStr = new();
         private StringBuilder currentBuffer;
 
         public static void AppendConstraints(
           Type[] genericArguments,
           StringBuilder builder)
         {
-            foreach (var arg in genericArguments)
+            foreach (Type arg in genericArguments)
             {
                 if (arg.IsGenericParameter)
                 {
-                    var constraints = arg.GetGenericParameterConstraints();
+                    Type[] constraints = arg.GetGenericParameterConstraints();
                     if (constraints.Length == 0 && (arg.GenericParameterAttributes &
             (GenericParameterAttributes.ReferenceTypeConstraint |
             GenericParameterAttributes.NotNullableValueTypeConstraint |
@@ -54,7 +54,7 @@ namespace PeterO.DocGen
                     builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
                     builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
                     builder.Append(" : ");
-                    var first = true;
+                    bool first = true;
                     if ((arg.GenericParameterAttributes &
                          GenericParameterAttributes.ReferenceTypeConstraint) !=
                         GenericParameterAttributes.None)
@@ -88,7 +88,7 @@ namespace PeterO.DocGen
                         builder.Append("new()");
                         first = false;
                     }
-                    foreach (var constr in constraints)
+                    foreach (Type constr in constraints)
                     {
                         if (!first)
                         {
@@ -104,7 +104,7 @@ namespace PeterO.DocGen
 
         public static string FormatField(FieldInfo field)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.Append(FourSpaces);
             if (field.IsPublic)
             {
@@ -133,7 +133,7 @@ namespace PeterO.DocGen
             {
                 try
                 {
-                    var obj = field.GetRawConstantValue();
+                    object obj = field.GetRawConstantValue();
                     if (obj is int)
                     {
                         builder.Append(" = " + (int)obj + ";");
@@ -163,7 +163,7 @@ namespace PeterO.DocGen
           MethodBase method,
           bool shortform)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             if (!shortform)
             {
                 builder.Append(FourSpaces);
@@ -204,8 +204,8 @@ namespace PeterO.DocGen
                     }
                 }
             }
-            var methodInfo = method as MethodInfo;
-            var isExtension = false;
+            MethodInfo methodInfo = method as MethodInfo;
+            bool isExtension = false;
             Attribute attr;
             if (methodInfo != null)
             {
@@ -248,7 +248,7 @@ namespace PeterO.DocGen
             {
                 builder.Append('<');
                 first = true;
-                foreach (var arg in method.GetGenericArguments())
+                foreach (Type arg in method.GetGenericArguments())
                 {
                     if (!first)
                     {
@@ -261,7 +261,7 @@ namespace PeterO.DocGen
             }
             builder.Append('(');
             first = true;
-            foreach (var param in method.GetParameters())
+            foreach (ParameterInfo param in method.GetParameters())
             {
                 if (!first)
                 {
@@ -311,9 +311,9 @@ namespace PeterO.DocGen
 
         public static string FormatProperty(PropertyInfo property, bool shortform)
         {
-            var builder = new StringBuilder();
-            var getter = property.GetGetMethod();
-            var setter = property.GetSetMethod();
+            StringBuilder builder = new();
+            MethodInfo getter = property.GetGetMethod();
+            MethodInfo setter = property.GetSetMethod();
             if (!shortform)
             {
                 builder.Append(FourSpaces);
@@ -363,7 +363,7 @@ namespace PeterO.DocGen
                 builder.Append((char)0x20);
             }
             bool first;
-            var indexParams = property.GetIndexParameters();
+            ParameterInfo[] indexParams = property.GetIndexParameters();
             if (indexParams.Length > 0)
             {
                 builder.Append("this[");
@@ -373,7 +373,7 @@ namespace PeterO.DocGen
                 builder.Append(property.Name);
             }
             first = true;
-            foreach (var param in indexParams)
+            foreach (ParameterInfo param in indexParams)
             {
                 if (!first)
                 {
@@ -382,9 +382,9 @@ namespace PeterO.DocGen
                 else
                 {
                     builder.Append(indexParams.Length == 1 ?
-                              String.Empty : "\r\n" + FourSpaces + FourSpaces);
+                              string.Empty : "\r\n" + FourSpaces + FourSpaces);
                 }
-                var attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
+                Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
                 if (attr != null)
                 {
                     builder.Append("params ");
@@ -419,18 +419,18 @@ namespace PeterO.DocGen
 
         public static string FormatType(Type type)
         {
-            var rawfmt = FormatTypeRaw(type);
+            string rawfmt = FormatTypeRaw(type);
             if (!type.IsArray && !type.IsGenericType)
             {
                 return rawfmt;
             }
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(rawfmt);
             if (type.ContainsGenericParameters)
             {
                 sb.Append('<');
-                var first = true;
-                foreach (var arg in type.GetGenericArguments())
+                bool first = true;
+                foreach (Type arg in type.GetGenericArguments())
                 {
                     if (!first)
                     {
@@ -443,7 +443,7 @@ namespace PeterO.DocGen
             }
             if (type.IsArray)
             {
-                for (var i = 0; i < type.GetArrayRank(); ++i)
+                for (int i = 0; i < type.GetArrayRank(); ++i)
                 {
                     sb.Append("[]");
                 }
@@ -453,7 +453,7 @@ namespace PeterO.DocGen
 
         public static string FormatTypeRaw(Type type)
         {
-            var name = TypeNameUtil.UndecorateTypeName(type.Name);
+            string name = TypeNameUtil.UndecorateTypeName(type.Name);
             if (type.IsGenericParameter)
             {
                 return name;
@@ -486,7 +486,7 @@ namespace PeterO.DocGen
 
         public static string FormatTypeSig(Type typeInfo)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.Append(FourSpaces);
             if (typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic)
             {
@@ -526,7 +526,7 @@ namespace PeterO.DocGen
             {
                 builder.Append('<');
                 first = true;
-                foreach (var arg in typeInfo.GetGenericArguments())
+                foreach (Type arg in typeInfo.GetGenericArguments())
                 {
                     if (!first)
                     {
@@ -538,8 +538,8 @@ namespace PeterO.DocGen
                 builder.Append('>');
             }
             first = true;
-            var ifaces = typeInfo.GetInterfaces();
-            var derived = typeInfo.BaseType;
+            Type[] ifaces = typeInfo.GetInterfaces();
+            Type derived = typeInfo.BaseType;
             if (typeInfo.BaseType != null &&
                 typeInfo.BaseType.Equals(typeof(object)))
             {
@@ -558,13 +558,13 @@ namespace PeterO.DocGen
                     // Sort interface names to ensure they are
                     // displayed in a consistent order. Apparently, GetInterfaces
                     // can return such interfaces in an unspecified order.
-                    var ifacenames = new List<string>();
-                    foreach (var iface in ifaces)
+                    List<string> ifacenames = new();
+                    foreach (Type iface in ifaces)
                     {
                         ifacenames.Add(FormatType(iface));
                     }
                     ifacenames.Sort();
-                    foreach (var ifacename in ifacenames)
+                    foreach (string ifacename in ifacenames)
                     {
                         if (!first)
                         {
@@ -581,13 +581,13 @@ namespace PeterO.DocGen
 
         public static string GetTypeID(Type type)
         {
-            var name = FormatType(type);
+            string name = FormatType(type);
             name = name.Replace(", ", ",");
-            var builder = new StringBuilder();
-            for (var i = 0; i < name.Length; ++i)
+            StringBuilder builder = new();
+            for (int i = 0; i < name.Length; ++i)
             {
-                var cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
-                var cp = DataUtilities.CodePointAt(name, i);
+                UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
+                int cp = DataUtilities.CodePointAt(name, i);
                 if (cp >= 0x10000)
                 {
                     ++i;
@@ -621,22 +621,22 @@ namespace PeterO.DocGen
 
         public static bool IsMethodOverride(MethodInfo method)
         {
-            var type = method.DeclaringType;
-            var baseMethod = method.GetBaseDefinition();
+            Type type = method.DeclaringType;
+            MethodInfo baseMethod = method.GetBaseDefinition();
             return (baseMethod != null) && (!method.Equals(baseMethod));
         }
 
         public void Debug(string ln)
         {
             this.WriteLine(ln);
-            this.WriteLine(String.Empty);
+            this.WriteLine(string.Empty);
         }
 
         public override string ToString()
         {
-            var b = new StringBuilder();
+            StringBuilder b = new();
             b.Append(this.buffer.ToString());
-            foreach (var b2 in this.members.Keys)
+            foreach (string b2 in this.members.Keys)
             {
                 b.Append(this.members[b2].ToString());
             }
@@ -645,9 +645,9 @@ namespace PeterO.DocGen
 
         public void VisitNode(INode node)
         {
-            if (String.IsNullOrEmpty(node.LocalName))
+            if (string.IsNullOrEmpty(node.LocalName))
             {
-                var t = node.GetContent();
+                string t = node.GetContent();
                 // Collapse multiple spaces into a single space
                 t = Regex.Replace(t, @"\s+", " ");
                 if (t.Length != 1 || t[0] != ' ')
@@ -659,7 +659,7 @@ namespace PeterO.DocGen
             }
             else
             {
-                var xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
+                string xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
                 if (xmlName.Equals("c", StringComparison.Ordinal))
                 {
                     this.VisitC(node);
@@ -725,9 +725,9 @@ namespace PeterO.DocGen
         xmlName.Equals("sup", StringComparison.Ordinal) ||
         xmlName.Equals("em", StringComparison.Ordinal))
                 {
-                    var sb = new StringBuilder();
+                    StringBuilder sb = new();
                     sb.Append("<" + xmlName);
-                    foreach (var attr in node.GetAttributes())
+                    foreach (string attr in node.GetAttributes())
                     {
                         sb.Append(" " + attr + "=");
                         sb.Append("\"" + DocGenUtil.HtmlEscape(
@@ -753,7 +753,7 @@ namespace PeterO.DocGen
         public void VisitCode(INode node)
         {
             this.WriteLine("\r\n\r\n");
-            foreach (var line in node.GetContent().Split('\n'))
+            foreach (string line in node.GetContent().Split('\n'))
             {
                 this.WriteLine(FourSpaces + line.TrimEnd());
             }
@@ -768,16 +768,16 @@ namespace PeterO.DocGen
 
         public void VisitException(INode node)
         {
-            using var ch = this.Change(this.exceptionStr);
-            var cref = node.GetAttribute("cref");
+            using IDisposable ch = this.Change(this.exceptionStr);
+            string cref = node.GetAttribute("cref");
             if (cref == null)
             {
-                cref = String.Empty;
+                cref = string.Empty;
                 Console.WriteLine("Warning: cref attribute absent in <exception>");
             }
             if (cref.StartsWith("T:", StringComparison.Ordinal))
             {
-                cref = cref.Substring(2);
+                cref = cref[2..];
             }
             this.WriteLine(" * " + cref + ": ");
             XmlDoc.VisitInnerNode(node, this);
@@ -789,14 +789,14 @@ namespace PeterO.DocGen
             string cref = see.GetAttribute("cref");
             if (cref == null)
             {
-                cref = String.Empty;
+                cref = string.Empty;
                 Console.WriteLine("Warning: cref attribute absent in <see>");
             }
-            if (cref.Substring(0, 2).Equals("T:", StringComparison.Ordinal))
+            if (cref[..2].Equals("T:", StringComparison.Ordinal))
             {
-                string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
+                string typeName = TypeNameUtil.UndecorateTypeName(cref[2..]);
                 string content = DocGenUtil.HtmlEscape(see.GetContent());
-                if (String.IsNullOrEmpty(content))
+                if (string.IsNullOrEmpty(content))
                 {
                     content = typeName;
                 }
@@ -804,10 +804,10 @@ namespace PeterO.DocGen
                 this.Write("(" + typeName + ".md)");
                 XmlDoc.VisitInnerNode(see, this);
             }
-            else if (cref.Substring(0, 2).Equals("M:", StringComparison.Ordinal))
+            else if (cref[..2].Equals("M:", StringComparison.Ordinal))
             {
                 string content = DocGenUtil.HtmlEscape(see.GetContent());
-                if (String.IsNullOrEmpty(content))
+                if (string.IsNullOrEmpty(content))
                 {
                     content = cref;
                 }
@@ -834,12 +834,11 @@ namespace PeterO.DocGen
 
         public void HandleMember(MemberInfo info, XmlDoc xmldoc)
         {
-            var signature = String.Empty;
-            var mnu = TypeNameUtil.XmlDocMemberName(info);
-            var mnm = xmldoc.GetMemberNode(mnu);
-            if (info is MethodBase)
+            string signature = string.Empty;
+            string mnu = TypeNameUtil.XmlDocMemberName(info);
+            INode mnm = xmldoc.GetMemberNode(mnu);
+            if (info is MethodBase method)
             {
-                var method = (MethodBase)info;
                 if (!method.IsPublic && !method.IsFamily)
                 {
                     // Ignore methods other than public and protected
@@ -851,23 +850,18 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using var ch = this.AddMember(info);
+                using IDisposable ch = this.AddMember(info);
                 signature = FormatMethod(method, false);
                 this.WriteLine("<a id=\"" +
                           MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
                 this.WriteLine("### " + Heading(info) +
                           "\r\n\r\n" + signature + "\r\n\r\n");
-                var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                  ObsoleteAttribute;
-                if (attr != null)
+                if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
                 {
                     this.WriteLine("<b>Deprecated.</b> " +
         DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
                 }
-                var cattr =
-      method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                  CLSCompliantAttribute;
-                if (cattr != null && !cattr.IsCompliant)
+                if (method.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
                 {
                     this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
                 }
@@ -878,7 +872,7 @@ namespace PeterO.DocGen
                 if (this.paramStr.Length > 0)
                 {
                     this.Write("<b>Parameters:</b>\r\n\r\n");
-                    var paramString = this.paramStr.ToString();
+                    string paramString = this.paramStr.ToString();
                     // Decrease spacing between list items
                     paramString = paramString.Replace("\r\n * ", " * ");
                     this.Write(paramString);
@@ -890,9 +884,8 @@ namespace PeterO.DocGen
                     this.Write(this.exceptionStr.ToString());
                 }
             }
-            else if (info is Type)
+            else if (info is Type type)
             {
-                var type = (Type)info;
                 if (!(type.IsNested ? type.IsNestedPublic : type.IsPublic))
                 {
                     // Ignore nonpublic types
@@ -903,18 +896,14 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using var ch = this.AddMember(info);
+                using IDisposable ch = this.AddMember(info);
                 this.WriteLine("## " + Heading(type) + "\r\n\r\n");
                 this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-                var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                  ObsoleteAttribute;
-                if (attr != null)
+                if (type.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
                 {
                     this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
                 }
-                var cattr = type.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                  CLSCompliantAttribute;
-                if (cattr != null && !cattr.IsCompliant)
+                if (type.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
                 {
                     this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
                 }
@@ -925,15 +914,14 @@ namespace PeterO.DocGen
                 if (this.paramStr.Length > 0)
                 {
                     this.Write("<b>Parameters:</b>\r\n\r\n");
-                    var paramString = this.paramStr.ToString();
+                    string paramString = this.paramStr.ToString();
                     // Decrease spacing between list items
                     paramString = paramString.Replace("\r\n * ", " * ");
                     this.Write(paramString);
                 }
             }
-            else if (info is PropertyInfo)
+            else if (info is PropertyInfo property)
             {
-                var property = (PropertyInfo)info;
                 if (!PropertyIsPublicOrFamily(property))
                 {
                     // Ignore methods other than public and protected
@@ -945,22 +933,17 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using var ch = this.AddMember(info);
+                using IDisposable ch = this.AddMember(info);
                 signature = FormatProperty(property);
                 this.WriteLine("<a id=\"" +
                           MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
                 this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
                           "\r\n\r\n");
-                var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                  ObsoleteAttribute;
-                if (attr != null)
+                if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
                 {
                     this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
                 }
-                var cattr =
-      property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                  CLSCompliantAttribute;
-                if (cattr != null && !cattr.IsCompliant)
+                if (property.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
                 {
                     this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
                 }
@@ -980,9 +963,8 @@ namespace PeterO.DocGen
                     this.Write(this.exceptionStr.ToString());
                 }
             }
-            else if (info is FieldInfo)
+            else if (info is FieldInfo field)
             {
-                var field = (FieldInfo)info;
                 if (!field.IsPublic && !field.IsFamily)
                 {
                     // Ignore nonpublic, nonprotected fields
@@ -993,21 +975,17 @@ namespace PeterO.DocGen
                     Console.WriteLine("member info not found: " + mnu);
                     return;
                 }
-                using var ch = this.AddMember(info);
+                using IDisposable ch = this.AddMember(info);
                 signature = FormatField(field);
                 this.WriteLine("<a id=\"" +
                           MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
                 this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
                           "\r\n\r\n");
-                var attr = field.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                  ObsoleteAttribute;
-                if (attr != null)
+                if (field.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
                 {
                     this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
                 }
-                var cattr = field.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-                  CLSCompliantAttribute;
-                if (cattr != null && !cattr.IsCompliant)
+                if (field.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
                 {
                     this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
                 }
@@ -1023,7 +1001,7 @@ namespace PeterO.DocGen
 
         public void VisitParam(INode node)
         {
-            using var ch = this.Change(this.paramStr);
+            using IDisposable ch = this.Change(this.paramStr);
             this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
             XmlDoc.VisitInnerNode(node, this);
             this.WriteLine("\r\n\r\n");
@@ -1037,7 +1015,7 @@ namespace PeterO.DocGen
 
         public void VisitReturns(INode node)
         {
-            using var ch = this.Change(this.returnStr);
+            using IDisposable ch = this.Change(this.returnStr);
             this.WriteLine("<b>Return Value:</b>\r\n");
             XmlDoc.VisitInnerNode(node, this);
             this.WriteLine("\r\n\r\n");
@@ -1045,7 +1023,7 @@ namespace PeterO.DocGen
 
         public void VisitTypeParam(INode node)
         {
-            using var ch = this.Change(this.paramStr);
+            using IDisposable ch = this.Change(this.paramStr);
             this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
             XmlDoc.VisitInnerNode(node, this);
             this.WriteLine("\r\n\r\n");
@@ -1053,7 +1031,7 @@ namespace PeterO.DocGen
 
         public void VisitValue(INode node)
         {
-            using var ch = this.Change(this.returnStr);
+            using IDisposable ch = this.Change(this.returnStr);
             this.WriteLine("<b>Returns:</b>\r\n");
             XmlDoc.VisitInnerNode(node, this);
             this.WriteLine("\r\n\r\n");
@@ -1061,10 +1039,9 @@ namespace PeterO.DocGen
 
         private static string Heading(MemberInfo info)
         {
-            var ret = String.Empty;
-            if (info is MethodBase)
+            string ret = string.Empty;
+            if (info is MethodBase method)
             {
-                var method = (MethodBase)info;
                 if (method is ConstructorInfo)
                 {
                     return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
@@ -1072,19 +1049,16 @@ namespace PeterO.DocGen
                 }
                 return MethodNameHeading(method.Name);
             }
-            if (info is Type)
+            if (info is Type type)
             {
-                var type = (Type)info;
                 return FormatType(type);
             }
-            else if (info is PropertyInfo)
+            else if (info is PropertyInfo property)
             {
-                var property = (PropertyInfo)info;
                 return property.Name;
             }
-            else if (info is FieldInfo)
+            else if (info is FieldInfo field)
             {
-                var field = (FieldInfo)info;
                 return field.Name;
             }
             return ret;
@@ -1092,27 +1066,23 @@ namespace PeterO.DocGen
 
         private static string HeadingUnambiguous(MemberInfo info)
         {
-            var ret = String.Empty;
-            if (info is MethodBase)
+            string ret = string.Empty;
+            if (info is MethodBase method)
             {
-                var method = (MethodBase)info;
                 return (method is ConstructorInfo) ? ("<1>" + " " +
                   FormatMethod(method, false)) : ("<4>" + method.Name + " " +
                   FormatMethod(method, false));
             }
-            if (info is Type)
+            if (info is Type type)
             {
-                var type = (Type)info;
                 return "<0>" + FormatType(type);
             }
-            else if (info is PropertyInfo)
+            else if (info is PropertyInfo property)
             {
-                var property = (PropertyInfo)info;
                 return "<3>" + property.Name;
             }
-            else if (info is FieldInfo)
+            else if (info is FieldInfo field)
             {
-                var field = (FieldInfo)info;
                 return "<2>" + field.Name;
             }
             return ret;
@@ -1130,7 +1100,7 @@ namespace PeterO.DocGen
 
         private static IDictionary<string, string> OperatorList()
         {
-            var ops = new Dictionary<string, string>
+            Dictionary<string, string> ops = new()
             {
                 ["op_Addition"] = "+",
                 ["op_UnaryPlus"] = "+",
@@ -1162,18 +1132,18 @@ namespace PeterO.DocGen
 
         private static bool PropertyIsPublicOrFamily(PropertyInfo property)
         {
-            var getter = property.GetGetMethod();
-            var setter = property.GetSetMethod();
-            return ((getter != null && getter.IsPublic) || (setter != null &&
-              setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter !=
+            MethodInfo getter = property.GetGetMethod();
+            MethodInfo setter = property.GetSetMethod();
+            return (getter != null && getter.IsPublic) || (setter != null &&
+              setter.IsPublic) || (getter != null && getter.IsFamily) || (setter !=
                       null &&
-        setter.IsFamily));
+        setter.IsFamily);
         }
 
         private IDisposable AddMember(MemberInfo member)
         {
-            var builder = new StringBuilder();
-            var heading = HeadingUnambiguous(member);
+            StringBuilder builder = new();
+            string heading = HeadingUnambiguous(member);
             this.members[heading] = builder;
             return new BufferChanger(this, builder);
         }

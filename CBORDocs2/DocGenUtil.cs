@@ -22,15 +22,15 @@ namespace PeterO.DocGen
 
         public static string NormalizeLines(string x)
         {
-            if (String.IsNullOrEmpty(x))
+            if (string.IsNullOrEmpty(x))
             {
                 return x;
             }
-            x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)", String.Empty);
+            x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)", string.Empty);
             x = Regex.Replace(x, @"\r?\n(\r?\n)+", "\n\n");
             x = Regex.Replace(x, @"\r?\n", "\n");
-            x = Regex.Replace(x, @"^\s*", String.Empty);
-            x = Regex.Replace(x, @"\s+$", String.Empty);
+            x = Regex.Replace(x, @"^\s*", string.Empty);
+            x = Regex.Replace(x, @"\s+$", string.Empty);
             return x + "\n";
         }
 

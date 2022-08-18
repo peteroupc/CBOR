@@ -99,7 +99,7 @@ namespace PeterO.Cbor
         internal ushort AsUInt16Legacy()
         {
             int v = this.AsInt32();
-            if (v > UInt16.MaxValue || v < 0)
+            if (v > ushort.MaxValue || v < 0)
             {
                 throw new OverflowException("This object's value is out of range");
             }
@@ -126,7 +126,7 @@ namespace PeterO.Cbor
         internal uint AsUInt32Legacy()
         {
             ulong v = this.AsUInt64Legacy();
-            if (v > UInt32.MaxValue)
+            if (v > uint.MaxValue)
             {
                 throw new OverflowException("This object's value is out of range");
             }
@@ -145,7 +145,7 @@ namespace PeterO.Cbor
         internal sbyte AsSByteLegacy()
         {
             int v = this.AsInt32();
-            if (v > SByte.MaxValue || v < SByte.MinValue)
+            if (v > sbyte.MaxValue || v < sbyte.MinValue)
             {
                 throw new OverflowException("This object's value is out of range");
             }
@@ -225,7 +225,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(outputStream));
             }
-            if (value <= Int64.MaxValue)
+            if (value <= long.MaxValue)
             {
                 return WriteValue(outputStream, majorType, (long)value);
             }
@@ -338,7 +338,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            if (value <= Int64.MaxValue)
+            if (value <= long.MaxValue)
             {
                 Write((long)value, stream);
             }
@@ -399,7 +399,7 @@ namespace PeterO.Cbor
 
         private static EInteger UInt64ToEInteger(ulong value)
         {
-            var data = new byte[9];
+            byte[] data = new byte[9];
             ulong uvalue = value;
             data[0] = (byte)(uvalue & 0xff);
             data[1] = (byte)((uvalue >> 8) & 0xff);
@@ -430,7 +430,7 @@ namespace PeterO.Cbor
         [CLSCompliant(false)]
         public static CBORObject FromObject(uint value)
         {
-            return FromObject((Int64)value);
+            return FromObject((long)value);
         }
 
         /// <summary>Converts a 16-bit unsigned integer to a CBOR
@@ -440,7 +440,7 @@ namespace PeterO.Cbor
         [CLSCompliant(false)]
         public static CBORObject FromObject(ushort value)
         {
-            return FromObject((Int64)value);
+            return FromObject((long)value);
         }
 
         /// <summary>Generates a CBOR object from this one, but gives the
@@ -485,7 +485,7 @@ namespace PeterO.Cbor
         /// . If "valueOb" is null, returns a version of CBORObject.Null with
         /// the given tag.</returns>
         [CLSCompliant(false)]
-        public static CBORObject FromObjectAndTag(Object o, ulong tag)
+        public static CBORObject FromObjectAndTag(object o, ulong tag)
         {
             return FromObjectAndTag(o, UInt64ToEInteger(tag));
         }

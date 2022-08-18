@@ -249,7 +249,7 @@ namespace PeterO.Cbor
                         throw new CBORException("Patch " +
                           valueOpStr + " " + path);
                     }
-                    Object testedObj = pointer.GetValue();
+                    object testedObj = pointer.GetValue();
                     if ((testedObj == null) ? (value != null) :
                       !testedObj.Equals(value))
                     {

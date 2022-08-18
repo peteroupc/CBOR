@@ -20,7 +20,7 @@ namespace PeterO.DocGen
         {
             public TypeLinkAndBuilder(Type type)
             {
-                var typeName = DocVisitor.FormatType(type);
+                string typeName = DocVisitor.FormatType(type);
                 typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](" +
         DocVisitor.GetTypeID(type) + ".md)";
                 this.TypeLink = typeName;
@@ -43,10 +43,10 @@ namespace PeterO.DocGen
 
         public void Finish()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             string finalString;
             sb.Append("## API Documentation\r\n\r\n");
-            foreach (var key in this.docs.Keys)
+            foreach (string key in this.docs.Keys)
             {
                 finalString = this.docs[key].Builder.ToString();
                 sb.Append(" * " + this.docs[key].TypeLink + " - ");
@@ -61,7 +61,7 @@ namespace PeterO.DocGen
     memberName)
         {
             string summary;
-            var attr = info?.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+            ObsoleteAttribute attr = info?.GetCustomAttribute(typeof(ObsoleteAttribute)) as
                         ObsoleteAttribute;
             summary = (attr != null) ?
                ("<b>Deprecated:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
@@ -69,9 +69,8 @@ namespace PeterO.DocGen
             if (summary != null && attr == null &&
               summary.IndexOf(".", StringComparison.Ordinal) >= 0)
             {
-                summary = summary.Substring(
-                      0,
-                      summary.IndexOf(".", StringComparison.Ordinal) + 1);
+                summary = summary[
+..(summary.IndexOf(".", StringComparison.Ordinal) + 1)];
             }
             return summary;
         }
@@ -83,13 +82,13 @@ namespace PeterO.DocGen
             {
                 return;
             }
-            var typeFullName = currentType.FullName;
+            string typeFullName = currentType.FullName;
             if (!this.docs.ContainsKey(typeFullName))
             {
-                var docVisitor = new TypeLinkAndBuilder(currentType);
+                TypeLinkAndBuilder docVisitor = new(currentType);
                 this.docs[typeFullName] = docVisitor;
             }
-            var summary = GetSummary(
+            string summary = GetSummary(
               currentType,
               xdoc,
               TypeNameUtil.XmlDocMemberName(currentType));

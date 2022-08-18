@@ -44,7 +44,7 @@ namespace PeterO.Cbor
             {
                 return alen == 0 ? 0 : 1;
             }
-            var cmp = 0;
+            int cmp = 0;
             if (alen < 128 && blen < 128)
             {
                 int istrAUpperBound = alen * 3;
@@ -60,7 +60,7 @@ namespace PeterO.Cbor
                 cmp = 0;
                 if (alen == blen)
                 {
-                    var equalStrings = true;
+                    bool equalStrings = true;
                     for (int i = 0; i < alen; ++i)
                     {
                         char sai = strA[i];
@@ -77,7 +77,7 @@ namespace PeterO.Cbor
                         return 0;
                     }
                 }
-                var nonAscii = false;
+                bool nonAscii = false;
                 for (int i = 0; i < alen; ++i)
                 {
                     if (strA[i] >= 0x80)
@@ -120,12 +120,12 @@ namespace PeterO.Cbor
                 }
             }
             // DebugUtility.Log("slow path "+alen+","+blen);
-            var sapos = 0;
-            var sbpos = 0;
+            int sapos = 0;
+            int sbpos = 0;
             long sautf8 = 0L;
             long sbutf8 = 0L;
             cmp = 0;
-            var haveboth = true;
+            bool haveboth = true;
             while (true)
             {
                 int sa = 0, sb = 0;
@@ -253,11 +253,11 @@ namespace PeterO.Cbor
             {
                 return 1;
             }
-            var u16pos = 0;
-            var u8pos = 0;
+            int u16pos = 0;
+            int u8pos = 0;
             long u16u8length = 0L;
-            var cmp = 0;
-            var haveboth = true;
+            int cmp = 0;
+            bool haveboth = true;
             while (true)
             {
                 int u16 = 0, u8 = 0;
@@ -413,8 +413,8 @@ namespace PeterO.Cbor
         // this purpose.
         public static int StringHashCode(string str)
         {
-            var upos = 0;
-            var code = 0x7edede19;
+            int upos = 0;
+            int code = 0x7edede19;
             while (true)
             {
                 if (upos == str.Length)
@@ -440,8 +440,8 @@ namespace PeterO.Cbor
 
         public static int Utf8HashCode(byte[] utf8)
         {
-            var upos = 0;
-            var code = 0x7edede19;
+            int upos = 0;
+            int code = 0x7edede19;
             while (true)
             {
                 int sc = Utf8CodePointAt(utf8, upos);
@@ -475,7 +475,7 @@ namespace PeterO.Cbor
 
         public static bool CheckUtf16(string str)
         {
-            var upos = 0;
+            int upos = 0;
             while (true)
             {
                 if (upos == str.Length)
@@ -500,7 +500,7 @@ namespace PeterO.Cbor
 
         public static bool CheckUtf8(byte[] utf8)
         {
-            var upos = 0;
+            int upos = 0;
             while (true)
             {
                 int sc = Utf8CodePointAt(utf8, upos);
@@ -551,8 +551,8 @@ namespace PeterO.Cbor
             {
                 return false;
             }
-            var spos = 0;
-            var upos = 0;
+            int spos = 0;
+            int upos = 0;
             while (true)
             {
                 int sc = DataUtilities.CodePointAt(str, spos, 1);
@@ -605,7 +605,7 @@ namespace PeterO.Cbor
             {
                 return false;
             }
-            for (var i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
                 if (a[i] != b[i])
                 {
@@ -621,11 +621,11 @@ namespace PeterO.Cbor
             {
                 return 0;
             }
-            var ret = 19;
+            int ret = 19;
             unchecked
             {
                 ret = (ret * 31) + a.Length;
-                for (var i = 0; i < a.Length; ++i)
+                for (int i = 0; i < a.Length; ++i)
                 {
                     ret = (ret * 31) + a[i];
                 }
@@ -644,7 +644,7 @@ namespace PeterO.Cbor
                 return 1;
             }
             int c = Math.Min(a.Length, b.Length);
-            for (var i = 0; i < c; ++i)
+            for (int i = 0; i < c; ++i)
             {
                 byte ai = a[i];
                 byte bi = b[i];
@@ -670,7 +670,7 @@ namespace PeterO.Cbor
             {
                 return a.Length < b.Length ? -1 : 1;
             }
-            for (var i = 0; i < a.Length; ++i)
+            for (int i = 0; i < a.Length; ++i)
             {
                 byte ai = a[i];
                 byte bi = b[i];
@@ -732,7 +732,7 @@ namespace PeterO.Cbor
 
         public static string LongToString(long longValue)
         {
-            if (longValue == Int64.MinValue)
+            if (longValue == long.MinValue)
             {
                 return "-9223372036854775808";
             }
@@ -745,7 +745,7 @@ namespace PeterO.Cbor
                 return "-2147483648";
             }
             bool neg = longValue < 0;
-            var count = 0;
+            int count = 0;
             char[] chars;
             int intlongValue = unchecked((int)longValue);
             if (intlongValue == longValue)
@@ -784,7 +784,7 @@ namespace PeterO.Cbor
                 {
                     ++count;
                 }
-                return new String(chars, count, 12 - count);
+                return new string(chars, count, 12 - count);
             }
             else
             {
@@ -820,7 +820,7 @@ namespace PeterO.Cbor
                 {
                     ++count;
                 }
-                return new String(chars, count, 24 - count);
+                return new string(chars, count, 24 - count);
             }
         }
 
@@ -899,7 +899,7 @@ namespace PeterO.Cbor
                 if (intDay < -101)
                 {
                     // Number of days in a 400-year block
-                    int intCount = (intDay == Int32.MinValue) ? 14699 : Math.Abs(intDay)
+                    int intCount = (intDay == int.MinValue) ? 14699 : Math.Abs(intDay)
                       / 146097;
                     intDay = checked(intDay + (intCount * 146097));
                     longYear = checked(longYear - (intCount * 400));
@@ -1067,7 +1067,7 @@ namespace PeterO.Cbor
                 throw new ArgumentOutOfRangeException(nameof(mday));
             }
             EInteger numDays = EInteger.Zero;
-            var startYear = 1970;
+            int startYear = 1970;
             if (year.CompareTo(startYear) < 0)
             {
                 EInteger currentYear = EInteger.FromInt32(startYear - 1);
@@ -1082,7 +1082,7 @@ namespace PeterO.Cbor
                 }
 
                 numDays = numDays.Subtract(diff.Multiply(365));
-                var decrement = 1;
+                int decrement = 1;
                 for (;
                   currentYear.CompareTo(year) > 0;
                   currentYear = currentYear.Subtract(decrement))
@@ -1161,7 +1161,7 @@ namespace PeterO.Cbor
           EInteger[] year,
           int[] lesserFields)
         {
-            var normPart = new EInteger[3];
+            EInteger[] normPart = new EInteger[3];
             long longDays = FloorDiv(seconds, 86400) + 1;
             long longSecondsInDay = FloorModLong(seconds, 86400);
 #if DEBUG
@@ -1198,7 +1198,7 @@ namespace PeterO.Cbor
               year,
               lesserFields); // Fills out month and day in lesserFields[0]/[1]
             lesserFields[2] = secondsInDay / 3600;
-            lesserFields[3] = (secondsInDay % 3600) / 60;
+            lesserFields[3] = secondsInDay % 3600 / 60;
             lesserFields[4] = secondsInDay % 60;
             lesserFields[5] = 0;
             lesserFields[6] = 0;
@@ -1241,13 +1241,13 @@ namespace PeterO.Cbor
               year,
               lesserFields); // Fills out month and day in lesserFields[0]/[1]
             lesserFields[2] = secondsInDay / 3600;
-            lesserFields[3] = (secondsInDay % 3600) / 60;
+            lesserFields[3] = secondsInDay % 3600 / 60;
             lesserFields[4] = secondsInDay % 60;
             lesserFields[5] = fractionalSeconds;
             lesserFields[6] = 0;
         }
 
-        public static bool NameStartsWithWord(String name, String word)
+        public static bool NameStartsWithWord(string name, string word)
         {
             int wl = word.Length;
             return name.Length > wl && name.Substring(0, wl).Equals(word,
@@ -1255,11 +1255,11 @@ namespace PeterO.Cbor
                 'z') && !(name[wl] >= '0' && name[wl] <= '9');
         }
 
-        public static String FirstCharLower(String name)
+        public static string FirstCharLower(string name)
         {
             if (name.Length > 0 && name[0] >= 'A' && name[0] <= 'Z')
             {
-                var sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.Append((char)(name[0] + 0x20));
                 sb.Append(name.Substring(1));
                 return sb.ToString();
@@ -1267,11 +1267,11 @@ namespace PeterO.Cbor
             return name;
         }
 
-        public static String FirstCharUpper(String name)
+        public static string FirstCharUpper(string name)
         {
             if (name.Length > 0 && name[0] >= 'a' && name[0] <= 'z')
             {
-                var sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.Append((char)(name[0] - 0x20));
                 sb.Append(name.Substring(1));
                 return sb.ToString();
@@ -1341,12 +1341,12 @@ namespace PeterO.Cbor
 
         private static int[] ParseAtomDateTimeString(string str)
         {
-            var bad = false;
+            bool bad = false;
             if (str.Length < 19)
             {
                 throw new ArgumentException("Invalid date/time");
             }
-            for (var i = 0; i < 19 && !bad; ++i)
+            for (int i = 0; i < 19 && !bad; ++i)
             {
                 if (i == 4 || i == 7)
                 {
@@ -1379,11 +1379,11 @@ namespace PeterO.Cbor
             int hour = ((str[11] - '0') * 10) + (str[12] - '0');
             int minute = ((str[14] - '0') * 10) + (str[15] - '0');
             int second = ((str[17] - '0') * 10) + (str[18] - '0');
-            var index = 19;
-            var nanoSeconds = 0;
+            int index = 19;
+            int nanoSeconds = 0;
             if (index <= str.Length && str[index] == '.')
             {
-                var icount = 0;
+                int icount = 0;
                 ++index;
                 while (index < str.Length)
                 {
@@ -1404,7 +1404,7 @@ namespace PeterO.Cbor
                     ++icount;
                 }
             }
-            var utcToLocal = 0;
+            int utcToLocal = 0;
             if (index + 1 == str.Length && str[index] == 'Z')
             {
                 /*lowercase z not used to indicate UTC,
@@ -1414,7 +1414,7 @@ namespace PeterO.Cbor
             else if (index + 6 == str.Length)
             {
                 bad = false;
-                for (var i = 0; i < 6 && !bad; ++i)
+                for (int i = 0; i < 6 && !bad; ++i)
                 {
                     if (i == 0)
                     {
@@ -1440,7 +1440,7 @@ namespace PeterO.Cbor
                 {
                     throw new ArgumentException("Invalid date/time");
                 }
-                utcToLocal = ((neg ? -1 : 1) * (tzhour * 60)) + tzminute;
+                utcToLocal = ((neg ? -1 : 1) * tzhour * 60) + tzminute;
             }
             else
             {
@@ -1516,9 +1516,9 @@ namespace PeterO.Cbor
             EDecimal d = EDecimal.FromInt32(lesserFields[5]).Divide(FractionalSeconds)
               .Add(EDecimal.FromEInteger(seconds));
             double dbl = d.ToDouble();
-            if (Double.IsPositiveInfinity(dbl) ||
-                   Double.IsNegativeInfinity(dbl) ||
-                   Double.IsNaN(dbl))
+            if (double.IsPositiveInfinity(dbl) ||
+                   double.IsNegativeInfinity(dbl) ||
+                   double.IsNaN(dbl))
             {
                 status[0] = 2;
                 return null;
@@ -1684,37 +1684,37 @@ namespace PeterO.Cbor
             int minute = lesserFields[3];
             int second = lesserFields[4];
             int fracSeconds = lesserFields[5];
-            var charbuf = new char[32];
-            charbuf[0] = (char)('0' + ((smallYear / 1000) % 10));
-            charbuf[1] = (char)('0' + ((smallYear / 100) % 10));
-            charbuf[2] = (char)('0' + ((smallYear / 10) % 10));
+            char[] charbuf = new char[32];
+            charbuf[0] = (char)('0' + (smallYear / 1000 % 10));
+            charbuf[1] = (char)('0' + (smallYear / 100 % 10));
+            charbuf[2] = (char)('0' + (smallYear / 10 % 10));
             charbuf[3] = (char)('0' + (smallYear % 10));
             charbuf[4] = '-';
-            charbuf[5] = (char)('0' + ((month / 10) % 10));
+            charbuf[5] = (char)('0' + (month / 10 % 10));
             charbuf[6] = (char)('0' + (month % 10));
             charbuf[7] = '-';
-            charbuf[8] = (char)('0' + ((intDay / 10) % 10));
+            charbuf[8] = (char)('0' + (intDay / 10 % 10));
             charbuf[9] = (char)('0' + (intDay % 10));
             charbuf[10] = 'T';
-            charbuf[11] = (char)('0' + ((hour / 10) % 10));
+            charbuf[11] = (char)('0' + (hour / 10 % 10));
             charbuf[12] = (char)('0' + (hour % 10));
             charbuf[13] = ':';
-            charbuf[14] = (char)('0' + ((minute / 10) % 10));
+            charbuf[14] = (char)('0' + (minute / 10 % 10));
             charbuf[15] = (char)('0' + (minute % 10));
             charbuf[16] = ':';
-            charbuf[17] = (char)('0' + ((second / 10) % 10));
+            charbuf[17] = (char)('0' + (second / 10 % 10));
             charbuf[18] = (char)('0' + (second % 10));
-            var charbufLength = 19;
+            int charbufLength = 19;
             if (fracSeconds > 0)
             {
                 charbuf[19] = '.';
                 ++charbufLength;
-                var digitdiv = FractionalSeconds;
+                int digitdiv = FractionalSeconds;
                 digitdiv /= 10;
-                var index = 20;
+                int index = 20;
                 while (digitdiv > 0 && fracSeconds != 0)
                 {
-                    int digit = (fracSeconds / digitdiv) % 10;
+                    int digit = fracSeconds / digitdiv % 10;
                     fracSeconds -= digit * digitdiv;
                     charbuf[index++] = (char)('0' + digit);
                     ++charbufLength;
@@ -1728,12 +1728,12 @@ namespace PeterO.Cbor
                 charbuf[19] = 'Z';
                 ++charbufLength;
             }
-            return new String(charbuf, 0, charbufLength);
+            return new string(charbuf, 0, charbufLength);
         }
 
         public static long IntegerToDoubleBits(int i)
         {
-            if (i == Int32.MinValue)
+            if (i == int.MinValue)
             {
                 return unchecked((long)0xc1e0000000000000L);
             }
@@ -1742,7 +1742,7 @@ namespace PeterO.Cbor
                 return 0L;
             }
             long longmant = Math.Abs(i);
-            var expo = 0;
+            int expo = 0;
             while (longmant < (1L << 10))
             {
                 longmant <<= 42;
@@ -1796,7 +1796,7 @@ namespace PeterO.Cbor
             {
                 return false;
             }
-            var exp = (int)(bits >> 52);
+            int exp = (int)(bits >> 52);
             long mant = bits & ((1L << 52) - 1);
             int shift = 52 - (exp - 0x3ff);
             return ((mant >> shift) << shift) == mant;
@@ -1826,7 +1826,7 @@ namespace PeterO.Cbor
             {
                 throw new NotSupportedException();
             }
-            var exp = (int)(bits >> 52);
+            int exp = (int)(bits >> 52);
             long mant = bits & ((1L << 52) - 1);
             mant |= 1L << 52;
             int shift = 52 - (exp - 0x3ff);
@@ -1845,7 +1845,7 @@ namespace PeterO.Cbor
         {
             int value0 = unchecked((int)(lvalue & 0xffffffffL));
             int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
-            var floatExponent = (value1 >> 20) & 0x7ff;
+            int floatExponent = (value1 >> 20) & 0x7ff;
             bool neg = (value1 >> 31) != 0;
             if (floatExponent == 2047)
             {
@@ -1872,7 +1872,7 @@ namespace PeterO.Cbor
                 }
             }
             floatExponent -= 1075;
-            var bytes = new byte[9];
+            byte[] bytes = new byte[9];
             EInteger bigmantissa;
             bytes[0] = (byte)(value0 & 0xff);
             bytes[1] = (byte)((value0 >> 8) & 0xff);
@@ -2151,7 +2151,7 @@ namespace PeterO.Cbor
 
         public static long SingleToDoublePrecision(int bits)
         {
-            var negvalue = (long)((bits >> 31) & 1) << 63;
+            long negvalue = (long)((bits >> 31) & 1) << 63;
             int exp = (bits >> 23) & 0xff;
             int mant = bits & 0x7fffff;
             long value = 0;
@@ -2186,7 +2186,7 @@ namespace PeterO.Cbor
 
         public static long HalfToDoublePrecision(int bits)
         {
-            var negvalue = (long)(bits & 0x8000) << 48;
+            long negvalue = (long)(bits & 0x8000) << 48;
             int exp = (bits >> 10) & 31;
             int mant = bits & 0x3ff;
             long value = 0;

@@ -13,9 +13,9 @@ namespace PeterO
     public sealed class RandomGenerator : IRandomGenExtended
     {
         private bool valueHaveLastNormal;
-        private IRandomGen valueIrg;
+        private readonly IRandomGen valueIrg;
         private double valueLastNormal;
-        private object valueNormalLock = new Object();
+        private readonly object valueNormalLock = new();
 
         /// <summary>Initializes a new instance of the RandomGenerator
         /// class.</summary>
@@ -101,10 +101,10 @@ namespace PeterO
             {
                 return trials;
             }
-            var count = 0;
+            int count = 0;
             if (p == 0.5)
             {
-                var bytes = new byte[1];
+                byte[] bytes = new byte[1];
                 for (int i = 0; i < trials && i >= 0;)
                 {
                     this.valueIrg.GetBytes(bytes, 0, 1);
@@ -255,8 +255,8 @@ namespace PeterO
                 throw new ArgumentException("trials(" + trials +
                   ") is more than " + count);
             }
-            var ret = 0;
-            for (var i = 0; i < trials && ones > 0; ++i)
+            int ret = 0;
+            for (int i = 0; i < trials && ones > 0; ++i)
             {
                 if (this.UniformInt(count) < ones)
                 {
@@ -308,12 +308,12 @@ namespace PeterO
             }
             if (p == 0.0)
             {
-                return Int32.MaxValue;
+                return int.MaxValue;
             }
-            var count = 0;
+            int count = 0;
             if (p == 0.5)
             {
-                var bytes = new byte[1];
+                byte[] bytes = new byte[1];
                 while (true)
                 {
                     this.valueIrg.GetBytes(bytes, 0, 1);
@@ -422,7 +422,7 @@ namespace PeterO
                   ") is less than 0");
             }
             double l = Math.Exp(-mean);
-            var count = -1;
+            int count = -1;
             double p = 1.0;
             while (true)
             {
@@ -502,7 +502,7 @@ namespace PeterO
             else
             {
                 long diff = maxExclusive - minInclusive;
-                if (diff <= Int32.MaxValue)
+                if (diff <= int.MaxValue)
                 {
                     return minInclusive + this.UniformInt((int)diff);
                 }
@@ -537,14 +537,14 @@ namespace PeterO
             }
             else
             {
-                if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive <
+                if ((maxExclusive < 0 && long.MaxValue + maxExclusive <
                     minInclusive) ||
-                  (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
+                  (maxExclusive > 0 && long.MinValue + maxExclusive > minInclusive) ||
                   minInclusive - maxExclusive < 0)
                 {
                     // Difference is greater than MaxValue
                     long lb = 0;
-                    var b = new byte[8];
+                    byte[] b = new byte[8];
                     while (true)
                     {
                         this.valueIrg.GetBytes(b, 0, 8);
@@ -585,12 +585,11 @@ namespace PeterO
             {
                 return 0;
             }
-            var rge = this.valueIrg as IRandomGenExtended;
-            if (rge != null)
+            if (this.valueIrg is IRandomGenExtended rge)
             {
                 return rge.GetInt32(maxExclusive);
             }
-            var b = new byte[4];
+            byte[] b = new byte[4];
             switch (maxExclusive)
             {
                 case 2:
@@ -607,7 +606,7 @@ namespace PeterO
                     {
                         while (true)
                         {
-                            var ib = 0;
+                            int ib = 0;
                             if (maxExclusive == 0x1000000)
                             {
                                 this.valueIrg.GetBytes(b, 0, 3);
@@ -624,7 +623,7 @@ namespace PeterO
                                 return ib;
                             }
                             int maxexc;
-                            maxexc = (Int32.MaxValue / maxExclusive) * maxExclusive;
+                            maxexc = int.MaxValue / maxExclusive * maxExclusive;
                             while (true)
                             {
                                 this.valueIrg.GetBytes(b, 0, 4);
@@ -664,19 +663,18 @@ namespace PeterO
                 throw new ArgumentException("maxExclusive(" + maxExclusive +
                   ") is less than 0");
             }
-            if (maxExclusive <= Int32.MaxValue)
+            if (maxExclusive <= int.MaxValue)
             {
                 return this.UniformInt((int)maxExclusive);
             }
-            var rge = this.valueIrg as IRandomGenExtended;
-            if (rge != null)
+            if (this.valueIrg is IRandomGenExtended rge)
             {
                 return rge.GetInt64(maxExclusive);
             }
             long lb = 0;
             long maxexc;
-            var b = new byte[8];
-            maxexc = (Int64.MaxValue / maxExclusive) * maxExclusive;
+            byte[] b = new byte[8];
+            maxexc = long.MaxValue / maxExclusive * maxExclusive;
             while (true)
             {
                 this.valueIrg.GetBytes(b, 0, 8);

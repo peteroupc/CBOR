@@ -68,12 +68,12 @@ namespace Test
                 case 0:
                     o = RandomObjects.RandomDouble(
                       rand,
-                      Int32.MaxValue);
+                      int.MaxValue);
                     return CBORObject.FromObject(o);
                 case 1:
                     o = RandomObjects.RandomSingle(
                       rand,
-                      Int32.MaxValue);
+                      int.MaxValue);
                     return CBORObject.FromObject(o);
                 case 2:
                     return CBORObject.FromObject(
@@ -101,12 +101,12 @@ namespace Test
                 case 0:
                     o = RandomObjects.RandomDouble(
                       rand,
-                      Int32.MaxValue);
+                      int.MaxValue);
                     return CBORObject.FromObject(o);
                 case 1:
                     o = RandomObjects.RandomSingle(
                       rand,
-                      Int32.MaxValue);
+                      int.MaxValue);
                     return CBORObject.FromObject(o);
                 case 2:
                     return CBORObject.FromObject(
@@ -133,7 +133,7 @@ namespace Test
             int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
             CBORObject cborRet = rand.GetInt32(100) < 30 ?
                CBORObject.NewOrderedMap() : CBORObject.NewMap();
-            for (var i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 CBORObject key = RandomCBORObject(rand, depth + 1);
                 CBORObject value = RandomCBORObject(rand, depth + 1);
@@ -171,7 +171,7 @@ namespace Test
           IRandomGenExtended rand,
           int depth)
         {
-            var tag = 0;
+            int tag = 0;
             if (rand.GetInt32(2) == 0)
             {
                 int[] tagselection = {
@@ -204,16 +204,16 @@ namespace Test
             {
                 CBORObject cbor;
                 // Console.WriteLine("tag "+tag+" "+i);
-                if (tag == 0 || tag == 1 || tag == 28 || tag == 29)
+                if (tag is 0 or 1 or 28 or 29)
                 {
                     tag = 999;
                 }
-                if (tag == 2 || tag == 3)
+                if (tag is 2 or 3)
                 {
                     object o = RandomObjects.RandomByteStringShort(rand);
                     cbor = CBORObject.FromObject(o);
                 }
-                else if (tag == 4 || tag == 5)
+                else if (tag is 4 or 5)
                 {
                     cbor = CBORObject.NewArray();
                     object o = RandomObjects.RandomSmallIntegral(rand);
@@ -243,7 +243,7 @@ namespace Test
             int x = rand.GetInt32(100);
             int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
             CBORObject cborRet = CBORObject.NewArray();
-            for (var i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 cborRet.Add(RandomCBORObject(rand, depth + 1));
             }
@@ -259,32 +259,21 @@ namespace Test
           depth)
         {
             int nextval = rand.GetInt32(11);
-            switch (nextval)
+            return nextval switch
             {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    return RandomNumberOrRational(rand);
-                case 4:
-                    return rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False;
-                case 5:
-                    return rand.GetInt32(2) == 0 ? CBORObject.Null :
-                      CBORObject.Undefined;
-                case 6:
-                    return CBORObject.FromObject(
-                        RandomObjects.RandomTextString(rand));
-                case 7:
-                    return CBORObject.FromObject(
-                        RandomObjects.RandomByteString(rand));
-                case 8:
-                    return RandomCBORArray(rand, depth);
-                case 9:
-                    return RandomCBORMap(rand, depth);
-                case 10:
-                    return RandomCBORTaggedObject(rand, depth);
-                default: return RandomNumber(rand);
-            }
+                0 or 1 or 2 or 3 => RandomNumberOrRational(rand),
+                4 => rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False,
+                5 => rand.GetInt32(2) == 0 ? CBORObject.Null :
+                                      CBORObject.Undefined,
+                6 => CBORObject.FromObject(
+                                        RandomObjects.RandomTextString(rand)),
+                7 => CBORObject.FromObject(
+                                        RandomObjects.RandomByteString(rand)),
+                8 => RandomCBORArray(rand, depth),
+                9 => RandomCBORMap(rand, depth),
+                10 => RandomCBORTaggedObject(rand, depth),
+                _ => RandomNumber(rand),
+            };
         }
 
 #pragma warning disable CS0618
@@ -309,7 +298,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail("Object: " + o + ", " + ex);
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -323,7 +312,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail("Object: " + o + ", " + ex);
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -337,7 +326,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail("Object: " + o + ", " + ex);
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -351,7 +340,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail("Object: " + o + ", " + ex);
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -360,7 +349,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -369,7 +358,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -383,7 +372,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail("Object: " + o + ", " + ex);
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 return;
             }
@@ -394,7 +383,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail("Object: " + o + ", " + ex);
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
             try
             {
@@ -403,7 +392,7 @@ namespace Test
             catch (Exception ex)
             {
                 Assert.Fail("Object: " + o + ", " + ex);
-                throw new InvalidOperationException(String.Empty, ex);
+                throw new InvalidOperationException(string.Empty, ex);
             }
         }
 #pragma warning restore CS0618
@@ -428,7 +417,7 @@ namespace Test
             TestCommon.AssertEqualsHashCode(o, o2);
         }
 
-        public static void AssertJSONSer(CBORObject o, String s)
+        public static void AssertJSONSer(CBORObject o, string s)
         {
             if (!s.Equals(o.ToJSONString(), StringComparison.Ordinal))
             {
@@ -469,7 +458,7 @@ namespace Test
 
         private static CBORObject FromBytesB(byte[] b, CBOREncodeOptions options)
         {
-            using var ms = new Test.DelayingStream(b);
+            using DelayingStream ms = new(b);
             CBORObject o = CBORObject.Read(ms, options);
             if (ms.Position != ms.Length)
             {
@@ -497,7 +486,7 @@ namespace Test
 
         private static CBORObject FromBytesB(byte[] b)
         {
-            using var ms = new Test.DelayingStream(b);
+            using DelayingStream ms = new(b);
             CBORObject o = CBORObject.Read(ms);
             if (ms.Position != ms.Length)
             {

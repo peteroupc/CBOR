@@ -18,8 +18,8 @@ namespace Test
 
         public static int StringToInt(string str)
         {
-            var neg = false;
-            var i = 0;
+            bool neg = false;
+            int i = 0;
             if (str == null)
             {
                 throw new ArgumentNullException(nameof(str));
@@ -33,12 +33,12 @@ namespace Test
             {
                 throw new FormatException();
             }
-            var ret = 0;
+            int ret = 0;
             while (i < str.Length)
             {
                 int c = str[i];
                 ++i;
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     int x = c - '0';
                     if (ret > 214748364)
@@ -54,7 +54,7 @@ namespace Test
                             {
                                 throw new FormatException();
                             }
-                            return Int32.MinValue;
+                            return int.MinValue;
                         }
                         if (x > 7)
                         {
@@ -73,8 +73,8 @@ namespace Test
 
         public static long StringToLong(string str)
         {
-            var neg = false;
-            var i = 0;
+            bool neg = false;
+            int i = 0;
             if (str == null)
             {
                 throw new ArgumentNullException(nameof(str));
@@ -93,7 +93,7 @@ namespace Test
             {
                 int c = str[i];
                 ++i;
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     int x = c - '0';
                     if (ret > 922337203685477580L)
@@ -109,7 +109,7 @@ namespace Test
                             {
                                 throw new FormatException();
                             }
-                            return Int64.MinValue;
+                            return long.MinValue;
                         }
                         if (x > 7)
                         {
@@ -216,7 +216,7 @@ namespace Test
             }
         }
 
-        public static void AssertNotEqual(Object o, Object o2)
+        public static void AssertNotEqual(object o, object o2)
         {
             if (o == null)
             {
@@ -232,7 +232,7 @@ namespace Test
             }
         }
 
-        public static void AssertEquals(Object o, Object o2)
+        public static void AssertEquals(object o, object o2)
         {
             if (o == null)
             {
@@ -244,7 +244,7 @@ namespace Test
             }
         }
 
-        public static void AssertEqualsHashCode(Object o, Object o2)
+        public static void AssertEqualsHashCode(object o, object o2)
         {
             if (o == null)
             {
@@ -259,7 +259,7 @@ namespace Test
                 if (!o2.Equals(o))
                 {
                     Assert.Fail(
-                      String.Empty + o + " equals " + o2 + " but not vice versa");
+                      string.Empty + o + " equals " + o2 + " but not vice versa");
                 }
                 // Test for the guarantee that equal objects
                 // must have equal hash codes
@@ -268,7 +268,7 @@ namespace Test
                     // Don't use Assert.AreEqual directly because it has
                     // quite a lot of overhead
                     Assert.Fail(
-                      String.Empty + o + " and " + o2 + " don't have equal hash codes");
+                      string.Empty + o + " and " + o2 + " don't have equal hash codes");
                 }
             }
             else
@@ -279,7 +279,7 @@ namespace Test
                 }
                 if (o2.Equals(o))
                 {
-                    Assert.Fail(String.Empty + o + " does not equal " + o2 +
+                    Assert.Fail(string.Empty + o + " does not equal " + o2 +
                       " but not vice versa");
                 }
                 // At least check that GetHashCode doesn't throw
@@ -290,7 +290,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
                 try
                 {
@@ -299,7 +299,7 @@ namespace Test
                 catch (Exception ex)
                 {
                     Assert.Fail(ex.ToString());
-                    throw new InvalidOperationException(String.Empty, ex);
+                    throw new InvalidOperationException(string.Empty, ex);
                 }
             }
         }
@@ -393,7 +393,7 @@ namespace Test
         {
             if (CompareTestReciprocal(o1, o2) != 0)
             {
-                msg = (msg == null ? String.Empty : (msg + "\r\n")) +
+                msg = (msg == null ? string.Empty : (msg + "\r\n")) +
                 "Not equal: " + CompareTestReciprocal(o1, o2);
                 Assert.Fail(ObjectMessages(
                   o1,
@@ -402,7 +402,7 @@ namespace Test
             }
             if (!o1.Equals(o2))
             {
-                msg = (msg == null ? String.Empty : (msg + "\r\n")) +
+                msg = (msg == null ? string.Empty : (msg + "\r\n")) +
                 "Not equal: " + CompareTestReciprocal(o1, o2);
                 Assert.Fail(ObjectMessages(
                   o1,
@@ -589,7 +589,7 @@ namespace Test
             {
                 return "0";
             }
-            if (value == Int32.MinValue)
+            if (value == int.MinValue)
             {
                 return "-2147483648";
             }
@@ -631,7 +631,7 @@ namespace Test
                 {
                     ++count;
                 }
-                return new String(chars, count, chars.Length - count);
+                return new string(chars, count, chars.Length - count);
             }
             chars = new char[12];
             count = 11;
@@ -661,12 +661,12 @@ namespace Test
             {
                 ++count;
             }
-            return new String(chars, count, 12 - count);
+            return new string(chars, count, 12 - count);
         }
 
         public static string LongToString(long longValue)
         {
-            if (longValue == Int64.MinValue)
+            if (longValue == long.MinValue)
             {
                 return "-9223372036854775808";
             }
@@ -675,7 +675,7 @@ namespace Test
                 return "0";
             }
             bool neg = longValue < 0;
-            var count = 0;
+            int count = 0;
             char[] chars;
             int intlongValue = unchecked((int)longValue);
             if (intlongValue == longValue)
@@ -716,14 +716,14 @@ namespace Test
                 {
                     ++count;
                 }
-                return new String(chars, count, 24 - count);
+                return new string(chars, count, 24 - count);
             }
         }
 
         public static string ObjectMessages(
           object o1,
           object o2,
-          String s)
+          string s)
         {
             return s + ":\n" + o1 + " and\n" + o2;
         }
@@ -732,7 +732,7 @@ namespace Test
           object o1,
           object o2,
           object o3,
-          String s)
+          string s)
         {
             return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3;
         }
@@ -746,24 +746,24 @@ namespace Test
                 throw new ArgumentException("num (" + num +
                    ") is not greater or equal to 0");
             }
-            var sb = new StringBuilder(num);
+            StringBuilder sb = new(num);
             if (num > RepeatDivideThreshold)
             {
                 string sb2 = Repeat(c, RepeatDivideThreshold);
                 int count = num / RepeatDivideThreshold;
                 int rem = num % RepeatDivideThreshold;
-                for (var i = 0; i < count; ++i)
+                for (int i = 0; i < count; ++i)
                 {
                     sb.Append(sb2);
                 }
-                for (var i = 0; i < rem; ++i)
+                for (int i = 0; i < rem; ++i)
                 {
                     sb.Append(c);
                 }
             }
             else
             {
-                for (var i = 0; i < num; ++i)
+                for (int i = 0; i < num; ++i)
                 {
                     sb.Append(c);
                 }
@@ -771,7 +771,7 @@ namespace Test
             return sb.ToString();
         }
 
-        public static string Repeat(String str, int num)
+        public static string Repeat(string str, int num)
         {
             if (num < 0)
             {
@@ -786,8 +786,8 @@ namespace Test
             {
                 return Repeat(str[0], num);
             }
-            var sb = new StringBuilder(num * str.Length);
-            for (var i = 0; i < num; ++i)
+            StringBuilder sb = new(num * str.Length);
+            for (int i = 0; i < num; ++i)
             {
                 sb.Append(str);
             }
@@ -841,10 +841,10 @@ namespace Test
         "\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
         length);
             }
-            var sb = new System.Text.StringBuilder();
+            StringBuilder sb = new();
             const string ValueHex = "0123456789ABCDEF";
             sb.Append("new byte[] { ");
-            for (var i = 0; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
                 if (i > 0)
                 {
@@ -941,7 +941,7 @@ namespace Test
             {
                 return false;
             }
-            for (var i = 0; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
                 if (arr1[offset + i] != arr2[offset2 + i])
                 {
@@ -965,7 +965,7 @@ namespace Test
             {
                 return false;
             }
-            for (var i = 0; i < arr1.Length; ++i)
+            for (int i = 0; i < arr1.Length; ++i)
             {
                 if (arr1[i] != arr2[i])
                 {

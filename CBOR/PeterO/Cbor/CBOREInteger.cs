@@ -60,7 +60,7 @@ namespace PeterO.Cbor
 
         public long AsInt64(object obj)
         {
-            var bi = (EInteger)obj;
+            EInteger bi = (EInteger)obj;
             if (!bi.CanFitInInt64())
             {
                 throw new OverflowException("This object's value is out of range");
@@ -70,7 +70,7 @@ namespace PeterO.Cbor
 
         public bool CanFitInSingle(object obj)
         {
-            var bigintItem = (EInteger)obj;
+            EInteger bigintItem = (EInteger)obj;
             EFloat ef = EFloat.FromEInteger(bigintItem);
             EFloat ef2 = EFloat.FromSingle(ef.ToSingle());
             return ef.CompareTo(ef2) == 0;
@@ -78,7 +78,7 @@ namespace PeterO.Cbor
 
         public bool CanFitInDouble(object obj)
         {
-            var bigintItem = (EInteger)obj;
+            EInteger bigintItem = (EInteger)obj;
             EFloat ef = EFloat.FromEInteger(bigintItem);
             EFloat ef2 = EFloat.FromDouble(ef.ToDouble());
             return ef.CompareTo(ef2) == 0;
@@ -86,19 +86,19 @@ namespace PeterO.Cbor
 
         public bool CanFitInInt32(object obj)
         {
-            var bi = (EInteger)obj;
+            EInteger bi = (EInteger)obj;
             return bi.CanFitInInt32();
         }
 
         public bool CanFitInInt64(object obj)
         {
-            var bi = (EInteger)obj;
+            EInteger bi = (EInteger)obj;
             return bi.CanFitInInt64();
         }
 
         public bool CanFitInUInt64(object obj)
         {
-            var bi = (EInteger)obj;
+            EInteger bi = (EInteger)obj;
             return bi.Sign >= 0 && bi.GetUnsignedBitLengthAsInt64() <= 64;
         }
 
@@ -134,10 +134,10 @@ namespace PeterO.Cbor
 
         public int AsInt32(object obj, int minValue, int maxValue)
         {
-            var bi = (EInteger)obj;
+            EInteger bi = (EInteger)obj;
             if (bi.CanFitInInt32())
             {
-                var ret = (int)bi;
+                int ret = (int)bi;
                 if (ret >= minValue && ret <= maxValue)
                 {
                     return ret;
@@ -148,7 +148,7 @@ namespace PeterO.Cbor
 
         public object Negate(object obj)
         {
-            var bigobj = (EInteger)obj;
+            EInteger bigobj = (EInteger)obj;
             bigobj = -bigobj;
             return bigobj;
         }

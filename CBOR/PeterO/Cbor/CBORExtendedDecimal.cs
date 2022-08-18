@@ -15,61 +15,61 @@ namespace PeterO.Cbor
     {
         public bool IsPositiveInfinity(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsPositiveInfinity();
         }
 
         public bool IsInfinity(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsInfinity();
         }
 
         public bool IsNegativeInfinity(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsNegativeInfinity();
         }
 
         public bool IsNaN(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsNaN();
         }
 
         public double AsDouble(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.ToDouble();
         }
 
         public EDecimal AsEDecimal(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed;
         }
 
         public EFloat AsEFloat(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.ToEFloat();
         }
 
         public float AsSingle(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.ToSingle();
         }
 
         public EInteger AsEInteger(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.ToEInteger();
         }
 
         public long AsInt64(object obj)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             if (this.CanTruncatedIntFitInInt64(obj))
             {
                 EInteger bi = ef.ToEInteger();
@@ -80,14 +80,14 @@ namespace PeterO.Cbor
 
         public bool CanFitInSingle(object obj)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             return (!ef.IsFinite) || (ef.CompareTo(EDecimal.FromSingle(
                   ef.ToSingle())) == 0);
         }
 
         public bool CanFitInDouble(object obj)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             return (!ef.IsFinite) || (ef.CompareTo(EDecimal.FromDouble(
                   ef.ToDouble())) == 0);
         }
@@ -109,7 +109,7 @@ namespace PeterO.Cbor
 
         public bool CanTruncatedIntFitInInt64(object obj)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -128,7 +128,7 @@ namespace PeterO.Cbor
 
         public bool CanTruncatedIntFitInUInt64(object obj)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -147,7 +147,7 @@ namespace PeterO.Cbor
 
         public bool CanTruncatedIntFitInInt32(object obj)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -166,19 +166,19 @@ namespace PeterO.Cbor
 
         public bool IsNumberZero(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsZero;
         }
 
         public int Sign(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsNaN() ? 2 : ed.Sign;
         }
 
         public bool IsIntegral(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.IsFinite && ((ed.Exponent.Sign >= 0) ||
       (ed.CompareTo(EDecimal.FromEInteger(ed.ToEInteger())) ==
 
@@ -187,11 +187,11 @@ namespace PeterO.Cbor
 
         public int AsInt32(object obj, int minValue, int maxValue)
         {
-            var ef = (EDecimal)obj;
+            EDecimal ef = (EDecimal)obj;
             if (this.CanTruncatedIntFitInInt32(obj))
             {
                 EInteger bi = ef.ToEInteger();
-                var ret = (int)bi;
+                int ret = (int)bi;
                 if (ret >= minValue && ret <= maxValue)
                 {
                     return ret;
@@ -202,13 +202,13 @@ namespace PeterO.Cbor
 
         public object Negate(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.Negate();
         }
 
         public object Abs(object obj)
         {
-            var ed = (EDecimal)obj;
+            EDecimal ed = (EDecimal)obj;
             return ed.Abs();
         }
 

@@ -18,7 +18,7 @@ namespace Test
                 }
                 else
                 {
-                    var newbytes = new byte[this.bytes.Length * 2];
+                    byte[] newbytes = new byte[this.bytes.Length * 2];
                     Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
                     this.bytes = newbytes;
                     this.bytes[this.pos++] = (byte)b;
@@ -26,17 +26,11 @@ namespace Test
                 return this;
             }
 
-            public int ByteLength
-            {
-                get
-                {
-                    return this.pos;
-                }
-            }
+            public int ByteLength => this.pos;
 
             public byte[] ToBytes()
             {
-                var newbytes = new byte[this.pos];
+                byte[] newbytes = new byte[this.pos];
                 Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
                 return newbytes;
             }
@@ -48,8 +42,8 @@ namespace Test
           int len,
           ByteWriter bs)
         {
-            var maxArg = 4;
-            var sh = 0;
+            int maxArg = 4;
+            int sh = 0;
             int minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 :
                 ((len <= 0xffff) ? 2 : 3));
             int arg = minArg + r.GetInt32(maxArg - minArg + 1);
@@ -96,19 +90,19 @@ namespace Test
             }
         }
 
-        private static int[]
+        private static readonly int[]
         valueMajorTypes = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4,
       4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7,
     };
 
-        private static int[]
+        private static readonly int[]
         valueMajorTypesHighDepth = {
       0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 6, 7,
     };
 
-        private static int[] valueMajorTypesHighLength = {
+        private static readonly int[] valueMajorTypesHighLength = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 6,
       6, 7, 7, 7, 7, 7, 7,
     };
@@ -129,7 +123,7 @@ namespace Test
                     r = ra.GetInt32(3);
                     if (r == 0 && length - i >= 2)
                     {
-                        r = 0xc2 + ra.GetInt32((0xdf - 0xc2) + 1);
+                        r = 0xc2 + ra.GetInt32(0xdf - 0xc2 + 1);
                         bs.Write(r);
                         bs.Write(0x80 + ra.GetInt32(0x40));
                         i += 2;
@@ -140,7 +134,7 @@ namespace Test
                         bs.Write(r);
                         int lower = (r == 0xe0) ? 0xa0 : 0x80;
                         int upper = (r == 0xed) ? 0x9f : 0xbf;
-                        r = lower + ra.GetInt32((upper - lower) + 1);
+                        r = lower + ra.GetInt32(upper - lower + 1);
                         bs.Write(r);
                         bs.Write(0x80 + ra.GetInt32(0x40));
                         i += 3;
@@ -151,7 +145,7 @@ namespace Test
                         bs.Write(r);
                         int lower = (r == 0xf0) ? 0x90 : 0x80;
                         int upper = (r == 0xf4) ? 0x8f : 0xbf;
-                        r = lower + ra.GetInt32((upper - lower) + 1);
+                        r = lower + ra.GetInt32(upper - lower + 1);
                         bs.Write(r);
                         bs.Write(0x80 + ra.GetInt32(0x40));
                         bs.Write(0x80 + ra.GetInt32(0x40));
@@ -213,12 +207,12 @@ namespace Test
                 majorType = valueMajorTypesHighLength[r.GetInt32(
                       valueMajorTypesHighLength.Length)];
             }
-            if (majorType == 3 || majorType == 2)
+            if (majorType is 3 or 2)
             { // Byte and text strings
                 int len = r.GetInt32(1000);
                 if (r.GetInt32(50) == 0 && depth < 2)
                 {
-                    var v = (long)r.GetInt32(100000) * r.GetInt32(100000);
+                    long v = (long)r.GetInt32(100000) * r.GetInt32(100000);
                     len = (int)(v / 100000);
                 }
                 else if (depth > 6)
@@ -271,12 +265,12 @@ namespace Test
                 }
                 return;
             }
-            else if (majorType == 4 || majorType == 5)
+            else if (majorType is 4 or 5)
             { // Arrays and maps
                 int len = r.GetInt32(8);
                 if (r.GetInt32(50) == 0 && depth < 2)
                 {
-                    var v = (long)r.GetInt32(1000) * r.GetInt32(1000);
+                    long v = (long)r.GetInt32(1000) * r.GetInt32(1000);
                     len = (int)(v / 1000);
                 }
                 else if (depth > 6)
@@ -368,7 +362,7 @@ namespace Test
 
         public byte[] Generate(IRandomGenExtended random)
         {
-            var bs = new ByteWriter();
+            ByteWriter bs = new();
             if (random == null)
             {
                 throw new ArgumentNullException(nameof(random));

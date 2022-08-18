@@ -71,8 +71,8 @@ namespace PeterO.Cbor
                 throw new ArgumentNullException(nameof(uri));
             }
             string uriString = uri.ToString();
-            var nonascii = false;
-            for (var i = 0; i < uriString.Length; ++i)
+            bool nonascii = false;
+            for (int i = 0; i < uriString.Length; ++i)
             {
                 nonascii |= uriString[i] >= 0x80;
             }

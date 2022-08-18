@@ -16,12 +16,12 @@ namespace Test
           StringOutput sb,
           JSONOptions options)
         {
-            var i = 0;
+            int i = 0;
             for (; i < str.Length; ++i)
             {
                 char c = str[i];
-                if (c < 0x20 || c >= 0x7f || c == '\\' || c == '"' || c == '&' ||
-                  c == '<' || c == '>')
+                if (c is < (char)0x20 or >= (char)0x7f or '\\' or '"' or '&' or
+                  '<' or '>')
                 {
                     sb.WriteString(str, 0, i);
                     break;
@@ -35,23 +35,22 @@ namespace Test
             for (; i < str.Length; ++i)
             {
                 char c = str[i];
-                if ((c < 0x20 && (c != 0x09 || c != 0x0a || c != 0x0d)) || c ==
-                  0xfffe || c == 0xffff)
+                if (c is (< (char)0x20 and (not (char)0x09 or not (char)0x0a or not (char)0x0d)) or (char)0xfffe or (char)0xffff)
                 {
                     // XML doesn't support certain code points even if escaped.
                     // Therefore, replace all unsupported code points with replacement
                     // characters.
                     sb.WriteCodePoint(0xfffd);
                 }
-                else if (c == '\\' || c == '"')
+                else if (c is '\\' or '"')
                 {
                     sb.WriteCodePoint('\\');
                     sb.WriteCodePoint(c);
                 }
-                else if (c < 0x20 || c == '&' || c == '<' || c == '>' || (c >= 0x7f &&
-                    (c == 0x2028 || c == 0x2029 ||
-                      (c >= 0x7f && c <= 0xa0) || c == 0xfeff || c == 0xfffe ||
-                      c == 0xffff)))
+                else if (c is < (char)0x20 or '&' or '<' or '>' or (>= (char)0x7f and
+                    ((char)0x2028 or (char)0x2029 or
+                      (>= (char)0x7f and <= (char)0xa0) or (char)0xfeff or (char)0xfffe or
+                      (char)0xffff)))
                 {
                     sb.WriteString("&#x");
                     sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
@@ -89,7 +88,7 @@ namespace Test
 
         internal static string ToPlistString(CBORObject obj)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new();
             try
             {
                 WritePlistToInternal(
@@ -121,9 +120,9 @@ namespace Test
           StringOutput writer,
           JSONOptions options)
         {
-            if (obj.Type == CBORType.Array || obj.Type == CBORType.Map)
+            if (obj.Type is CBORType.Array or CBORType.Map)
             {
-                var stack = new List<CBORObject>();
+                List<CBORObject> stack = new();
                 WritePlistToInternalCore(obj, writer, options, stack);
             }
             else
@@ -147,7 +146,7 @@ namespace Test
           CBORObject parent,
           CBORObject child)
         {
-            if (child.Type != CBORType.Array && child.Type != CBORType.Map)
+            if (child.Type is not CBORType.Array and not CBORType.Map)
             {
                 return false;
             }
@@ -195,8 +194,8 @@ namespace Test
             if (obj.HasMostOuterTag(0) || obj.HasMostOuterTag(1))
             {
                 CBORDateConverter conv = CBORDateConverter.TaggedString;
-                var year = new EInteger[1];
-                var lesserFields = new int[7];
+                EInteger[] year = new EInteger[1];
+                int[] lesserFields = new int[7];
                 if (!conv.TryGetDateTimeFields(obj, year, lesserFields))
                 {
                     throw new InvalidOperationException("Unsupported date/time");
@@ -323,7 +322,7 @@ namespace Test
                 case CBORType.Array:
                     {
                         writer.WriteString("<array>");
-                        for (var i = 0; i < obj.Count; ++i)
+                        for (int i = 0; i < obj.Count; ++i)
                         {
                             bool pop = CheckCircularRef(stack, obj, obj[i]);
                             WritePlistToInternalCore(obj[i], writer, options, stack);
@@ -334,7 +333,7 @@ namespace Test
                     }
                 case CBORType.Map:
                     {
-                        var hasNonStringKeys = false;
+                        bool hasNonStringKeys = false;
                         ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
                           obj.Entries;
                         foreach (KeyValuePair<CBORObject, CBORObject> entry in entries)
@@ -387,8 +386,8 @@ namespace Test
                                     case CBORType.Array:
                                     case CBORType.Map:
                                         {
-                                            var sb = new StringBuilder();
-                                            var sw = new StringOutput(sb);
+                                            StringBuilder sb = new();
+                                            StringOutput sw = new(sb);
                                             bool pop = CheckCircularRef(stack, obj, key);
                                             WritePlistToInternalCore(key, sw, options, stack);
                                             PopRefIfNeeded(stack, pop);

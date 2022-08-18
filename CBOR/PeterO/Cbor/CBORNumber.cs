@@ -63,7 +63,7 @@ namespace PeterO.Cbor
         internal static ICBORNumber GetNumberInterface(CBORObject obj)
         {
             CBORNumber num = CBORNumber.FromCBORObject(obj);
-            return (num == null) ? null : num.GetNumberInterface();
+            return num?.GetNumberInterface();
         }
 
         internal object GetValue()
@@ -104,14 +104,8 @@ namespace PeterO.Cbor
         /// positive or negative depending on what sign is stored in their
         /// underlying forms.</summary>
         /// <value>This value's sign.</value>
-        public int Sign
-        {
-            get
-            {
-                return this.IsNaN() ? (this.IsNegative() ? -1 : 1) :
+        public int Sign => this.IsNaN() ? (this.IsNegative() ? -1 : 1) :
                   this.GetNumberInterface().Sign(this.value);
-            }
-        }
 
         internal static bool IsNumber(CBORObject o)
         {
@@ -603,13 +597,7 @@ namespace PeterO.Cbor
         /// <summary>Gets the underlying form of this CBOR number
         /// object.</summary>
         /// <value>The underlying form of this CBOR number object.</value>
-        public NumberKind Kind
-        {
-            get
-            {
-                return this.kind;
-            }
-        }
+        public NumberKind Kind => this.kind;
 
         /// <summary>Returns whether this object's value, converted to an
         /// integer by discarding its fractional part, would be -(2^31) or
@@ -734,7 +722,7 @@ namespace PeterO.Cbor
             {
                 case NumberKind.Integer:
                     {
-                        var thisValue = (long)this.value;
+                        long thisValue = (long)this.value;
                         return thisValue == 0;
                     }
                 default: return this.GetNumberInterface().IsNumberZero(this.GetValue());
@@ -886,7 +874,7 @@ namespace PeterO.Cbor
         /// number.</returns>
         public static CBORNumber FromInt16(short inputInt16)
         {
-            var val = (int)inputInt16;
+            int val = inputInt16;
             return FromObject((long)val);
         }
 
@@ -992,7 +980,7 @@ namespace PeterO.Cbor
             if (data.Length <= 7)
             {
                 long x = 0;
-                for (var i = 0; i < data.Length; ++i)
+                for (int i = 0; i < data.Length; ++i)
                 {
                     x <<= 8;
                     x |= ((long)data[i]) & 0xff;
@@ -1007,7 +995,7 @@ namespace PeterO.Cbor
             int neededLength = data.Length;
             byte[] bytes;
             EInteger bi;
-            var extended = false;
+            bool extended = false;
             if (((data[0] >> 7) & 1) != 0)
             {
                 // Increase the needed length
@@ -1059,16 +1047,16 @@ namespace PeterO.Cbor
             {
                 case NumberKind.Integer:
                     {
-                        var longItem = (long)this.value;
+                        long longItem = (long)this.value;
                         return CBORUtilities.LongToString(longItem);
                     }
                 case NumberKind.Double:
                     {
-                        var longItem = (long)this.value;
+                        long longItem = (long)this.value;
                         return CBORUtilities.DoubleBitsToString(longItem);
                     }
                 default:
-                    return (this.value == null) ? String.Empty :
+                    return (this.value == null) ? string.Empty :
                       this.value.ToString();
             }
         }
@@ -1079,7 +1067,7 @@ namespace PeterO.Cbor
             {
                 case NumberKind.Double:
                     {
-                        var f = (long)this.value;
+                        long f = (long)this.value;
                         if (!CBORUtilities.DoubleBitsFinite(f))
                         {
                             return "null";
@@ -1089,7 +1077,7 @@ namespace PeterO.Cbor
                     }
                 case NumberKind.Integer:
                     {
-                        var longItem = (long)this.value;
+                        long longItem = (long)this.value;
                         return CBORUtilities.LongToString(longItem);
                     }
                 case NumberKind.EInteger:
@@ -1099,7 +1087,7 @@ namespace PeterO.Cbor
                     }
                 case NumberKind.EDecimal:
                     {
-                        var dec = (EDecimal)this.value;
+                        EDecimal dec = (EDecimal)this.value;
                         if (dec.IsInfinity() || dec.IsNaN())
                         {
                             return "null";
@@ -1111,7 +1099,7 @@ namespace PeterO.Cbor
                     }
                 case NumberKind.EFloat:
                     {
-                        var flo = (EFloat)this.value;
+                        EFloat flo = (EFloat)this.value;
                         if (flo.IsInfinity() || flo.IsNaN())
                         {
                             return "null";
@@ -1134,7 +1122,7 @@ namespace PeterO.Cbor
                     }
                 case NumberKind.ERational:
                     {
-                        var dec = (ERational)this.value;
+                        ERational dec = (ERational)this.value;
                         EDecimal f = dec.ToEDecimalExactIfPossible(
                             EContext.Decimal128.WithUnlimitedExponents());
                         // DebugUtility.Log(
@@ -1195,7 +1183,7 @@ namespace PeterO.Cbor
                 return false;
             }
             long v = icn.AsInt64(gv);
-            return v >= Int32.MinValue && v <= Int32.MaxValue;
+            return v >= int.MinValue && v <= int.MaxValue;
         }
 
         /// <summary>Returns whether this object's numerical value is an
@@ -1288,8 +1276,8 @@ namespace PeterO.Cbor
             {
                 case NumberKind.Integer:
                     {
-                        var longValue = (long)this.value;
-                        if (longValue == Int64.MinValue)
+                        long longValue = (long)this.value;
+                        if (longValue == long.MinValue)
                         {
                             return FromObject(EInteger.FromInt64(longValue).Negate());
                         }
@@ -1302,7 +1290,7 @@ namespace PeterO.Cbor
                     }
                 case NumberKind.EInteger:
                     {
-                        var eivalue = (EInteger)this.value;
+                        EInteger eivalue = (EInteger)this.value;
                         return eivalue.Sign >= 0 ? this : FromObject(eivalue.Abs());
                     }
                 default:
@@ -1321,12 +1309,12 @@ namespace PeterO.Cbor
             {
                 case NumberKind.Integer:
                     {
-                        var longValue = (long)this.value;
+                        long longValue = (long)this.value;
                         if (longValue == 0)
                         {
                             return FromObject(EDecimal.NegativeZero);
                         }
-                        else if (longValue == Int64.MinValue)
+                        else if (longValue == long.MinValue)
                         {
                             return FromObject(EInteger.FromInt64(longValue).Negate());
                         }
@@ -1337,7 +1325,7 @@ namespace PeterO.Cbor
                     }
                 case NumberKind.EInteger:
                     {
-                        var eiValue = (EInteger)this.value;
+                        EInteger eiValue = (EInteger)this.value;
                         if (eiValue.IsZero)
                         {
                             return FromObject(EDecimal.NegativeZero);
@@ -1449,10 +1437,10 @@ namespace PeterO.Cbor
             NumberKind typeB = b.kind;
             if (typeA == NumberKind.Integer && typeB == NumberKind.Integer)
             {
-                var valueA = (long)objA;
-                var valueB = (long)objB;
-                if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
-                  (valueA > 0 && valueB > Int64.MaxValue - valueA))
+                long valueA = (long)objA;
+                long valueB = (long)objB;
+                if ((valueA < 0 && valueB < long.MinValue - valueA) ||
+                  (valueA > 0 && valueB > long.MaxValue - valueA))
                 {
                     // would overflow, convert to EInteger
                     return CBORNumber.FromObject(
@@ -1532,10 +1520,10 @@ namespace PeterO.Cbor
             NumberKind typeB = b.kind;
             if (typeA == NumberKind.Integer && typeB == NumberKind.Integer)
             {
-                var valueA = (long)objA;
-                var valueB = (long)objB;
-                if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
-                  (valueB > 0 && Int64.MinValue + valueB > valueA))
+                long valueA = (long)objA;
+                long valueB = (long)objB;
+                if ((valueB < 0 && long.MaxValue + valueB < valueA) ||
+                  (valueB > 0 && long.MinValue + valueB > valueA))
                 {
                     // would overflow, convert to EInteger
                     return CBORNumber.FromObject(
@@ -1609,20 +1597,20 @@ namespace PeterO.Cbor
             NumberKind typeB = b.kind;
             if (typeA == NumberKind.Integer && typeB == NumberKind.Integer)
             {
-                var valueA = (long)objA;
-                var valueB = (long)objB;
+                long valueA = (long)objA;
+                long valueB = (long)objB;
                 bool apos = valueA > 0L;
                 bool bpos = valueB > 0L;
                 if (
-                  (apos && ((!bpos && (Int64.MinValue / valueA) > valueB) ||
-                      (bpos && valueA > (Int64.MaxValue / valueB)))) ||
+                  (apos && ((!bpos && (long.MinValue / valueA) > valueB) ||
+                      (bpos && valueA > (long.MaxValue / valueB)))) ||
                   (!apos && ((!bpos && valueA != 0L &&
-                        (Int64.MaxValue / valueA) > valueB) ||
-                      (bpos && valueA < (Int64.MinValue / valueB)))))
+                        (long.MaxValue / valueA) > valueB) ||
+                      (bpos && valueA < (long.MinValue / valueB)))))
                 {
                     // would overflow, convert to EInteger
-                    var bvalueA = (EInteger)valueA;
-                    var bvalueB = (EInteger)valueB;
+                    EInteger bvalueA = (EInteger)valueA;
+                    EInteger bvalueB = (EInteger)valueB;
                     return CBORNumber.FromObject(bvalueA * bvalueB);
                 }
                 return CBORNumber.FromObject(valueA * valueB);
@@ -1683,8 +1671,8 @@ namespace PeterO.Cbor
             NumberKind typeB = b.kind;
             if (typeA == NumberKind.Integer && typeB == NumberKind.Integer)
             {
-                var valueA = (long)objA;
-                var valueB = (long)objB;
+                long valueA = (long)objA;
+                long valueB = (long)objB;
                 if (valueB == 0)
                 {
                     return (valueA == 0) ? CBORNumber.FromObject(EDecimal.NaN) :
@@ -1692,7 +1680,7 @@ namespace PeterO.Cbor
 
                         CBORNumber.FromObject(EDecimal.PositiveInfinity));
                 }
-                if (valueA == Int64.MinValue && valueB == -1)
+                if (valueA == long.MinValue && valueB == -1)
                 {
                     return new CBORNumber(NumberKind.Integer, valueA).Negate();
                 }
@@ -1808,9 +1796,9 @@ namespace PeterO.Cbor
             NumberKind typeB = b.kind;
             if (typeA == NumberKind.Integer && typeB == NumberKind.Integer)
             {
-                var valueA = (long)objA;
-                var valueB = (long)objB;
-                return (valueA == Int64.MinValue && valueB == -1) ?
+                long valueA = (long)objA;
+                long valueB = (long)objB;
+                return (valueA == long.MinValue && valueB == -1) ?
                   CBORNumber.FromObject(0) : CBORNumber.FromObject(valueA % valueB);
             }
             NumberKind convertKind = GetConvertKind(this, b);
@@ -1912,7 +1900,7 @@ namespace PeterO.Cbor
             {
                 return 0;
             }
-            var cmp = 0;
+            int cmp = 0;
             NumberKind typeA = this.kind;
             NumberKind typeB = other.kind;
             object objA = this.value;
@@ -1923,22 +1911,22 @@ namespace PeterO.Cbor
                 {
                     case NumberKind.Integer:
                         {
-                            var a = (long)objA;
-                            var b = (long)objB;
+                            long a = (long)objA;
+                            long b = (long)objB;
                             cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
                             break;
                         }
                     case NumberKind.EInteger:
                         {
-                            var bigintA = (EInteger)objA;
-                            var bigintB = (EInteger)objB;
+                            EInteger bigintA = (EInteger)objA;
+                            EInteger bigintB = (EInteger)objB;
                             cmp = bigintA.CompareTo(bigintB);
                             break;
                         }
                     case NumberKind.Double:
                         {
-                            var a = (long)objA;
-                            var b = (long)objB;
+                            long a = (long)objA;
+                            long b = (long)objB;
                             // Treat NaN as greater than all other numbers
                             cmp = CBORUtilities.DoubleBitsNaN(a) ?
                               (CBORUtilities.DoubleBitsNaN(b) ? 0 : 1) :
@@ -2038,14 +2026,14 @@ namespace PeterO.Cbor
                         EDecimal e2 = null;
                         if (typeA == NumberKind.EFloat)
                         {
-                            var ef1 = (EFloat)objA;
+                            EFloat ef1 = (EFloat)objA;
                             e2 = (EDecimal)objB;
                             cmp = e2.CompareToBinary(ef1);
                             cmp = -cmp;
                         }
                         else if (typeB == NumberKind.EFloat)
                         {
-                            var ef1 = (EFloat)objB;
+                            EFloat ef1 = (EFloat)objB;
                             e2 = (EDecimal)objA;
                             cmp = e2.CompareToBinary(ef1);
                         }

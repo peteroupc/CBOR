@@ -35,13 +35,13 @@ namespace PeterO.Cbor
 
         public double AsDouble(object obj)
         {
-            var er = (ERational)obj;
+            ERational er = (ERational)obj;
             return er.ToDouble();
         }
 
         public EDecimal AsEDecimal(object obj)
         {
-            var er = (ERational)obj;
+            ERational er = (ERational)obj;
             return
 
               er.ToEDecimalExactIfPossible(
@@ -50,7 +50,7 @@ namespace PeterO.Cbor
 
         public EFloat AsEFloat(object obj)
         {
-            var er = (ERational)obj;
+            ERational er = (ERational)obj;
             return
 
               er.ToEFloatExactIfPossible(
@@ -59,19 +59,19 @@ namespace PeterO.Cbor
 
         public float AsSingle(object obj)
         {
-            var er = (ERational)obj;
+            ERational er = (ERational)obj;
             return er.ToSingle();
         }
 
         public EInteger AsEInteger(object obj)
         {
-            var er = (ERational)obj;
+            ERational er = (ERational)obj;
             return er.ToEInteger();
         }
 
         public long AsInt64(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             if (ef.IsFinite)
             {
                 EInteger bi = ef.ToEInteger();
@@ -85,14 +85,14 @@ namespace PeterO.Cbor
 
         public bool CanFitInSingle(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             return (!ef.IsFinite) || (ef.CompareTo(ERational.FromSingle(
                   ef.ToSingle())) == 0);
         }
 
         public bool CanFitInDouble(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             return (!ef.IsFinite) || (ef.CompareTo(ERational.FromDouble(
                   ef.ToDouble())) == 0);
         }
@@ -114,7 +114,7 @@ namespace PeterO.Cbor
 
         public bool CanTruncatedIntFitInInt64(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -125,7 +125,7 @@ namespace PeterO.Cbor
 
         public bool CanTruncatedIntFitInInt32(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -136,7 +136,7 @@ namespace PeterO.Cbor
 
         public bool CanTruncatedIntFitInUInt64(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -147,19 +147,19 @@ namespace PeterO.Cbor
 
         public bool IsNumberZero(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             return ef.IsZero;
         }
 
         public int Sign(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             return ef.Sign;
         }
 
         public bool IsIntegral(object obj)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             if (!ef.IsFinite)
             {
                 return false;
@@ -177,13 +177,13 @@ namespace PeterO.Cbor
 
         public int AsInt32(object obj, int minValue, int maxValue)
         {
-            var ef = (ERational)obj;
+            ERational ef = (ERational)obj;
             if (ef.IsFinite)
             {
                 EInteger bi = ef.ToEInteger();
                 if (bi.CanFitInInt32())
                 {
-                    var ret = (int)bi;
+                    int ret = (int)bi;
                     if (ret >= minValue && ret <= maxValue)
                     {
                         return ret;
@@ -195,13 +195,13 @@ namespace PeterO.Cbor
 
         public object Negate(object obj)
         {
-            var ed = (ERational)obj;
+            ERational ed = (ERational)obj;
             return ed.Negate();
         }
 
         public object Abs(object obj)
         {
-            var ed = (ERational)obj;
+            ERational ed = (ERational)obj;
             return ed.Abs();
         }
 

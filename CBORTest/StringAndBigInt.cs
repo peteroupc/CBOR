@@ -12,25 +12,13 @@ namespace Test
         private const string ValueDigitsLower =
           "0123456789abcdefghijklmnopqrstuvwxyz";
 
-        private String stringValue;
+        private string stringValue;
 
-        public String StringValue
-        {
-            get
-            {
-                return this.stringValue;
-            }
-        }
+        public string StringValue => this.stringValue;
 
         private EInteger bigintValue;
 
-        public EInteger BigIntValue
-        {
-            get
-            {
-                return this.bigintValue;
-            }
-        }
+        public EInteger BigIntValue => this.bigintValue;
 
         public static StringAndBigInt Generate(IRandomGenExtended rand, int radix)
         {
@@ -53,10 +41,10 @@ namespace Test
                   ") is more than 36");
             }
             EInteger bv = EInteger.Zero;
-            var sabi = new StringAndBigInt();
+            StringAndBigInt sabi = new();
             int numDigits = 1 + rand.GetInt32(maxNumDigits);
-            var negative = false;
-            var builder = new StringBuilder();
+            bool negative = false;
+            StringBuilder builder = new();
             if (rand.GetInt32(2) == 0)
             {
                 builder.Append('-');
@@ -65,7 +53,7 @@ namespace Test
             int radixpowint = radix * radix * radix * radix;
             EInteger radixpow4 = EInteger.FromInt32(radixpowint);
             EInteger radixpow1 = EInteger.FromInt32(radix);
-            var count = 0;
+            int count = 0;
             for (int i = 0; i < numDigits - 4; i += 4)
             {
                 int digitvalues = rand.GetInt32(radixpowint);
@@ -114,7 +102,7 @@ namespace Test
                 int digits = (((((digit * radix) + digit2) *
                         radix) + digit3) * radix) + digit4;
                 bv *= radixpow4;
-                var bigintTmp = (EInteger)digits;
+                EInteger bigintTmp = (EInteger)digits;
                 bv += bigintTmp;
             }
             for (int i = count; i < numDigits; ++i)
@@ -129,7 +117,7 @@ namespace Test
                     builder.Append(ValueDigitsLower[digit]);
                 }
                 bv *= radixpow1;
-                var bigintTmp = (EInteger)digit;
+                EInteger bigintTmp = (EInteger)digit;
                 bv += bigintTmp;
             }
             if (negative)

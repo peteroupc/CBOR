@@ -22,7 +22,7 @@ namespace PeterO.DocGen
             {
                 if (this.children != null)
                 {
-                    foreach (var c in this.children)
+                    foreach (Node c in this.children)
                     {
                         yield return c;
                     }
@@ -33,7 +33,7 @@ namespace PeterO.DocGen
             {
                 if (this.attributes != null)
                 {
-                    foreach (var c in this.attributes.Keys)
+                    foreach (string c in this.attributes.Keys)
                     {
                         yield return c;
                     }
@@ -72,8 +72,8 @@ namespace PeterO.DocGen
                 {
                     return this.content;
                 }
-                var sb = new StringBuilder();
-                foreach (var c in this.children)
+                StringBuilder sb = new();
+                foreach (Node c in this.children)
                 {
                     sb.Append(c.GetContent());
                 }
@@ -92,7 +92,7 @@ namespace PeterO.DocGen
                 }
                 else
                 {
-                    this.LocalName = String.Empty;
+                    this.LocalName = string.Empty;
                     this.children = null;
                     this.attributes = null;
                 }
@@ -105,7 +105,7 @@ namespace PeterO.DocGen
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            foreach (var child in node.GetChildren())
+            foreach (INode child in node.GetChildren())
             {
                 if (vis == null)
                 {
@@ -117,8 +117,8 @@ namespace PeterO.DocGen
 
         private static INode ReadNode(XmlReader reader)
         {
-            var node = new Node(reader.LocalName, true, String.Empty);
-            var emptyElement = reader.IsEmptyElement;
+            Node node = new(reader.LocalName, true, string.Empty);
+            bool emptyElement = reader.IsEmptyElement;
             if (reader.HasAttributes)
             {
                 while (reader.MoveToNextAttribute())
@@ -131,9 +131,9 @@ namespace PeterO.DocGen
                 reader.Read();
                 return node;
             }
-            var depth = 0;
-            var nodeStack = new List<Node>();
-            var doread = true;
+            int depth = 0;
+            List<Node> nodeStack = new();
+            bool doread = true;
             nodeStack.Add(node);
             while (true)
             {
@@ -155,7 +155,7 @@ namespace PeterO.DocGen
                 else if (reader.NodeType == XmlNodeType.Element)
                 {
                     emptyElement = reader.IsEmptyElement;
-                    var childNode = new Node(reader.LocalName, true, String.Empty);
+                    Node childNode = new(reader.LocalName, true, string.Empty);
                     if (reader.HasAttributes)
                     {
                         while (reader.MoveToNextAttribute())
@@ -163,7 +163,7 @@ namespace PeterO.DocGen
                             childNode.SetAttribute(reader.Name, reader.Value);
                         }
                     }
-                    nodeStack[nodeStack.Count - 1].AppendChild(childNode);
+                    nodeStack[^1].AppendChild(childNode);
                     if (!emptyElement)
                     {
                         nodeStack.Add(childNode);
@@ -174,22 +174,22 @@ namespace PeterO.DocGen
                 {
                     throw new XmlException();
                 }
-                else if (reader.NodeType == XmlNodeType.SignificantWhitespace ||
-                  reader.NodeType == XmlNodeType.Whitespace ||
-                  reader.NodeType == XmlNodeType.Text)
+                else if (reader.NodeType is XmlNodeType.SignificantWhitespace or
+                  XmlNodeType.Whitespace or
+                  XmlNodeType.Text)
                 {
-                    var sb = new StringBuilder().Append(reader.Value);
+                    StringBuilder sb = new StringBuilder().Append(reader.Value);
                     reader.Read();
-                    while (reader.NodeType == XmlNodeType.SignificantWhitespace ||
-                      reader.NodeType == XmlNodeType.Whitespace ||
-                      reader.NodeType == XmlNodeType.Text)
+                    while (reader.NodeType is XmlNodeType.SignificantWhitespace or
+                      XmlNodeType.Whitespace or
+                      XmlNodeType.Text)
                     {
                         sb.Append(reader.Value);
                         reader.Read();
                     }
                     doread = false;
-                    nodeStack[nodeStack.Count - 1].AppendChild(
-                     new Node(String.Empty, false, sb.ToString()));
+                    nodeStack[^1].AppendChild(
+                     new Node(string.Empty, false, sb.ToString()));
                 }
             }
             return node;
@@ -206,14 +206,14 @@ namespace PeterO.DocGen
 
             public void VisitNode(INode node)
             {
-                if (String.IsNullOrEmpty(node.LocalName))
+                if (string.IsNullOrEmpty(node.LocalName))
                 {
                     this.sb.Append(node.GetContent());
                 }
                 else
                 {
-                    var c = node.GetAttribute("cref");
-                    var n = node.GetAttribute("name");
+                    string c = node.GetAttribute("cref");
+                    string n = node.GetAttribute("name");
                     if (c != null)
                     {
                         this.sb.Append(c);
@@ -228,8 +228,8 @@ namespace PeterO.DocGen
 
             public override string ToString()
             {
-                var summary = this.sb.ToString();
-                summary = Regex.Replace(summary, @"^\s+|\s+$", String.Empty);
+                string summary = this.sb.ToString();
+                summary = Regex.Replace(summary, @"^\s+|\s+$", string.Empty);
                 summary = Regex.Replace(summary, @"\s+", " ");
                 return summary;
             }
@@ -257,19 +257,19 @@ namespace PeterO.DocGen
             }
             else
             {
-                var mn = this.memberNodes[memberID];
-                var sb = new StringBuilder();
-                foreach (var c in mn.GetChildren())
+                INode mn = this.memberNodes[memberID];
+                StringBuilder sb = new();
+                foreach (INode c in mn.GetChildren())
                 {
                     if (c.LocalName.Equals("summary", StringComparison.Ordinal))
                     {
-                        var sv = new SummaryVisitor();
+                        SummaryVisitor sv = new();
                         sv.VisitNode(c);
                         sb.Append(sv.ToString()).Append("\r\n\r\n");
                     }
                 }
-                var summary = sb.ToString();
-                summary = Regex.Replace(summary, @"^\s+$", String.Empty);
+                string summary = sb.ToString();
+                summary = Regex.Replace(summary, @"^\s+$", string.Empty);
                 return summary;
             }
         }
@@ -277,8 +277,8 @@ namespace PeterO.DocGen
         public XmlDoc(string xmlFilename)
         {
             this.memberNodes = new Dictionary<string, INode>();
-            using var stream = new FileStream(xmlFilename, FileMode.Open);
-            using var reader = XmlReader.Create(stream);
+            using FileStream stream = new(xmlFilename, FileMode.Open);
+            using XmlReader reader = XmlReader.Create(stream);
             reader.Read();
             reader.ReadStartElement("doc");
             while (reader.IsStartElement())
@@ -293,7 +293,7 @@ namespace PeterO.DocGen
                              StringComparison.Ordinal))
                         {
                             string memberName = reader.GetAttribute("name");
-                            var node = ReadNode(reader);
+                            INode node = ReadNode(reader);
                             this.memberNodes[memberName] = node;
                         }
                         else

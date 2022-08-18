@@ -18,12 +18,12 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentException("delimiter is empty.");
             }
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
-                return new[] { String.Empty };
+                return new[] { string.Empty };
             }
-            var index = 0;
-            var first = true;
+            int index = 0;
+            bool first = true;
             List<string> strings = null;
             int delimLength = delimiter.Length;
             while (true)
@@ -36,7 +36,7 @@ namespace PeterO.Cbor
                 {
                     if (first)
                     {
-                        var strret = new string[1];
+                        string[] strret = new string[1];
                         strret[0] = str;
                         return strret;
                     }

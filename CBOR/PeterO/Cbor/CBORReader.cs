@@ -35,7 +35,7 @@ namespace PeterO.Cbor
 
         private static EInteger ToUnsignedEInteger(long val)
         {
-            var lval = (EInteger)(val & ~(1L << 63));
+            EInteger lval = (EInteger)(val & ~(1L << 63));
             if ((val >> 63) != 0)
             {
                 EInteger bigintAdd = EInteger.One << 63;
@@ -81,7 +81,7 @@ namespace PeterO.Cbor
 
         private CBORObject ObjectFromUtf8Array(byte[] data, int lengthHint)
         {
-            CBORObject cbor = data.Length == 0 ? CBORObject.FromObject(String.Empty) :
+            CBORObject cbor = data.Length == 0 ? CBORObject.FromObject(string.Empty) :
                CBORObject.FromRawUtf8(data);
             if (this.stringRefs != null)
             {
@@ -132,7 +132,7 @@ namespace PeterO.Cbor
             }
             else if (type == CBORType.Array)
             {
-                for (var i = 0; i < obj.Count; ++i)
+                for (int i = 0; i < obj.Count; ++i)
                 {
                     obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
                 }
@@ -146,7 +146,7 @@ namespace PeterO.Cbor
               this.ReadInternalOrEOF() : this.ReadInternal();
             if (this.options.ResolveReferences && this.hasSharableObjects)
             {
-                var sharedRefs = new SharedRefs();
+                SharedRefs sharedRefs = new SharedRefs();
                 return ResolveSharedRefs(obj, sharedRefs);
             }
             return obj;
@@ -192,8 +192,8 @@ namespace PeterO.Cbor
                       ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
                       "\u0020than supported");
                 }
-                int hint = (uadditional > Int32.MaxValue ||
-                    (uadditional >> 63) != 0) ? Int32.MaxValue : (int)uadditional;
+                int hint = (uadditional > int.MaxValue ||
+                    (uadditional >> 63) != 0) ? int.MaxValue : (int)uadditional;
                 byte[] data = ReadByteData(this.stream, uadditional, null);
                 if (type == 3)
                 {
@@ -475,7 +475,7 @@ namespace PeterO.Cbor
                     case 2:
                         {
                             // Streaming byte string
-                            using (var ms = new MemoryStream())
+                            using (MemoryStream ms = new MemoryStream())
                             {
                                 // Requires same type as this one
                                 while (true)
@@ -487,7 +487,7 @@ namespace PeterO.Cbor
                                         break;
                                     }
                                     long len = ReadDataLength(this.stream, nextByte, 2);
-                                    if ((len >> 63) != 0 || len > Int32.MaxValue)
+                                    if ((len >> 63) != 0 || len > int.MaxValue)
                                     {
                                         throw new CBORException("Length" + ToUnsignedEInteger(len) +
                                             " is bigger than supported ");
@@ -498,7 +498,7 @@ namespace PeterO.Cbor
                                         ReadByteData(this.stream, len, ms);
                                     }
                                 }
-                                if (ms.Position > Int32.MaxValue)
+                                if (ms.Position > int.MaxValue)
                                 {
                                     throw new
                                     CBORException("Length of bytes to be streamed is bigger" +
@@ -511,7 +511,7 @@ namespace PeterO.Cbor
                     case 3:
                         {
                             // Streaming text string
-                            var builder = new StringBuilder();
+                            StringBuilder builder = new StringBuilder();
                             while (true)
                             {
                                 int nextByte = this.stream.ReadByte();
@@ -521,7 +521,7 @@ namespace PeterO.Cbor
                                     break;
                                 }
                                 long len = ReadDataLength(this.stream, nextByte, 3);
-                                if ((len >> 63) != 0 || len > Int32.MaxValue)
+                                if ((len >> 63) != 0 || len > int.MaxValue)
                                 {
                                     throw new CBORException("Length" + ToUnsignedEInteger(len) +
                                       " is bigger than supported");
@@ -552,7 +552,7 @@ namespace PeterO.Cbor
                     case 4:
                         {
                             CBORObject cbor = CBORObject.NewArray();
-                            var vtindex = 0;
+                            int vtindex = 0;
                             // Indefinite-length array
                             while (true)
                             {
@@ -620,8 +620,8 @@ namespace PeterO.Cbor
             }
             if (type == 6)
             { // Tagged item
-                var haveFirstByte = false;
-                var newFirstByte = -1;
+                bool haveFirstByte = false;
+                int newFirstByte = -1;
                 if (this.options.ResolveReferences && (uadditional >> 32) == 0)
                 {
                     // NOTE: HandleItemTag treats only certain tags up to 256 specially
@@ -680,7 +680,7 @@ namespace PeterO.Cbor
             {
                 return EmptyByteArray;
             }
-            if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue)
+            if ((uadditional >> 63) != 0 || uadditional > int.MaxValue)
             {
                 throw new CBORException("Length" + ToUnsignedEInteger(uadditional) +
                   " is bigger than supported ");
@@ -692,7 +692,7 @@ namespace PeterO.Cbor
             if (uadditional <= 0x10000)
             {
                 // Simple case: small size
-                var data = new byte[(int)uadditional];
+                byte[] data = new byte[(int)uadditional];
                 ReadHelper(stream, data, 0, data.Length);
                 if (outputStream != null)
                 {
@@ -703,8 +703,8 @@ namespace PeterO.Cbor
             }
             else
             {
-                var tmpdata = new byte[0x10000];
-                var total = (int)uadditional;
+                byte[] tmpdata = new byte[0x10000];
+                int total = (int)uadditional;
                 if (outputStream != null)
                 {
                     while (total > 0)
@@ -716,7 +716,7 @@ namespace PeterO.Cbor
                     }
                     return null;
                 }
-                using (var ms = new MemoryStream(0x10000))
+                using (MemoryStream ms = new MemoryStream(0x10000))
                 {
                     while (total > 0)
                     {
@@ -757,7 +757,7 @@ namespace PeterO.Cbor
             {
                 return headByte;
             }
-            var data = new byte[8];
+            byte[] data = new byte[8];
             switch (headByte)
             {
                 case 24:

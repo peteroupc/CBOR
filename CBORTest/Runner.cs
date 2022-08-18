@@ -41,14 +41,14 @@ namespace PeterO
 
         public static bool Extra()
         {
-            var rand = new RandomGenerator();
-            for (var i = 0; i < 20; ++i)
+            RandomGenerator rand = new();
+            for (int i = 0; i < 20; ++i)
             {
-                var array = new byte[rand.UniformInt(100000) + 1];
+                byte[] array = new byte[rand.UniformInt(100000) + 1];
                 rand.GetBytes(array, 0, array.Length);
                 DateTime utcn = DateTime.UtcNow;
                 CBORTest.TestRandomOne(array);
-                var span = DateTime.UtcNow - utcn;
+                TimeSpan span = DateTime.UtcNow - utcn;
                 if (span.Seconds > 3)
                 {
                     Console.WriteLine("----" + i + ": " + span.Seconds + " " +

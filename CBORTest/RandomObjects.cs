@@ -33,13 +33,13 @@ namespace Test
           IRandomGenExtended rg,
           bool jsonSafe)
         {
-            using var ms = new Test.DelayingStream();
+            using DelayingStream ms = new();
             if (rg == null)
             {
                 throw new ArgumentNullException(nameof(rg));
             }
             int length = 1 + rg.GetInt32(6);
-            for (var i = 0; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
                 int v = rg.GetInt32(4);
                 if (v == 0)
@@ -113,7 +113,7 @@ namespace Test
                 throw new ArgumentNullException(nameof(rand));
             }
             int x = rand.GetInt32(MaxExclusiveStringLength);
-            var bytes = new byte[x];
+            byte[] bytes = new byte[x];
             rand.GetBytes(bytes, 0, bytes.Length);
             return bytes;
         }
@@ -124,7 +124,7 @@ namespace Test
             {
                 throw new ArgumentNullException(nameof(rand));
             }
-            var bytes = new byte[length];
+            byte[] bytes = new byte[length];
             rand.GetBytes(bytes, 0, bytes.Length);
             return bytes;
         }
@@ -158,8 +158,8 @@ namespace Test
                 throw new ArgumentNullException(nameof(rand));
             }
             int length = rand.GetInt32(MaxExclusiveStringLength);
-            var sb = new StringBuilder();
-            for (var i = 0; i < length; ++i)
+            StringBuilder sb = new();
+            for (int i = 0; i < length; ++i)
             {
                 int x = rand.GetInt32(100);
                 if (x < 95)
@@ -184,7 +184,7 @@ namespace Test
                 {
                     // BMP character
                     x = 0x20 + rand.GetInt32(0xffe0);
-                    if (x >= 0xd800 && x < 0xe000)
+                    if (x is >= 0xd800 and < 0xe000)
                     {
                         // surrogate code unit, generate ASCII instead
                         x = 0x20 + rand.GetInt32(0x60);
@@ -221,7 +221,7 @@ namespace Test
 
         public static double RandomDouble(IRandomGenExtended rand, int exponent)
         {
-            if (exponent == Int32.MaxValue)
+            if (exponent == int.MaxValue)
             {
                 if (rand == null)
                 {
@@ -272,7 +272,7 @@ namespace Test
 
         public static float RandomSingle(IRandomGenExtended rand, int exponent)
         {
-            if (exponent == Int32.MaxValue)
+            if (exponent == int.MaxValue)
             {
                 if (rand == null)
                 {
@@ -298,7 +298,7 @@ namespace Test
           IRandomGenExtended wrapper,
           bool extended)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             if (wrapper == null)
             {
                 throw new ArgumentNullException(nameof(wrapper));
@@ -412,13 +412,13 @@ namespace Test
 
         private static EInteger BitHeavyEInteger(IRandomGenExtended rg, int count)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             int[] oneChances = {
         999, 1, 980, 20, 750, 250, 980,
         20, 980, 20, 980, 20, 750, 250,
       };
             int oneChance = oneChances[rg.GetInt32(oneChances.Length)];
-            for (var i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 sb.Append((rg.GetInt32(1000) >= oneChance) ? '0' : '1');
             }
@@ -428,13 +428,13 @@ namespace Test
         private static EInteger DigitHeavyEInteger(IRandomGenExtended rg, int
     count)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             int[] oneChances = {
         999, 1, 980, 20, 750, 250, 980,
         20, 980, 20, 980, 20, 750, 250,
       };
             int oneChance = oneChances[rg.GetInt32(oneChances.Length)];
-            for (var i = 0; i < count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 sb.Append((rg.GetInt32(1000) >= oneChance) ? '0' : '9');
             }
@@ -451,12 +451,12 @@ namespace Test
             if (selection < 10)
             {
                 int count = r.GetInt32(MaxNumberLength);
-                count = (int)(((long)count * r.GetInt32(MaxNumberLength)) /
+                count = (int)((long)count * r.GetInt32(MaxNumberLength) /
                     MaxNumberLength);
-                count = (int)(((long)count * r.GetInt32(MaxNumberLength)) /
+                count = (int)((long)count * r.GetInt32(MaxNumberLength) /
                     MaxNumberLength);
                 count = Math.Max(count, 1);
-                if (selection == 0 || selection == 1)
+                if (selection is 0 or 1)
                 {
                     return BitHeavyEInteger(r, count);
                 }
@@ -549,14 +549,14 @@ namespace Test
                 (EInteger)(r.GetInt32(400) - 200));
         }
 
-        public static String RandomBigIntString(IRandomGenExtended r)
+        public static string RandomBigIntString(IRandomGenExtended r)
         {
             if (r == null)
             {
                 throw new ArgumentNullException(nameof(r));
             }
             int count = r.GetInt32(MaxShortNumberLength) + 1;
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             if (r.GetInt32(2) == 0)
             {
                 sb.Append('-');
@@ -574,7 +574,7 @@ namespace Test
                 throw new ArgumentNullException(nameof(r));
             }
             int count = r.GetInt32(MaxShortNumberLength / 2) + 1;
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             if (r.GetInt32(2) == 0)
             {
                 sb.Append('-');
@@ -585,18 +585,18 @@ namespace Test
             return EInteger.FromString(sb.ToString());
         }
 
-        public static String RandomDecimalString(IRandomGenExtended r)
+        public static string RandomDecimalString(IRandomGenExtended r)
         {
             return RandomDecimalString(r, false, true);
         }
 
-        private static char[] charTable = {
+        private static readonly char[] charTable = {
       '0', '0', '0', '1', '1', '1', '2', '2', '2', '3', '3', '3', '4', '4', '4',
       '5', '5', '5', '6', '6', '6', '7', '7', '7', '8', '8', '8', '9', '9', '9',
     };
 
         // Special 10-digit-long strings
-        private static string[] valueSpecialDecimals = {
+        private static readonly string[] valueSpecialDecimals = {
       "1000000000",
       "0000000001",
       "4999999999",
@@ -608,7 +608,7 @@ namespace Test
     };
 
         // Special 40-digit-long strings
-        private static string[] valueSpecialDecimals2 = {
+        private static readonly string[] valueSpecialDecimals2 = {
       "1000000000000000000000000000000000000000",
       "0000000000000000000000000000000000000001",
       "4999999999999999999999999999999999999999",
@@ -634,12 +634,12 @@ namespace Test
             }
             if (count > 0)
             {
-                var buflen = (int)Math.Min(0x10000, Math.Max(count + 8, 64));
-                var buffer = new byte[buflen];
+                int buflen = (int)Math.Min(0x10000, Math.Max(count + 8, 64));
+                byte[] buffer = new byte[buflen];
                 while (count > 0)
                 {
                     r.GetBytes(buffer, 0, buflen);
-                    var i = 0;
+                    int i = 0;
                     while (i < buflen && count > 0)
                     {
                         int x = buffer[i] & 31;
@@ -682,13 +682,13 @@ namespace Test
             AppendRandomDecimalsLong(r, sb, smallCount);
         }
 
-        public static String RandomDecimalStringShort(
+        public static string RandomDecimalStringShort(
           IRandomGenExtended r)
         {
             return RandomDecimalStringShort(r, false);
         }
 
-        public static String RandomDecimalString(
+        public static string RandomDecimalString(
           IRandomGenExtended r,
           bool extended,
           bool limitedExponent)
@@ -701,19 +701,19 @@ namespace Test
             {
                 return RandomDecimalStringShort(r, extended);
             }
-            long count = ((long)r.GetInt32(MaxNumberLength) *
-                r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-            count = (count * r.GetInt32(MaxNumberLength)) / MaxNumberLength;
+            long count = (long)r.GetInt32(MaxNumberLength) *
+                r.GetInt32(MaxNumberLength) / MaxNumberLength;
+            count = count * r.GetInt32(MaxNumberLength) / MaxNumberLength;
             count = Math.Max(1, count);
             long afterPointCount = 0;
             long exponentCount = 0;
-            var smallExponent = false;
+            bool smallExponent = false;
             if (r.GetInt32(2) == 0)
             {
-                afterPointCount = ((long)r.GetInt32(MaxNumberLength) *
-                    r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-                afterPointCount = (afterPointCount *
-                    r.GetInt32(MaxNumberLength)) / MaxNumberLength;
+                afterPointCount = (long)r.GetInt32(MaxNumberLength) *
+                    r.GetInt32(MaxNumberLength) / MaxNumberLength;
+                afterPointCount = afterPointCount *
+                    r.GetInt32(MaxNumberLength) / MaxNumberLength;
                 afterPointCount = Math.Max(1, afterPointCount);
             }
             if (r.GetInt32(2) == 0)
@@ -724,19 +724,19 @@ namespace Test
                 }
                 else
                 {
-                    exponentCount = ((long)r.GetInt32(MaxNumberLength) *
-                        r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-                    exponentCount = (exponentCount *
-                        r.GetInt32(MaxNumberLength)) / MaxNumberLength;
-                    exponentCount = (exponentCount *
-                        r.GetInt32(MaxNumberLength)) / MaxNumberLength;
+                    exponentCount = (long)r.GetInt32(MaxNumberLength) *
+                        r.GetInt32(MaxNumberLength) / MaxNumberLength;
+                    exponentCount = exponentCount *
+                        r.GetInt32(MaxNumberLength) / MaxNumberLength;
+                    exponentCount = exponentCount *
+                        r.GetInt32(MaxNumberLength) / MaxNumberLength;
                     exponentCount = Math.Max(1, exponentCount);
                 }
             }
-            var bufferSize = (int)Math.Min(
-                Int32.MaxValue,
+            int bufferSize = (int)Math.Min(
+                int.MaxValue,
                 8 + count + afterPointCount + exponentCount);
-            var sb = new StringBuilder(bufferSize);
+            StringBuilder sb = new(bufferSize);
             if (r.GetInt32(2) == 0)
             {
                 sb.Append('-');

@@ -11,11 +11,7 @@ namespace Test
 
         public DelayingStream(Stream ms)
         {
-            if (ms == null)
-            {
-                throw new ArgumentNullException(nameof(ms));
-            }
-            this.ms = ms;
+            this.ms = ms ?? throw new ArgumentNullException(nameof(ms));
         }
 
         public DelayingStream(byte[] bytes) : this(new MemoryStream(bytes))
@@ -35,13 +31,7 @@ namespace Test
             this.ms.Dispose();
         }
 
-        public override long Length
-        {
-            get
-            {
-                return this.ms.Length;
-            }
-        }
+        public override long Length => this.ms.Length;
 
         public override long Seek(long pos, SeekOrigin origin)
         {
@@ -55,20 +45,14 @@ namespace Test
 
         public override long Position
         {
-            get
-            {
-                return this.ms.Position;
-            }
+            get => this.ms.Position;
 
-            set
-            {
-                this.ms.Position = value;
-            }
+            set => this.ms.Position = value;
         }
 
         public byte[] ToArray()
         {
-            var ms = this.ms as MemoryStream;
+            MemoryStream ms = this.ms as MemoryStream;
             if (ms != null)
             {
                 return ms.ToArray();
@@ -76,29 +60,11 @@ namespace Test
             throw new NotSupportedException();
         }
 
-        public override bool CanRead
-        {
-            get
-            {
-                return this.ms.CanRead;
-            }
-        }
+        public override bool CanRead => this.ms.CanRead;
 
-        public override bool CanSeek
-        {
-            get
-            {
-                return this.ms.CanSeek;
-            }
-        }
+        public override bool CanSeek => this.ms.CanSeek;
 
-        public override bool CanWrite
-        {
-            get
-            {
-                return this.ms.CanWrite;
-            }
-        }
+        public override bool CanWrite => this.ms.CanWrite;
 
         public override int Read(byte[] bytes, int offset, int count)
         {

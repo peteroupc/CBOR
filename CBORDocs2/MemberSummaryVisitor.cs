@@ -30,7 +30,7 @@ namespace PeterO.DocGen
         {
             this.docs = new SortedDictionary<string, StringBuilder>();
             this.memberFormats = new Dictionary<string, string>();
-            this.summaryString = String.Empty;
+            this.summaryString = string.Empty;
         }
 
         public static string MemberName(object obj)
@@ -51,7 +51,7 @@ namespace PeterO.DocGen
 
         public static string MemberAnchor(object obj)
         {
-            string anchor = String.Empty;
+            string anchor = string.Empty;
             if (obj is Type)
             {
                 anchor = ((Type)obj).FullName;
@@ -70,9 +70,9 @@ namespace PeterO.DocGen
             ((FieldInfo)obj).Name : obj.ToString());
             }
             anchor = anchor.Trim();
-            anchor = Regex.Replace(anchor, "\\(\\)", String.Empty);
+            anchor = Regex.Replace(anchor, "\\(\\)", string.Empty);
             anchor = Regex.Replace(anchor, "\\W+", "_");
-            anchor = Regex.Replace(anchor, "_+$", String.Empty);
+            anchor = Regex.Replace(anchor, "_+$", string.Empty);
             return anchor;
         }
 
@@ -112,13 +112,13 @@ namespace PeterO.DocGen
 
         public void Finish()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             string finalString;
             sb.Append("### Member Summary\n");
-            foreach (var key in this.docs.Keys)
+            foreach (string key in this.docs.Keys)
             {
                 finalString = this.docs[key].ToString();
-                var typeName = this.memberFormats[key];
+                string typeName = this.memberFormats[key];
                 typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](#" + key + ")";
                 finalString = Regex.Replace(finalString, "\\s+", " ");
                 sb.Append("* <code>" + typeName + "</code> - ");
@@ -130,11 +130,11 @@ namespace PeterO.DocGen
 
         public void HandleMember(object info, XmlDoc xmldoc)
         {
-            var isPublicOrProtected = false;
-            var typeInfo = info as Type;
-            var methodInfo = info as MethodInfo;
-            var propertyInfo = info as PropertyInfo;
-            var fieldInfo = info as FieldInfo;
+            bool isPublicOrProtected = false;
+            Type typeInfo = info as Type;
+            MethodInfo methodInfo = info as MethodInfo;
+            PropertyInfo propertyInfo = info as PropertyInfo;
+            FieldInfo fieldInfo = info as FieldInfo;
             if (methodInfo != null)
             {
                 isPublicOrProtected = methodInfo.IsPublic || methodInfo.IsFamily;
@@ -160,11 +160,11 @@ namespace PeterO.DocGen
             this.memberFormats[memberAnchor] = FormatMember(info);
             if (!this.docs.ContainsKey(memberAnchor))
             {
-                var docVisitor = new StringBuilder();
+                StringBuilder docVisitor = new();
                 this.docs[memberAnchor] = docVisitor;
             }
             string memberFullName = TypeNameUtil.XmlDocMemberName(info);
-            var summary = SummaryVisitor.GetSummary(
+            string summary = SummaryVisitor.GetSummary(
               info as MemberInfo,
               xmldoc,
               memberFullName);

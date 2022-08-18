@@ -100,7 +100,7 @@ namespace PeterO.Cbor
         /// <summary>Initializes a new instance of the
         /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
         /// options.</summary>
-        public JSONOptions() : this(String.Empty)
+        public JSONOptions() : this(string.Empty)
         {
         }
 
@@ -184,7 +184,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(paramString));
             }
-            var parser = new OptionsParser(paramString);
+            OptionsParser parser = new OptionsParser(paramString);
             this.PreserveNegativeZero = parser.GetBoolean(
               "preservenegativezero",
               true);

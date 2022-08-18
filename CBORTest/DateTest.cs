@@ -45,11 +45,11 @@ namespace Test
                 }
                 CBORObject obj = dtc.DateTimeFieldsToCBORObject(year, lesserFields);
                 fieldsString += "\n" + obj.ToString();
-                var newYear = new EInteger[1];
-                var newLesserFields = new int[7];
+                EInteger[] newYear = new EInteger[1];
+                int[] newLesserFields = new int[7];
                 if (dtc.TryGetDateTimeFields(obj, newYear, newLesserFields))
                 {
-                    for (var i = 0; i < lesserFields.Length; ++i)
+                    for (int i = 0; i < lesserFields.Length; ++i)
                     {
                         Assert.AreEqual(
                           lesserFields[i],
@@ -126,16 +126,16 @@ namespace Test
         [Test]
         public void DateConverterRoundTrip()
         {
-            var dtcs = new CBORDateConverter[] {
+            CBORDateConverter[] dtcs = new CBORDateConverter[] {
          CBORDateConverter.TaggedString,
        };
             int[] lesserFields;
-            var rg = new RandomGenerator();
-            for (var i = 0; i < 10000; ++i)
+            RandomGenerator rg = new();
+            for (int i = 0; i < 10000; ++i)
             {
                 EInteger year = RandomYear(rg);
                 lesserFields = RandomLesserFields(rg, year);
-                for (var j = 0; j < dtcs.Length; ++j)
+                for (int j = 0; j < dtcs.Length; ++j)
                 {
                     DateConverterRoundTripOne(dtcs[j], year, lesserFields);
                 }
@@ -144,13 +144,13 @@ namespace Test
          CBORDateConverter.TaggedNumber,
          CBORDateConverter.UntaggedNumber,
        };
-            for (var i = 0; i < 30000; ++i)
+            for (int i = 0; i < 30000; ++i)
             {
                 EInteger year = RandomExpandedYear(rg);
                 lesserFields = RandomLesserFields(rg, year);
                 // Don't check fractional seconds because conversion is lossy
                 lesserFields[5] = 0;
-                for (var j = 0; j < dtcs.Length; ++j)
+                for (int j = 0; j < dtcs.Length; ++j)
                 {
                     DateConverterRoundTripOne(dtcs[j], year, lesserFields);
                 }

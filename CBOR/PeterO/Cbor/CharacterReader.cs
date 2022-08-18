@@ -273,7 +273,7 @@ namespace PeterO.Cbor
             this.mode = mode;
             this.errorThrow = errorThrow;
             this.dontSkipUtf8Bom = dontSkipUtf8Bom;
-            this.str = String.Empty;
+            this.str = string.Empty;
             this.strLength = -1;
         }
 
@@ -332,7 +332,7 @@ namespace PeterO.Cbor
                 throw new ArgumentException("chars's length minus " + index + "(" +
                   (chars.Length - index) + ") is less than " + length);
             }
-            var count = 0;
+            int count = 0;
             for (int i = 0; i < length; ++i)
             {
                 int c = this.ReadChar();
@@ -413,7 +413,7 @@ namespace PeterO.Cbor
                     }
                     else
                     {
-                        var newReader = new Utf16Reader(
+                        Utf16Reader newReader = new Utf16Reader(
                           this.stream,
                           bigEndian,
                           this.errorThrow);
@@ -429,7 +429,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                    Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                     utf8reader.Unget(c2);
                     this.reader = utf8reader;
                     return 0xfffd;
@@ -453,7 +453,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                    Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                     utf8reader.UngetThree(c2, c3, c4);
                     this.reader = utf8reader;
                     return c1;
@@ -480,7 +480,7 @@ namespace PeterO.Cbor
                         }
                         else
                         {
-                            var newReader = new Utf16Reader(
+                            Utf16Reader newReader = new Utf16Reader(
                               this.stream,
                               false,
                               this.errorThrow);
@@ -492,7 +492,7 @@ namespace PeterO.Cbor
                     else
                     {
                         // NZA NZ, so UTF-8
-                        var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                        Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                         utf8reader.Unget(c2);
                         this.reader = utf8reader;
                         return c1;
@@ -505,7 +505,7 @@ namespace PeterO.Cbor
                     if (c2 >= 0x01 && c2 <= 0x7f)
                     {
                         // 0 NZA, so UTF-16BE
-                        var newReader = new Utf16Reader(
+                        Utf16Reader newReader = new Utf16Reader(
                           this.stream,
                           true,
                           this.errorThrow);
@@ -538,7 +538,7 @@ namespace PeterO.Cbor
                         else
                         {
                             // 0 0 ...
-                            var newReader = new Utf8Reader(this.stream, this.errorThrow);
+                            Utf8Reader newReader = new Utf8Reader(this.stream, this.errorThrow);
                             newReader.UngetThree(c2, c3, c4);
                             this.reader = newReader;
                             return c1;
@@ -547,7 +547,7 @@ namespace PeterO.Cbor
                     else
                     {
                         // 0 NonAscii, so UTF-8
-                        var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                        Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                         utf8reader.Unget(c2);
                         this.reader = utf8reader;
                         return c1;
@@ -569,7 +569,7 @@ namespace PeterO.Cbor
                 int otherbyte = bigEndian ? 0xff : 0xfe;
                 if (c2 == otherbyte)
                 {
-                    var newReader = new Utf16Reader(
+                    Utf16Reader newReader = new Utf16Reader(
                       this.stream,
                       bigEndian,
                       this.errorThrow);
@@ -583,7 +583,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                    Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                     utf8reader.Unget(c2);
                     this.reader = utf8reader;
                     return 0xfffd;
@@ -598,7 +598,7 @@ namespace PeterO.Cbor
                     if (c2 == 0)
                     {
                         // NZA 0, so UTF-16LE
-                        var newReader = new Utf16Reader(
+                        Utf16Reader newReader = new Utf16Reader(
                           this.stream,
                           false,
                           this.errorThrow);
@@ -607,7 +607,7 @@ namespace PeterO.Cbor
                     else
                     {
                         // NZA NZ
-                        var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                        Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                         utf8reader.Unget(c2);
                         this.reader = utf8reader;
                     }
@@ -620,7 +620,7 @@ namespace PeterO.Cbor
                     if (c2 >= 0x01 && c2 <= 0x7f)
                     {
                         // 0 NZA, so UTF-16BE
-                        var newReader = new Utf16Reader(
+                        Utf16Reader newReader = new Utf16Reader(
                           this.stream,
                           true,
                           this.errorThrow);
@@ -629,7 +629,7 @@ namespace PeterO.Cbor
                     }
                     else
                     {
-                        var utf8reader = new Utf8Reader(this.stream, this.errorThrow);
+                        Utf8Reader utf8reader = new Utf8Reader(this.stream, this.errorThrow);
                         utf8reader.Unget(c2);
                         this.reader = utf8reader;
                         return c1;
@@ -706,7 +706,7 @@ namespace PeterO.Cbor
                 this.saved = this.saved ?? (new int[this.savedLength + size]);
                 if (this.savedLength + size < this.saved.Length)
                 {
-                    var newsaved = new int[this.savedLength + size + 4];
+                    int[] newsaved = new int[this.savedLength + size + 4];
                     Array.Copy(this.saved, 0, newsaved, 0, this.savedLength);
                     this.saved = newsaved;
                 }
@@ -836,7 +836,7 @@ namespace PeterO.Cbor
 
             public int Read(int[] chars, int index, int length)
             {
-                var count = 0;
+                int count = 0;
                 for (int i = 0; i < length; ++i)
                 {
                     int c = this.ReadChar();
@@ -906,7 +906,7 @@ namespace PeterO.Cbor
 
             public int Read(int[] chars, int index, int length)
             {
-                var count = 0;
+                int count = 0;
                 for (int i = 0; i < length; ++i)
                 {
                     int c = this.ReadChar();
@@ -948,11 +948,11 @@ namespace PeterO.Cbor
 
             public int ReadChar()
             {
-                var cp = 0;
-                var bytesSeen = 0;
-                var bytesNeeded = 0;
-                var lower = 0;
-                var upper = 0;
+                int cp = 0;
+                int bytesSeen = 0;
+                int bytesNeeded = 0;
+                int lower = 0;
+                int upper = 0;
                 while (true)
                 {
                     int b;
@@ -1052,7 +1052,7 @@ namespace PeterO.Cbor
 
             public int Read(int[] chars, int index, int length)
             {
-                var count = 0;
+                int count = 0;
                 for (int i = 0; i < length; ++i)
                 {
                     int c = this.ReadChar();

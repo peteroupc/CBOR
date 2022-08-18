@@ -21,7 +21,7 @@ namespace PeterO.Cbor
 
         public static JSONPointer FromPointer(CBORObject obj, string pointer)
         {
-            var index = 0;
+            int index = 0;
             if (pointer == null)
             {
                 throw new ArgumentNullException(nameof(pointer));
@@ -47,7 +47,7 @@ namespace PeterO.Cbor
                         throw new CBORException("Invalid pointer");
                     }
                     ++index;
-                    var value = new int[] { 0 };
+                    int[] value = new int[] { 0 };
                     // DebugUtility.Log("index parse 0: " + (pointer.Substring(index)));
                     int newIndex = ReadPositiveInteger(pointer, index, value);
                     // DebugUtility.Log("index parse 1: " + (pointer.Substring(newIndex)));
@@ -102,7 +102,7 @@ namespace PeterO.Cbor
                     // DebugUtility.Log("Parsing map key " + (pointer.Substring(index)));
                     string key = null;
                     int oldIndex = index;
-                    var tilde = false;
+                    bool tilde = false;
                     while (index < pointer.Length)
                     {
                         int c = pointer[index];
@@ -126,7 +126,7 @@ namespace PeterO.Cbor
                     else
                     {
                         index = oldIndex;
-                        var sb = new StringBuilder();
+                        StringBuilder sb = new StringBuilder();
                         while (index < pointer.Length)
                         {
                             int c = pointer[index];
@@ -218,8 +218,8 @@ namespace PeterO.Cbor
           int index,
           int[] result)
         {
-            var haveNumber = false;
-            var haveZeros = false;
+            bool haveNumber = false;
+            bool haveZeros = false;
             int oldIndex = index;
             result[0] = -1;
             if (index == str.Length)
@@ -260,7 +260,7 @@ namespace PeterO.Cbor
                     --index;
                     break;
                 }
-                if (lvalue > Int32.MaxValue)
+                if (lvalue > int.MaxValue)
                 {
                     return index - 1;
                 }
@@ -424,7 +424,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(root));
             }
-            GetPointersWithKey(root, keyToFind, String.Empty, list, true);
+            GetPointersWithKey(root, keyToFind, string.Empty, list, true);
             return list;
         }
 
@@ -463,13 +463,13 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(root));
             }
-            GetPointersWithKey(root, keyToFind, String.Empty, list, false);
+            GetPointersWithKey(root, keyToFind, string.Empty, list, false);
             return list;
         }
 
-        private static String Replace(string str, char c, string srep)
+        private static string Replace(string str, char c, string srep)
         {
-            var j = -1;
+            int j = -1;
             for (int i = 0; i < str.Length; ++i)
             {
                 if (str[i] == c)
@@ -482,7 +482,7 @@ namespace PeterO.Cbor
             {
                 return str;
             }
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append(str.Substring(0, j));
             sb.Append(srep);
             for (int i = j + 1; i < str.Length; ++i)
@@ -508,7 +508,7 @@ namespace PeterO.Cbor
         {
             if (root.Type == CBORType.Map)
             {
-                var rootObj = root;
+                CBORObject rootObj = root;
                 if (rootObj.ContainsKey(keyToFind))
                 {
                     // Key found in this object,
