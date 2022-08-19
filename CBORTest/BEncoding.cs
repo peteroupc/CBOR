@@ -161,10 +161,10 @@ namespace PeterO
         private static CBORObject ReadString(Stream stream, char firstChar)
         {
             StringBuilder builder = new();
-            if (firstChar is < '0' and > '9')
-            {
-                throw new CBORException("Invalid integer encoding");
-            }
+            ////if (firstChar is < '0' and > '9')
+            ////{
+            ////    throw new CBORException("Invalid integer encoding");
+            ////}
             builder.Append(firstChar);
             while (true)
             {
