@@ -714,10 +714,10 @@ namespace PeterO.Cbor
         {
             if (this.Type == CBORType.Array)
             {
-                int index = 0;
-                if (key is int)
+                int index;
+                if (key is int @int)
                 {
-                    index = (int)key;
+                    index = @int;
                 }
                 else
                 {
@@ -758,10 +758,6 @@ namespace PeterO.Cbor
         /// of the array.</exception>
         /// <exception cref='InvalidOperationException'>This object is not a
         /// map or an array.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Design",
-            "CA1043",
-            Justification = "Represents a logical data store")]
         public CBORObject this[CBORObject key]
         {
             get
@@ -3207,9 +3203,9 @@ namespace PeterO.Cbor
             {
                 return CBORObject.Null;
             }
-            if (obj is CBORObject)
+            if (obj is CBORObject @object)
             {
-                return FromObject((CBORObject)obj);
+                return FromObject(@object);
             }
             CBORObject objret;
             if (mapper != null)
@@ -3220,17 +3216,17 @@ namespace PeterO.Cbor
                     return objret;
                 }
             }
-            if (obj is string)
+            if (obj is string @string)
             {
-                return FromObject((string)obj);
+                return FromObject(@string);
             }
-            if (obj is int)
+            if (obj is int @int)
             {
-                return FromObject((int)obj);
+                return FromObject(@int);
             }
-            if (obj is long)
+            if (obj is long int1)
             {
-                return FromObject((long)obj);
+                return FromObject(int1);
             }
             if (obj is EInteger eif)
             {
@@ -3248,70 +3244,70 @@ namespace PeterO.Cbor
             {
                 return FromObject(erf);
             }
-            if (obj is short)
+            if (obj is short int2)
             {
-                return FromObject((short)obj);
+                return FromObject(int2);
             }
-            if (obj is char)
+            if (obj is char @char)
             {
-                return FromObject((int)(char)obj);
+                return FromObject((int)@char);
             }
-            if (obj is bool)
+            if (obj is bool boolean)
             {
-                return FromObject((bool)obj);
+                return FromObject(boolean);
             }
-            if (obj is byte)
+            if (obj is byte @byte)
             {
-                return FromObject((byte)obj);
+                return FromObject(@byte);
             }
-            if (obj is float)
+            if (obj is float single)
             {
-                return FromObject((float)obj);
+                return FromObject(single);
             }
-            if (obj is sbyte)
+            if (obj is sbyte byte1)
             {
-                return FromObject((sbyte)obj);
+                return FromObject(byte1);
             }
-            if (obj is ulong)
+            if (obj is ulong int3)
             {
-                return FromObject((ulong)obj);
+                return FromObject(int3);
             }
-            if (obj is uint)
+            if (obj is uint int4)
             {
-                return FromObject((uint)obj);
+                return FromObject(int4);
             }
-            if (obj is ushort)
+            if (obj is ushort int5)
             {
-                return FromObject((ushort)obj);
+                return FromObject(int5);
             }
-            if (obj is decimal)
+            if (obj is decimal @decimal)
             {
-                return FromObject((decimal)obj);
+                return FromObject(@decimal);
             }
-            if (obj is double)
+            if (obj is double @double)
             {
-                return FromObject((double)obj);
+                return FromObject(@double);
             }
             if (obj is byte[] bytearr)
             {
                 return FromObject(bytearr);
             }
-            if (obj is System.Collections.IDictionary)
+            if (obj is System.Collections.IDictionary dictionary)
             {
                 // IDictionary appears first because IDictionary includes IEnumerable
-                objret = CBORObject.NewMap();
+                objret = NewMap();
                 System.Collections.IDictionary objdic =
-                  (System.Collections.IDictionary)obj;
+                  dictionary;
                 foreach (object keyPair in objdic)
                 {
                     System.Collections.DictionaryEntry
                     kvp = (System.Collections.DictionaryEntry)keyPair;
-                    CBORObject objKey = CBORObject.FromObject(
+                    CBORObject objKey = FromObject(
                         kvp.Key,
                         options,
                         mapper,
                         depth + 1);
-                    objret[objKey] = CBORObject.FromObject(
+                    objret[objKey] = FromObject(
                         kvp.Value,
                         options,
                         mapper,
@@ -3323,10 +3319,10 @@ namespace PeterO.Cbor
             {
                 return PropertyMap.FromArray(obj, options, mapper, depth);
             }
-            if (obj is System.Collections.IEnumerable)
+            if (obj is System.Collections.IEnumerable enumerable)
             {
                 objret = CBORObject.NewArray();
-                foreach (object element in (System.Collections.IEnumerable)obj)
+                foreach (object element in enumerable)
                 {
                     objret.Add(
                       CBORObject.FromObject(
@@ -3337,21 +3333,21 @@ namespace PeterO.Cbor
                 }
                 return objret;
             }
-            if (obj is Enum)
+            if (obj is Enum @enum)
             {
-                return FromObject(PropertyMap.EnumToObjectAsInteger((Enum)obj));
+                return FromObject(PropertyMap.EnumToObjectAsInteger(@enum));
             }
-            if (obj is DateTime)
+            if (obj is DateTime time)
             {
-                return new CBORDateConverter().ToCBORObject((DateTime)obj);
+                return new CBORDateConverter().ToCBORObject(time);
             }
-            if (obj is Uri)
+            if (obj is Uri uri)
             {
-                return new CBORUriConverter().ToCBORObject((Uri)obj);
+                return new CBORUriConverter().ToCBORObject(uri);
             }
-            if (obj is Guid)
+            if (obj is Guid guid)
             {
-                return new CBORUuidConverter().ToCBORObject((Guid)obj);
+                return new CBORUuidConverter().ToCBORObject(guid);
             }
             objret = PropertyMap.FromObjectOther(obj);
             if (objret != null)
@@ -3627,7 +3623,7 @@ namespace PeterO.Cbor
             List<CBORObject> list = new List<CBORObject>(2)
             {
                 o1,
-                o2
+                o2,
             };
             return new CBORObject(CBORObjectTypeArray, list);
         }
@@ -3641,7 +3637,7 @@ namespace PeterO.Cbor
             {
                 o1,
                 o2,
-                o3
+                o3,
             };
             return new CBORObject(CBORObjectTypeArray, list);
         }
@@ -4415,7 +4411,7 @@ namespace PeterO.Cbor
             if ((bignum.IsZero && bignum.IsNegative) || bignum.IsInfinity() ||
               bignum.IsNaN())
             {
-                Write(CBORObject.FromObject(bignum), stream);
+                Write(FromObject(bignum), stream);
                 return;
             }
             EInteger exponent = bignum.Exponent;
@@ -4937,18 +4933,18 @@ namespace PeterO.Cbor
                 output.Write(data, 0, data.Length);
                 return;
             }
-            if (objValue is IList<CBORObject>)
+            if (objValue is IList<CBORObject> list)
             {
                 WriteObjectArray(
-                  (IList<CBORObject>)objValue,
+                  list,
                   output,
                   options);
                 return;
             }
-            if (objValue is IDictionary<CBORObject, CBORObject>)
+            if (objValue is IDictionary<CBORObject, CBORObject> dictionary)
             {
                 WriteObjectMap(
-                  (IDictionary<CBORObject, CBORObject>)objValue,
+                  dictionary,
                   output,
                   options);
                 return;
@@ -4991,9 +4987,9 @@ namespace PeterO.Cbor
                 outputStream.Write(ValueNullBytes, 0, ValueNullBytes.Length);
                 return;
             }
-            if (obj is bool)
+            if (obj is bool boolean)
             {
-                if ((bool)obj)
+                if (boolean)
                 {
                     outputStream.Write(ValueTrueBytes, 0, ValueTrueBytes.Length);
                     return;
@@ -5026,20 +5022,20 @@ namespace PeterO.Cbor
             {
                 return this;
             }
-            if (newItem is EDecimal)
+            if (newItem is EDecimal @decimal)
             {
-                return CBORObject.FromObject((EDecimal)newItem);
+                return FromObject(@decimal);
             }
-            if (newItem is EInteger)
+            if (newItem is EInteger integer)
             {
-                return CBORObject.FromObject((EInteger)newItem);
+                return FromObject(integer);
             }
-            if (newItem is EFloat)
+            if (newItem is EFloat @float)
             {
-                return CBORObject.FromObject((EFloat)newItem);
+                return FromObject(@float);
             }
-            return (newItem is ERational rat) ? CBORObject.FromObject(rat) : ((oldItem ==
-                  newItem) ? this : CBORObject.FromObject(newItem));
+            return (newItem is ERational rat) ? FromObject(rat) : ((oldItem ==
+                  newItem) ? this : FromObject(newItem));
         }
 
         /// <summary>
@@ -5748,11 +5744,6 @@ namespace PeterO.Cbor
               cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
         }
 
-        private static string Chop(string str)
-        {
-            return str.Substring(0, Math.Min(100, str.Length));
-        }
-
         /// <summary>Compares two CBOR objects. This implementation was changed
         /// in version 4.0.
         /// <para>In this implementation:</para>
@@ -6153,7 +6144,7 @@ namespace PeterO.Cbor
                 }
                 else
                 {
-                    tagbyte = (byte)(0xc0 + tagLow);
+                    tagbyte = (byte)(0xc0 + this.tagLow);
                 }
             }
             if (!hasComplexTag)
@@ -6230,7 +6221,7 @@ namespace PeterO.Cbor
                     case CBORObjectTypeInteger:
                         {
                             long value = (long)this.ThisItem;
-                            byte[] intBytes = null;
+                            byte[] intBytes;
                             if (value >= 0)
                             {
                                 intBytes = GetPositiveInt64Bytes(0, value);
@@ -6483,8 +6474,8 @@ namespace PeterO.Cbor
             {
                 if (this.itemValue != null)
                 {
-                    int itemHashCode = 0;
-                    long longValue = 0L;
+                    int itemHashCode;
+                    long longValue;
                     switch (this.itemtypeValue)
                     {
                         case CBORObjectTypeByteString:
@@ -6652,7 +6643,7 @@ namespace PeterO.Cbor
                 throw new ArgumentException("bigTagValue(" + bigTagValue +
                   ") is less than 0");
             }
-            return IsTagged && this.MostInnerTag.Equals(bigTagValue);
+            return this.IsTagged && this.MostInnerTag.Equals(bigTagValue);
         }
 
         /// <summary>Returns whether this object has an outermost tag and that
@@ -6692,7 +6683,7 @@ namespace PeterO.Cbor
                 throw new ArgumentException("bigTagValue(" + bigTagValue +
                   ") is less than 0");
             }
-            return IsTagged && this.MostOuterTag.Equals(bigTagValue);
+            return this.IsTagged && this.MostOuterTag.Equals(bigTagValue);
         }
 
         /// <summary>Returns whether this object has a tag of the given
@@ -6875,20 +6866,20 @@ namespace PeterO.Cbor
                 throw new InvalidOperationException("This object is not a number.");
             }
             object newItem = cn.GetNumberInterface().Negate(cn.GetValue());
-            if (newItem is EDecimal)
+            if (newItem is EDecimal @decimal)
             {
-                return CBORObject.FromObject((EDecimal)newItem);
+                return FromObject(@decimal);
             }
-            if (newItem is EInteger)
+            if (newItem is EInteger integer)
             {
-                return CBORObject.FromObject((EInteger)newItem);
+                return FromObject(integer);
             }
-            if (newItem is EFloat)
+            if (newItem is EFloat @float)
             {
-                return CBORObject.FromObject((EFloat)newItem);
+                return FromObject(@float);
             }
-            return (newItem is ERational rat) ? CBORObject.FromObject(rat) :
-              CBORObject.FromObject(newItem);
+            return (newItem is ERational rat) ? FromObject(rat) :
+              FromObject(newItem);
         }
 
         /// <summary>Removes all items from this CBOR array or all keys and
@@ -7046,10 +7037,10 @@ namespace PeterO.Cbor
             }
             else if (this.Type == CBORType.Array)
             {
-                if (key is int)
+                if (key is int @int)
                 {
                     IList<CBORObject> list = this.AsList();
-                    int index = (int)key;
+                    int index = @int;
                     if (index < 0 || index >= this.Count)
                     {
                         throw new ArgumentOutOfRangeException(nameof(key));
@@ -7628,7 +7619,7 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(outputStream));
             }
-            long bits = 0;
+            long bits;
             switch (byteCount)
             {
                 case 2:
@@ -7674,8 +7665,8 @@ namespace PeterO.Cbor
             {
                 throw new ArgumentNullException(nameof(outputStream));
             }
-            int bits = 0;
-            long longbits = 0L;
+            int bits;
+            long longbits;
             switch (byteCount)
             {
                 case 2:
@@ -8306,7 +8297,7 @@ namespace PeterO.Cbor
             if ((firstbyte & 0x1c) == 0x18)
             {
                 // contains 1 to 8 extra bytes of additional information
-                long uadditional = 0;
+                long uadditional;
                 switch (firstbyte & 0x1f)
                 {
                     case 24:
@@ -8493,26 +8484,26 @@ namespace PeterO.Cbor
             return ret;
         }
 
-        private static bool StringEquals(string str, string str2)
-        {
-            if (str == str2)
-            {
-                return true;
-            }
-            if (str.Length != str2.Length)
-            {
-                return false;
-            }
-            int count = str.Length;
-            for (int i = 0; i < count; ++i)
-            {
-                if (str[i] != str2[i])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        ////private static bool StringEquals(string str, string str2)
+        ////{
+        ////    if (str == str2)
+        ////    {
+        ////        return true;
+        ////    }
+        ////    if (str.Length != str2.Length)
+        ////    {
+        ////        return false;
+        ////    }
+        ////    int count = str.Length;
+        ////    for (int i = 0; i < count; ++i)
+        ////    {
+        ////        if (str[i] != str2[i])
+        ////        {
+        ////            return false;
+        ////        }
+        ////    }
+        ////    return true;
+        ////}
 
         private static bool CBORMapEquals(
           IDictionary<CBORObject, CBORObject> mapA,
@@ -8532,8 +8523,7 @@ namespace PeterO.Cbor
             }
             foreach (KeyValuePair<CBORObject, CBORObject> kvp in mapA)
             {
-                CBORObject valueB = null;
-                bool hasKey = mapB.TryGetValue(kvp.Key, out valueB);
+                bool hasKey = mapB.TryGetValue(kvp.Key, out CBORObject valueB);
                 if (hasKey)
                 {
                     CBORObject valueA = kvp.Value;
@@ -8592,17 +8582,17 @@ namespace PeterO.Cbor
             }
         }
 
-        private static string ExtendedToString(EFloat ef)
-        {
-            if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
-                ef.Exponent.CompareTo((EInteger)(-2500)) < 0))
-            {
-                // It can take very long to convert a number with a very high
-                // or very low exponent to a decimal string, so do this instead
-                return ef.Mantissa + "p" + ef.Exponent;
-            }
-            return ef.ToString();
-        }
+        ////private static string ExtendedToString(EFloat ef)
+        ////{
+        ////    if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
+        ////        ef.Exponent.CompareTo((EInteger)(-2500)) < 0))
+        ////    {
+        ////        // It can take very long to convert a number with a very high
+        ////        // or very low exponent to a decimal string, so do this instead
+        ////        return ef.Mantissa + "p" + ef.Exponent;
+        ////    }
+        ////    return ef.ToString();
+        ////}
 
         private static byte[] GetOptimizedBytesIfShortAscii(
           string str,
@@ -8860,7 +8850,7 @@ namespace PeterO.Cbor
 
         private static EInteger LowHighToEInteger(int tagLow, int tagHigh)
         {
-            byte[] uabytes = null;
+            byte[] uabytes;
             if (tagHigh != 0)
             {
                 uabytes = new byte[9];
@@ -8928,7 +8918,7 @@ namespace PeterO.Cbor
             List<CBORObject> sortedBSet = new List<CBORObject>(PropertyMap.GetSortedKeys(mapB));
             // DebugUtility.Log("---done sorting");
             listACount = sortedASet.Count;
-            listBCount = sortedBSet.Count;
+            // listBCount = sortedBSet.Count;
             // Compare the keys
             /* for (var i = 0; i < listACount; ++i) {
               string str = sortedASet[i].ToString();
@@ -8980,7 +8970,7 @@ namespace PeterO.Cbor
             {
                 stack = new List<object>(4)
                 {
-                    parent
+                    parent,
                 };
             }
             foreach (object o in stack)
@@ -8995,30 +8985,30 @@ namespace PeterO.Cbor
             return stack;
         }
 
-        private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB)
-        {
-            if (tagsA == null)
-            {
-                return (tagsB == null) ? 0 : -1;
-            }
-            if (tagsB == null)
-            {
-                return 1;
-            }
-            int listACount = tagsA.Length;
-            int listBCount = tagsB.Length;
-            int c = Math.Min(listACount, listBCount);
-            for (int i = 0; i < c; ++i)
-            {
-                int cmp = tagsA[i].CompareTo(tagsB[i]);
-                if (cmp != 0)
-                {
-                    return cmp;
-                }
-            }
-            return (listACount != listBCount) ? ((listACount < listBCount) ? -1 : 1) :
-              0;
-        }
+        ////private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB)
+        ////{
+        ////    if (tagsA == null)
+        ////    {
+        ////        return (tagsB == null) ? 0 : -1;
+        ////    }
+        ////    if (tagsB == null)
+        ////    {
+        ////        return 1;
+        ////    }
+        ////    int listACount = tagsA.Length;
+        ////    int listBCount = tagsB.Length;
+        ////    int c = Math.Min(listACount, listBCount);
+        ////    for (int i = 0; i < c; ++i)
+        ////    {
+        ////        int cmp = tagsA[i].CompareTo(tagsB[i]);
+        ////        if (cmp != 0)
+        ////        {
+        ////            return cmp;
+        ////        }
+        ////    }
+        ////    return (listACount != listBCount) ? ((listACount < listBCount) ? -1 : 1) :
+        ////      0;
+        ////}
 
         private static IList<object> WriteChildObject(
           object parentThisItem,

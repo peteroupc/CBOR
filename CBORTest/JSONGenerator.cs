@@ -38,21 +38,21 @@ namespace Test
             }
         }
 
-        private static readonly int[] valueMajorTypes = {
+        private static readonly int[] ValueMajorTypes = {
       0, 1, 3, 4, 5,
     };
 
-        private static readonly int[] valueMajorTypesTop = {
+        private static readonly int[] ValueMajorTypesTop = {
       0, 1, 3, 4, 4, 4, 4, 4, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 5, 5, 5,
     };
 
-        private static readonly int[] valueEscapes = {
+        private static readonly int[] ValueEscapes = {
       '\\', '/', '\"',
       'b', 'f', 'n', 'r', 't', 'u',
     };
 
-        private static readonly char[] valueEscapeChars = {
+        private static readonly char[] ValueEscapeChars = {
       '\\', '/', '\"',
       (char)8, (char)12, '\n', '\r', '\t', (char)0,
     };
@@ -144,7 +144,7 @@ namespace Test
                 bs.Write('-');
             }
             bool shortLen = ra.GetInt32(100) < 75;
-            int len = 0;
+            int len;
             if (ra.GetInt32(100) < 2)
             {
                 // Integer part is zero
@@ -303,8 +303,8 @@ namespace Test
                     else if (r == 1)
                     {
                         bs.Write('\\');
-                        int escindex = ra.GetInt32(valueEscapes.Length);
-                        int esc = valueEscapes[escindex];
+                        int escindex = ra.GetInt32(ValueEscapes.Length);
+                        int esc = ValueEscapes[escindex];
                         bs.Write(esc);
                         if (esc == 'u')
                         {
@@ -312,7 +312,7 @@ namespace Test
                         }
                         else
                         {
-                            sb.Append(valueEscapeChars[escindex]);
+                            sb.Append(ValueEscapeChars[escindex]);
                         }
                     }
                     else
@@ -372,7 +372,7 @@ namespace Test
                 else if (r == 1)
                 {
                     bs.Write('\\');
-                    int esc = valueEscapes[ra.GetInt32(valueEscapes.Length)];
+                    int esc = ValueEscapes[ra.GetInt32(ValueEscapes.Length)];
                     bs.Write(esc);
                     if (esc == 'u')
                     {
@@ -390,10 +390,10 @@ namespace Test
         private void Generate(IRandomGenExtended r, int depth, ByteWriter bs)
         {
             int majorType;
-            majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
+            majorType = ValueMajorTypes[r.GetInt32(ValueMajorTypes.Length)];
             if (depth == 0)
             {
-                majorType = valueMajorTypesTop[r.GetInt32(valueMajorTypes.Length)];
+                majorType = ValueMajorTypesTop[r.GetInt32(ValueMajorTypes.Length)];
             }
             GenerateWhitespace(r, bs);
             if (bs.ByteLength > 2000000)

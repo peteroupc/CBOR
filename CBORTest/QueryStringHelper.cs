@@ -277,7 +277,7 @@ namespace Test
             }
             List<string> path = new()
             {
-                s[..index ]
+                s[..index]
             };
             ++index; // move to after the bracket
             while (true)

@@ -261,7 +261,7 @@ namespace PeterO.Cbor
                     throw new CBORException("Unrecognized op");
                 }
             }
-            return (o == null) ? CBORObject.Null : o;
+            return o ?? CBORObject.Null;
         }
 
         private static CBORObject RemoveOperation(

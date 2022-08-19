@@ -12,10 +12,10 @@ namespace PeterO
     /// random byte generator is as well.</para></summary>
     public sealed class RandomGenerator : IRandomGenExtended
     {
-        private bool valueHaveLastNormal;
         private readonly IRandomGen valueIrg;
-        private double valueLastNormal;
         private readonly object valueNormalLock = new();
+        private bool valueHaveLastNormal;
+        private double valueLastNormal;
 
         /// <summary>Initializes a new instance of the RandomGenerator
         /// class.</summary>
@@ -542,13 +542,12 @@ namespace PeterO
                   (maxExclusive > 0 && long.MinValue + maxExclusive > minInclusive) ||
                   minInclusive - maxExclusive < 0)
                 {
-                    // Difference is greater than MaxValue
-                    long lb = 0;
                     byte[] b = new byte[8];
                     while (true)
                     {
                         this.valueIrg.GetBytes(b, 0, 8);
-                        lb = b[0] & 0xffL;
+                        // Difference is greater than MaxValue
+                        long lb = b[0] & 0xffL;
                         lb |= (b[1] & 0xffL) << 8;
                         lb |= (b[2] & 0xffL) << 16;
                         lb |= (b[3] & 0xffL) << 24;
@@ -606,7 +605,7 @@ namespace PeterO
                     {
                         while (true)
                         {
-                            int ib = 0;
+                            int ib;
                             if (maxExclusive == 0x1000000)
                             {
                                 this.valueIrg.GetBytes(b, 0, 3);
@@ -671,14 +670,14 @@ namespace PeterO
             {
                 return rge.GetInt64(maxExclusive);
             }
-            long lb = 0;
+
             long maxexc;
             byte[] b = new byte[8];
             maxexc = long.MaxValue / maxExclusive * maxExclusive;
             while (true)
             {
                 this.valueIrg.GetBytes(b, 0, 8);
-                lb = b[0] & 0xffL;
+                long lb = b[0] & 0xffL;
                 lb |= (b[1] & 0xffL) << 8;
                 lb |= (b[2] & 0xffL) << 16;
                 lb |= (b[3] & 0xffL) << 24;

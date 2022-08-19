@@ -969,7 +969,6 @@ namespace PeterO.Cbor
                     {
                         if (bytesNeeded != 0)
                         {
-                            bytesNeeded = 0;
                             if (this.errorThrow)
                             {
                                 throw new InvalidOperationException("Invalid UTF-8");
@@ -1023,7 +1022,6 @@ namespace PeterO.Cbor
                     }
                     if (b < lower || b > upper)
                     {
-                        cp = bytesNeeded = bytesSeen = 0;
                         this.state.AddOne(b);
                         if (this.errorThrow)
                         {
@@ -1043,9 +1041,6 @@ namespace PeterO.Cbor
                         continue;
                     }
                     int ret = cp;
-                    cp = 0;
-                    bytesSeen = 0;
-                    bytesNeeded = 0;
                     return ret;
                 }
             }

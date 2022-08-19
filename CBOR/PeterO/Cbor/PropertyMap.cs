@@ -56,7 +56,7 @@ namespace PeterO.Cbor
                     // CheckKeyDoesNotExist(k);
                     // DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
                     // "]");
-                    int keycnt = this.dict.Count;
+                    // int keycnt = this.dict.Count;
                     this.dict.Add(k, v);
                     // if (keycnt == this.dict.Count) {
                     // throw new InvalidOperationException();
@@ -69,11 +69,10 @@ namespace PeterO.Cbor
             {
                 get
                 {
-                    TValue v = default;
                     // NOTE: Don't use dict[key], since if it fails it could
                     // print the key in the exception's message, which could
                     // cause an infinite loop
-                    if (!this.dict.TryGetValue(key, out v))
+                    if (!this.dict.TryGetValue(key, out TValue v))
                     {
                         throw new ArgumentException("key not found");
                     }
@@ -155,48 +154,47 @@ namespace PeterO.Cbor
             public int Count => this.dict.Count;
             public bool IsReadOnly => false;
 
-            [System.Diagnostics.Conditional("DEBUG")]
-            private void CheckKeyExists(TKey key)
-            {
-                TValue v = default;
-                if (!this.dict.ContainsKey(key))
-                {
-                    /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
-                    (CS(key)) + "]");
-                    foreach (var k in this.dict.Keys) {
-                      DebugUtility.Log(
-                      "key {0} {1}" + "\u0020" + "\u0020 [{2}]",
-                          k.Equals(key), k.GetHashCode(), CS(k), CS(key),
-                        this.dict.ContainsKey(k));
-                    } */
-                    throw new ArgumentException("key not found (ContainsKey)");
-                }
-                // NOTE: Don't use dict[k], since if it fails it could
-                // print the key in the exception's message, which could
-                // cause an infinite loop
-                if (!this.dict.TryGetValue(key, out v))
-                {
-                    throw new ArgumentException("key not found (TryGetValue)");
-                }
-                if (this.dict.Count != this.list.Count)
-                {
-                    throw new InvalidOperationException();
-                }
-            }
+            ////[System.Diagnostics.Conditional("DEBUG")]
+            ////private void CheckKeyExists(TKey key)
+            ////{
+            ////    if (!this.dict.ContainsKey(key))
+            ////    {
+            ////        /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
+            ////        (CS(key)) + "]");
+            ////        foreach (var k in this.dict.Keys) {
+            ////          DebugUtility.Log(
+            ////          "key {0} {1}" + "\u0020" + "\u0020 [{2}]",
+            ////              k.Equals(key), k.GetHashCode(), CS(k), CS(key),
+            ////            this.dict.ContainsKey(k));
+            ////        } */
+            ////        throw new ArgumentException("key not found (ContainsKey)");
+            ////    }
+            ////    // NOTE: Don't use dict[k], since if it fails it could
+            ////    // print the key in the exception's message, which could
+            ////    // cause an infinite loop
+            ////    if (!this.dict.TryGetValue(key, out TValue v))
+            ////    {
+            ////        throw new ArgumentException("key not found (TryGetValue)");
+            ////    }
+            ////    if (this.dict.Count != this.list.Count)
+            ////    {
+            ////        throw new InvalidOperationException();
+            ////    }
+            ////}
 
-            [System.Diagnostics.Conditional("DEBUG")]
-            private void CheckKeyDoesNotExist(TKey key)
-            {
-                TValue v = default;
-                // NOTE: Don't use dict[k], since if it fails it could
-                // print the key in the exception's message, which could
-                // cause an infinite loop
-                if (!this.dict.TryGetValue(key, out v))
-                {
-                    return;
-                }
-                throw new ArgumentException("key found");
-            }
+            ////[System.Diagnostics.Conditional("DEBUG")]
+            ////private void CheckKeyDoesNotExist(TKey key)
+            ////{
+            ////    TValue v = default;
+            ////    // NOTE: Don't use dict[k], since if it fails it could
+            ////    // print the key in the exception's message, which could
+            ////    // cause an infinite loop
+            ////    if (!this.dict.TryGetValue(key, out v))
+            ////    {
+            ////        return;
+            ////    }
+            ////    throw new ArgumentException("key found");
+            ////}
 
             public ICollection<TKey> Keys => new KeyWrapper<TKey, TValue>(this.dict, this.list);
 
@@ -208,13 +206,12 @@ namespace PeterO.Cbor
             {
                 foreach (TKey k in this.list)
                 {
-                    TValue v = default;
                     // DebugUtility.Log("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
                     // CBORObject).Type) + "]");
                     // NOTE: Don't use dict[k], since if it fails it could
                     // print the key in the exception's message, which could
                     // cause an infinite loop
-                    if (!this.dict.TryGetValue(k, out v))
+                    if (!this.dict.TryGetValue(k, out TValue v))
                     {
                         throw new ArgumentException("key not found");
                     }
@@ -957,7 +954,7 @@ namespace PeterO.Cbor
             // Complex cases
             List<int> list = new List<int>
             {
-                obj.Count
+                obj.Count,
             };
             while (obj.Type == CBORType.Array &&
               obj.Count > 0 && obj[0].Type == CBORType.Array)
@@ -971,10 +968,9 @@ namespace PeterO.Cbor
         public static object ObjectToEnum(CBORObject obj, Type enumType)
         {
             Type utype = Enum.GetUnderlyingType(enumType);
-            object ret = null;
             if (obj.IsNumber && obj.AsNumber().IsInteger())
             {
-                ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
+                object ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
                 if (!Enum.IsDefined(enumType, ret))
                 {
                     string estr = ret.ToString();
@@ -1565,16 +1561,13 @@ namespace PeterO.Cbor
           CBORObject key,
           CBORObject defaultValue)
         {
-            CBORObject ret = null;
-            return (!map.TryGetValue(key, out ret)) ? defaultValue : ret;
+            return (!map.TryGetValue(key, out CBORObject ret)) ? defaultValue : ret;
         }
 
-#pragma warning disable CA1801
         public static CBORObject FromObjectOther(object obj)
         {
             return null;
         }
-#pragma warning restore CA1801
 
         public static object ObjectWithProperties(
           Type t,

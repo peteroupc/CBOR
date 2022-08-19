@@ -18,7 +18,7 @@ namespace PeterO.DocGen
                 Type nt = t;
                 List<Type> types = new()
                 {
-                    t
+                    t,
                 };
                 StringBuilder sb = new StringBuilder().Append(t.Namespace);
                 while (nt != null && nt.IsNested)
@@ -73,7 +73,7 @@ namespace PeterO.DocGen
                 Type nt = t;
                 List<Type> types = new()
                 {
-                    t
+                    t,
                 };
                 while (nt != null && nt.IsNested)
                 {

@@ -391,7 +391,7 @@ namespace Test
                 }
             }
             EInteger emant = RandomEInteger(r);
-            EInteger eexp = null;
+            EInteger eexp;
             if (r.GetInt32(100) < 95)
             {
                 int exp = (r.GetInt32(100) < 80) ? (r.GetInt32(50) - 25) :
@@ -504,10 +504,10 @@ namespace Test
               IntInRange(rg, -300, 300);
             int pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
               IntInRange(rg, 2, 300));
-            EFloat ef = null;
-            ef = (rg.GetInt32(2) == 0) ? EFloat.Create(1,
-              pwr).Add(EFloat.Create(1, pwr2)) : EFloat.Create(1,
-              pwr).Subtract(EFloat.Create(1, pwr2));
+            EFloat ef =
+                rg.GetInt32(2) == 0
+                ? EFloat.Create(1, pwr).Add(EFloat.Create(1, pwr2))
+                : EFloat.Create(1, pwr).Subtract(EFloat.Create(1, pwr2));
             if (rg.GetInt32(10) == 0)
             {
                 pwr2 = pwr - (rg.GetInt32(100) < 80 ? IntInRange(rg, 51, 61) :
@@ -590,13 +590,13 @@ namespace Test
             return RandomDecimalString(r, false, true);
         }
 
-        private static readonly char[] charTable = {
+        private static readonly char[] CharTable = {
       '0', '0', '0', '1', '1', '1', '2', '2', '2', '3', '3', '3', '4', '4', '4',
       '5', '5', '5', '6', '6', '6', '7', '7', '7', '8', '8', '8', '9', '9', '9',
     };
 
         // Special 10-digit-long strings
-        private static readonly string[] valueSpecialDecimals = {
+        private static readonly string[] ValueSpecialDecimals = {
       "1000000000",
       "0000000001",
       "4999999999",
@@ -608,7 +608,7 @@ namespace Test
     };
 
         // Special 40-digit-long strings
-        private static readonly string[] valueSpecialDecimals2 = {
+        private static readonly string[] ValueSpecialDecimals2 = {
       "1000000000000000000000000000000000000000",
       "0000000000000000000000000000000000000001",
       "4999999999999999999999999999999999999999",
@@ -645,23 +645,23 @@ namespace Test
                         int x = buffer[i] & 31;
                         if (x < 30)
                         {
-                            sb.Append(charTable[x]);
+                            sb.Append(CharTable[x]);
                             --count;
                             ++i;
                         }
                         else if (count >= 40 && i + 1 < buflen)
                         {
                             int y = (buffer[i + 1] & 0xff) %
-                              valueSpecialDecimals2.Length;
-                            sb.Append(valueSpecialDecimals2[y]);
+                              ValueSpecialDecimals2.Length;
+                            sb.Append(ValueSpecialDecimals2[y]);
                             count -= 40;
                             i += 2;
                         }
                         else if (count >= 10 && i + 1 < buflen)
                         {
                             int y = (buffer[i + 1] & 0xff) %
-                              valueSpecialDecimals.Length;
-                            sb.Append(valueSpecialDecimals[y]);
+                              ValueSpecialDecimals.Length;
+                            sb.Append(ValueSpecialDecimals[y]);
                             count -= 10;
                             i += 2;
                         }

@@ -1381,7 +1381,7 @@ namespace PeterO.Cbor
         {
             NumberKind typeA = a.kind;
             NumberKind typeB = b.kind;
-            NumberKind convertKind = NumberKind.EInteger;
+            NumberKind convertKind;
             if (!a.IsFinite())
             {
                 convertKind = (typeB == NumberKind.Integer || typeB ==
@@ -1900,11 +1900,12 @@ namespace PeterO.Cbor
             {
                 return 0;
             }
-            int cmp = 0;
+
             NumberKind typeA = this.kind;
             NumberKind typeB = other.kind;
             object objA = this.value;
             object objB = other.value;
+            int cmp;
             if (typeA == typeB)
             {
                 switch (typeA)
@@ -2022,8 +2023,7 @@ namespace PeterO.Cbor
                     else if (typeA == NumberKind.EDecimal ||
                       typeB == NumberKind.EDecimal)
                     {
-                        EDecimal e1 = null;
-                        EDecimal e2 = null;
+                        EDecimal e2;
                         if (typeA == NumberKind.EFloat)
                         {
                             EFloat ef1 = (EFloat)objA;
@@ -2039,7 +2039,7 @@ namespace PeterO.Cbor
                         }
                         else
                         {
-                            e1 = GetNumberInterface(typeA).AsEDecimal(objA);
+                            EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);
                             e2 = GetNumberInterface(typeB).AsEDecimal(objB);
                             cmp = e1.CompareTo(e2);
                         }

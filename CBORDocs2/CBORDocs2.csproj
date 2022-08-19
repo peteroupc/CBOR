@@ -1,4 +1,4 @@
-<Project Sdk='Microsoft.NET.Sdk'>
+﻿<Project Sdk='Microsoft.NET.Sdk'>
   <PropertyGroup>
     <TargetFramework>netcoreapp5.0</TargetFramework>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
@@ -10,7 +10,6 @@
     <DebugType>none</DebugType>
     <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include='..\CBORDocs\CBORDocs.csproj'/>
   <AdditionalFiles Include='stylecop.json'/><AdditionalFiles Include='rules.ruleset'/></ItemGroup>
       <ItemGroup>
         <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='5.0.3'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>

@@ -25,7 +25,6 @@ namespace PeterO.Cbor
         internal static string ToStringHelper(CBORObject obj, int depth)
         {
             StringBuilder sb = null;
-            string simvalue = null;
             CBORType type = obj.Type;
             CBORObject curobject;
             if (obj.IsTagged)
@@ -55,6 +54,7 @@ namespace PeterO.Cbor
                     curobject = curobject.UntagOne();
                 }
             }
+            string simvalue;
             switch (type)
             {
                 case CBORType.SimpleValue:
@@ -75,12 +75,12 @@ namespace PeterO.Cbor
                         if (thisItemInt >= 100)
                         {
                             // NOTE: '0'-'9' have ASCII code 0x30-0x39
-                            c = (char)(0x30 + (thisItemInt / 100 % 10));
+                            c = (char)(0x30 + ((thisItemInt / 100) % 10));
                             sb.Append(c);
                         }
                         if (thisItemInt >= 10)
                         {
-                            c = (char)(0x30 + (thisItemInt / 10 % 10));
+                            c = (char)(0x30 + ((thisItemInt / 10) % 10));
                             sb.Append(c);
                             c = (char)(0x30 + (thisItemInt % 10));
                         }
@@ -131,7 +131,7 @@ namespace PeterO.Cbor
                     }
                 case CBORType.TextString:
                     {
-                        sb = sb == null ? new StringBuilder() : sb;
+                        sb = sb ?? new StringBuilder();
                         sb.Append('\"');
                         string ostring = obj.AsString();
                         int length = ostring.Length;

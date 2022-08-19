@@ -183,7 +183,6 @@ namespace PeterO.Cbor
 
         private CBORObject ReadStringArrayMap(int type, long uadditional)
         {
-            bool canonical = this.options.Ctap2Canonical;
             if (type == 2 || type == 3)
             { // Byte string or text string
                 if ((uadditional >> 31) != 0)
@@ -447,7 +446,7 @@ namespace PeterO.Cbor
                 return fixedObject;
             }
             // Read fixed-length data
-            byte[] data = null;
+            byte[] data;
             if (expectedLength != 0)
             {
                 data = new byte[expectedLength];
@@ -609,7 +608,7 @@ namespace PeterO.Cbor
                     default: throw new CBORException("Unexpected data encountered");
                 }
             }
-            EInteger bigintAdditional = EInteger.Zero;
+
             uadditional = ReadDataLength(this.stream, firstbyte, type);
             // The following doesn't check for major types 0 and 1,
             // since all of them are fixed-length types and are

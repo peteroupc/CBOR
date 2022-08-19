@@ -38,18 +38,18 @@ namespace PeterO.Cbor
         // NOTE: Differs from CBORJson2
         private readonly string jstring;
         private readonly JSONOptions options;
+        private readonly int endPos;
         private StringBuilder sb;
         private int index;
-        private readonly int endPos;
 
         private string NextJSONString()
         {
             int c;
             int startIndex = this.index;
-            int endIndex = -1;
             int ep = this.endPos;
             string js = this.jstring;
             int idx = this.index;
+            int endIndex;
             while (true)
             {
                 c = idx < ep ? js[idx++] & 0xffff : -1;
@@ -87,7 +87,6 @@ namespace PeterO.Cbor
                 switch (c)
                 {
                     case '\\':
-                        endIndex = this.index - 1;
                         c = this.index < ep ? js[this.index++] &
                           0xffff : -1;
                         switch (c)
@@ -449,11 +448,11 @@ namespace PeterO.Cbor
           int depth)
         {
             int c = firstChar;
-            CBORObject obj = null;
             if (c < 0)
             {
                 this.RaiseError("Unexpected end of data");
             }
+            CBORObject obj;
             switch (c)
             {
                 case '"':

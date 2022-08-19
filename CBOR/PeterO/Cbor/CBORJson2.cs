@@ -37,17 +37,17 @@ namespace PeterO.Cbor
 
         private readonly byte[] bytes;
         private readonly JSONOptions options;
-        private int index;
         private readonly int endPos;
-        private static readonly byte[] valueEmptyBytes = new byte[0];
+        private static readonly byte[] ValueEmptyBytes = new byte[0];
+        private int index;
 
         private byte[] NextJSONString()
         {
             int c;
             int startIndex = this.index;
             int batchIndex = startIndex;
-            int batchEnd = startIndex;
             byte[] jbytes = this.bytes;
+            int batchEnd;
             while (true)
             {
                 if (this.index >= this.endPos)
@@ -69,7 +69,7 @@ namespace PeterO.Cbor
                     int isize = this.index - startIndex - 1;
                     if (isize == 0)
                     {
-                        return valueEmptyBytes;
+                        return ValueEmptyBytes;
                     }
                     byte[] buf = new byte[isize];
                     Array.Copy(jbytes, startIndex, buf, 0, isize);
@@ -600,11 +600,11 @@ namespace PeterO.Cbor
           int depth)
         {
             int c = firstChar;
-            CBORObject obj = null;
             if (c < 0)
             {
                 this.RaiseError("Unexpected end of data");
             }
+            CBORObject obj;
             switch (c)
             {
                 case '"':

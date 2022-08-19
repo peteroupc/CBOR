@@ -35,7 +35,7 @@ namespace PeterO.Cbor
             {
                 return null;
             }
-            JSONOptions opt = options ?? CBORDataUtilities.DefaultOptions;
+
             bool preserveNegativeZero = options.PreserveNegativeZero;
             JSONOptions.ConversionMode kind = options.NumberConversion;
             int endPos = offset + count;

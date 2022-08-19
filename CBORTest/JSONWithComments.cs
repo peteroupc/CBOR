@@ -22,10 +22,10 @@ namespace Test
         private readonly string jstring;
         private readonly IList<CBORObject> currPointer;
         private readonly JSONOptions options;
-        private int currPointerStackSize;
         private readonly IList<string[]> pointers;
-        private int index;
         private readonly int endPos;
+        private int currPointerStackSize;
+        private int index;
 
         // JSON parsing method
         private int SkipWhitespaceJSON()
@@ -58,7 +58,7 @@ namespace Test
             while (true)
             {
                 c = idx < ep ? js[idx++] & 0xffff : -1;
-                if (c is (-1) or < 0x20)
+                if (c is -1 or < 0x20)
                 {
                     this.index = idx;
                     this.RaiseError("Unterminated string");
@@ -88,8 +88,8 @@ namespace Test
         {
             CBORObject obj;
             int numberStartIndex = this.index - 1;
-            int numberEndIndex = numberStartIndex;
             int c;
+            int numberEndIndex;
             while (true)
             {
                 c = this.index < this.endPos ? this.jstring[this.index++] &
@@ -111,12 +111,12 @@ namespace Test
             }
             c = numberEndIndex >= this.endPos ? -1 : this.jstring[numberEndIndex];
             // check if character can validly appear after a JSON number
-            if (c is not ',' and not ']' and not '}' and not (-1) and
+            if (c is not ',' and not ']' and not '}' and not -1 and
               not 0x20 and not 0x0a and not 0x0d and not 0x09)
             {
                 this.RaiseError("Invalid character after JSON number");
             }
-            if (c is (-1) or (not 0x20 and not 0x0a and not 0x0d and not 0x09))
+            if (c is -1 or (not 0x20 and not 0x0a and not 0x0d and not 0x09))
             {
                 nextChar[0] = c;
             }
@@ -133,11 +133,11 @@ namespace Test
           int depth)
         {
             int c = firstChar;
-            CBORObject obj = null;
             if (c < 0)
             {
                 this.RaiseError("Unexpected end of data");
             }
+            CBORObject obj;
             switch (c)
             {
                 case '"':
@@ -356,7 +356,7 @@ namespace Test
         {
             // Parse nonstandard comments before JSON keys
             bool hasHash = false;
-            int i = 0;
+            int i;
             for (i = index; i < endPos; ++i)
             {
                 if (jstring[i] == '#')
@@ -400,7 +400,7 @@ namespace Test
         {
             // Parse nonstandard comments before JSON keys
             bool hasHash = false;
-            int i = 0;
+            int i;
             for (i = index; i < endPos; ++i)
             {
                 if (jstring[i] == '#')
@@ -506,12 +506,12 @@ namespace Test
                 CBORObject obj = this.currPointer[i];
                 if (obj.Type == CBORType.Integer)
                 {
-                    sb.Append("/");
+                    sb.Append('/');
                     sb.Append(obj.ToJSONString());
                 }
                 else if (obj.Type == CBORType.TextString)
                 {
-                    sb.Append("/");
+                    sb.Append('/');
                     string str = obj.AsString();
                     for (int j = 0; j < str.Length; ++j)
                     {

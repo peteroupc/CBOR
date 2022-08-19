@@ -60,7 +60,7 @@ namespace PeterO.Cbor
                 ToObject = PropertyMap.FindOneArgumentMethod(
               converter,
               "ToCBORObject",
-              type)
+              type),
             };
             if (ci.ToObject == null)
             {
@@ -79,7 +79,7 @@ namespace PeterO.Cbor
           CBORObject cbor,
           Type type)
         {
-            ConverterInfo convinfo = null;
+            ConverterInfo convinfo;
             if (this.converters.ContainsKey(type))
             {
                 convinfo = this.converters[type];
@@ -99,7 +99,7 @@ namespace PeterO.Cbor
         internal CBORObject ConvertWithConverter(object obj)
         {
             object type = obj.GetType();
-            ConverterInfo convinfo = null;
+            ConverterInfo convinfo;
             if (this.converters.ContainsKey(type))
             {
                 convinfo = this.converters[type];

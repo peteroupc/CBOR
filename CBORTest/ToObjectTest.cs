@@ -1692,24 +1692,24 @@ namespace Test
             int min = rand.UniformInt(1, 60);
             int sec = rand.UniformInt(1, 60);
             char[] dt = new char[20];
-            dt[0] = (char)(0x30 + (year / 1000 % 10));
-            dt[1] = (char)(0x30 + (year / 100 % 10));
-            dt[2] = (char)(0x30 + (year / 10 % 10));
+            dt[0] = (char)(0x30 + ((year / 1000) % 10));
+            dt[1] = (char)(0x30 + ((year / 100) % 10));
+            dt[2] = (char)(0x30 + ((year / 10) % 10));
             dt[3] = (char)(0x30 + (year % 10));
             dt[4] = '-';
-            dt[5] = (char)(0x30 + (month / 10 % 10));
+            dt[5] = (char)(0x30 + ((month / 10) % 10));
             dt[6] = (char)(0x30 + (month % 10));
             dt[7] = '-';
-            dt[8] = (char)(0x30 + (day / 10 % 10));
+            dt[8] = (char)(0x30 + ((day / 10) % 10));
             dt[9] = (char)(0x30 + (day % 10));
             dt[10] = 'T';
-            dt[11] = (char)(0x30 + (hour / 10 % 10));
+            dt[11] = (char)(0x30 + ((hour / 10) % 10));
             dt[12] = (char)(0x30 + (hour % 10));
             dt[13] = ':';
-            dt[14] = (char)(0x30 + (min / 10 % 10));
+            dt[14] = (char)(0x30 + ((min / 10) % 10));
             dt[15] = (char)(0x30 + (min % 10));
             dt[16] = ':';
-            dt[17] = (char)(0x30 + (sec / 10 % 10));
+            dt[17] = (char)(0x30 + ((sec / 10) % 10));
             dt[18] = (char)(0x30 + (sec % 10));
             dt[19] = 'Z';
             return new string(dt);
@@ -1922,7 +1922,7 @@ namespace Test
                 {
                     Aa = obj[0].AsString(),
                     Bb = obj[1].AsString(),
-                    Cc = obj[2].AsString()
+                    Cc = obj[2].AsString(),
                 };
                 return ret;
             }
@@ -1935,13 +1935,13 @@ namespace Test
             {
                 Aa = "aa",
                 Bb = "bb",
-                Cc = "cc"
+                Cc = "cc",
             };
             CPOD3 cp2 = new()
             {
                 Aa = "AA",
                 Bb = "BB",
-                Cc = "CC"
+                Cc = "CC",
             };
             CBORTypeMapper tm = new CBORTypeMapper().AddConverter(
               typeof(CPOD3),
@@ -2082,7 +2082,7 @@ namespace Test
             CBORObject cbor = CBORObject.FromObject(obj);
             if (obj != null)
             {
-                object obj2 = null;
+                object obj2;
                 try
                 {
                     obj2 = cbor.ToObject(obj.GetType());
@@ -2094,15 +2094,15 @@ namespace Test
                 }
                 if (!obj.Equals(obj2))
                 {
-                    if (obj is byte[])
+                    if (obj is byte[] v)
                     {
                         TestCommon.AssertByteArraysEqual(
-                          (byte[])obj,
+                          v,
                           (byte[])obj2);
                     }
-                    else if (obj is string[])
+                    else if (obj is string[] v1)
                     {
-                        Assert.AreEqual((string[])obj, (string[])obj2);
+                        Assert.AreEqual(v1, (string[])obj2);
                     }
                     else
                     {

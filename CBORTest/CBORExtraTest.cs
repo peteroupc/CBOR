@@ -64,7 +64,7 @@ namespace Test
                     decimal d = RandomDecimal(rand, i);
                     CBORObject obj = ToObjectTest.TestToFromObjectRoundTrip(d);
                     CBORTestCommon.AssertRoundTrip(obj);
-                    decimal decimalOther = 0m;
+                    decimal decimalOther;
                     try
                     {
                         decimalOther = obj.ToObject<decimal>();
@@ -340,7 +340,7 @@ namespace Test
             {
                 CustomEnum.A,
                 CustomEnum.B,
-                CustomEnum.C
+                CustomEnum.C,
             };
             CBORObject cbor = CBORObject.FromObject(clist);
             Console.WriteLine(cbor);
@@ -359,7 +359,7 @@ namespace Test
             }
             CustomCollectionContainer clc = new()
             {
-                CList = clist2
+                CList = clist2,
             };
             cbor = CBORObject.FromObject(clc);
             Console.WriteLine(cbor);
@@ -411,7 +411,7 @@ namespace Test
             CPOD2 m = new()
             {
                 Aa = "Test",
-                IsAa = false
+                IsAa = false,
             };
             CBORObject cbor = CBORObject.FromObject(m);
             // ambiguous properties

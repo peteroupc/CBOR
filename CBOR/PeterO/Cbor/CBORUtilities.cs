@@ -44,7 +44,7 @@ namespace PeterO.Cbor
             {
                 return alen == 0 ? 0 : 1;
             }
-            int cmp = 0;
+            int cmp;
             if (alen < 128 && blen < 128)
             {
                 int istrAUpperBound = alen * 3;
@@ -745,9 +745,9 @@ namespace PeterO.Cbor
                 return "-2147483648";
             }
             bool neg = longValue < 0;
-            int count = 0;
             char[] chars;
             int intlongValue = unchecked((int)longValue);
+            int count;
             if (intlongValue == longValue)
             {
                 chars = new char[12];
@@ -1198,7 +1198,7 @@ namespace PeterO.Cbor
               year,
               lesserFields); // Fills out month and day in lesserFields[0]/[1]
             lesserFields[2] = secondsInDay / 3600;
-            lesserFields[3] = secondsInDay % 3600 / 60;
+            lesserFields[3] = (secondsInDay % 3600) / 60;
             lesserFields[4] = secondsInDay % 60;
             lesserFields[5] = 0;
             lesserFields[6] = 0;
@@ -1241,7 +1241,7 @@ namespace PeterO.Cbor
               year,
               lesserFields); // Fills out month and day in lesserFields[0]/[1]
             lesserFields[2] = secondsInDay / 3600;
-            lesserFields[3] = secondsInDay % 3600 / 60;
+            lesserFields[3] = (secondsInDay % 3600) / 60;
             lesserFields[4] = secondsInDay % 60;
             lesserFields[5] = fractionalSeconds;
             lesserFields[6] = 0;
@@ -1404,7 +1404,7 @@ namespace PeterO.Cbor
                     ++icount;
                 }
             }
-            int utcToLocal = 0;
+            int utcToLocal;
             if (index + 1 == str.Length && str[index] == 'Z')
             {
                 /*lowercase z not used to indicate UTC,
@@ -1685,24 +1685,24 @@ namespace PeterO.Cbor
             int second = lesserFields[4];
             int fracSeconds = lesserFields[5];
             char[] charbuf = new char[32];
-            charbuf[0] = (char)('0' + (smallYear / 1000 % 10));
-            charbuf[1] = (char)('0' + (smallYear / 100 % 10));
-            charbuf[2] = (char)('0' + (smallYear / 10 % 10));
+            charbuf[0] = (char)('0' + ((smallYear / 1000) % 10));
+            charbuf[1] = (char)('0' + ((smallYear / 100) % 10));
+            charbuf[2] = (char)('0' + ((smallYear / 10) % 10));
             charbuf[3] = (char)('0' + (smallYear % 10));
             charbuf[4] = '-';
-            charbuf[5] = (char)('0' + (month / 10 % 10));
+            charbuf[5] = (char)('0' + ((month / 10) % 10));
             charbuf[6] = (char)('0' + (month % 10));
             charbuf[7] = '-';
-            charbuf[8] = (char)('0' + (intDay / 10 % 10));
+            charbuf[8] = (char)('0' + ((intDay / 10) % 10));
             charbuf[9] = (char)('0' + (intDay % 10));
             charbuf[10] = 'T';
-            charbuf[11] = (char)('0' + (hour / 10 % 10));
+            charbuf[11] = (char)('0' + ((hour / 10) % 10));
             charbuf[12] = (char)('0' + (hour % 10));
             charbuf[13] = ':';
-            charbuf[14] = (char)('0' + (minute / 10 % 10));
+            charbuf[14] = (char)('0' + ((minute / 10) % 10));
             charbuf[15] = (char)('0' + (minute % 10));
             charbuf[16] = ':';
-            charbuf[17] = (char)('0' + (second / 10 % 10));
+            charbuf[17] = (char)('0' + ((second / 10) % 10));
             charbuf[18] = (char)('0' + (second % 10));
             int charbufLength = 19;
             if (fracSeconds > 0)
@@ -1714,7 +1714,7 @@ namespace PeterO.Cbor
                 int index = 20;
                 while (digitdiv > 0 && fracSeconds != 0)
                 {
-                    int digit = fracSeconds / digitdiv % 10;
+                    int digit = (fracSeconds / digitdiv) % 10;
                     fracSeconds -= digit * digitdiv;
                     charbuf[index++] = (char)('0' + digit);
                     ++charbufLength;
@@ -2154,7 +2154,7 @@ namespace PeterO.Cbor
             long negvalue = (long)((bits >> 31) & 1) << 63;
             int exp = (bits >> 23) & 0xff;
             int mant = bits & 0x7fffff;
-            long value = 0;
+            long value;
             if (exp == 255)
             {
                 value = 0x7ff0000000000000L | ((long)mant << 29) | negvalue;
@@ -2189,7 +2189,7 @@ namespace PeterO.Cbor
             long negvalue = (long)(bits & 0x8000) << 48;
             int exp = (bits >> 10) & 31;
             int mant = bits & 0x3ff;
-            long value = 0;
+            long value;
             if (exp == 31)
             {
                 value = 0x7ff0000000000000L | ((long)mant << 42) | negvalue;

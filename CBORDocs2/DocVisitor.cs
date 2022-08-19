@@ -1125,7 +1125,7 @@ namespace PeterO.DocGen
                 ["op_GreaterThan"] = ">",
                 ["op_GreaterThanOrEqual"] = ">=",
                 ["op_LessThan"] = "<",
-                ["op_LessThanOrEqual"] = "<="
+                ["op_LessThanOrEqual"] = "<=",
             };
             return ops;
         }

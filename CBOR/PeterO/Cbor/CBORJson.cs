@@ -243,7 +243,6 @@ namespace PeterO.Cbor
             {
                 this.RaiseError("JSON number can't be parsed.");
             }
-            int cval = -(c - '0');
             int cstart = c;
             c = this.ReadChar();
             this.sb = this.sb ?? new StringBuilder();

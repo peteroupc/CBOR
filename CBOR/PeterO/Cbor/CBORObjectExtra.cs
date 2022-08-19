@@ -259,10 +259,10 @@ namespace PeterO.Cbor
             }
         }
 
-        private static EInteger DecimalToEInteger(decimal dec)
-        {
-            return ((EDecimal)dec).ToEInteger();
-        }
+        ////private static EInteger DecimalToEInteger(decimal dec)
+        ////{
+        ////    return ((EDecimal)dec).ToEInteger();
+        ////}
 
         /// <summary>Converts this object to a DotNet decimal.</summary>
         /// <returns>The closest big integer to this object.</returns>

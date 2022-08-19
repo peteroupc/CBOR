@@ -43,10 +43,10 @@ namespace Test
           ByteWriter bs)
         {
             int maxArg = 4;
-            int sh = 0;
             int minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 :
                 ((len <= 0xffff) ? 2 : 3));
             int arg = minArg + r.GetInt32(maxArg - minArg + 1);
+            int sh;
             switch (arg)
             {
                 case 0:
@@ -91,18 +91,18 @@ namespace Test
         }
 
         private static readonly int[]
-        valueMajorTypes = {
+        ValueMajorTypes = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4,
       4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7,
     };
 
         private static readonly int[]
-        valueMajorTypesHighDepth = {
+        ValueMajorTypesHighDepth = {
       0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 6, 7,
     };
 
-        private static readonly int[] valueMajorTypesHighLength = {
+        private static readonly int[] ValueMajorTypesHighLength = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 6,
       6, 7, 7, 7, 7, 7, 7,
     };
@@ -196,16 +196,16 @@ namespace Test
         }
         private void Generate(IRandomGenExtended r, int depth, ByteWriter bs)
         {
-            int majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
+            int majorType = ValueMajorTypes[r.GetInt32(ValueMajorTypes.Length)];
             if (depth > 6)
             {
-                majorType = valueMajorTypesHighDepth[r.GetInt32(
-                      valueMajorTypesHighDepth.Length)];
+                majorType = ValueMajorTypesHighDepth[r.GetInt32(
+                      ValueMajorTypesHighDepth.Length)];
             }
             if (bs.ByteLength > 2000000)
             {
-                majorType = valueMajorTypesHighLength[r.GetInt32(
-                      valueMajorTypesHighLength.Length)];
+                majorType = ValueMajorTypesHighLength[r.GetInt32(
+                      ValueMajorTypesHighLength.Length)];
             }
             if (majorType is 3 or 2)
             { // Byte and text strings

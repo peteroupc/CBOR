@@ -204,8 +204,8 @@ namespace PeterO.Cbor
             }
             try
             {
-                CBORObject cobj = JSONPointer.FromPointer(obj, pointer).GetValue();
-                return cobj == null ? defaultValue : cobj;
+                CBORObject cobj = FromPointer(obj, pointer).GetValue();
+                return cobj ?? defaultValue;
             }
             catch (CBORException)
             {
@@ -305,13 +305,13 @@ namespace PeterO.Cbor
                     return false;
                 }
                 EInteger eivalue = EInteger.FromString(this.refValue);
-                int icount = jsonobj.Count;
+                int icount = this.jsonobj.Count;
                 return eivalue.Sign >= 0 &&
                   eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
             }
             else if (this.jsonobj.Type == CBORType.Map)
             {
-                return jsonobj.ContainsKey(this.refValue);
+                return this.jsonobj.ContainsKey(this.refValue);
             }
             else
             {
@@ -329,10 +329,10 @@ namespace PeterO.Cbor
             {
                 if (this.refValue.Equals("-", StringComparison.Ordinal))
                 {
-                    return jsonobj.Count;
+                    return this.jsonobj.Count;
                 }
                 EInteger value = EInteger.FromString(this.refValue);
-                int icount = jsonobj.Count;
+                int icount = this.jsonobj.Count;
                 return (value.Sign < 0) ? (-1) :
         ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
 
@@ -361,11 +361,11 @@ namespace PeterO.Cbor
                 // Root always exists
                 return this.jsonobj;
             }
-            CBORObject tmpcbor = null;
+            CBORObject tmpcbor;
             if (this.jsonobj.Type == CBORType.Array)
             {
                 int index = this.GetIndex();
-                if (index >= 0 && index < jsonobj.Count)
+                if (index >= 0 && index < this.jsonobj.Count)
                 {
                     tmpcbor = this.jsonobj;
                     return tmpcbor[index];

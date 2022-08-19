@@ -1113,7 +1113,7 @@ namespace Test
         {
             CPOD m = new()
             {
-                Aa = "Test"
+                Aa = "Test",
             };
             CBORObject cbor = CBORObject.FromObject(m);
             Assert.IsFalse(cbor.ContainsKey("bb"), cbor.ToString());

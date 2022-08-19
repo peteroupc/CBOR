@@ -2274,7 +2274,7 @@ namespace Test
             }
             try
             {
-                CBORObject.DecodeFromBytes(new byte[] { });
+                CBORObject.DecodeFromBytes(Array.Empty<byte>());
                 Assert.Fail("Should have failed");
             }
             catch (CBORException)
@@ -2519,7 +2519,7 @@ namespace Test
             Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
             Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
             Assert.AreEqual(CBORObject.FromObject("A"), objs[2]);
-            bytes = new byte[] { };
+            bytes = Array.Empty<byte>();
             objs = CBORObject.DecodeSequenceFromBytes(bytes);
             Assert.AreEqual(0, objs.Length);
             try
@@ -2645,7 +2645,7 @@ namespace Test
             Assert.AreEqual(CBORObject.FromObject(0), objs[0]);
             Assert.AreEqual(CBORObject.FromObject(1), objs[1]);
             Assert.AreEqual(CBORObject.FromObject("A"), objs[2]);
-            bytes = new byte[] { };
+            bytes = Array.Empty<byte>();
             using (DelayingStream ms = new(bytes))
             {
                 objs = null;
@@ -5124,7 +5124,7 @@ namespace Test
         public void TestJsonSequence()
         {
             byte[] bytes;
-            bytes = new byte[] { };
+            bytes = Array.Empty<byte>();
             ExpectJsonSequenceZero(bytes);
             bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0a };
             ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
@@ -9873,30 +9873,30 @@ namespace Test
           int millisecond)
         {
             char[] charbuf = new char[millisecond > 0 ? 24 : 20];
-            charbuf[0] = (char)('0' + (year / 1000 % 10));
-            charbuf[1] = (char)('0' + (year / 100 % 10));
-            charbuf[2] = (char)('0' + (year / 10 % 10));
+            charbuf[0] = (char)('0' + ((year / 1000) % 10));
+            charbuf[1] = (char)('0' + ((year / 100) % 10));
+            charbuf[2] = (char)('0' + ((year / 10) % 10));
             charbuf[3] = (char)('0' + (year % 10));
             charbuf[4] = '-';
-            charbuf[5] = (char)('0' + (month / 10 % 10));
+            charbuf[5] = (char)('0' + ((month / 10) % 10));
             charbuf[6] = (char)('0' + (month % 10));
             charbuf[7] = '-';
-            charbuf[8] = (char)('0' + (day / 10 % 10));
+            charbuf[8] = (char)('0' + ((day / 10) % 10));
             charbuf[9] = (char)('0' + (day % 10));
             charbuf[10] = 'T';
-            charbuf[11] = (char)('0' + (hour / 10 % 10));
+            charbuf[11] = (char)('0' + ((hour / 10) % 10));
             charbuf[12] = (char)('0' + (hour % 10));
             charbuf[13] = ':';
-            charbuf[14] = (char)('0' + (minute / 10 % 10));
+            charbuf[14] = (char)('0' + ((minute / 10) % 10));
             charbuf[15] = (char)('0' + (minute % 10));
             charbuf[16] = ':';
-            charbuf[17] = (char)('0' + (second / 10 % 10));
+            charbuf[17] = (char)('0' + ((second / 10) % 10));
             charbuf[18] = (char)('0' + (second % 10));
             if (millisecond > 0)
             {
                 charbuf[19] = '.';
-                charbuf[20] = (char)('0' + (millisecond / 100 % 10));
-                charbuf[21] = (char)('0' + (millisecond / 10 % 10));
+                charbuf[20] = (char)('0' + ((millisecond / 100) % 10));
+                charbuf[21] = (char)('0' + ((millisecond / 10) % 10));
                 charbuf[22] = (char)('0' + (millisecond % 10));
                 charbuf[23] = 'Z';
             }
