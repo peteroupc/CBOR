@@ -69,8 +69,8 @@ namespace PeterO.Cbor {
 
     public string GetLCString(string key, string defaultValue) {
       string lckey = DataUtilities.ToLowerCaseAscii(key);
-      if (this.dict.ContainsKey(lckey)) {
-        string lcvalue = DataUtilities.ToLowerCaseAscii(this.dict[lckey]);
+      if (this.dict.TryGetValue(lckey, out string val)) {
+        string lcvalue = DataUtilities.ToLowerCaseAscii(val);
         return lcvalue;
       }
       return defaultValue;
@@ -78,8 +78,8 @@ namespace PeterO.Cbor {
 
     public bool GetBoolean(string key, bool defaultValue) {
       string lckey = DataUtilities.ToLowerCaseAscii(key);
-      if (this.dict.ContainsKey(lckey)) {
-        string lcvalue = DataUtilities.ToLowerCaseAscii(this.dict[lckey]);
+      if (this.dict.TryGetValue(lckey, out string val)) {
+        string lcvalue = DataUtilities.ToLowerCaseAscii(val);
         return lcvalue.Equals("1", StringComparison.Ordinal) ||
           lcvalue.Equals("yes", StringComparison.Ordinal) ||
           lcvalue.Equals("on", StringComparison.Ordinal) ||

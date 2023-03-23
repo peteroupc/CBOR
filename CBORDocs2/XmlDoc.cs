@@ -48,7 +48,7 @@ namespace PeterO.DocGen {
 
       public string GetAttribute(string str) {
         return (this.attributes == null ||
-           !this.attributes.ContainsKey(str)) ? null : this.attributes[str];
+           !this.attributes.TryGetValue(str, out string attr)) ? null : attr;
       }
 
       public string GetContent() {
@@ -184,18 +184,17 @@ namespace PeterO.DocGen {
     private readonly IDictionary<string, INode> memberNodes;
 
     public INode GetMemberNode(string memberID) {
-      if (!this.memberNodes.ContainsKey(memberID)) {
+      if (!this.memberNodes.TryGetValue(memberID, out INode node)) {
         return null;
       } else {
-        return this.memberNodes[memberID];
+        return node;
       }
     }
 
     public string GetSummary(string memberID) {
-      if (!this.memberNodes.ContainsKey(memberID)) {
+      if (!this.memberNodes.TryGetValue(memberID, out INode mn)) {
         return null;
       } else {
-        var mn = this.memberNodes[memberID];
         var sb = new StringBuilder();
         foreach (var c in mn.GetChildren()) {
           if (c.LocalName.Equals("summary", StringComparison.Ordinal)) {

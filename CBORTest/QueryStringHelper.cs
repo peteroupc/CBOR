@@ -332,10 +332,10 @@ namespace Test {
       int count = dict.Count;
       while (index < count) {
         string indexString = IntToString(index);
-        if (!dict.ContainsKey(indexString)) {
+        if (!dict.TryGetValue(indexString, out object o)) {
           throw new InvalidOperationException();
         }
-        ret.Add(dict[indexString]);
+        ret.Add(o);
         ++index;
       }
       return ret;
@@ -438,7 +438,7 @@ namespace Test {
         string[] path = GetKeyPath(keyvalue[0]);
         IDictionary<string, Object> leaf = root;
         for (int i = 0; i < path.Length - 1; ++i) {
-          if (!leaf.ContainsKey(path[i])) {
+          if (!leaf.TryGetValue(path[i], out object di)) {
             // node doesn't exist so add it
             IDictionary<string, Object> newLeaf = new Dictionary<string, Object>();
             if (leaf.ContainsKey(path[i])) {
@@ -447,7 +447,6 @@ namespace Test {
             leaf.Add(path[i], newLeaf);
             leaf = newLeaf;
           } else {
-            object di = leaf[path[i]];
             IDictionary<string, Object> o = di as IDictionary<string, Object>;
             if (o != null) {
               leaf = o;
@@ -458,10 +457,11 @@ namespace Test {
           }
         }
         if (leaf != null) {
-          if (leaf.ContainsKey(path[path.Length - 1])) {
+          string last = path[path.Length - 1];
+          if (leaf.ContainsKey(last)) {
             throw new InvalidOperationException();
           }
-          leaf.Add(path[path.Length - 1], keyvalue[1]);
+          leaf.Add(last, keyvalue[1]);
         }
       }
       return root;
