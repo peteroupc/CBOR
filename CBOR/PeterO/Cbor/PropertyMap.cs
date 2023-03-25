@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using PeterO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
@@ -103,17 +102,16 @@ namespace PeterO.Cbor {
         return false;
       }
       public bool Remove(TKey key) {
-        if (this.dict.ContainsKey(key)) {
+        if (this.dict.Remove(key)) {
           // CheckKeyExists(key);
-          this.dict.Remove(key);
           this.list.Remove(key);
           return true;
         }
         return false;
       }
       public bool Contains(KeyValuePair<TKey, TValue> kvp) {
-        if (this.dict.ContainsKey(kvp.Key)) {
-          if (this.dict[kvp.Key].Equals(kvp.Value)) {
+        if (this.dict.TryGetValue(kvp.Key, out TValue val)) {
+          if (val.Equals(kvp.Value)) {
             return true;
           }
         }
@@ -570,11 +568,11 @@ namespace PeterO.Cbor {
 
     private static IList<PropertyData> GetPropertyList(Type t) {
       {
-        IList<PropertyData> ret = new List<PropertyData>();
         propertyLists = propertyLists ?? new Dictionary<Type, IList<PropertyData>>();
-        if (propertyLists.ContainsKey(t)) {
-          return propertyLists[t];
+        if (propertyLists.TryGetValue(t, out IList<PropertyData> ret)) {
+          return ret;
         }
+        ret = new List<PropertyData>();
         bool anonymous = HasCustomAttribute(
             t,
             "System.Runtime.CompilerServices.CompilerGeneratedAttribute") ||
@@ -584,16 +582,16 @@ namespace PeterO.Cbor {
         var names = new SortedDictionary<string, int>();
         foreach (PropertyInfo pi in GetTypeProperties(t)) {
           var pn = RemoveIsPrefix(pi.Name);
-          if (names.ContainsKey(pn)) {
-            ++names[pn];
+          if (names.TryGetValue(pn, out int count)) {
+            names[pn] = count + 1;
           } else {
             names[pn] = 1;
           }
         }
         foreach (FieldInfo pi in GetTypeFields(t)) {
           var pn = RemoveIsPrefix(pi.Name);
-          if (names.ContainsKey(pn)) {
-            ++names[pn];
+          if (names.TryGetValue(pn, out int count)) {
+            names[pn] = count + 1;
           } else {
             names[pn] = 1;
           }
@@ -603,7 +601,7 @@ namespace PeterO.Cbor {
           if (pd.HasUsableGetter() || pd.HasUsableSetter()) {
             var pn = RemoveIsPrefix(pd.Name);
             // Ignore ambiguous properties
-            if (names.ContainsKey(pn) && names[pn] > 1) {
+            if (names.TryGetValue(pn, out int count) && count > 1) {
               continue;
             }
             ret.Add(pd);
@@ -616,7 +614,7 @@ namespace PeterO.Cbor {
               PropertyData.HasUsableSetter(pi)) {
               var pn = RemoveIsPrefix(pi.Name);
               // Ignore ambiguous properties
-              if (names.ContainsKey(pn) && names[pn] > 1) {
+              if (names.TryGetValue(pn, out int count) && count > 1) {
                 continue;
               }
               PropertyData pd = new PropertyMap.PropertyData(pi.Name, pi);
@@ -1382,8 +1380,8 @@ typeof(
           }
           var name = key.GetAdjustedName(options != null ?
               options.UseCamelCase : true);
-          if (dict.ContainsKey(name)) {
-            object dobj = dict[name].ToObject(
+          if (dict.TryGetValue(name, out CBORObject cborObj)) {
+            object dobj = cborObj.ToObject(
                 key.PropertyType,
                 mapper,
                 options,

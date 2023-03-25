@@ -174,10 +174,10 @@ IsMethodOverride((MethodInfo)method)) {
   StringComparison.Ordinal)) {
           builder.Append("implicit operator ");
           builder.Append(FormatType(methodInfo.ReturnType));
-        } else if (ValueOperators.ContainsKey(method.Name)) {
+        } else if (ValueOperators.TryGetValue(method.Name, out string op)) {
           builder.Append(FormatType(methodInfo.ReturnType));
           builder.Append(" operator ");
-          builder.Append(ValueOperators[method.Name]);
+          builder.Append(op);
         } else {
           if (!shortform) {
             builder.Append(FormatType(methodInfo.ReturnType));
@@ -879,8 +879,8 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
     }
 
     private static string MethodNameHeading(string p) {
-      return ValueOperators.ContainsKey(p) ? ("Operator `" +
-        ValueOperators[p] + "`") :
+      return ValueOperators.TryGetValue(p, out string op) ? ("Operator `" +
+        op + "`") :
         (p.Equals("op_Explicit", StringComparison.Ordinal) ?
           "Explicit Operator" :
          (p.Equals("op_Implicit", StringComparison.Ordinal) ?

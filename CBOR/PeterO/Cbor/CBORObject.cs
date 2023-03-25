@@ -639,7 +639,7 @@ namespace PeterO.Cbor {
           CBORObject key = CBORObject.FromObject(index);
           // TODO: In next major version, consider throwing an exception
           // instead if key does not exist.
-          return (!map.ContainsKey(key)) ? null : map[key];
+          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null : cborObj;
         }
         throw new InvalidOperationException("Not an array or map");
       }
@@ -743,7 +743,7 @@ namespace PeterO.Cbor {
         }
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          return (!map.ContainsKey(key)) ? null : map[key];
+          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null : cborObj;
         }
         if (this.Type == CBORType.Array) {
           if (!key.IsNumber || !key.AsNumber().IsInteger()) {
@@ -6235,12 +6235,7 @@ CBORObjectTypeTextStringAscii)) {
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-        bool hasKey = dict.ContainsKey(obj);
-        if (hasKey) {
-          dict.Remove(obj);
-          return true;
-        }
-        return false;
+        return dict.Remove(obj);
       }
       if (this.Type == CBORType.Array) {
         IList<CBORObject> list = this.AsList();
@@ -6287,11 +6282,7 @@ CBORObjectTypeTextStringAscii)) {
           mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        if (map.ContainsKey(mapKey)) {
-          map[mapKey] = mapValue;
-        } else {
-          map.Add(mapKey, mapValue);
-        }
+        map[mapKey] = mapValue;
       } else if (this.Type == CBORType.Array) {
         if (key is int) {
           IList<CBORObject> list = this.AsList();

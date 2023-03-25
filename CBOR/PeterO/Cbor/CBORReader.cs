@@ -267,19 +267,19 @@ count);
       int t = count;
       int tpos = offset;
       while (t > 0) {
-              int rcount = stream.Read(bytes, tpos, t);
-              if (rcount <= 0) {
-                 throw new CBORException("Premature end of data");
-              }
-              if (rcount > t) {
-                 throw new CBORException("Internal error");
-              }
-              tpos = checked(tpos + rcount);
-              t = checked(t - rcount);
-           }
-           if (t != 0) {
-             throw new CBORException("Internal error");
-           }
+        int rcount = stream.Read(bytes, tpos, t);
+        if (rcount <= 0) {
+           throw new CBORException("Premature end of data");
+        }
+        if (rcount > t) {
+           throw new CBORException("Internal error");
+        }
+        tpos = checked(tpos + rcount);
+        t = checked(t - rcount);
+      }
+      if (t != 0) {
+        throw new CBORException("Internal error");
+      }
     }
 
     public CBORObject ReadForFirstByte(int firstbyte) {

@@ -69,10 +69,7 @@ namespace PeterO.Cbor {
     internal object ConvertBackWithConverter(
       CBORObject cbor,
       Type type) {
-      ConverterInfo convinfo = null;
-      if (this.converters.ContainsKey(type)) {
-        convinfo = this.converters[type];
-      } else {
+      if (!this.converters.TryGetValue(type, out ConverterInfo convinfo)) {
         return null;
       }
       if (convinfo == null) {
@@ -84,10 +81,7 @@ namespace PeterO.Cbor {
 
     internal CBORObject ConvertWithConverter(object obj) {
       Object type = obj.GetType();
-      ConverterInfo convinfo = null;
-      if (this.converters.ContainsKey(type)) {
-        convinfo = this.converters[type];
-      } else {
+      if (!this.converters.TryGetValue(type, out ConverterInfo convinfo)) {
         return null;
       }
       return (convinfo == null) ? null :
