@@ -639,7 +639,8 @@ namespace PeterO.Cbor {
           CBORObject key = CBORObject.FromObject(index);
           // TODO: In next major version, consider throwing an exception
           // instead if key does not exist.
-          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null : cborObj;
+          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null :
+cborObj;
         }
         throw new InvalidOperationException("Not an array or map");
       }
@@ -743,7 +744,8 @@ namespace PeterO.Cbor {
         }
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null : cborObj;
+          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null :
+cborObj;
         }
         if (this.Type == CBORType.Array) {
           if (!key.IsNumber || !key.AsNumber().IsInteger()) {

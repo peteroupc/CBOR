@@ -880,8 +880,7 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
 
     private static string MethodNameHeading(string p) {
       return ValueOperators.TryGetValue(p, out string op) ? ("Operator `" +
-        op + "`") :
-        (p.Equals("op_Explicit", StringComparison.Ordinal) ?
+        op + "`") : (p.Equals("op_Explicit", StringComparison.Ordinal) ?
           "Explicit Operator" :
          (p.Equals("op_Implicit", StringComparison.Ordinal) ?
           "Implicit Operator" : p));
