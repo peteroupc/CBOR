@@ -1090,13 +1090,15 @@ namespace PeterO.Cbor {
           return byteret;
         }
       }
-      if (objThis.Type == CBORType.Array) {
+      if (objThis.Type == CBORType.Array || objThis.Type ==
+CBORType.ByteString) {
         Type objectType = typeof(object);
         var isList = false;
         var isReadOnlyCollection = false;
         object listObject = null;
         object genericListObject = null;
-        if (IsAssignableFrom(typeof(Array), t)) {
+        if (objThis.Type == CBORType.Array &&
+IsAssignableFrom(typeof(Array), t)) {
           Type elementType = t.GetElementType();
           Array array = Array.CreateInstance(
               elementType,
@@ -1128,11 +1130,7 @@ namespace PeterO.Cbor {
          #endif
         }
         isList = isList && t.GetGenericArguments().Length == 1;
-        if (isReadOnlyCollection) {
-          objectType = t.GetGenericArguments()[0];
-          Type listType = typeof(List<>).MakeGenericType(objectType);
-          listObject = Activator.CreateInstance(listType);
-        } else if (isList) {
+        if (isList || isReadOnlyCollection) {
           objectType = t.GetGenericArguments()[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
           listObject = Activator.CreateInstance(listType);
@@ -1153,14 +1151,28 @@ namespace PeterO.Cbor {
              t.GenericTypeArguments.Length == 1;
         }
         isList = isList && t.GenericTypeArguments.Length == 1;
-        if (isReadOnlyCollection) {
+        if (isList || isReadOnlyCollection) {
           objectType = t.GenericTypeArguments[0];
           Type listType = typeof(List<>).MakeGenericType(objectType);
           listObject = Activator.CreateInstance(listType);
-        } else if (isList) {
-          objectType = t.GenericTypeArguments[0];
-          Type listType = typeof(List<>).MakeGenericType(objectType);
-          listObject = Activator.CreateInstance(listType);
+        }
+        #endif
+        #if BYTE_STRING_TO_NONARRAY_LIST
+        if (objThis.Type == CBORType.ByteString) {
+          if (isReadOnlyCollection && typeof(byte).Equals(objectType)) {
+           byte[] bytes = objThis.GetByteString();
+           var byteret = new byte[bytes.Length];
+           Array.Copy(bytes, 0, byteret, 0, byteret.Length);
+           return new
+System.Collections.ObjectModel.ReadOnlyCollection<byte>(byteret);
+        } else if (isList && typeof(byte).Equals(objectType)) {
+          byte[] bytes = objThis.GetByteString();
+           var bytelist = new List<byte>();
+           for (var i = 0;i<bytes.Length; ++i) {
+             bytelist.Add(bytes[i]);
+           }
+           return bytelist;
+        }
         }
         #endif
         if (listObject == null) {
@@ -1190,7 +1202,19 @@ namespace PeterO.Cbor {
             }
           }
         }
-        if (genericListObject != null) {
+        #if BYTE_STRING_TO_NONARRAY_LIST
+        if (objThis.Type == CBORType.ByteString) {
+          if (genericListObject != null && typeof(byte).Equals(objectType)) {
+           byte[] bytes = objThis.GetByteString();
+           var bytelist=(IList<byte>)genericListObject;
+           for (var i = 0;i<bytes.Length; ++i) {
+             bytelist.Add(bytes[i]);
+           }
+           return bytelist;
+          }
+        }
+        #endif
+        if (objThis.Type == CBORType.Array && genericListObject != null) {
           object addMethod = FindOneArgumentMethod(
               genericListObject,
               "Add",
@@ -1206,7 +1230,7 @@ namespace PeterO.Cbor {
           }
           return genericListObject;
         }
-        if (listObject != null) {
+        if (objThis.Type == CBORType.Array && listObject != null) {
           System.Collections.IList ie = (System.Collections.IList)listObject;
           foreach (CBORObject value in objThis.Values) {
             ie.Add(value.ToObject(objectType, mapper, options, depth + 1));

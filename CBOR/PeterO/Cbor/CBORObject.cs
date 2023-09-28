@@ -5010,7 +5010,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// <para>The following example code (originally written in C# for
     /// the.NET Framework) shows a way to check whether a given CBOR object
     /// stores a 64-bit signed integer before getting its value.</para>
-    /// <code>CBORObject obj = CBORObject.FromInt64(99999);
+    /// <code>CBORObject obj = CBORObject.FromObject((long)99999);
     /// if (obj.IsIntegral &amp;&amp; obj.AsNumber().CanFitInInt64()) {
     /// &#x2f;&#x2a; Not an Int64; handle the error &#x2a;&#x2f;
     /// Console.WriteLine("Not a 64-bit integer."); } else {

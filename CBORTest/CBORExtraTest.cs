@@ -261,6 +261,78 @@ System.Collections.IEnumerable.GetEnumerator() {
       }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Design",
+      "CA1034",
+      Justification = "Testing whether serialization works " + "on nested public types")]
+    public sealed class CustomByteCollection : IList<byte> {
+      private List<byte> w = new List<byte>();
+
+      public byte this[int index] {
+        get {
+          return ((IList<byte>)this.w)[index];
+        }
+
+        set {
+          ((IList<byte>)this.w)[index] = value;
+        }
+      }
+
+      public int Count {
+        get {
+          return ((IList<byte>)this.w).Count;
+        }
+      }
+
+      public bool IsReadOnly {
+        get {
+          return ((IList<byte>)this.w).IsReadOnly;
+        }
+      }
+
+      public void Add(byte item) {
+((IList<byte>)this.w).Add(item);
+      }
+
+      public void Clear() {
+        ((IList<byte>)this.w).Clear();
+      }
+
+      public bool Contains(byte item) {
+        return ((IList<byte>)this.w).Contains(item);
+      }
+
+      public void CopyTo(byte[] array, int arrayIndex) {
+((IList<byte>)this.w).CopyTo(array, arrayIndex);
+      }
+
+      public int IndexOf(byte item) {
+        return ((IList<byte>)this.w).IndexOf(item);
+      }
+
+      public void Insert(int index, byte item) {
+((IList<byte>)this.w).Insert(index, item);
+      }
+
+      public bool Remove(byte item) {
+        return ((IList<byte>)this.w).Remove(item);
+      }
+
+      public void RemoveAt(int index) {
+((IList<byte>)this.w).RemoveAt(index);
+      }
+
+      public System.Collections.Generic.IEnumerator<byte>
+GetEnumerator() {
+        return ((IList<byte>)this.w).GetEnumerator();
+      }
+
+      System.Collections.IEnumerator
+System.Collections.IEnumerable.GetEnumerator() {
+        return ((IList<byte>)this.w).GetEnumerator();
+      }
+    }
+
     [Test]
     public void TestCustomFlagsEnum() {
       var cbor = CBORObject.FromObject(CustomBits.A | CustomBits.B);
