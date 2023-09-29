@@ -192,12 +192,12 @@ JSONOptions("numberconversion=full;preservenegativezero=false")) ==
         }
       }
       TestCommon.CompareTestEqual(
-        ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber();
+        ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber(),
         CBORDataUtilities.ParseJSONNumber("23.0e01",
   new JSONOptions("numberconversion=full")).AsNumber());
       {
-        object objectTemp = ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber();
-object objectTemp2 = CBORDataUtilities.ParseJSONNumber("23.0e00", new
+        CBORNumber objectTemp = ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber();
+CBORNumber objectTemp2 = CBORDataUtilities.ParseJSONNumber("23.0e00", new
 JSONOptions("numberconversion=full")).AsNumber();
 TestCommon.CompareTestEqual(objectTemp, objectTemp2);
 }

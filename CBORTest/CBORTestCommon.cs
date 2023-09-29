@@ -250,87 +250,6 @@ depth) {
       }
     }
 
-#pragma warning disable CS0618
-    public static void TestNumber(CBORObject o) {
-      if (o.Type != CBORType.Number) {
-        return;
-      }
-      if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
-        o.IsNaN()) {
-        try {
-          o.AsByte();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          // NOTE: Intentionally empty
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex);
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt16();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          // NOTE: Intentionally empty
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex);
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt32();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          // NOTE: Intentionally empty
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex);
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt64();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          // NOTE: Intentionally empty
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex);
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsSingle();
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsDouble();
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsEInteger();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          // NOTE: Intentionally empty
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex);
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        return;
-      }
-      try {
-        o.AsSingle();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex);
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        o.AsDouble();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex);
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-#pragma warning restore CS0618
-
     public static byte[] CheckEncodeToBytes(CBORObject o) {
       byte[] bytes = o.EncodeToBytes();
       if (bytes.Length != o.CalcEncodedSize()) {
@@ -344,7 +263,6 @@ depth) {
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(CheckEncodeToBytes(o));
       TestCommon.CompareTestEqual(o, o2);
-      TestNumber(o);
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
@@ -362,7 +280,6 @@ depth) {
           "\no2string = " + o2.ToString();
         Assert.AreEqual(s, o2.ToJSONString(), msg);
       }
-      TestNumber(o);
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 

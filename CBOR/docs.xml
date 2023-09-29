@@ -267,8 +267,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
-
-            <summary>Parses a number whose format follows the JSON
+<summary>Parses a number whose format follows the JSON
             specification (RFC 8259). The method uses a JSONOptions with all
             default properties except for a PreserveNegativeZero property of
             false.</summary>
@@ -290,11 +289,9 @@
             one or more basic digits (the exponent). A text string representing
             a valid JSON number is not allowed to contain white space
             characters, including spaces.</remarks>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)">
-
-            <summary>Parses a number whose format follows the JSON
+<summary>Parses a number whose format follows the JSON
             specification (RFC 8259).</summary>
             <param name='str'>A text string to parse as a JSON number.</param>
             <param name='integersOnly'>If true, no decimal points or exponents
@@ -316,7 +313,6 @@
             one or more basic digits (the exponent). A text string representing
             a valid JSON number is not allowed to contain white space
             characters, including spaces.</remarks>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Int32,System.Int32)">
 
@@ -1891,15 +1887,13 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Abs">
-
-            <summary>Gets this object's absolute value.</summary>
+<summary>Gets this object's absolute value.</summary>
             <returns>This object's absolute without its negative
             sign.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for this purpose, infinities and not-a-number
             or NaN values, but not CBORObject.Null, are considered
             numbers).</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)">
 
@@ -1973,8 +1967,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Finds the sum of two CBOR numbers.</summary>
+<summary>Finds the sum of two CBOR numbers.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a
             CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a
@@ -1983,7 +1976,6 @@
             <exception cref='ArgumentException'>Either or both operands are not
             numbers (as opposed to Not-a-Number, NaN).</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ApplyJSONPatch(PeterO.Cbor.CBORObject)">
 
@@ -2025,8 +2017,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsByte">
-
-            <summary>Converts this object to a byte (0 to 255). Floating point
+<summary>Converts this object to a byte (0 to 255). Floating point
             values are converted to integers by discarding their fractional
             parts.</summary>
             <returns>The closest byte-sized integer to this object.</returns>
@@ -2038,7 +2029,6 @@
             range of a byte (would be less than 0 or greater than 255 when
             converted to an integer by discarding its fractional
             part).</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsDecimal">
 
@@ -2095,18 +2085,15 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEDecimal">
-
-            <summary>Converts this object to a decimal number.</summary>
+<summary>Converts this object to a decimal number.</summary>
             <returns>A decimal number for this object's value.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
             considered numbers).</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEFloat">
-
-            <summary>Converts this object to an arbitrary-precision binary
+<summary>Converts this object to an arbitrary-precision binary
             floating point number. See the ToObject overload taking a type for
             more information.</summary>
             <returns>An arbitrary-precision binary floating-point number for
@@ -2115,11 +2102,9 @@
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
             considered numbers).</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEInteger">
-
-            <summary>Converts this object to an arbitrary-precision integer.
+<summary>Converts this object to an arbitrary-precision integer.
             See the ToObject overload taking a type for more
             information.</summary>
             <returns>The closest arbitrary-precision integer to this
@@ -2130,7 +2115,6 @@
             considered numbers).</exception>
             <exception cref='OverflowException'>This object's value is infinity
             or not-a-number (NaN).</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsEIntegerValue">
 
@@ -2144,19 +2128,16 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsERational">
-
-            <summary>Converts this object to a rational number. See the
+<summary>Converts this object to a rational number. See the
             ToObject overload taking a type for more information.</summary>
             <returns>A rational number for this object's value.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for the purposes of this method, infinity and
             not-a-number values, but not <c>CBORObject.Null</c>, are
             considered numbers).</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt16">
-
-            <summary>Converts this object to a 16-bit signed integer. Floating
+<summary>Converts this object to a 16-bit signed integer. Floating
             point values are converted to integers by discarding their
             fractional parts.</summary>
             <returns>The closest 16-bit signed integer to this
@@ -2167,7 +2148,6 @@
             numbers).</exception>
             <exception cref='OverflowException'>This object's value exceeds the
             range of a 16-bit signed integer.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt32">
 
@@ -2215,8 +2195,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt64">
-
-            <summary>Converts this object to a 64-bit signed integer.
+<summary>Converts this object to a 64-bit signed integer.
             Non-integer numbers are converted to integers by discarding their
             fractional parts. (NOTE: To determine whether this method call can
             succeed, call <b>AsNumber().CanTruncatedIntFitInInt64</b> before
@@ -2238,7 +2217,6 @@
             Console.WriteLine("Not a 64-bit integer."); } else {
             Console.WriteLine("The value is " + obj.AsInt64()); }</code> .
             </example>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt64Value">
 
@@ -2420,8 +2398,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInDouble">
-
-            <summary>Returns whether this object's value can be converted to a
+<summary>Returns whether this object's value can be converted to a
             64-bit floating point number without its value being rounded to
             another numerical value.</summary>
             <returns><c>true</c> if this object's value can be converted to a
@@ -2429,27 +2406,21 @@
             another numerical value, or if this is a not-a-number value, even
             if the value's diagnostic information can't fit in a 64-bit
             floating point number; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt32">
-
-            <summary>Returns whether this object's numerical value is an
+<summary>Returns whether this object's numerical value is an
             integer, is -(2^31) or greater, and is less than 2^31.</summary>
             <returns><c>true</c> if this object's numerical value is an
             integer, is -(2^31) or greater, and is less than 2^31; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInInt64">
-
-            <summary>Returns whether this object's numerical value is an
+<summary>Returns whether this object's numerical value is an
             integer, is -(2^63) or greater, and is less than 2^63.</summary>
             <returns><c>true</c> if this object's numerical value is an
             integer, is -(2^63) or greater, and is less than 2^63; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanFitInSingle">
-
-            <summary>Returns whether this object's value can be converted to a
+<summary>Returns whether this object's value can be converted to a
             32-bit floating point number without its value being rounded to
             another numerical value.</summary>
             <returns><c>true</c> if this object's value can be converted to a
@@ -2457,27 +2428,22 @@
             another numerical value, or if this is a not-a-number value, even
             if the value's diagnostic information can' t fit in a 32-bit
             floating point number; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32">
-
-            <summary>Returns whether this object's value, converted to an
+<summary>Returns whether this object's value, converted to an
             integer by discarding its fractional part, would be -(2^31) or
             greater, and less than 2^31.</summary>
             <returns><c>true</c> if this object's value, converted to an
             integer by discarding its fractional part, would be -(2^31) or
             greater, and less than 2^31; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64">
-
-            <summary>Returns whether this object's value, converted to an
+<summary>Returns whether this object's value, converted to an
             integer by discarding its fractional part, would be -(2^63) or
             greater, and less than 2^63.</summary>
             <returns><c>true</c> if this object's value, converted to an
             integer by discarding its fractional part, would be -(2^63) or
             greater, and less than 2^63; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.CanValueFitInInt32">
 
@@ -3014,8 +2980,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Divides a CBORObject object by the value of a CBORObject
+<summary>Divides a CBORObject object by the value of a CBORObject
             object.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a
             CBOR object.</param>
@@ -3023,7 +2988,6 @@
             CBOR object.</param>
             <returns>The quotient of the two objects.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.EncodeToBytes">
 
@@ -3317,8 +3281,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)">
-
-            <summary>Generates a CBOR object from a text string in JavaScript
+<summary>Generates a CBOR object from a text string in JavaScript
             Object Notation (JSON) format, using the specified options to
             control the decoding process.
             <para>Note that if a CBOR object is converted to JSON with
@@ -3337,7 +3300,6 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> or <paramref name='options'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>The string is not in
             JSON format.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.JSONOptions)">
 
@@ -4185,52 +4147,40 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsFinite">
-
-            <summary>Gets a value indicating whether this CBOR object
+<summary>Gets a value indicating whether this CBOR object
             represents a finite number.</summary>
             <value><c>true</c> if this CBOR object represents a finite number; otherwise, <c>false</c>.</value>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsInfinity">
-
-            <summary>Gets a value indicating whether this CBOR object
+<summary>Gets a value indicating whether this CBOR object
             represents infinity.</summary>
             <returns><c>true</c> if this CBOR object represents infinity; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsIntegral">
-
-            <summary>Gets a value indicating whether this object represents an
+<summary>Gets a value indicating whether this object represents an
             integer number, that is, a number without a fractional part.
             Infinity and not-a-number are not considered integers.</summary>
             <value><c>true</c> if this object represents an integer number,
             that is, a number without a fractional part; otherwise, <c>false</c>.</value>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNaN">
-
-            <summary>Gets a value indicating whether this CBOR object
+<summary>Gets a value indicating whether this CBOR object
             represents a not-a-number value (as opposed to whether this object
             does not express a number).</summary>
             <returns><c>true</c> if this CBOR object represents a not-a-number
             value (as opposed to whether this object does not represent a
             number as defined by the IsNumber property or <c>isNumber()</c> method in Java); otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNegative">
-
-            <summary>Gets a value indicating whether this object is a negative
+<summary>Gets a value indicating whether this object is a negative
             number.</summary>
             <value><c>true</c> if this object is a negative number; otherwise, <c>false</c>.</value>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsNegativeInfinity">
-
-            <summary>Gets a value indicating whether this CBOR object
+<summary>Gets a value indicating whether this CBOR object
             represents negative infinity.</summary>
             <returns><c>true</c> if this CBOR object represents negative
             infinity; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsNull">
 
@@ -4252,12 +4202,10 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.IsPositiveInfinity">
-
-            <summary>Gets a value indicating whether this CBOR object
+<summary>Gets a value indicating whether this CBOR object
             represents positive infinity.</summary>
             <returns><c>true</c> if this CBOR object represents positive
             infinity; otherwise, <c>false</c>.</returns>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsTagged">
 
@@ -4281,11 +4229,9 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.IsZero">
-
-            <summary>Gets a value indicating whether this object's value equals
+<summary>Gets a value indicating whether this object's value equals
             0.</summary>
             <value><c>true</c> if this object's value equals 0; otherwise, <c>false</c>.</value>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)">
 
@@ -4346,10 +4292,9 @@
             <summary>Gets a collection of the keys of this CBOR object. In
             general, the order in which those keys occur is undefined unless
             this is a map created using the NewOrderedMap method.</summary>
-            <value>A collection of the keys of this CBOR object. To avoid
-            potential problems, the calling code should not modify the CBOR map
-            or the returned collection while iterating over the returned
-            collection.</value>
+            <value>A read-only collection of the keys of this CBOR object. To
+            avoid potential problems, the calling code should not modify the
+            CBOR map while iterating over the returned collection.</value>
             <exception cref='InvalidOperationException'>This object is not a
             map.</exception>
 
@@ -4371,8 +4316,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Multiplies two CBOR numbers.</summary>
+<summary>Multiplies two CBOR numbers.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a
             CBOR object.</param>
             <param name='second'>The parameter <paramref name='second'/> is a
@@ -4381,7 +4325,6 @@
             <exception cref='ArgumentException'>Either or both operands are not
             numbers (as opposed to Not-a-Number, NaN).</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
-
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.NaN">
 
@@ -4389,14 +4332,12 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Negate">
-
-            <summary>Gets this object's value with the sign reversed.</summary>
+<summary>Gets this object's value with the sign reversed.</summary>
             <returns>The reversed-sign form of this number.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for this purpose, infinities and not-a-number
             or NaN values, but not CBORObject.Null, are considered
             numbers).</exception>
-
 </doc>
 <doc name="F:PeterO.Cbor.CBORObject.NegativeInfinity">
 
@@ -4486,8 +4427,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
-
-            <summary>Generates a CBOR object from a data stream in JavaScript
+<summary>Generates a CBOR object from a data stream in JavaScript
             Object Notation (JSON) format, using the specified options to
             control the decoding process. The JSON stream may begin with a
             byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be
@@ -4507,7 +4447,6 @@
             occurred.</exception>
             <exception cref='PeterO.Cbor.CBORException'>The data stream
             contains invalid encoding or is not in JSON format.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.JSONOptions)">
 
@@ -4627,8 +4566,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Finds the remainder that results when a CBORObject object
+<summary>Finds the remainder that results when a CBORObject object
             is divided by the value of a CBOR object.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a
             CBOR object.</param>
@@ -4636,7 +4574,6 @@
             CBOR object.</param>
             <returns>The remainder of the two numbers.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)">
 
@@ -4702,8 +4639,7 @@
 
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.Sign">
-
-            <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
+<summary>Gets this value's sign: -1 if negative; 1 if positive; 0
             if zero. Throws an exception if this is a not-a-number
             value.</summary>
             <value>This value's sign: -1 if negative; 1 if positive; 0 if
@@ -4711,7 +4647,6 @@
             <exception cref='InvalidOperationException'>This object does not
             represent a number, or this object is a not-a-number (NaN)
             value.</exception>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.SimpleValue">
 
@@ -4724,8 +4659,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Finds the difference between two CBOR number
+<summary>Finds the difference between two CBOR number
             objects.</summary>
             <param name='first'>The parameter <paramref name='first'/> is a
             CBOR object.</param>
@@ -4735,7 +4669,6 @@
             <exception cref='ArgumentException'>Either or both operands are not
             numbers (as opposed to Not-a-Number, NaN).</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORObject.TagCount">
 
@@ -5385,10 +5318,10 @@
             of the array in the order they are listed. (This method can't be
             used to get the bytes in a CBOR byte string; for that, use the
             GetByteString method instead.).</summary>
-            <value>A collection of the values of this CBOR map or array. To
-            avoid potential problems, the calling code should not modify the
-            CBOR map or array or the returned collection while iterating over
-            the returned collection.</value>
+            <value>A read-only collection of the values of this CBOR map or
+            array. To avoid potential problems, the calling code should not
+            modify the CBOR map or array while iterating over the returned
+            collection.</value>
             <exception cref='InvalidOperationException'>This object is not a
             map or an array.</exception>
 
@@ -6356,26 +6289,22 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Does an addition on two CBOR objects and returns their
+<summary>Does an addition on two CBOR objects and returns their
             result.</summary>
             <param name='a'>The parameter <paramref name='a'/> is a CBOR
             object.</param>
             <param name='b'>The parameter <paramref name='b'/> is a CBOR
             object.</param>
             <returns>The sum of the two objects.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Division(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Divides a CBORObject object by the value of a CBORObject
+<summary>Divides a CBORObject object by the value of a CBORObject
             object.</summary>
             <param name='a'>The parameter <paramref name='a'/> is a CBOR
             object.</param>
             <param name='b'>The parameter <paramref name='b'/> is a CBOR
             object.</param>
             <returns>The quotient of the two objects.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_GreaterThan(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 
@@ -6419,37 +6348,31 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Modulus(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Finds the remainder that results when a CBORObject object
+<summary>Finds the remainder that results when a CBORObject object
             is divided by the value of a CBORObject object.</summary>
             <param name='a'>The parameter <paramref name='a'/> is a CBOR
             object.</param>
             <param name='b'>The parameter <paramref name='b'/> is a CBOR
             object.</param>
             <returns>The remainder of the two numbers.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Multiplies a CBORObject object by the value of a
+<summary>Multiplies a CBORObject object by the value of a
             CBORObject object.</summary>
             <param name='a'>The parameter <paramref name='a'/> is a CBOR
             object.</param>
             <param name='b'>The parameter <paramref name='b'/> is a CBOR
             object.</param>
             <returns>The product of the two numbers.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Subtraction(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
-
-            <summary>Subtracts a CBORObject object from a CBORObject
+<summary>Subtracts a CBORObject object from a CBORObject
             object.</summary>
             <param name='a'>The parameter <paramref name='a'/> is a CBOR
             object.</param>
             <param name='b'>The parameter <paramref name='b'/> is a CBOR
             object.</param>
             <returns>The difference of the two objects.</returns>
-
 </doc>
 <doc name="T:PeterO.Cbor.CBORObjectMath">
 <summary>Implements arithmetic operations with CBOR objects.
@@ -6982,8 +6905,9 @@
             can be any combination of basic upper-case and/or basic lower-case
             letters), and any other value is unrecognized. (If the
             <c>numberconversion</c> key is not given, its value is treated as
-            <c>full</c>. If that key is given, but has an unrecognized value,
-            an exception is thrown.) For example, <c>base64padding=Yes</c> and
+            <c>intorfloat</c> (formerly <c>full</c> in versions earlier than
+            5.0). If that key is given, but has an unrecognized value, an
+            exception is thrown.) For example, <c>base64padding=Yes</c> and
             <c>base64padding=1</c> both set the <c>Base64Padding</c> property
             to true, and <c>numberconversion=double</c> sets the
             <c>NumberConversion</c> property to <c>ConversionMode.Double</c> .</param>

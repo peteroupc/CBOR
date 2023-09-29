@@ -316,39 +316,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets a value indicating whether this CBOR object
-    /// represents a finite number.</summary>
-    /// <value><c>true</c> if this CBOR object represents a finite number;
-    /// otherwise, <c>false</c>.</value>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().IsFinite()).")]
-    public bool IsFinite {
-      get {
-        if (this.IsNumber) {
-          CBORNumber cn = this.AsNumber();
-          return !cn.IsInfinity() && !cn.IsNaN();
-        } else {
-          return false;
-        }
-      }
-    }
-
-    /// <summary>Gets a value indicating whether this object represents an
-    /// integer number, that is, a number without a fractional part.
-    /// Infinity and not-a-number are not considered integers.</summary>
-    /// <value><c>true</c> if this object represents an integer number,
-    /// that is, a number without a fractional part; otherwise,
-    /// <c>false</c>.</value>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().IsInteger()).")]
-    public bool IsIntegral {
-      get {
-        CBORNumber cn = CBORNumber.FromCBORObject(this);
-        return (cn != null) &&
-          cn.GetNumberInterface().IsIntegral(cn.GetValue());
-      }
-    }
-
     /// <summary>Gets a value indicating whether this CBOR object is a CBOR
     /// null value, whether tagged or not.</summary>
     /// <value><c>true</c> if this value is a CBOR null value; otherwise,
@@ -392,20 +359,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object's value equals
-    /// 0.</summary>
-    /// <value><c>true</c> if this object's value equals 0; otherwise,
-    /// <c>false</c>.</value>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().IsZero()).")]
-    public bool IsZero {
-      get {
-        CBORNumber cn = CBORNumber.FromCBORObject(this);
-        return cn != null &&
-          cn.GetNumberInterface().IsNumberZero(cn.GetValue());
-      }
-    }
-
     /// <summary>Gets a collection of the keys of this CBOR object. In
     /// general, the order in which those keys occur is undefined unless
     /// this is a map created using the NewOrderedMap method.</summary>
@@ -421,20 +374,6 @@ namespace PeterO.Cbor {
           return PropertyMap.ReadOnlyKeys(dict);
         }
         throw new InvalidOperationException("Not a map");
-      }
-    }
-
-    /// <summary>Gets a value indicating whether this object is a negative
-    /// number.</summary>
-    /// <value><c>true</c> if this object is a negative number; otherwise,
-    /// <c>false</c>.</value>
-    [Obsolete("Instead, use \u0028cbor.IsNumber() &&" +
-        "\u0020cbor.AsNumber().IsNegative()).")]
-    public bool IsNegative {
-      get {
-        CBORNumber cn = CBORNumber.FromCBORObject(this);
-        return (cn != null) &&
-          cn.GetNumberInterface().IsNegative(cn.GetValue());
       }
     }
 
@@ -454,29 +393,6 @@ namespace PeterO.Cbor {
         return LowHighToEInteger(
             this.tagLow,
             this.tagHigh);
-      }
-    }
-
-    /// <summary>Gets this value's sign: -1 if negative; 1 if positive; 0
-    /// if zero. Throws an exception if this is a not-a-number
-    /// value.</summary>
-    /// <value>This value's sign: -1 if negative; 1 if positive; 0 if
-    /// zero.</value>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number, or this object is a not-a-number (NaN)
-    /// value.</exception>
-    [Obsolete("Instead, convert this object to a number with .AsNumber()," +
-        "\u0020 and use the Sign property in .NET or the signum method in" +
-        "\u0020Java." +
-        " Either will treat not-a-number (NaN) values differently than here.")]
-    public int Sign {
-      get {
-        CBORNumber cn = CBORNumber.FromCBORObject(this);
-        if (cn == null || cn.IsNaN()) {
-          throw new InvalidOperationException(
-            "This object is not a number.");
-        }
-        return cn.GetNumberInterface().Sign(cn.GetValue());
       }
     }
 
@@ -828,39 +744,6 @@ cborObj;
       }
     }
 
-    /// <summary>Finds the sum of two CBOR numbers.</summary>
-    /// <param name='first'>The parameter <paramref name='first'/> is a
-    /// CBOR object.</param>
-    /// <param name='second'>The parameter <paramref name='second'/> is a
-    /// CBOR object.</param>
-    /// <returns>A CBOR object.</returns>
-    /// <exception cref='ArgumentException'>Either or both operands are not
-    /// numbers (as opposed to Not-a-Number, NaN).</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='first'/> or <paramref name='second'/> is null.</exception>
-    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
-
-        "\u0020.AsNumber()), and use the first number's .Add() method.")]
-    public static CBORObject Addition(CBORObject first, CBORObject second) {
-      if (first == null) {
-        throw new ArgumentNullException(nameof(first));
-      }
-      if (second == null) {
-        throw new ArgumentNullException(nameof(second));
-      }
-      CBORNumber numberA = CBORNumber.FromCBORObject(first);
-      if (numberA == null) {
-        throw new ArgumentException(nameof(first) + "does not represent a" +
-          "\u0020number");
-      }
-      CBORNumber b = CBORNumber.FromCBORObject(second);
-      if (b == null) {
-        throw new ArgumentException(nameof(second) + "does not represent a" +
-          "\u0020number");
-      }
-      return numberA.Add(b).ToCBORObject();
-    }
-
     /// <summary>
     /// <para>Generates a CBOR object from an array of CBOR-encoded
     /// bytes.</para></summary>
@@ -1128,38 +1011,6 @@ cborObj;
       }
     }
 
-    /// <summary>Divides a CBORObject object by the value of a CBORObject
-    /// object.</summary>
-    /// <param name='first'>The parameter <paramref name='first'/> is a
-    /// CBOR object.</param>
-    /// <param name='second'>The parameter <paramref name='second'/> is a
-    /// CBOR object.</param>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='first'/> or <paramref name='second'/> is null.</exception>
-    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
-
-        "\u0020.AsNumber()), and use the first number's .Divide() method.")]
-    public static CBORObject Divide(CBORObject first, CBORObject second) {
-      if (first == null) {
-        throw new ArgumentNullException(nameof(first));
-      }
-      if (second == null) {
-        throw new ArgumentNullException(nameof(second));
-      }
-      CBORNumber a = CBORNumber.FromCBORObject(first);
-      if (a == null) {
-        throw new ArgumentException(nameof(first) + "does not represent a" +
-          "\u0020number");
-      }
-      CBORNumber b = CBORNumber.FromCBORObject(second);
-      if (b == null) {
-        throw new ArgumentException(nameof(second) + "does not represent a" +
-          "\u0020number");
-      }
-      return a.Divide(b).ToCBORObject();
-    }
-
     /// <summary>
     /// <para>Generates a CBOR object from a text string in JavaScript
     /// Object Notation (JSON) format.</para>
@@ -1248,45 +1099,6 @@ cborObj;
     /// JSON format.</exception>
     public static CBORObject FromJSONString(string str) {
       return FromJSONString(str, JSONOptions.Default);
-    }
-
-    /// <summary>Generates a CBOR object from a text string in JavaScript
-    /// Object Notation (JSON) format, using the specified options to
-    /// control the decoding process.
-    /// <para>Note that if a CBOR object is converted to JSON with
-    /// <c>ToJSONString</c>, then the JSON is converted back to CBOR with
-    /// this method, the new CBOR object will not necessarily be the same
-    /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
-    /// keys.</para></summary>
-    /// <param name='str'>A text string in JSON format. The entire string
-    /// must contain a single JSON object and not multiple objects. The
-    /// string may not begin with a byte-order mark (U+FEFF).</param>
-    /// <param name='options'>Specifies options to control the decoding
-    /// process. This method uses only the AllowDuplicateKeys property of
-    /// this object.</param>
-    /// <returns>A CBOR object containing the JSON data decoded.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> or <paramref name='options'/> is null.</exception>
-    /// <exception cref='PeterO.Cbor.CBORException'>The string is not in
-    /// JSON format.</exception>
-    [Obsolete("Instead, use .FromJSONString\u0028str, new" +
-        "\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or" +
-        "\u0020.FromJSONString\u0028str," +
-        "\u0020 new JSONOptions\u0028\"allowduplicatekeys=false\")), as" +
-        "\u0020appropriate.")]
-    public static CBORObject FromJSONString(
-      string str,
-      CBOREncodeOptions options) {
-      if (str == null) {
-        throw new ArgumentNullException(nameof(str));
-      }
-      if (options == null) {
-        throw new ArgumentNullException(nameof(options));
-      }
-      var jsonoptions = new JSONOptions(options.AllowDuplicateKeys ?
-        "allowduplicatekeys=1" : "allowduplicatekeys=0");
-      return FromJSONString(str, jsonoptions);
     }
 
     /// <summary>Generates a CBOR object from a text string in JavaScript
@@ -3251,38 +3063,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           simpleValue);
     }
 
-    /// <summary>Multiplies two CBOR numbers.</summary>
-    /// <param name='first'>The parameter <paramref name='first'/> is a
-    /// CBOR object.</param>
-    /// <param name='second'>The parameter <paramref name='second'/> is a
-    /// CBOR object.</param>
-    /// <returns>The product of the two numbers.</returns>
-    /// <exception cref='ArgumentException'>Either or both operands are not
-    /// numbers (as opposed to Not-a-Number, NaN).</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='first'/> or <paramref name='second'/> is null.</exception>
-    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
-        "\u0020.AsNumber()), and use the first number's .Multiply() method.")]
-    public static CBORObject Multiply(CBORObject first, CBORObject second) {
-      if (first == null) {
-        throw new ArgumentNullException(nameof(first));
-      }
-      if (second == null) {
-        throw new ArgumentNullException(nameof(second));
-      }
-      CBORNumber a = CBORNumber.FromCBORObject(first);
-      if (a == null) {
-        throw new ArgumentException(nameof(first) + "does not represent a" +
-          "\u0020number");
-      }
-      CBORNumber b = CBORNumber.FromCBORObject(second);
-      if (b == null) {
-        throw new ArgumentException(nameof(second) + "does not represent a" +
-          "\u0020number");
-      }
-      return a.Multiply(b).ToCBORObject();
-    }
-
     /// <summary>Creates a new empty CBOR array.</summary>
     /// <returns>A new CBOR array.</returns>
     public static CBORObject NewArray() {
@@ -3494,46 +3274,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// more liberal syntax for parsing JSON text sequences.</remarks>
     public static CBORObject[] ReadJSONSequence(Stream stream) {
       return ReadJSONSequence(stream, JSONOptions.Default);
-    }
-
-    /// <summary>Generates a CBOR object from a data stream in JavaScript
-    /// Object Notation (JSON) format, using the specified options to
-    /// control the decoding process. The JSON stream may begin with a
-    /// byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be
-    /// in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by
-    /// assuming that the first character read must be a byte-order mark or
-    /// a nonzero basic character (U+0001 to U+007F). (In previous
-    /// versions, only UTF-8 was allowed.).</summary>
-    /// <param name='stream'>A readable data stream. The sequence of bytes
-    /// read from the data stream must contain a single JSON object and not
-    /// multiple objects.</param>
-    /// <param name='options'>Contains options to control the JSON decoding
-    /// process. This method uses only the AllowDuplicateKeys property of
-    /// this object.</param>
-    /// <returns>A CBOR object containing the JSON data decoded.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
-    /// <exception cref='System.IO.IOException'>An I/O error
-    /// occurred.</exception>
-    /// <exception cref='PeterO.Cbor.CBORException'>The data stream
-    /// contains invalid encoding or is not in JSON format.</exception>
-    [Obsolete("Instead, use .ReadJSON\u0028stream, new" +
-        "\u0020JSONOptions\u0028\"allowduplicatekeys=true\")) or" +
-        "\u0020.ReadJSON\u0028stream, new" +
-        "\u0020JSONOptions\u0028\"allowduplicatekeys=false\")), as" +
-        "\u0020appropriate.")]
-    public static CBORObject ReadJSON(
-      Stream stream,
-      CBOREncodeOptions options) {
-      if (stream == null) {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      if (options == null) {
-        throw new ArgumentNullException(nameof(options));
-      }
-      var jsonoptions = new JSONOptions(options.AllowDuplicateKeys ?
-        "allowduplicatekeys=1" : "allowduplicatekeys=0");
-      return ReadJSON(stream, jsonoptions);
     }
 
     /// <summary>Generates a list of CBOR objects from a data stream in
@@ -3852,71 +3592,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           throw new CBORException(ex.Message, ex);
         }
       }
-    }
-
-    /// <summary>Finds the remainder that results when a CBORObject object
-    /// is divided by the value of a CBOR object.</summary>
-    /// <param name='first'>The parameter <paramref name='first'/> is a
-    /// CBOR object.</param>
-    /// <param name='second'>The parameter <paramref name='second'/> is a
-    /// CBOR object.</param>
-    /// <returns>The remainder of the two numbers.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='first'/> or <paramref name='second'/> is null.</exception>
-    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
-        "\u0020.AsNumber()), and use the first number's .Remainder() method.")]
-    public static CBORObject Remainder(CBORObject first, CBORObject second) {
-      if (first == null) {
-        throw new ArgumentNullException(nameof(first));
-      }
-      if (second == null) {
-        throw new ArgumentNullException(nameof(second));
-      }
-      CBORNumber a = CBORNumber.FromCBORObject(first);
-      if (a == null) {
-        throw new ArgumentException(nameof(first) + "does not represent a" +
-          "\u0020number");
-      }
-      CBORNumber b = CBORNumber.FromCBORObject(second);
-      if (b == null) {
-        throw new ArgumentException(nameof(second) + "does not represent a" +
-          "\u0020number");
-      }
-      return a.Remainder(b).ToCBORObject();
-    }
-
-    /// <summary>Finds the difference between two CBOR number
-    /// objects.</summary>
-    /// <param name='first'>The parameter <paramref name='first'/> is a
-    /// CBOR object.</param>
-    /// <param name='second'>The parameter <paramref name='second'/> is a
-    /// CBOR object.</param>
-    /// <returns>The difference of the two objects.</returns>
-    /// <exception cref='ArgumentException'>Either or both operands are not
-    /// numbers (as opposed to Not-a-Number, NaN).</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='first'/> or <paramref name='second'/> is null.</exception>
-    [Obsolete("Instead, convert both CBOR objects to numbers (with" +
-
-        "\u0020.AsNumber()), and use the first number's .Subtract() method.")]
-    public static CBORObject Subtract(CBORObject first, CBORObject second) {
-      if (first == null) {
-        throw new ArgumentNullException(nameof(first));
-      }
-      if (second == null) {
-        throw new ArgumentNullException(nameof(second));
-      }
-      CBORNumber a = CBORNumber.FromCBORObject(first);
-      if (a == null) {
-        throw new ArgumentException(nameof(first) + "does not represent a" +
-          "\u0020number");
-      }
-      CBORNumber b = CBORNumber.FromCBORObject(second);
-      if (b == null) {
-        throw new ArgumentException(nameof(second) + "does not represent a" +
-          "\u0020number");
-      }
-      return a.Subtract(b).ToCBORObject();
     }
 
     /// <summary>
@@ -4499,39 +4174,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       CBORObject.FromObject(obj).WriteJSONTo(outputStream);
     }
 
-    /// <summary>Gets this object's absolute value.</summary>
-    /// <returns>This object's absolute without its negative
-    /// sign.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    [Obsolete("Instead, convert this object to a number \u0028with" +
-        "\u0020.AsNumber\u0028)), and use that number's .Abs\u0028) method.")]
-    public CBORObject Abs() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("This object is not a number.");
-      }
-      object oldItem = cn.GetValue();
-      object newItem = cn.GetNumberInterface().Abs(oldItem);
-      if (oldItem == newItem) {
-        return this;
-      }
-      if (newItem is EDecimal) {
-        return CBORObject.FromObject((EDecimal)newItem);
-      }
-      if (newItem is EInteger) {
-        return CBORObject.FromObject((EInteger)newItem);
-      }
-      if (newItem is EFloat) {
-        return CBORObject.FromObject((EFloat)newItem);
-      }
-      var rat = newItem as ERational;
-      return (rat != null) ? CBORObject.FromObject(rat) : ((oldItem ==
-            newItem) ? this : CBORObject.FromObject(newItem));
-    }
-
     /// <summary>
     /// <para>Adds a new key and its value to this CBOR map, or adds the
     /// value if the key doesn't exist.</para>
@@ -4648,25 +4290,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       throw new InvalidOperationException("Not an array");
     }
 
-    /// <summary>Converts this object to an arbitrary-precision integer.
-    /// See the ToObject overload taking a type for more
-    /// information.</summary>
-    /// <returns>The closest arbitrary-precision integer to this
-    /// object.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for the purposes of this method, infinity and
-    /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value is infinity
-    /// or not-a-number (NaN).</exception>
-    [Obsolete("Instead, use " + ".ToObject<PeterO.Numbers.EInteger>\u0028) in" +
-        "\u0020.NET" +
-        " or \u0020.ToObject\u0028com.upokecenter.numbers.EInteger.class) in" +
-        "\u0020Java.")]
-    public EInteger AsEInteger() {
-      return (EInteger)this.ToObject(typeof(EInteger));
-    }
-
     /// <summary>Returns false if this object is a CBOR false, null, or
     /// undefined value (whether or not the object has tags); otherwise,
     /// true.</summary>
@@ -4674,25 +4297,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// value; otherwise, true.</returns>
     public bool AsBoolean() {
       return !this.IsFalse && !this.IsNull && !this.IsUndefined;
-    }
-
-    /// <summary>Converts this object to a byte (0 to 255). Floating point
-    /// values are converted to integers by discarding their fractional
-    /// parts.</summary>
-    /// <returns>The closest byte-sized integer to this object.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value exceeds the
-    /// range of a byte (would be less than 0 or greater than 255 when
-    /// converted to an integer by discarding its fractional
-    /// part).</exception>
-    [Obsolete("Instead, use " + ".ToObject<byte>\u0028) in" +
-        "\u0020.NET" + " or \u0020.ToObject\u0028Byte.class) in" +
-        "\u0020Java.")]
-    public byte AsByte() {
-      return (byte)this.AsInt32(0, 255);
     }
 
     internal byte AsByteLegacy() {
@@ -4715,72 +4319,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         throw new InvalidOperationException("Not a number type");
       }
       return cn.GetNumberInterface().AsDouble(cn.GetValue());
-    }
-
-    /// <summary>Converts this object to a decimal number.</summary>
-    /// <returns>A decimal number for this object's value.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for the purposes of this method, infinity and
-    /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers).</exception>
-    [Obsolete("Instead, use " + ".ToObject<PeterO.Numbers.EDecimal>\u0028) in" +
-
-        "\u0020.NET" +
-        " or \u0020.ToObject\u0028com.upokecenter.numbers.EDecimal.class) in" +
-        "\u0020Java.")]
-    public EDecimal AsEDecimal() {
-      return (EDecimal)this.ToObject(typeof(EDecimal));
-    }
-
-    /// <summary>Converts this object to an arbitrary-precision binary
-    /// floating point number. See the ToObject overload taking a type for
-    /// more information.</summary>
-    /// <returns>An arbitrary-precision binary floating-point number for
-    /// this object's value.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for the purposes of this method, infinity and
-    /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers).</exception>
-    [Obsolete("Instead, use " +
-        ".ToObject<PeterO.Numbers.EFloat>\u0028) in .NET" +
-
-        " or \u0020.ToObject\u0028com.upokecenter.numbers.EFloat.class) in" +
-        "\u0020Java.")]
-    public EFloat AsEFloat() {
-      return (EFloat)this.ToObject(typeof(EFloat));
-    }
-
-    /// <summary>Converts this object to a rational number. See the
-    /// ToObject overload taking a type for more information.</summary>
-    /// <returns>A rational number for this object's value.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for the purposes of this method, infinity and
-    /// not-a-number values, but not <c>CBORObject.Null</c>, are
-    /// considered numbers).</exception>
-    [Obsolete("Instead, use " + ".ToObject<PeterO.Numbers.ERational>" +
-        "\u0028) in .NET" +
-        "\u0020or .ToObject\u0028com.upokecenter.numbers.ERational.class) in" +
-        "\u0020Java.")]
-    public ERational AsERational() {
-      return (ERational)this.ToObject(typeof(ERational));
-    }
-
-    /// <summary>Converts this object to a 16-bit signed integer. Floating
-    /// point values are converted to integers by discarding their
-    /// fractional parts.</summary>
-    /// <returns>The closest 16-bit signed integer to this
-    /// object.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value exceeds the
-    /// range of a 16-bit signed integer.</exception>
-    [Obsolete("Instead, use the following:" +
-        "\u0020\u0028cbor.AsNumber().ToInt16Checked()), or" +
-        "\u0020.ToObject<short>() in" + "\u0020.NET.")]
-    public short AsInt16() {
-      return (short)this.AsInt32(Int16.MinValue, Int16.MaxValue);
     }
 
     /// <summary>Converts this object to a 32-bit signed integer if this
@@ -4990,39 +4528,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       return this.AsInt32(Int32.MinValue, Int32.MaxValue);
     }
 
-    /// <summary>Converts this object to a 64-bit signed integer.
-    /// Non-integer numbers are converted to integers by discarding their
-    /// fractional parts. (NOTE: To determine whether this method call can
-    /// succeed, call <b>AsNumber().CanTruncatedIntFitInInt64</b>
-    ///  before
-    /// calling this method. See the example.).</summary>
-    /// <returns>The closest 64-bit signed integer to this
-    /// object.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value exceeds the
-    /// range of a 64-bit signed integer.</exception>
-    /// <example>
-    /// <para>The following example code (originally written in C# for
-    /// the.NET Framework) shows a way to check whether a given CBOR object
-    /// stores a 64-bit signed integer before getting its value.</para>
-    /// <code>CBORObject obj = CBORObject.FromObject((long)99999);
-    /// if (obj.IsIntegral &amp;&amp; obj.AsNumber().CanFitInInt64()) {
-    /// &#x2f;&#x2a; Not an Int64; handle the error &#x2a;&#x2f;
-    /// Console.WriteLine("Not a 64-bit integer."); } else {
-    /// Console.WriteLine("The value is " + obj.AsInt64()); }</code>
-    ///  .
-    /// </example>
-    [Obsolete("Instead, use the following:" +
-        "\u0020\u0028cbor.AsNumber().ToInt64Checked()), or .ToObject<long>()" +
-        "\u0020in .NET.")]
-    public long AsInt64() {
-      CBORNumber cn = this.AsNumber();
-      return cn.GetNumberInterface().AsInt64(cn.GetValue());
-    }
-
     /// <summary>Converts this object to a 32-bit floating point
     /// number.</summary>
     /// <returns>The closest 32-bit floating point number to this object.
@@ -5070,108 +4575,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         default:
           throw new InvalidOperationException("Not a text string type");
       }
-    }
-
-    /// <summary>Returns whether this object's value can be converted to a
-    /// 64-bit floating point number without its value being rounded to
-    /// another numerical value.</summary>
-    /// <returns><c>true</c> if this object's value can be converted to a
-    /// 64-bit floating point number without its value being rounded to
-    /// another numerical value, or if this is a not-a-number value, even
-    /// if the value's diagnostic information can't fit in a 64-bit
-    /// floating point number; otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().CanFitInDouble()).")]
-    public bool CanFitInDouble() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return (cn != null) &&
-        cn.GetNumberInterface().CanFitInDouble(cn.GetValue());
-    }
-
-    /// <summary>Returns whether this object's numerical value is an
-    /// integer, is -(2^31) or greater, and is less than 2^31.</summary>
-    /// <returns><c>true</c> if this object's numerical value is an
-    /// integer, is -(2^31) or greater, and is less than 2^31; otherwise,
-    /// <c>false</c>.</returns>
-    [Obsolete("Instead, use " +
-        ".CanValueFitInInt32(), if the application allows" +
-
-        "\u0020only CBOR integers, or \u0028cbor.IsNumber &&" +
-        "cbor.AsNumber().CanFitInInt32())," +
-        "\u0020 if the application allows any CBOR object convertible to an " +
-        "integer.")]
-    public bool CanFitInInt32() {
-      if (!this.CanFitInInt64()) {
-        return false;
-      }
-      long v = this.AsInt64();
-      return v >= Int32.MinValue && v <= Int32.MaxValue;
-    }
-
-    /// <summary>Returns whether this object's numerical value is an
-    /// integer, is -(2^63) or greater, and is less than 2^63.</summary>
-    /// <returns><c>true</c> if this object's numerical value is an
-    /// integer, is -(2^63) or greater, and is less than 2^63; otherwise,
-    /// <c>false</c>.</returns>
-    [Obsolete("Instead, use " +
-        "CanValueFitInInt64(), if the application allows" +
-
-        "\u0020only CBOR integers, or \u0028cbor.IsNumber &&" +
-        "cbor.AsNumber().CanFitInInt64())," +
-        "\u0020 if the application allows any CBOR object convertible to an " +
-        "integer.")]
-    public bool CanFitInInt64() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return (cn != null) &&
-        cn.GetNumberInterface().CanFitInInt64(cn.GetValue());
-    }
-
-    /// <summary>Returns whether this object's value can be converted to a
-    /// 32-bit floating point number without its value being rounded to
-    /// another numerical value.</summary>
-    /// <returns><c>true</c> if this object's value can be converted to a
-    /// 32-bit floating point number without its value being rounded to
-    /// another numerical value, or if this is a not-a-number value, even
-    /// if the value's diagnostic information can' t fit in a 32-bit
-    /// floating point number; otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().CanFitInSingle()).")]
-    public bool CanFitInSingle() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return (cn != null) &&
-        cn.GetNumberInterface().CanFitInSingle(cn.GetValue());
-    }
-
-    /// <summary>Returns whether this object's value, converted to an
-    /// integer by discarding its fractional part, would be -(2^31) or
-    /// greater, and less than 2^31.</summary>
-    /// <returns><c>true</c> if this object's value, converted to an
-    /// integer by discarding its fractional part, would be -(2^31) or
-    /// greater, and less than 2^31; otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt32()" +
-        "\u0020if only integers of any tag are allowed, or" +
-        "\u0020\u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().CanTruncatedIntFitInInt32()).")]
-    public bool CanTruncatedIntFitInInt32() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return (cn != null) &&
-        cn.GetNumberInterface().CanTruncatedIntFitInInt32(cn.GetValue());
-    }
-
-    /// <summary>Returns whether this object's value, converted to an
-    /// integer by discarding its fractional part, would be -(2^63) or
-    /// greater, and less than 2^63.</summary>
-    /// <returns><c>true</c> if this object's value, converted to an
-    /// integer by discarding its fractional part, would be -(2^63) or
-    /// greater, and less than 2^63; otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.CanValueFitInInt64()" +
-        "\u0020if only integers of any tag are allowed, or" +
-        "\u0020\u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().CanTruncatedIntFitInInt64()).")]
-    public bool CanTruncatedIntFitInInt64() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return cn != null &&
-        cn.GetNumberInterface().CanTruncatedIntFitInInt64(cn.GetValue());
     }
 
     private static string Chop(string str) {
@@ -6087,85 +5490,6 @@ CBORObjectTypeTextStringAscii)) {
       return this;
     }
 
-    /// <summary>Gets a value indicating whether this CBOR object
-    /// represents infinity.</summary>
-    /// <returns><c>true</c> if this CBOR object represents infinity;
-    /// otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-        "\u0020cbor.AsNumber().IsInfinity()).")]
-    public bool IsInfinity() {
-      return this.IsNumber && this.AsNumber().IsInfinity();
-    }
-
-    /// <summary>Gets a value indicating whether this CBOR object
-    /// represents a not-a-number value (as opposed to whether this object
-    /// does not express a number).</summary>
-    /// <returns><c>true</c> if this CBOR object represents a not-a-number
-    /// value (as opposed to whether this object does not represent a
-    /// number as defined by the IsNumber property or <c>isNumber()</c>
-    /// method in Java); otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-
-        "\u0020cbor.AsNumber().IsNaN()).")]
-    public bool IsNaN() {
-      return this.IsNumber && this.AsNumber().IsNaN();
-    }
-
-    /// <summary>Gets a value indicating whether this CBOR object
-    /// represents negative infinity.</summary>
-    /// <returns><c>true</c> if this CBOR object represents negative
-    /// infinity; otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-
-        "\u0020cbor.AsNumber().IsNegativeInfinity()).")]
-    public bool IsNegativeInfinity() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return cn != null &&
-        cn.GetNumberInterface().IsNegativeInfinity(cn.GetValue());
-    }
-
-    /// <summary>Gets a value indicating whether this CBOR object
-    /// represents positive infinity.</summary>
-    /// <returns><c>true</c> if this CBOR object represents positive
-    /// infinity; otherwise, <c>false</c>.</returns>
-    [Obsolete("Instead, use the following: \u0028cbor.IsNumber &&" +
-
-        "\u0020cbor.AsNumber().IsPositiveInfinity()).")]
-    public bool IsPositiveInfinity() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      return cn != null &&
-        cn.GetNumberInterface().IsPositiveInfinity(cn.GetValue());
-    }
-
-    /// <summary>Gets this object's value with the sign reversed.</summary>
-    /// <returns>The reversed-sign form of this number.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    [Obsolete("Instead, convert this object to a number \u0028with" +
-
-        "\u0020.AsNumber()), and use that number's .Negate() method.")]
-    public CBORObject Negate() {
-      CBORNumber cn = CBORNumber.FromCBORObject(this);
-      if (cn == null) {
-        throw new InvalidOperationException("This object is not a number.");
-      }
-      object newItem = cn.GetNumberInterface().Negate(cn.GetValue());
-      if (newItem is EDecimal) {
-        return CBORObject.FromObject((EDecimal)newItem);
-      }
-      if (newItem is EInteger) {
-        return CBORObject.FromObject((EInteger)newItem);
-      }
-      if (newItem is EFloat) {
-        return CBORObject.FromObject((EFloat)newItem);
-      }
-      var rat = newItem as ERational;
-      return (rat != null) ? CBORObject.FromObject(rat) :
-        CBORObject.FromObject(newItem);
-    }
-
     /// <summary>Removes all items from this CBOR array or all keys and
     /// values from this CBOR map.</summary>
     /// <exception cref='InvalidOperationException'>This object is not a
@@ -6345,7 +5669,6 @@ CBORObjectTypeTextStringAscii)) {
     /// options to control the encoding process. This function
     /// works not only with arrays and maps, but also integers,
     /// strings, byte arrays, and other JSON data types. Notes:
-    ///
     /// <list type=''><item>If this object contains maps with non-string
     /// keys, the keys are converted to JSON strings before writing the map
     /// as a JSON string.</item>
