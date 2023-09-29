@@ -13,7 +13,6 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
-// TODO: In next major version, make .Keys and .Values read-only
 // TODO: Add ReadObject that combines Read and ToObject; similarly
 // for ReadJSON, FromJSONString, FromJSONBytes
 // TODO: In Java version add overloads for Class<T> in overloads
@@ -410,9 +409,9 @@ namespace PeterO.Cbor {
     /// <summary>Gets a collection of the keys of this CBOR object. In
     /// general, the order in which those keys occur is undefined unless
     /// this is a map created using the NewOrderedMap method.</summary>
-    /// <value>A collection of the keys of this CBOR object. To avoid
+    /// <value>A read-only collection of the keys of this CBOR object. To avoid
     /// potential problems, the calling code should not modify the CBOR map
-    /// or the returned collection while iterating over the returned
+    /// while iterating over the returned
     /// collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
@@ -420,7 +419,9 @@ namespace PeterO.Cbor {
       get {
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-          return dict.Keys;
+          return new
+            System.Collections.ObjectModel.ReadOnlyCollection<CBORObject>(
+               dict.Keys);
         }
         throw new InvalidOperationException("Not a map");
       }
@@ -567,9 +568,9 @@ namespace PeterO.Cbor {
     /// of the array in the order they are listed. (This method can't be
     /// used to get the bytes in a CBOR byte string; for that, use the
     /// GetByteString method instead.).</summary>
-    /// <value>A collection of the values of this CBOR map or array. To
+    /// <value>A read-only collection of the values of this CBOR map or array. To
     /// avoid potential problems, the calling code should not modify the
-    /// CBOR map or array or the returned collection while iterating over
+    /// CBOR map or array while iterating over
     /// the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map or an array.</exception>
@@ -577,7 +578,9 @@ namespace PeterO.Cbor {
       get {
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-          return dict.Values;
+          return new
+            System.Collections.ObjectModel.ReadOnlyCollection<CBORObject>(
+               dict.Values);
         }
         if (this.Type == CBORType.Array) {
           IList<CBORObject> list = this.AsList();
