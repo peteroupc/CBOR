@@ -923,12 +923,12 @@ namespace PeterO.Cbor {
 
     public static ICollection<TKey> ReadOnlyKeys<TKey, TValue>(
       IDictionary<TKey, TValue> dict) {
-      return new ReadOnlyWrapper<KeyValuePair<TKey, TValue>>(dict.Keys);
+      return new ReadOnlyWrapper<TKey>(dict.Keys);
     }
 
-    public static ICollection<TKey> ReadOnlyValues<TKey, TValue>(
+    public static ICollection<TValue> ReadOnlyValues<TKey, TValue>(
       IDictionary<TKey, TValue> dict) {
-      return new ReadOnlyWrapper<KeyValuePair<TKey, TValue>>(dict.Values);
+      return new ReadOnlyWrapper<TValue>(dict.Values);
     }
 
     public static IDictionary<CBORObject, CBORObject> NewOrderedDict() {

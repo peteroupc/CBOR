@@ -1918,6 +1918,7 @@ namespace Test {
         Int64.MinValue + 1000,
       };
       ranges[0] = -65539;
+      var jso = new JSONOptions("numberconversion=full");
       for (var i = 0; i < ranges.Length; i += 2) {
         long j = ranges[i];
         while (true) {
@@ -1925,17 +1926,19 @@ namespace Test {
           Assert.IsTrue(cn.IsInteger());
           Assert.IsTrue(cn.CanFitInInt64());
           Assert.IsTrue(cn.CanTruncatedIntFitInInt64());
-          CBORTestCommon.AssertJSONSer(
-            ToObjectTest.TestToFromObjectRoundTrip(j),
-            TestCommon.LongToString(j));
+        string l2s = TestCommon.LongToString(j);
           Assert.AreEqual(
             ToObjectTest.TestToFromObjectRoundTrip(j),
             ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromInt64(j)));
           CBORObject obj = CBORObject.FromJSONString(
-              "[" + TestCommon.LongToString(j) + "]");
+            "[" + l2s + "]",
+            jso);
           CBORTestCommon.AssertJSONSer(
-            obj,
-            "[" + TestCommon.LongToString(j) + "]");
+            ToObjectTest.TestToFromObjectRoundTrip(j),
+            l2s);
+            CBORTestCommon.AssertJSONSer(
+              obj,
+              "[" + l2s + "]");
           if (j == ranges[i + 1]) {
             break;
           }
@@ -2013,10 +2016,13 @@ namespace Test {
       CBORTestCommon.AssertRoundTrip(oo);
     }
 
+    private static readonly JSONOptions FullJsonOptions = new
+JSONOptions("numberconversion=full;preservenegativezero=false");
+
     public static void TestParseDecimalStringsOne(string r) {
       CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(
           EDecimal.FromString(r));
-      CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
+      CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r, FullJsonOptions);
       TestCommon.CompareTestEqual(o.AsNumber(), o2.AsNumber());
     }
 

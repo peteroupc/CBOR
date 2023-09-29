@@ -12,40 +12,40 @@ namespace Test {
       CBORTestCommon.AssertRoundTrip(obj);
     }
 
-    // testing obsolete method
-    #pragma warning disable CS0618
     [Test]
     public void TestPreserveNegativeZero() {
       CBORObject cbor;
-      cbor = CBORDataUtilities.ParseJSONNumber("-0", false, false, true);
+      var pnz = new
+JSONOptions("numberconversion=full;preservenegativezero=true");
+      cbor = CBORDataUtilities.ParseJSONNumber("-0", pnz);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0",
           stringTemp);
       }
-      cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", false, false, true);
+      cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", pnz);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0.0",
           stringTemp);
       }
-      cbor = CBORDataUtilities.ParseJSONNumber("-0e1", false, false, true);
+      cbor = CBORDataUtilities.ParseJSONNumber("-0e1", pnz);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0E+1",
           stringTemp);
       }
-      cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", false, false, true);
+      cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", pnz);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
           "-0",
           stringTemp);
       }
-      cbor = CBORDataUtilities.ParseJSONNumber("-0.0", false, false, true);
+      cbor = CBORDataUtilities.ParseJSONNumber("-0.0", pnz);
       {
         string stringTemp = cbor.ToObject(typeof(EDecimal)).ToString();
         Assert.AreEqual(
@@ -76,11 +76,13 @@ namespace Test {
         "-0.000e-999999999999",
       };
       foreach (var str in assertNegatives) {
-        cbor = CBORDataUtilities.ParseJSONNumber(str, false, false, true);
+        cbor = CBORDataUtilities.ParseJSONNumber(str, pnz);
         AssertNegative(cbor);
       }
     }
 
+    // testing obsolete method
+    #pragma warning disable CS0618
     [Test]
     public void TestParseJSONNumberSubstring() {
       string tstr =
@@ -91,7 +93,7 @@ namespace Test {
           "xyzxyz" + tstr,
           6,
           tstr.Length,
-          JSONOptions.Default);
+          new JSONOptions("numberconversion=full"));
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -107,7 +109,8 @@ namespace Test {
       };
       for (var i = 0; i < strings.Length; i += 2) {
         var jsonDecimal = (EDecimal)CBORDataUtilities
-          .ParseJSONNumber(strings[i]).ToObject(typeof(EDecimal));
+          .ParseJSONNumber(strings[i], new
+  JSONOptions("numberconversion=full;preservenegativezero=false")).ToObject(typeof(EDecimal));
         Assert.AreEqual(
           strings[i + 1],
           jsonDecimal.ToString());
@@ -169,8 +172,8 @@ namespace Test {
         if (CBORDataUtilities.ParseJSONNumber(str) != null) {
           Assert.Fail(str);
         }
-        if (CBORDataUtilities.ParseJSONNumber(str, JSONOptions.Default) !=
-null) {
+        if (CBORDataUtilities.ParseJSONNumber(str,
+              new JSONOptions("numberconversion=full")) != null) {
           Assert.Fail(str);
         }
         if (CBORDataUtilities.ParseJSONNumber(str, false, false, true) !=
@@ -182,7 +185,8 @@ null) {
           Assert.Fail(str);
         }
       }
-      CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
+      CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648",
+  new JSONOptions("numberconversion=full"));
       CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
       foreach (var str in GoodJsonNumbers) {
         if (CBORDataUtilities.ParseJSONNumber(str) == null) {
@@ -197,14 +201,20 @@ null) {
           Assert.Fail(str);
         }
       }
-      TestCommon.CompareTestEqual(
-        ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber(),
-        CBORDataUtilities.ParseJSONNumber("23.0e01").AsNumber());
+      {
+        object objectTemp =
+ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber();
+        object objectTemp2 = CBORDataUtilities.ParseJSONNumber("23.0e01",
+  new JSONOptions("numberconversion=full")).AsNumber();
+        TestCommon.CompareTestEqual(objectTemp, objectTemp2);
+      }
       TestCommon.CompareTestEqual(
         ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber(),
-        CBORDataUtilities.ParseJSONNumber("23.0e00").AsNumber());
+        CBORDataUtilities.ParseJSONNumber("23.0e00", new
+JSONOptions("numberconversion=full")).AsNumber());
       cbor = CBORDataUtilities.ParseJSONNumber(
-          "1e+99999999999999999999999999");
+        "1e+99999999999999999999999999",
+        new JSONOptions("numberconversion=full"));
       Assert.IsTrue(cbor != null);
       Assert.IsFalse(cbor.AsNumber().CanFitInDouble());
       CBORTestCommon.AssertRoundTrip(cbor);

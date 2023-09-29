@@ -418,9 +418,7 @@ namespace PeterO.Cbor {
       get {
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-          return new
-            System.Collections.ObjectModel.ReadOnlyCollection<CBORObject>(
-               dict.Keys);
+          return PropertyMap.ReadOnlyKeys(dict);
         }
         throw new InvalidOperationException("Not a map");
       }
@@ -577,9 +575,7 @@ namespace PeterO.Cbor {
       get {
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-          return new
-            System.Collections.ObjectModel.ReadOnlyCollection<CBORObject>(
-               dict.Values);
+          return PropertyMap.ReadOnlyValues(dict);
         }
         if (this.Type == CBORType.Array) {
           IList<CBORObject> list = this.AsList();
