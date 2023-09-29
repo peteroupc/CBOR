@@ -161,8 +161,9 @@ namespace PeterO.Cbor {
     /// can be any combination of basic upper-case and/or basic lower-case
     /// letters), and any other value is unrecognized. (If the
     /// <c>numberconversion</c> key is not given, its value is treated as
-    /// <c>intorfloat</c> (formerly <c>full</c> in versions earlier than 5.0). If that key is given, but has an unrecognized value,
-    /// an exception is thrown.) For example, <c>base64padding=Yes</c> and
+    /// <c>intorfloat</c> (formerly <c>full</c> in versions earlier than
+    /// 5.0). If that key is given, but has an unrecognized value, an
+    /// exception is thrown.) For example, <c>base64padding=Yes</c> and
     /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
     /// to true, and <c>numberconversion=double</c> sets the
     /// <c>NumberConversion</c> property to <c>ConversionMode.Double</c>

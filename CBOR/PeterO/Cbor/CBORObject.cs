@@ -409,10 +409,9 @@ namespace PeterO.Cbor {
     /// <summary>Gets a collection of the keys of this CBOR object. In
     /// general, the order in which those keys occur is undefined unless
     /// this is a map created using the NewOrderedMap method.</summary>
-    /// <value>A read-only collection of the keys of this CBOR object. To avoid
-    /// potential problems, the calling code should not modify the CBOR map
-    /// while iterating over the returned
-    /// collection.</value>
+    /// <value>A read-only collection of the keys of this CBOR object. To
+    /// avoid potential problems, the calling code should not modify the
+    /// CBOR map while iterating over the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
     public ICollection<CBORObject> Keys {
@@ -568,10 +567,10 @@ namespace PeterO.Cbor {
     /// of the array in the order they are listed. (This method can't be
     /// used to get the bytes in a CBOR byte string; for that, use the
     /// GetByteString method instead.).</summary>
-    /// <value>A read-only collection of the values of this CBOR map or array. To
-    /// avoid potential problems, the calling code should not modify the
-    /// CBOR map or array while iterating over
-    /// the returned collection.</value>
+    /// <value>A read-only collection of the values of this CBOR map or
+    /// array. To avoid potential problems, the calling code should not
+    /// modify the CBOR map or array while iterating over the returned
+    /// collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map or an array.</exception>
     public ICollection<CBORObject> Values {

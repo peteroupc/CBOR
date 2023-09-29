@@ -222,11 +222,9 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
       if (kind == JSONOptions.ConversionMode.Full) {
         if (!haveDecimalPoint && !haveExponent) {
           EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
-          if (preserveNegativeZero && ei.IsZero && negative) {
-            // TODO: In next major version, change to EDecimal.NegativeZero
-            return CBORObject.FromFloatingPointBits(0x8000, 2);
-          }
-          return CBORObject.FromObject(ei);
+          return (preserveNegativeZero && ei.IsZero && negative) ?
+CBORObject.FromObject(EDecimal.NegativeZero) :
+CBORObject.FromObject(ei);
         }
         if (!haveExponent && haveDecimalPoint) {
           // No more than 18 digits plus one decimal point (which
@@ -277,10 +275,8 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
             endPos - initialOffset);
         if (ed.IsZero && negative) {
           if (ed.Exponent.IsZero) {
-            // TODO: In next major version, use EDecimal
-            // for preserveNegativeZero
             return preserveNegativeZero ?
-              CBORObject.FromFloatingPointBits(0x8000, 2) :
+              CBORObject.FromObject(EDecimal.NegativeZero) :
               CBORObject.FromObject(0);
           } else if (!preserveNegativeZero) {
             return CBORObject.FromObject(ed.Negate());
