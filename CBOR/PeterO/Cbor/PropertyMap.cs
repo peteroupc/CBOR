@@ -926,6 +926,12 @@ namespace PeterO.Cbor {
       return new ReadOnlyWrapper<TKey>(dict.Keys);
     }
 
+    public static bool DictRemove<TKey, TValue>(
+      IDictionary<TKey, TValue> dict,
+      TKey key) {
+      return dict.Remove(key);
+    }
+
     public static ICollection<TValue> ReadOnlyValues<TKey, TValue>(
       IDictionary<TKey, TValue> dict) {
       return new ReadOnlyWrapper<TValue>(dict.Values);

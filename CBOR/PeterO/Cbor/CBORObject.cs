@@ -553,8 +553,7 @@ namespace PeterO.Cbor {
           CBORObject key = CBORObject.FromObject(index);
           // TODO: In next major version, consider throwing an exception
           // instead if key does not exist.
-          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null :
-cborObj;
+          return PropertyMap.GetOrDefault(map, key, null);
         }
         throw new InvalidOperationException("Not an array or map");
       }
@@ -658,8 +657,7 @@ cborObj;
         }
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          return (!map.TryGetValue(key, out CBORObject cborObj)) ? null :
-cborObj;
+          return PropertyMap.GetOrDefault(map, key, null);
         }
         if (this.Type == CBORType.Array) {
           if (!key.IsNumber || !key.AsNumber().IsInteger()) {
@@ -5559,7 +5557,7 @@ CBORObjectTypeTextStringAscii)) {
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> dict = this.AsMap();
-        return dict.Remove(obj);
+        return PropertyMap.DictRemove(dict, obj);
       }
       if (this.Type == CBORType.Array) {
         IList<CBORObject> list = this.AsList();
@@ -6938,14 +6936,15 @@ CBORObjectTypeTextStringAscii)) {
         return false;
       }
       foreach (KeyValuePair<CBORObject, CBORObject> kvp in mapA) {
-        CBORObject valueB = null;
-        bool hasKey = mapB.TryGetValue(kvp.Key, out valueB);
-        if (hasKey) {
-          CBORObject valueA = kvp.Value;
-          if (!(valueA == null ? valueB == null : valueA.Equals(valueB))) {
-            return false;
-          }
-        } else {
+        CBORObject valueB = PropertyMap.GetOrDefault(mapB, kvp.Key, null);
+        if (valueB == null) {
+          return false;
+        }
+        if (kvp.Value == null) {
+          // Null (as opposed to CBORObject.Null) values not supported in CBOR maps.
+          throw new InvalidOperationException();
+        }
+        if (!kvp.Value.Equals(valueB)) {
           return false;
         }
       }
