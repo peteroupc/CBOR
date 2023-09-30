@@ -191,12 +191,16 @@ JSONOptions("numberconversion=full;preservenegativezero=false")) ==
           Assert.Fail(str);
         }
       }
-      TestCommon.CompareTestEqual(
-        ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber(),
-        CBORDataUtilities.ParseJSONNumber("23.0e01",
-  new JSONOptions("numberconversion=full")).AsNumber());
       {
-        CBORNumber objectTemp = ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber();
+        object objectTemp =
+ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber();
+        object objectTemp2 = CBORDataUtilities.ParseJSONNumber("23.0e01",
+  new JSONOptions("numberconversion=full")).AsNumber();
+  TestCommon.CompareTestEqual(objectTemp, objectTemp2);
+}
+      {
+        CBORNumber objectTemp =
+ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber();
 CBORNumber objectTemp2 = CBORDataUtilities.ParseJSONNumber("23.0e00", new
 JSONOptions("numberconversion=full")).AsNumber();
 TestCommon.CompareTestEqual(objectTemp, objectTemp2);

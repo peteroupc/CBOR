@@ -5669,6 +5669,7 @@ CBORObjectTypeTextStringAscii)) {
     /// options to control the encoding process. This function
     /// works not only with arrays and maps, but also integers,
     /// strings, byte arrays, and other JSON data types. Notes:
+    ///
     /// <list type=''><item>If this object contains maps with non-string
     /// keys, the keys are converted to JSON strings before writing the map
     /// as a JSON string.</item>

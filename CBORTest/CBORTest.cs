@@ -1936,7 +1936,7 @@ namespace Test {
           CBORTestCommon.AssertJSONSer(
             ToObjectTest.TestToFromObjectRoundTrip(j),
             l2s);
-            CBORTestCommon.AssertJSONSer(
+          CBORTestCommon.AssertJSONSer(
               obj,
               "[" + l2s + "]");
           if (j == ranges[i + 1]) {
