@@ -462,9 +462,11 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               numberinfo["number"].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
+          var bb = (byte)cbornumber.ToObject(typeof(byte));
+          int ibb = ((int)bb) & 0xff;
           Assert.AreEqual(
             TestCommon.StringToInt(numberinfo["integer"].AsString()),
-            ((int)(byte)cbornumber.ToObject(typeof(byte))) & 0xff);
+            ibb);
         } else {
           try {
             cbornumber.ToObject(typeof(byte));
@@ -479,11 +481,10 @@ namespace Test {
       }
       for (var i = 0; i < 255; ++i) {
         {
-          byte varbyteTemp = i;
-byte varbyteTemp2 = (
-            byte)ToObjectTest.TestToFromObjectRoundTrip(
+          var varbyteTemp = (byte)i;
+          var varbyteTemp2 = (byte)ToObjectTest.TestToFromObjectRoundTrip(
               i).ToObject(typeof(byte));
-Assert.AreEqual(varbyteTemp, varbyteTemp2);
+          Assert.AreEqual(varbyteTemp, varbyteTemp2);
 }
       }
       for (int i = -200; i < 0; ++i) {
@@ -3621,12 +3622,14 @@ Assert.AreEqual(varbyteTemp, varbyteTemp2);
 
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(0).AsNumber().IsFinite());
-      {
-        object objectTemp = typeof(InvalidOperationException);
-        object objectTemp2 = (
-  ) => ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-        .AsNumber().IsFinite();
-      Assert.Throws(objectTemp, objectTemp2);
+      try {
+ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
+ Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+// NOTE: Intentionally empty
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+ throw new InvalidOperationException(String.Empty, ex);
 }
       try {
  CBORObject.NewArray().AsNumber().IsFinite();
