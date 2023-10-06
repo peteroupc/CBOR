@@ -41,13 +41,13 @@ namespace PeterO.Cbor
             throw new CBORException("Patch " + valueOpStr + " path");
           }
           // DebugUtility.Log("before "+parent+"");
-          parent.Insert(index, value);
+          _ = parent.Insert(index, value);
           // DebugUtility.Log("after "+parent+"");
         }
         else if (pointer.GetParent().Type == CBORType.Map)
         {
           string key = pointer.GetKey();
-          parent.Set(key, value);
+          _ = parent.Set(key, value);
         }
         else
         {
@@ -288,11 +288,11 @@ namespace PeterO.Cbor
         o = pointer.GetValue();
         if (pointer.GetParent().Type == CBORType.Array)
         {
-          ((CBORObject)pointer.GetParent()).RemoveAt(pointer.GetIndex());
+          _ = pointer.GetParent().RemoveAt(pointer.GetIndex());
         }
         else if (pointer.GetParent().Type == CBORType.Map)
         {
-          ((CBORObject)pointer.GetParent()).Remove(
+          _ = pointer.GetParent().Remove(
             CBORObject.FromObject(pointer.GetKey()));
         }
         return o;
@@ -335,12 +335,12 @@ namespace PeterO.Cbor
           {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
-          ((CBORObject)pointer.GetParent()).Set(index, value);
+          pointer.GetParent().Set(index, value);
         }
         else if (pointer.GetParent().Type == CBORType.Map)
         {
           string key = pointer.GetKey();
-          ((CBORObject)pointer.GetParent()).Set(key, value);
+          pointer.GetParent().Set(key, value);
         }
         else
         {

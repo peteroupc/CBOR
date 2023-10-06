@@ -16,15 +16,15 @@ namespace PeterO.DocGen
       }
       var name = TypeNameUtil.UndecorateTypeName(type.Name);
       var builder = new StringBuilder();
-      Directory.CreateDirectory(directory);
-      builder.Append("using System;\n");
-      builder.Append("using System.Collections.Generic;\n");
-      builder.Append("using System.Text;\n");
-      builder.Append("using " + type.Namespace + ";\n");
-      builder.Append("using Microsoft.VisualStudio.TestTools.UnitTesting;\n");
-      builder.Append("namespace Test {\n");
-      builder.Append(" [TestClass]\n");
-      builder.Append(" public partial class " + name + "Test {\n");
+      _ = Directory.CreateDirectory(directory);
+      _ = builder.Append("using System;\n");
+      _ = builder.Append("using System.Collections.Generic;\n");
+      _ = builder.Append("using System.Text;\n");
+      _ = builder.Append("using " + type.Namespace + ";\n");
+      _ = builder.Append("using Microsoft.VisualStudio.TestTools.UnitTesting;\n");
+      _ = builder.Append("namespace Test {\n");
+      _ = builder.Append(" [TestClass]\n");
+      _ = builder.Append(" public partial class " + name + "Test {\n");
       var methods = new SortedSet<string>();
       var hasPublicConstructor = false;
       foreach (var method in type.GetConstructors())
@@ -38,7 +38,7 @@ namespace PeterO.DocGen
       }
       if (hasPublicConstructor)
       {
-        methods.Add("Constructor");
+        _ = methods.Add("Constructor");
       }
       foreach (var method in type.GetMethods())
       {
@@ -77,7 +77,7 @@ namespace PeterO.DocGen
         }
         methodName = PeterO.DataUtilities.ToUpperCaseAscii(
           methodName.Substring(0, 1)) + methodName.Substring(1);
-        methods.Add(methodName);
+        _ = methods.Add(methodName);
       }
       if (methods.Count == 0)
       {
@@ -86,10 +86,10 @@ namespace PeterO.DocGen
       }
       if (methods.Contains("Constructor"))
       {
-        builder.Append(" [TestMethod]\n");
-        builder.Append(" public void TestConstructor() {\n");
-        builder.Append(" // not implemented yet\n");
-        builder.Append(" }\n");
+        _ = builder.Append(" [TestMethod]\n");
+        _ = builder.Append(" public void TestConstructor() {\n");
+        _ = builder.Append(" // not implemented yet\n");
+        _ = builder.Append(" }\n");
       }
       foreach (var methodName in methods)
       {
@@ -97,13 +97,13 @@ namespace PeterO.DocGen
         {
           continue;
         }
-        builder.Append(" [TestMethod]\n");
-        builder.Append(" public void Test" + methodName + "() {\n");
-        builder.Append(" // not implemented yet\n");
-        builder.Append(" }\n");
+        _ = builder.Append(" [TestMethod]\n");
+        _ = builder.Append(" public void Test" + methodName + "() {\n");
+        _ = builder.Append(" // not implemented yet\n");
+        _ = builder.Append(" }\n");
       }
-      builder.Append(" }\n");
-      builder.Append('}');
+      _ = builder.Append(" }\n");
+      _ = builder.Append('}');
       var filename = Path.Combine(directory, name + "Test.cs");
       if (!File.Exists(filename))
       {

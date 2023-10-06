@@ -46,15 +46,15 @@ namespace PeterO.Cbor
       int c;
       int startIndex = this.index;
       int batchIndex = startIndex;
-      int batchEnd = startIndex;
       byte[] jbytes = this.bytes;
+      int batchEnd;
       while (true)
       {
         if (this.index >= this.endPos)
         {
           this.RaiseError("Unterminated string");
         }
-        c = ((int)jbytes[this.index++]) & 0xff;
+        c = jbytes[this.index++] & 0xff;
         if (c < 0x20)
         {
           this.RaiseError("Invalid character in string literal");
@@ -82,7 +82,7 @@ namespace PeterO.Cbor
         else if (c >= 0xc2 && c <= 0xdf)
         {
           int c1 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           if (c1 < 0x80 || c1 > 0xbf)
           {
             this.RaiseError("Invalid encoding");
@@ -91,9 +91,9 @@ namespace PeterO.Cbor
         else if (c >= 0xe0 && c <= 0xef)
         {
           int c1 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int c2 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int lower = (c == 0xe0) ? 0xa0 : 0x80;
           int upper = (c == 0xed) ? 0x9f : 0xbf;
           if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf)
@@ -104,11 +104,11 @@ namespace PeterO.Cbor
         else if (c >= 0xf0 && c <= 0xf4)
         {
           int c1 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int c2 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int c3 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int lower = (c == 0xf0) ? 0x90 : 0x80;
           int upper = (c == 0xf4) ? 0x8f : 0xbf;
           if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
@@ -138,7 +138,7 @@ namespace PeterO.Cbor
         while (true)
         {
           batchEnd = this.index;
-          c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
+          c = this.index < this.endPos ? jbytes[this.index++] &
             0xff : -1;
           if (c == -1)
           {
@@ -151,7 +151,7 @@ namespace PeterO.Cbor
           switch (c)
           {
             case '\\':
-              c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
+              c = this.index < this.endPos ? jbytes[this.index++] &
                 0xff : -1;
               switch (c)
               {
@@ -213,7 +213,7 @@ namespace PeterO.Cbor
                     for (var i = 0; i < 4; ++i)
                     {
                       int ch = this.index < this.endPos ?
-                        (int)jbytes[this.index++] : -1;
+                        jbytes[this.index++] : -1;
                       if (ch >= '0' && ch <= '9')
                       {
                         c <<= 4;
@@ -265,7 +265,7 @@ namespace PeterO.Cbor
                       int ch;
                       if (this.index >= this.endPos - 1 ||
                         jbytes[this.index] != (byte)'\\' ||
-                        jbytes[this.index + 1] != (byte)0x75)
+                        jbytes[this.index + 1] != 0x75)
                       {
                         this.RaiseError("Invalid escaped character");
                       }
@@ -274,7 +274,7 @@ namespace PeterO.Cbor
                       for (var i = 0; i < 4; ++i)
                       {
                         ch = this.index < this.endPos ?
-                          ((int)jbytes[this.index++]) & 0xff : -1;
+                          jbytes[this.index++] & 0xff : -1;
                         if (ch >= '0' && ch <= '9')
                         {
                           c2 <<= 4;
@@ -307,8 +307,8 @@ namespace PeterO.Cbor
                           ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                         }
                         batchIndex = this.index;
-                        int ic = 0x10000 + (((int)c & 0x3ff) << 10) +
-                          ((int)c2 & 0x3ff);
+                        int ic = 0x10000 + ((c & 0x3ff) << 10) +
+                          (c2 & 0x3ff);
                         ms.WriteByte((byte)(0xf0 | ((ic >> 18) & 0x07)));
                         ms.WriteByte((byte)(0x80 | ((ic >> 12) & 0x3f)));
                         ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
@@ -343,7 +343,7 @@ namespace PeterO.Cbor
                 else if (c >= 0xc2 && c <= 0xdf)
                 {
                   int c1 = this.index < this.endPos ?
-                    ((int)jbytes[this.index++]) & 0xff : -1;
+                    jbytes[this.index++] & 0xff : -1;
                   if (c1 < 0x80 || c1 > 0xbf)
                   {
                     this.RaiseError("Invalid encoding");
@@ -352,9 +352,9 @@ namespace PeterO.Cbor
                 else if (c >= 0xe0 && c <= 0xef)
                 {
                   int c1 = this.index < this.endPos ?
-                    ((int)jbytes[this.index++]) & 0xff : -1;
+                    jbytes[this.index++] & 0xff : -1;
                   int c2 = this.index < this.endPos ?
-                    ((int)jbytes[this.index++]) & 0xff : -1;
+                    jbytes[this.index++] & 0xff : -1;
                   int lower = (c == 0xe0) ? 0xa0 : 0x80;
                   int upper = (c == 0xed) ? 0x9f : 0xbf;
                   if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf)
@@ -365,11 +365,11 @@ namespace PeterO.Cbor
                 else if (c >= 0xf0 && c <= 0xf4)
                 {
                   int c1 = this.index < this.endPos ?
-                    ((int)jbytes[this.index++]) & 0xff : -1;
+                    jbytes[this.index++] & 0xff : -1;
                   int c2 = this.index < this.endPos ?
-                    ((int)jbytes[this.index++]) & 0xff : -1;
+                    jbytes[this.index++] & 0xff : -1;
                   int c3 = this.index < this.endPos ?
-                    ((int)jbytes[this.index++]) & 0xff : -1;
+                    jbytes[this.index++] & 0xff : -1;
                   int lower = (c == 0xf0) ? 0x90 : 0x80;
                   int upper = (c == 0xf4) ? 0x8f : 0xbf;
                   if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
@@ -395,7 +395,7 @@ namespace PeterO.Cbor
       // Assumes the last character read was '-'
       CBORObject obj;
       int numberStartIndex = this.index - 1;
-      int c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+      int c = this.index < this.endPos ? this.bytes[this.index++] &
         0xff : -1;
       if (c < '0' || c > '9')
       {
@@ -405,7 +405,7 @@ namespace PeterO.Cbor
       while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
         c == 'e' || c == 'E')
       {
-        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        c = this.index < this.endPos ? this.bytes[this.index++] &
           0xff : -1;
       }
       // check if character can validly appear after a JSON number
@@ -419,8 +419,8 @@ namespace PeterO.Cbor
       if (numberEndIndex - numberStartIndex == 2 && cstart != '0')
       {
         // Negative single digit other than negative zero
-        obj = CBORDataUtilities.ParseSmallNumberAsNegative((int)(cstart
-              - '0'),
+        obj = CBORDataUtilities.ParseSmallNumberAsNegative(cstart
+              - '0',
             this.options);
       }
       else
@@ -469,7 +469,7 @@ namespace PeterO.Cbor
       int startIndex = this.index - 1;
       var needObj = true;
       int numberStartIndex = this.index - 1;
-      c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+      c = this.index < this.endPos ? this.bytes[this.index++] &
         0xff : -1;
       if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
           c == 'e' || c == 'E'))
@@ -487,17 +487,17 @@ namespace PeterO.Cbor
           // Leading zero followed by any digit is not allowed
           this.RaiseError("JSON number can't be parsed.");
         }
-        cval = (cval * 10) + (int)(c - '0');
-        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        cval = (cval * 10) + (c - '0');
+        c = this.index < this.endPos ? this.bytes[this.index++] &
           0xff : -1;
         if (c >= '0' && c <= '9')
         {
           var digits = 2;
           while (digits < 9 && (c >= '0' && c <= '9'))
           {
-            cval = (cval * 10) + (int)(c - '0');
+            cval = (cval * 10) + (c - '0');
             c = this.index < this.endPos ?
-              ((int)this.bytes[this.index++]) & 0xff : -1;
+              this.bytes[this.index++] & 0xff : -1;
             ++digits;
           }
           if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
@@ -540,7 +540,7 @@ namespace PeterO.Cbor
         while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
           c == 'e' || c == 'E')
         {
-          c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+          c = this.index < this.endPos ? this.bytes[this.index++] &
             0xff : -1;
         }
         // check if character can validly appear after a JSON number
@@ -600,11 +600,11 @@ namespace PeterO.Cbor
       int depth)
     {
       int c = firstChar;
-      CBORObject obj = null;
       if (c < 0)
       {
         this.RaiseError("Unexpected end of data");
       }
+      CBORObject obj;
       switch (c)
       {
         case '"':
@@ -635,9 +635,9 @@ namespace PeterO.Cbor
           {
             // Parse true
             if (this.endPos - this.index <= 2 ||
-              this.bytes[this.index] != (byte)0x72 ||
-              this.bytes[this.index + 1] != (byte)0x75 ||
-              this.bytes[this.index + 2] != (byte)0x65)
+              this.bytes[this.index] != 0x72 ||
+              this.bytes[this.index + 1] != 0x75 ||
+              this.bytes[this.index + 2] != 0x65)
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -649,10 +649,10 @@ namespace PeterO.Cbor
           {
             // Parse false
             if (this.endPos - this.index <= 3 ||
-              this.bytes[this.index] != (byte)0x61 ||
-              this.bytes[this.index + 1] != (byte)0x6c ||
-              this.bytes[this.index + 2] != (byte)0x73 ||
-              this.bytes[this.index + 3] != (byte)0x65)
+              this.bytes[this.index] != 0x61 ||
+              this.bytes[this.index + 1] != 0x6c ||
+              this.bytes[this.index + 2] != 0x73 ||
+              this.bytes[this.index + 3] != 0x65)
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -664,9 +664,9 @@ namespace PeterO.Cbor
           {
             // Parse null
             if (this.endPos - this.index <= 2 ||
-              this.bytes[this.index] != (byte)0x75 ||
-              this.bytes[this.index + 1] != (byte)0x6c ||
-              this.bytes[this.index + 2] != (byte)0x6c)
+              this.bytes[this.index] != 0x75 ||
+              this.bytes[this.index + 1] != 0x6c ||
+              this.bytes[this.index + 2] != 0x6c)
             {
               this.RaiseError("Value can't be parsed.");
             }

@@ -244,10 +244,10 @@ namespace Test
     {
       Assert.AreEqual(
         CBORObject.Null,
-        ToObjectTest.TestToFromObjectRoundTrip((byte[])null));
+        ToObjectTest.TestToFromObjectRoundTrip(null));
       Assert.AreEqual(
         CBORObject.Null,
-        ToObjectTest.TestToFromObjectRoundTrip((CBORObject[])null));
+        ToObjectTest.TestToFromObjectRoundTrip(null));
       Assert.AreEqual(
         CBORObject.True,
         ToObjectTest.TestToFromObjectRoundTrip(true));
@@ -260,7 +260,7 @@ namespace Test
 
       try
       {
-        CBORObject.True.ToObject(typeof(ERational));
+        _ = CBORObject.True.ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -274,7 +274,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.ToObject(typeof(ERational));
+        _ = CBORObject.False.ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -288,7 +288,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().ToObject(typeof(ERational));
+        _ = CBORObject.NewArray().ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -302,7 +302,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().ToObject(typeof(ERational));
+        _ = CBORObject.NewMap().ToObject(typeof(ERational));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -322,7 +322,7 @@ namespace Test
       byte[] bytes = { 0x65, 0x41, 0x41, 0x41, 0x41 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes);
+        _ = CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -343,7 +343,7 @@ namespace Test
       bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes);
+        _ = CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -358,7 +358,7 @@ namespace Test
       bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0xff };
       try
       {
-        CBORObject.DecodeFromBytes(bytes);
+        _ = CBORObject.DecodeFromBytes(bytes);
       }
       catch (Exception ex)
       {
@@ -374,7 +374,7 @@ namespace Test
       byte[] bytes = { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes);
+        _ = CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -390,7 +390,7 @@ namespace Test
       bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes);
+        _ = CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -405,7 +405,7 @@ namespace Test
       bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0, 0xff };
       try
       {
-        CBORObject.DecodeFromBytes(bytes);
+        _ = CBORObject.DecodeFromBytes(bytes);
       }
       catch (Exception ex)
       {
@@ -418,9 +418,9 @@ namespace Test
     public void TestCyclicRefs()
     {
       CBORObject cbor = CBORObject.NewArray();
-      cbor.Add(CBORObject.NewArray());
-      cbor.Add(cbor);
-      cbor[0].Add(cbor);
+      _ = cbor.Add(CBORObject.NewArray());
+      _ = cbor.Add(cbor);
+      _ = cbor[0].Add(cbor);
       try
       {
         using (var memoryStream = new Test.DelayingStream())
@@ -451,18 +451,18 @@ namespace Test
             for (var i = 0; i < 2000; ++i)
             {
               // Write beginning of indefinite-length array
-              ms.WriteByte((byte)0x9f);
+              ms.WriteByte(0x9f);
             }
             for (var i = 0; i < 2000; ++i)
             {
               // Write end of indefinite-length array
-              ms.WriteByte((byte)0xff);
+              ms.WriteByte(0xff);
             }
             // Assert throwing CBOR exception for reaching maximum
             // nesting depth
             try
             {
-              CBORObject.DecodeFromBytes(ms.ToArray());
+              _ = CBORObject.DecodeFromBytes(ms.ToArray());
               Assert.Fail("Should have failed");
             }
             catch (CBORException)
@@ -482,17 +482,17 @@ namespace Test
             for (var i = 0; i < 495; ++i)
             {
               // Write beginning of indefinite-length array
-              ms.WriteByte((byte)0x9f);
+              ms.WriteByte(0x9f);
             }
             for (var i = 0; i < 495; ++i)
             {
               // Write end of indefinite-length array
-              ms.WriteByte((byte)0xff);
+              ms.WriteByte(0xff);
             }
             // Maximum nesting depth not reached, so shouldn't throw
             try
             {
-              CBORObject.DecodeFromBytes(ms.ToArray());
+              _ = CBORObject.DecodeFromBytes(ms.ToArray());
             }
             catch (Exception ex)
             {
@@ -514,7 +514,7 @@ namespace Test
       EInteger bi = EInteger.FromString("9223372036854775808");
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(long));
+        _ = ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -528,7 +528,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
+        _ = ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -543,7 +543,7 @@ namespace Test
       bi = EInteger.FromString("-9223372036854775809");
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(long));
+        _ = ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -557,7 +557,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
+        _ = ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -572,7 +572,7 @@ namespace Test
       bi = EInteger.FromString("-9223372036854775808");
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
+        _ = ToObjectTest.TestToFromObjectRoundTrip(bi).ToObject(typeof(int));
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -799,7 +799,7 @@ namespace Test
       {
         using (var memoryStream = new Test.DelayingStream(bytes))
         {
-          MiniCBOR.ReadInt32(memoryStream);
+          _ = MiniCBOR.ReadInt32(memoryStream);
         }
         Assert.Fail("Should have failed");
       }
@@ -817,7 +817,7 @@ namespace Test
       {
         using (var memoryStream = new Test.DelayingStream(bytes))
         {
-          MiniCBOR.ReadInt32(memoryStream);
+          _ = MiniCBOR.ReadInt32(memoryStream);
         }
         Assert.Fail("Should have failed");
       }
@@ -835,7 +835,7 @@ namespace Test
       {
         using (var ms = new Test.DelayingStream(bytes))
         {
-          MiniCBOR.ReadInt32(ms);
+          _ = MiniCBOR.ReadInt32(ms);
         }
         Assert.Fail("Should have failed");
       }
@@ -853,7 +853,7 @@ namespace Test
       {
         using (var memoryStream = new Test.DelayingStream(bytes))
         {
-          MiniCBOR.ReadInt32(memoryStream);
+          _ = MiniCBOR.ReadInt32(memoryStream);
         }
         Assert.Fail("Should have failed");
       }
@@ -871,7 +871,7 @@ namespace Test
       {
         using (var memoryStream = new Test.DelayingStream(bytes))
         {
-          MiniCBOR.ReadInt32(memoryStream);
+          _ = MiniCBOR.ReadInt32(memoryStream);
         }
         Assert.Fail("Should have failed");
       }

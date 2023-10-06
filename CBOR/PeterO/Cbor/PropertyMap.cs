@@ -56,12 +56,12 @@ namespace PeterO.Cbor
           // CheckKeyDoesNotExist(k);
           // DebugUtility.Log("Adding: " + (k.GetHashCode()) + " [Type=" + (CS(k)) +
           // "]");
-          int keycnt = this.dict.Count;
+          _ = this.dict.Count;
           this.dict.Add(k, v);
           // if (keycnt == this.dict.Count) {
           // throw new InvalidOperationException();
           // }
-          this.list.AddLast(k);
+          _ = this.list.AddLast(k);
           // CheckKeyExists(k);
         }
       }
@@ -69,7 +69,7 @@ namespace PeterO.Cbor
       {
         get
         {
-          TValue v = default(TValue);
+          TValue v;
           // NOTE: Don't use dict[key], since if it fails it could
           // print the key in the exception's message, which could
           // cause an infinite loop
@@ -94,7 +94,7 @@ namespace PeterO.Cbor
             // +
             // "]");
             this.dict.Add(key, value);
-            this.list.AddLast(key);
+            _ = this.list.AddLast(key);
             // CheckKeyExists(key);
           }
         }
@@ -116,8 +116,8 @@ namespace PeterO.Cbor
         if (this.Contains(kvp))
         {
           // CheckKeyExists(kvp.Key);
-          this.dict.Remove(kvp.Key);
-          this.list.Remove(kvp.Key);
+          _ = this.dict.Remove(kvp.Key);
+          _ = this.list.Remove(kvp.Key);
           return true;
         }
         return false;
@@ -127,7 +127,7 @@ namespace PeterO.Cbor
         if (this.dict.Remove(key))
         {
           // CheckKeyExists(key);
-          this.list.Remove(key);
+          _ = this.list.Remove(key);
           return true;
         }
         return false;
@@ -169,7 +169,6 @@ namespace PeterO.Cbor
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyExists(TKey key)
       {
-        TValue v = default(TValue);
         if (!this.dict.ContainsKey(key))
         {
           /* DebugUtility.Log("hash " + (key.GetHashCode()) + " [" +
@@ -185,7 +184,7 @@ namespace PeterO.Cbor
         // NOTE: Don't use dict[k], since if it fails it could
         // print the key in the exception's message, which could
         // cause an infinite loop
-        if (!this.dict.TryGetValue(key, out v))
+        if (!this.dict.TryGetValue(key, out _))
         {
           throw new ArgumentException("key not found (TryGetValue)");
         }
@@ -198,11 +197,10 @@ namespace PeterO.Cbor
       [System.Diagnostics.Conditional("DEBUG")]
       private void CheckKeyDoesNotExist(TKey key)
       {
-        TValue v = default(TValue);
         // NOTE: Don't use dict[k], since if it fails it could
         // print the key in the exception's message, which could
         // cause an infinite loop
-        if (!this.dict.TryGetValue(key, out v))
+        if (!this.dict.TryGetValue(key, out _))
         {
           return;
         }
@@ -854,7 +852,7 @@ namespace PeterO.Cbor
       index[0] = 0;
       for (var i = 0; i < dimensions[0]; ++i)
       {
-        ret.Add(CBORObject.NewArray());
+        _ = ret.Add(CBORObject.NewArray());
       }
       ++stackpos;
       while (stackpos > 0)
@@ -869,7 +867,7 @@ namespace PeterO.Cbor
             index[stackpos] = 0;
             for (var i = 0; i < dimensions[stackpos]; ++i)
             {
-              subobj.Add(CBORObject.NewArray());
+              _ = subobj.Add(CBORObject.NewArray());
             }
             ++index[stackpos - 1];
             ++stackpos;
@@ -907,7 +905,7 @@ namespace PeterO.Cbor
         int len = arr.GetLength(0);
         for (var i = 0; i < len; ++i)
         {
-          obj.Add(
+          _ = obj.Add(
             CBORObject.FromObject(
               arr.GetValue(i),
               options,
@@ -963,7 +961,7 @@ namespace PeterO.Cbor
       while (ilen >= ret.Count)
       {
         {
-          ret.Add(CBORObject.Null);
+          _ = ret.Add(CBORObject.Null);
         }
       }
       ret[ilen] = obj;
@@ -1054,10 +1052,9 @@ namespace PeterO.Cbor
     public static object ObjectToEnum(CBORObject obj, Type enumType)
     {
       Type utype = Enum.GetUnderlyingType(enumType);
-      object ret = null;
       if (obj.IsNumber && obj.AsNumber().IsInteger())
       {
-        ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
+        object ret = Enum.ToObject(enumType, TypeToIntegerObject(obj, utype));
         if (!Enum.IsDefined(enumType, ret))
         {
           string estr = ret.ToString();
@@ -1691,16 +1688,14 @@ typeof(
       CBORObject key,
       CBORObject defaultValue)
     {
-      CBORObject ret = null;
+      CBORObject ret;
       return (!map.TryGetValue(key, out ret)) ? defaultValue : ret;
     }
 
-#pragma warning disable CA1801
     public static CBORObject FromObjectOther(object obj)
     {
       return null;
     }
-#pragma warning restore CA1801
 
     public static object ObjectWithProperties(
       Type t,
@@ -1762,7 +1757,7 @@ typeof(
       CBORTypeMapper.ConverterInfo convinfo,
       CBORObject obj)
     {
-      return (object)PropertyMap.InvokeOneArgumentMethod(
+      return PropertyMap.InvokeOneArgumentMethod(
           convinfo.FromObject,
           convinfo.Converter,
           obj);
@@ -1840,8 +1835,8 @@ typeof(
           dt[2],
           dt[3],
           dt[4],
-          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks((long)(dt[5] /
-            TicksDivFracSeconds));
+          DateTimeKind.Utc).AddMinutes(-dt[6]).AddTicks(dt[5] /
+            TicksDivFracSeconds);
     }
   }
 }

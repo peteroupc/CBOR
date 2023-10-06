@@ -96,12 +96,12 @@ namespace Test
         if (c >= '0' && c <= '9')
         {
           int x = c - '0';
-          if ((long)ret > 922337203685477580L)
+          if (ret > 922337203685477580L)
           {
             throw new FormatException();
           }
           ret *= 10;
-          if ((long)ret == 9223372036854775800L)
+          if (ret == 9223372036854775800L)
           {
             if (neg && x == 8)
             {
@@ -285,7 +285,7 @@ namespace Test
         // At least check that GetHashCode doesn't throw
         try
         {
-          o.GetHashCode();
+          _ = o.GetHashCode();
         }
         catch (Exception ex)
         {
@@ -294,7 +294,7 @@ namespace Test
         }
         try
         {
-          o2.GetHashCode();
+          _ = o2.GetHashCode();
         }
         catch (Exception ex)
         {
@@ -615,13 +615,13 @@ namespace Test
         while (value > 9)
         {
           int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-          char digit = Digits[(int)(value - (intdivvalue * 10))];
+          char digit = Digits[value - (intdivvalue * 10)];
           chars[count--] = digit;
           value = intdivvalue;
         }
         if (value != 0)
         {
-          chars[count--] = Digits[(int)value];
+          chars[count--] = Digits[value];
         }
         if (neg)
         {
@@ -638,20 +638,20 @@ namespace Test
       while (value >= 163840)
       {
         int intdivvalue = value / 10;
-        char digit = Digits[(int)(value - (intdivvalue * 10))];
+        char digit = Digits[value - (intdivvalue * 10)];
         chars[count--] = digit;
         value = intdivvalue;
       }
       while (value > 9)
       {
         int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-        char digit = Digits[(int)(value - (intdivvalue * 10))];
+        char digit = Digits[value - (intdivvalue * 10)];
         chars[count--] = digit;
         value = intdivvalue;
       }
       if (value != 0)
       {
-        chars[count--] = Digits[(int)value];
+        chars[count--] = Digits[value];
       }
       if (neg)
       {
@@ -675,17 +675,16 @@ namespace Test
         return "0";
       }
       bool neg = longValue < 0;
-      var count = 0;
       char[] chars;
       int intlongValue = unchecked((int)longValue);
-      if ((long)intlongValue == longValue)
+      if (intlongValue == longValue)
       {
         return IntToString(intlongValue);
       }
       else
       {
         chars = new char[24];
-        count = 23;
+        int count = 23;
         if (neg)
         {
           longValue = -longValue;
@@ -754,18 +753,18 @@ namespace Test
         int rem = num % RepeatDivideThreshold;
         for (var i = 0; i < count; ++i)
         {
-          sb.Append(sb2);
+          _ = sb.Append(sb2);
         }
         for (var i = 0; i < rem; ++i)
         {
-          sb.Append(c);
+          _ = sb.Append(c);
         }
       }
       else
       {
         for (var i = 0; i < num; ++i)
         {
-          sb.Append(c);
+          _ = sb.Append(c);
         }
       }
       return sb.ToString();
@@ -789,7 +788,7 @@ namespace Test
       var sb = new StringBuilder(num * str.Length);
       for (var i = 0; i < num; ++i)
       {
-        sb.Append(str);
+        _ = sb.Append(str);
       }
       return sb.ToString();
     }
@@ -843,25 +842,25 @@ length);
       }
       var sb = new System.Text.StringBuilder();
       const string ValueHex = "0123456789ABCDEF";
-      sb.Append("new byte[] { ");
+      _ = sb.Append("new byte[] { ");
       for (var i = 0; i < length; ++i)
       {
         if (i > 0)
         {
-          sb.Append(',');
+          _ = sb.Append(',');
         }
         if ((bytes[offset + i] & 0x80) != 0)
         {
-          sb.Append("(byte)0x");
+          _ = sb.Append("(byte)0x");
         }
         else
         {
-          sb.Append("0x");
+          _ = sb.Append("0x");
         }
-        sb.Append(ValueHex[(bytes[offset + i] >> 4) & 0xf]);
-        sb.Append(ValueHex[bytes[offset + i] & 0xf]);
+        _ = sb.Append(ValueHex[(bytes[offset + i] >> 4) & 0xf]);
+        _ = sb.Append(ValueHex[bytes[offset + i] & 0xf]);
       }
-      sb.Append('}');
+      _ = sb.Append('}');
       return sb.ToString();
     }
 

@@ -51,7 +51,7 @@ namespace PeterO.DocGen
 
     public static string MemberAnchor(object obj)
     {
-      string anchor = String.Empty;
+      string anchor;
       if (obj is Type)
       {
         anchor = ((Type)obj).FullName;
@@ -114,15 +114,15 @@ namespace PeterO.DocGen
     {
       var sb = new StringBuilder();
       string finalString;
-      sb.Append("### Member Summary\n");
+      _ = sb.Append("### Member Summary\n");
       foreach (var key in this.docs.Keys)
       {
         finalString = this.docs[key].ToString();
         var typeName = this.memberFormats[key];
         typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](#" + key + ")";
         finalString = Regex.Replace(finalString, "\\s+", " ");
-        sb.Append("* <code>" + typeName + "</code> - ");
-        sb.Append(finalString + "\n");
+        _ = sb.Append("* <code>" + typeName + "</code> - ");
+        _ = sb.Append(finalString + "\n");
       }
       finalString = DocGenUtil.NormalizeLines(sb.ToString());
       this.summaryString = finalString;
@@ -131,7 +131,6 @@ namespace PeterO.DocGen
     public void HandleMember(object info, XmlDoc xmldoc)
     {
       var isPublicOrProtected = false;
-      var typeInfo = info as Type;
       var methodInfo = info as MethodInfo;
       var propertyInfo = info as PropertyInfo;
       var fieldInfo = info as FieldInfo;
@@ -174,7 +173,7 @@ namespace PeterO.DocGen
       }
       else
       {
-        this.docs[memberAnchor].Append(summary)
+        _ = this.docs[memberAnchor].Append(summary)
             .Append("\r\n");
       }
     }

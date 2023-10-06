@@ -36,7 +36,7 @@ namespace PeterO.DocGen
 
     public static void FileEdit(string filename, string newString)
     {
-      string oldString = null;
+      string oldString;
       try
       {
         oldString = File.ReadAllText(filename);

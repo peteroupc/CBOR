@@ -77,9 +77,9 @@ namespace PeterO.Cbor
       }
       string alphabet = classic ? Base64Classic : Base64URL;
       int length = offset + count;
-      int i = offset;
       var buffer = new byte[32];
       var bufferOffset = 0;
+      int i;
       for (i = offset; i < (length - 2); i += 3)
       {
         if (bufferOffset >= buffer.Length)

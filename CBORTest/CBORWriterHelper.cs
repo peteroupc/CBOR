@@ -10,6 +10,10 @@ namespace Test
   {
     private Stream outputStream;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CBORWriterHelper"/> class.
+    /// </summary>
+    /// <param name="outputStream"></param>
     public CBORWriterHelper(Stream outputStream)
     {
       this.outputStream = outputStream;
@@ -17,49 +21,49 @@ namespace Test
 
     public CBORWriterHelper WriteStartArray(int size)
     {
-      CBORObject.WriteValue(this.outputStream, 4, size);
+      _ = CBORObject.WriteValue(this.outputStream, 4, size);
       return this;
     }
 
     public CBORWriterHelper WriteStartMap(int size)
     {
-      CBORObject.WriteValue(this.outputStream, 5, size);
+      _ = CBORObject.WriteValue(this.outputStream, 5, size);
       return this;
     }
 
     public CBORWriterHelper WriteStartArray(long size)
     {
-      CBORObject.WriteValue(this.outputStream, 4, size);
+      _ = CBORObject.WriteValue(this.outputStream, 4, size);
       return this;
     }
 
     public CBORWriterHelper WriteStartMap(long size)
     {
-      CBORObject.WriteValue(this.outputStream, 5, size);
+      _ = CBORObject.WriteValue(this.outputStream, 5, size);
       return this;
     }
 
     public CBORWriterHelper WriteStartArray()
     {
-      this.outputStream.WriteByte((int)0x9f);
+      this.outputStream.WriteByte(0x9f);
       return this;
     }
 
     public CBORWriterHelper WriteStartMap()
     {
-      this.outputStream.WriteByte((int)0xbf);
+      this.outputStream.WriteByte(0xbf);
       return this;
     }
 
     public CBORWriterHelper WriteEndArray()
     {
-      this.outputStream.WriteByte((int)0xff);
+      this.outputStream.WriteByte(0xff);
       return this;
     }
 
     public CBORWriterHelper WriteEndMap()
     {
-      this.outputStream.WriteByte((int)0xff);
+      this.outputStream.WriteByte(0xff);
       return this;
     }
 

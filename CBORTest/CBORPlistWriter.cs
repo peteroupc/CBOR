@@ -45,8 +45,8 @@ namespace Test
         }
         else if (c == '\\' || c == '"')
         {
-          sb.WriteCodePoint((int)'\\');
-          sb.WriteCodePoint((int)c);
+          sb.WriteCodePoint('\\');
+          sb.WriteCodePoint(c);
         }
         else if (c < 0x20 || c == '&' || c == '<' || c == '>' || (c >= 0x7f &&
             (c == 0x2028 || c == 0x2029 ||
@@ -54,10 +54,10 @@ namespace Test
               c == 0xffff)))
         {
           sb.WriteString("&#x");
-          sb.WriteCodePoint((int)Hex16[(int)((c >> 12) & 15)]);
-          sb.WriteCodePoint((int)Hex16[(int)((c >> 8) & 15)]);
-          sb.WriteCodePoint((int)Hex16[(int)((c >> 4) & 15)]);
-          sb.WriteCodePoint((int)Hex16[(int)(c & 15)]);
+          sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
+          sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
+          sb.WriteCodePoint(Hex16[(c >> 4) & 15]);
+          sb.WriteCodePoint(Hex16[c & 15]);
           sb.WriteString(";");
         }
         else if ((c & 0xfc00) == 0xd800)
@@ -82,7 +82,7 @@ namespace Test
         }
         else
         {
-          sb.WriteCodePoint((int)c);
+          sb.WriteCodePoint(c);
         }
       }
     }
@@ -282,8 +282,8 @@ namespace Test
               // Write as base16
               for (int i = 0; i < byteArray.Length; ++i)
               {
-                writer.WriteCodePoint((int)Hex16[(byteArray[i] >> 4) & 15]);
-                writer.WriteCodePoint((int)Hex16[byteArray[i] & 15]);
+                writer.WriteCodePoint(Hex16[(byteArray[i] >> 4) & 15]);
+                writer.WriteCodePoint(Hex16[byteArray[i] & 15]);
               }
               writer.WriteString("</str");
               writer.WriteString("ing>");
@@ -413,7 +413,7 @@ namespace Test
                 string key = entry.Key;
                 CBORObject value = entry.Value;
                 writer.WriteString("<key>");
-                WritePlistStringUnquoted((string)key, writer, options);
+                WritePlistStringUnquoted(key, writer, options);
                 writer.WriteString("</key>");
                 bool pop = CheckCircularRef(stack, obj, value);
                 WritePlistToInternalCore(value, writer, options, stack);

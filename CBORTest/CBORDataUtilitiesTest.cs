@@ -86,7 +86,6 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
     }
 
     // testing obsolete method
-#pragma warning disable CS0618
     [Test]
     public void TestParseJSONNumberSubstring()
     {
@@ -95,7 +94,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
   "-3.00931381333368754713014659613049757554804012787921371662913692598770508705049030832574634419795955864174175076186656951904296875000E-49";
       try
       {
-        CBORDataUtilities.ParseJSONNumber(
+        _ = CBORDataUtilities.ParseJSONNumber(
           "xyzxyz" + tstr,
           6,
           tstr.Length,

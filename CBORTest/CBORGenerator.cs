@@ -49,47 +49,47 @@ namespace Test
       ByteWriter bs)
     {
       var maxArg = 4;
-      var sh = 0;
       int minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 :
           ((len <= 0xffff) ? 2 : 3));
       int arg = minArg + r.GetInt32(maxArg - minArg + 1);
+      int sh;
       switch (arg)
       {
         case 0:
-          bs.Write((majorType * 0x20) + len);
+          _ = bs.Write((majorType * 0x20) + len);
           break;
         case 1:
-          bs.Write((majorType * 0x20) + 0x18);
-          bs.Write(len & 0xff);
+          _ = bs.Write((majorType * 0x20) + 0x18);
+          _ = bs.Write(len & 0xff);
           break;
         case 2:
-          bs.Write((majorType * 0x20) + 0x19);
+          _ = bs.Write((majorType * 0x20) + 0x19);
           sh = 8;
           for (int i = 0; i < 2; ++i)
           {
-            bs.Write((len >> sh) & 0xff);
+            _ = bs.Write((len >> sh) & 0xff);
             sh -= 8;
           }
           break;
         case 3:
-          bs.Write((majorType * 0x20) + 0x1a);
+          _ = bs.Write((majorType * 0x20) + 0x1a);
           sh = 24;
           for (int i = 0; i < 4; ++i)
           {
-            bs.Write((len >> sh) & 0xff);
+            _ = bs.Write((len >> sh) & 0xff);
             sh -= 8;
           }
           break;
         case 4:
-          bs.Write((majorType * 0x20) + 0x1b);
+          _ = bs.Write((majorType * 0x20) + 0x1b);
           for (int i = 0; i < 4; ++i)
           {
-            bs.Write(0);
+            _ = bs.Write(0);
           }
           sh = 24;
           for (int i = 0; i < 4; ++i)
           {
-            bs.Write((len >> sh) & 0xff);
+            _ = bs.Write((len >> sh) & 0xff);
             sh -= 8;
           }
           break;
@@ -121,7 +121,7 @@ namespace Test
         int r = ra.GetInt32(10);
         if (r > 0)
         {
-          bs.Write(ra.GetInt32(128));
+          _ = bs.Write(ra.GetInt32(128));
           ++i;
         }
         else
@@ -130,31 +130,31 @@ namespace Test
           if (r == 0 && length - i >= 2)
           {
             r = 0xc2 + ra.GetInt32((0xdf - 0xc2) + 1);
-            bs.Write(r);
-            bs.Write(0x80 + ra.GetInt32(0x40));
+            _ = bs.Write(r);
+            _ = bs.Write(0x80 + ra.GetInt32(0x40));
             i += 2;
           }
           else if (r == 1 && length - i >= 3)
           {
             r = 0xe0 + ra.GetInt32(16);
-            bs.Write(r);
+            _ = bs.Write(r);
             int lower = (r == 0xe0) ? 0xa0 : 0x80;
             int upper = (r == 0xed) ? 0x9f : 0xbf;
             r = lower + ra.GetInt32((upper - lower) + 1);
-            bs.Write(r);
-            bs.Write(0x80 + ra.GetInt32(0x40));
+            _ = bs.Write(r);
+            _ = bs.Write(0x80 + ra.GetInt32(0x40));
             i += 3;
           }
           else if (r == 2 && length - i >= 4)
           {
             r = 0xf0 + ra.GetInt32(5);
-            bs.Write(r);
+            _ = bs.Write(r);
             int lower = (r == 0xf0) ? 0x90 : 0x80;
             int upper = (r == 0xf4) ? 0x8f : 0xbf;
             r = lower + ra.GetInt32((upper - lower) + 1);
-            bs.Write(r);
-            bs.Write(0x80 + ra.GetInt32(0x40));
-            bs.Write(0x80 + ra.GetInt32(0x40));
+            _ = bs.Write(r);
+            _ = bs.Write(0x80 + ra.GetInt32(0x40));
+            _ = bs.Write(0x80 + ra.GetInt32(0x40));
             i += 4;
           }
         }
@@ -170,34 +170,34 @@ namespace Test
       }
       else if (v < 35)
       {
-        bs.Write(0x41);
-        bs.Write(0x20);
+        _ = bs.Write(0x41);
+        _ = bs.Write(0x20);
       }
       else if (v < 45)
       {
-        bs.Write(0x41);
-        bs.Write(0x20);
+        _ = bs.Write(0x41);
+        _ = bs.Write(0x20);
       }
       else if (v < 50)
       {
-        bs.Write(0x81);
+        _ = bs.Write(0x81);
         this.GenerateSmall(r, depth + 1, bs);
       }
       else if (v < 53)
       {
-        bs.Write(0xa2);
-        bs.Write(0xf7);
-        bs.Write(0xf6);
+        _ = bs.Write(0xa2);
+        _ = bs.Write(0xf7);
+        _ = bs.Write(0xf6);
         this.GenerateSmall(r, depth + 1, bs);
-        bs.Write(0xf5);
+        _ = bs.Write(0xf5);
       }
       else if (v < 80)
       {
-        bs.Write(0x40);
+        _ = bs.Write(0x40);
       }
       else if (v < 100)
       {
-        bs.Write(0x60);
+        _ = bs.Write(0x60);
       }
     }
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs)
@@ -233,7 +233,7 @@ namespace Test
         if (r.GetInt32(2) == 0)
         {
           // Indefinite length
-          bs.Write(0x1f + (majorType * 0x20));
+          _ = bs.Write(0x1f + (majorType * 0x20));
           while (len > 0)
           {
             int sublen = r.GetInt32(len + 1);
@@ -246,12 +246,12 @@ namespace Test
             {
               for (int i = 0; i < sublen; ++i)
               {
-                bs.Write(r.GetInt32(256));
+                _ = bs.Write(r.GetInt32(256));
               }
             }
             len -= sublen;
           }
-          bs.Write(0xff);
+          _ = bs.Write(0xff);
         }
         else
         {
@@ -265,7 +265,7 @@ namespace Test
           {
             for (int i = 0; i < len; ++i)
             {
-              bs.Write(r.GetInt32(256));
+              _ = bs.Write(r.GetInt32(256));
             }
           }
         }
@@ -294,7 +294,7 @@ namespace Test
         bool indefiniteLength = r.GetInt32(2) == 0;
         if (indefiniteLength)
         {
-          bs.Write(0x1f + (majorType * 0x20));
+          _ = bs.Write(0x1f + (majorType * 0x20));
         }
         else
         {
@@ -317,7 +317,7 @@ namespace Test
         }
         if (indefiniteLength)
         {
-          bs.Write(0xff);
+          _ = bs.Write(0xff);
         }
         return;
       }
@@ -325,38 +325,38 @@ namespace Test
       switch (arg)
       {
         case 0:
-          bs.Write((majorType * 0x20) + r.GetInt32(0x18));
+          _ = bs.Write((majorType * 0x20) + r.GetInt32(0x18));
           break;
         case 1:
-          bs.Write((majorType * 0x20) + 0x18);
+          _ = bs.Write((majorType * 0x20) + 0x18);
           if (majorType == 7)
           {
-            bs.Write(32 + r.GetInt32(224));
+            _ = bs.Write(32 + r.GetInt32(224));
           }
           else
           {
-            bs.Write(r.GetInt32(256));
+            _ = bs.Write(r.GetInt32(256));
           }
           break;
         case 2:
-          bs.Write((majorType * 0x20) + 0x19);
+          _ = bs.Write((majorType * 0x20) + 0x19);
           for (int i = 0; i < 2; ++i)
           {
-            bs.Write(r.GetInt32(256));
+            _ = bs.Write(r.GetInt32(256));
           }
           break;
         case 3:
-          bs.Write((majorType * 0x20) + 0x1a);
+          _ = bs.Write((majorType * 0x20) + 0x1a);
           for (int i = 0; i < 4; ++i)
           {
-            bs.Write(r.GetInt32(256));
+            _ = bs.Write(r.GetInt32(256));
           }
           break;
         case 4:
-          bs.Write((majorType * 0x20) + 0x1b);
+          _ = bs.Write((majorType * 0x20) + 0x1b);
           for (int i = 0; i < 8; ++i)
           {
-            bs.Write(r.GetInt32(256));
+            _ = bs.Write(r.GetInt32(256));
           }
           break;
       }

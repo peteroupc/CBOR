@@ -51,9 +51,9 @@ namespace PeterO.DocGen
           {
             continue;
           }
-          builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
-          builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
-          builder.Append(" : ");
+          _ = builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
+          _ = builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
+          _ = builder.Append(" : ");
           var first = true;
           if ((arg.GenericParameterAttributes &
                GenericParameterAttributes.ReferenceTypeConstraint) !=
@@ -61,9 +61,9 @@ namespace PeterO.DocGen
           {
             if (!first)
             {
-              builder.Append(", ");
+              _ = builder.Append(", ");
             }
-            builder.Append("class");
+            _ = builder.Append("class");
             first = false;
           }
           if ((arg.GenericParameterAttributes &
@@ -72,9 +72,9 @@ namespace PeterO.DocGen
           {
             if (!first)
             {
-              builder.Append(", ");
+              _ = builder.Append(", ");
             }
-            builder.Append("struct");
+            _ = builder.Append("struct");
             first = false;
           }
           if ((arg.GenericParameterAttributes &
@@ -83,52 +83,52 @@ namespace PeterO.DocGen
           {
             if (!first)
             {
-              builder.Append(", ");
+              _ = builder.Append(", ");
             }
-            builder.Append("new()");
+            _ = builder.Append("new()");
             first = false;
           }
           foreach (var constr in constraints)
           {
             if (!first)
             {
-              builder.Append(", ");
+              _ = builder.Append(", ");
             }
-            builder.Append(FormatType(constr));
+            _ = builder.Append(FormatType(constr));
             first = false;
           }
         }
-        builder.Append(FormatType(arg));
+        _ = builder.Append(FormatType(arg));
       }
     }
 
     public static string FormatField(FieldInfo field)
     {
       var builder = new StringBuilder();
-      builder.Append(FourSpaces);
+      _ = builder.Append(FourSpaces);
       if (field.IsPublic)
       {
-        builder.Append("public ");
+        _ = builder.Append("public ");
       }
       if (field.IsAssembly)
       {
-        builder.Append("internal ");
+        _ = builder.Append("internal ");
       }
       if (field.IsFamily)
       {
-        builder.Append("protected ");
+        _ = builder.Append("protected ");
       }
       if (field.IsStatic)
       {
-        builder.Append("static ");
+        _ = builder.Append("static ");
       }
       if (field.IsInitOnly)
       {
-        builder.Append("readonly ");
+        _ = builder.Append("readonly ");
       }
-      builder.Append(FormatType(field.FieldType));
-      builder.Append((char)0x20); // space
-      builder.Append(field.Name);
+      _ = builder.Append(FormatType(field.FieldType));
+      _ = builder.Append((char)0x20); // space
+      _ = builder.Append(field.Name);
       if (field.IsLiteral)
       {
         try
@@ -136,25 +136,25 @@ namespace PeterO.DocGen
           var obj = field.GetRawConstantValue();
           if (obj is int)
           {
-            builder.Append(" = " + (int)obj + ";");
+            _ = builder.Append(" = " + (int)obj + ";");
           }
           else if (obj is long)
           {
-            builder.Append(" = " + (long)obj + "L;");
+            _ = builder.Append(" = " + (long)obj + "L;");
           }
           else
           {
-            builder.Append(';');
+            _ = builder.Append(';');
           }
         }
         catch (InvalidOperationException)
         {
-          builder.Append(';');
+          _ = builder.Append(';');
         }
       }
       else
       {
-        builder.Append(';');
+        _ = builder.Append(';');
       }
       return builder.ToString();
     }
@@ -166,41 +166,41 @@ namespace PeterO.DocGen
       var builder = new StringBuilder();
       if (!shortform)
       {
-        builder.Append(FourSpaces);
+        _ = builder.Append(FourSpaces);
         if (!method.ReflectedType.IsInterface)
         {
           if (method.IsPublic)
           {
-            builder.Append("public ");
+            _ = builder.Append("public ");
           }
           if (method.IsAssembly)
           {
-            builder.Append("internal ");
+            _ = builder.Append("internal ");
           }
           if (method.IsFamily)
           {
-            builder.Append("protected ");
+            _ = builder.Append("protected ");
           }
           if (method.IsStatic)
           {
-            builder.Append("static ");
+            _ = builder.Append("static ");
           }
           if (method.IsAbstract)
           {
-            builder.Append("abstract ");
+            _ = builder.Append("abstract ");
           }
           if (method.IsFinal)
           {
-            builder.Append("sealed ");
+            _ = builder.Append("sealed ");
           }
           else if (method is MethodInfo &&
 IsMethodOverride((MethodInfo)method))
           {
-            builder.Append("override ");
+            _ = builder.Append("override ");
           }
           else if (method.IsVirtual)
           {
-            builder.Append("virtual ");
+            _ = builder.Append("virtual ");
           }
         }
       }
@@ -214,92 +214,92 @@ IsMethodOverride((MethodInfo)method))
         isExtension = attr != null;
         if (method.Name.Equals("op_Explicit", StringComparison.Ordinal))
         {
-          builder.Append("explicit operator ");
-          builder.Append(FormatType(methodInfo.ReturnType));
+          _ = builder.Append("explicit operator ");
+          _ = builder.Append(FormatType(methodInfo.ReturnType));
         }
         else if (method.Name.Equals("op_Implicit",
   StringComparison.Ordinal))
         {
-          builder.Append("implicit operator ");
-          builder.Append(FormatType(methodInfo.ReturnType));
+          _ = builder.Append("implicit operator ");
+          _ = builder.Append(FormatType(methodInfo.ReturnType));
         }
         else if (ValueOperators.TryGetValue(method.Name, out string op))
         {
-          builder.Append(FormatType(methodInfo.ReturnType));
-          builder.Append(" operator ");
-          builder.Append(op);
+          _ = builder.Append(FormatType(methodInfo.ReturnType));
+          _ = builder.Append(" operator ");
+          _ = builder.Append(op);
         }
         else
         {
           if (!shortform)
           {
-            builder.Append(FormatType(methodInfo.ReturnType));
+            _ = builder.Append(FormatType(methodInfo.ReturnType));
           }
-          builder.Append((char)0x20);
-          builder.Append(method.Name);
+          _ = builder.Append((char)0x20);
+          _ = builder.Append(method.Name);
         }
       }
       else
       {
-        builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
+        _ = builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       }
       bool first;
       if (method is MethodInfo && method.GetGenericArguments().Length > 0)
       {
-        builder.Append('<');
+        _ = builder.Append('<');
         first = true;
         foreach (var arg in method.GetGenericArguments())
         {
           if (!first)
           {
-            builder.Append(", ");
+            _ = builder.Append(", ");
           }
-          builder.Append(FormatType(arg));
+          _ = builder.Append(FormatType(arg));
           first = false;
         }
-        builder.Append('>');
+        _ = builder.Append('>');
       }
-      builder.Append('(');
+      _ = builder.Append('(');
       first = true;
       foreach (var param in method.GetParameters())
       {
         if (!first)
         {
-          builder.Append(',');
+          _ = builder.Append(',');
         }
         if (!shortform)
         {
-          builder.Append("\r\n" + FourSpaces + FourSpaces);
+          _ = builder.Append("\r\n" + FourSpaces + FourSpaces);
         }
         else if (!first)
         {
-          builder.Append((char)0x20);
+          _ = builder.Append((char)0x20);
         }
         if (first && isExtension)
         {
-          builder.Append("this ");
+          _ = builder.Append("this ");
         }
         attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null)
         {
-          builder.Append("params ");
+          _ = builder.Append("params ");
         }
-        builder.Append(FormatType(param.ParameterType));
+        _ = builder.Append(FormatType(param.ParameterType));
         if (!shortform)
         {
-          builder.Append((char)0x20);
-          builder.Append(param.Name);
+          _ = builder.Append((char)0x20);
+          _ = builder.Append(param.Name);
         }
         first = false;
       }
-      builder.Append(')');
+      _ = builder.Append(')');
       if (method is MethodInfo && method.GetGenericArguments().Length > 0)
       {
         AppendConstraints(method.GetGenericArguments(), builder);
       }
       if (!shortform)
       {
-        builder.Append(';');
+        _ = builder.Append(';');
       }
       return builder.ToString();
     }
@@ -316,103 +316,103 @@ IsMethodOverride((MethodInfo)method))
       var setter = property.GetSetMethod();
       if (!shortform)
       {
-        builder.Append(FourSpaces);
+        _ = builder.Append(FourSpaces);
         if (!property.ReflectedType.IsInterface)
         {
           if ((getter != null && getter.IsPublic) ||
               (setter != null && setter.IsPublic))
           {
-            builder.Append("public ");
+            _ = builder.Append("public ");
           }
           else if ((getter != null && getter.IsAssembly) ||
                     (setter != null && setter.IsAssembly))
           {
-            builder.Append("internal ");
+            _ = builder.Append("internal ");
           }
           else if ((getter != null && getter.IsFamily) ||
                     (setter != null && setter.IsFamily))
           {
-            builder.Append("protected ");
+            _ = builder.Append("protected ");
           }
           if ((getter != null && getter.IsStatic) ||
               (setter != null && setter.IsStatic))
           {
-            builder.Append("static ");
+            _ = builder.Append("static ");
           }
           if ((getter != null && getter.IsAbstract) ||
               (setter != null && setter.IsAbstract))
           {
-            builder.Append("abstract ");
+            _ = builder.Append("abstract ");
           }
           if ((getter != null && getter.IsFinal) ||
               (setter != null && setter.IsFinal))
           {
-            builder.Append("sealed ");
+            _ = builder.Append("sealed ");
           }
           else if (IsMethodOverride(getter))
           {
-            builder.Append("override ");
+            _ = builder.Append("override ");
           }
           else if ((getter != null && getter.IsVirtual) ||
                     (setter != null && setter.IsVirtual))
           {
-            builder.Append("virtual ");
+            _ = builder.Append("virtual ");
           }
         }
-        builder.Append(FormatType(property.PropertyType));
-        builder.Append((char)0x20);
+        _ = builder.Append(FormatType(property.PropertyType));
+        _ = builder.Append((char)0x20);
       }
       bool first;
       var indexParams = property.GetIndexParameters();
       if (indexParams.Length > 0)
       {
-        builder.Append("this[");
+        _ = builder.Append("this[");
       }
       else
       {
-        builder.Append(property.Name);
+        _ = builder.Append(property.Name);
       }
       first = true;
       foreach (var param in indexParams)
       {
         if (!first)
         {
-          builder.Append(",\r\n" + FourSpaces + FourSpaces);
+          _ = builder.Append(",\r\n" + FourSpaces + FourSpaces);
         }
         else
         {
-          builder.Append(indexParams.Length == 1 ?
+          _ = builder.Append(indexParams.Length == 1 ?
                     String.Empty : "\r\n" + FourSpaces + FourSpaces);
         }
         var attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null)
         {
-          builder.Append("params ");
+          _ = builder.Append("params ");
         }
-        builder.Append(FormatType(param.ParameterType));
+        _ = builder.Append(FormatType(param.ParameterType));
         if (!shortform)
         {
-          builder.Append((char)0x20);
-          builder.Append(param.Name);
+          _ = builder.Append((char)0x20);
+          _ = builder.Append(param.Name);
         }
         first = false;
       }
       if (indexParams.Length > 0)
       {
-        builder.Append(']');
+        _ = builder.Append(']');
       }
       if (!shortform)
       {
-        builder.Append(" { ");
+        _ = builder.Append(" { ");
         if (getter != null && !getter.IsPrivate)
         {
-          builder.Append("get; ");
+          _ = builder.Append("get; ");
         }
         if (setter != null && !setter.IsPrivate)
         {
-          builder.Append("set; ");
+          _ = builder.Append("set; ");
         }
-        builder.Append('}');
+        _ = builder.Append('}');
       }
       return builder.ToString();
     }
@@ -425,27 +425,27 @@ IsMethodOverride((MethodInfo)method))
         return rawfmt;
       }
       var sb = new StringBuilder();
-      sb.Append(rawfmt);
+      _ = sb.Append(rawfmt);
       if (type.ContainsGenericParameters)
       {
-        sb.Append('<');
+        _ = sb.Append('<');
         var first = true;
         foreach (var arg in type.GetGenericArguments())
         {
           if (!first)
           {
-            sb.Append(", ");
+            _ = sb.Append(", ");
           }
-          sb.Append(FormatType(arg));
+          _ = sb.Append(FormatType(arg));
           first = false;
         }
-        sb.Append('>');
+        _ = sb.Append('>');
       }
       if (type.IsArray)
       {
         for (var i = 0; i < type.GetArrayRank(); ++i)
         {
-          sb.Append("[]");
+          _ = sb.Append("[]");
         }
       }
       return sb.ToString();
@@ -487,55 +487,55 @@ IsMethodOverride((MethodInfo)method))
     public static string FormatTypeSig(Type typeInfo)
     {
       var builder = new StringBuilder();
-      builder.Append(FourSpaces);
+      _ = builder.Append(FourSpaces);
       if (typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic)
       {
-        builder.Append("public ");
+        _ = builder.Append("public ");
       }
       else
       {
-        builder.Append("internal ");
+        _ = builder.Append("internal ");
       }
       if (typeInfo.IsAbstract && typeInfo.IsSealed)
       {
-        builder.Append("static ");
+        _ = builder.Append("static ");
       }
       else if (typeInfo.IsAbstract && !typeInfo.IsInterface)
       {
-        builder.Append("abstract ");
+        _ = builder.Append("abstract ");
       }
       else if (typeInfo.IsSealed)
       {
-        builder.Append("sealed ");
+        _ = builder.Append("sealed ");
       }
       if (typeInfo.IsValueType)
       {
-        builder.Append("struct ");
+        _ = builder.Append("struct ");
       }
       else if (typeInfo.IsClass)
       {
-        builder.Append("class ");
+        _ = builder.Append("class ");
       }
       else
       {
-        builder.Append("interface ");
+        _ = builder.Append("interface ");
       }
-      builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
+      _ = builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
       bool first;
       if (typeInfo.GetGenericArguments().Length > 0)
       {
-        builder.Append('<');
+        _ = builder.Append('<');
         first = true;
         foreach (var arg in typeInfo.GetGenericArguments())
         {
           if (!first)
           {
-            builder.Append(", ");
+            _ = builder.Append(", ");
           }
-          builder.Append(FormatType(arg));
+          _ = builder.Append(FormatType(arg));
           first = false;
         }
-        builder.Append('>');
+        _ = builder.Append('>');
       }
       first = true;
       var ifaces = typeInfo.GetInterfaces();
@@ -547,10 +547,10 @@ IsMethodOverride((MethodInfo)method))
       }
       if (derived != null || ifaces.Length > 0)
       {
-        builder.Append(" :\r\n" + FourSpaces);
+        _ = builder.Append(" :\r\n" + FourSpaces);
         if (derived != null)
         {
-          builder.Append(FourSpaces + FormatType(derived));
+          _ = builder.Append(FourSpaces + FormatType(derived));
           first = false;
         }
         if (ifaces.Length > 0)
@@ -568,9 +568,9 @@ IsMethodOverride((MethodInfo)method))
           {
             if (!first)
             {
-              builder.Append(",\r\n" + FourSpaces);
+              _ = builder.Append(",\r\n" + FourSpaces);
             }
-            builder.Append(FourSpaces + ifacename);
+            _ = builder.Append(FourSpaces + ifacename);
             first = false;
           }
         }
@@ -601,16 +601,16 @@ IsMethodOverride((MethodInfo)method))
         {
           if (cp >= 0x10000)
           {
-            builder.Append(name, i, 2);
+            _ = builder.Append(name, i, 2);
           }
           else
           {
-            builder.Append(name[i]);
+            _ = builder.Append(name[i]);
           }
         }
         else
         {
-          builder.Append(' ');
+          _ = builder.Append(' ');
         }
       }
       name = builder.ToString();
@@ -621,7 +621,7 @@ IsMethodOverride((MethodInfo)method))
 
     public static bool IsMethodOverride(MethodInfo method)
     {
-      var type = method.DeclaringType;
+      _ = method.DeclaringType;
       var baseMethod = method.GetBaseDefinition();
       return (baseMethod != null) && (!method.Equals(baseMethod));
     }
@@ -635,10 +635,10 @@ IsMethodOverride((MethodInfo)method))
     public override string ToString()
     {
       var b = new StringBuilder();
-      b.Append(this.buffer.ToString());
+      _ = b.Append(this.buffer.ToString());
       foreach (var b2 in this.members.Keys)
       {
-        b.Append(this.members[b2].ToString());
+        _ = b.Append(this.members[b2].ToString());
       }
       return b.ToString();
     }
@@ -726,14 +726,14 @@ xmlName.Equals("sup", StringComparison.Ordinal) ||
 xmlName.Equals("em", StringComparison.Ordinal))
         {
           var sb = new StringBuilder();
-          sb.Append("<" + xmlName);
+          _ = sb.Append("<" + xmlName);
           foreach (var attr in node.GetAttributes())
           {
-            sb.Append(" " + attr + "=");
-            sb.Append("\"" + DocGenUtil.HtmlEscape(
+            _ = sb.Append(" " + attr + "=");
+            _ = sb.Append("\"" + DocGenUtil.HtmlEscape(
               node.GetAttribute(attr)) + "\"");
           }
-          sb.Append('>');
+          _ = sb.Append('>');
           this.Write(sb.ToString());
           XmlDoc.VisitInnerNode(node, this);
           this.Write("</" + xmlName + ">");
@@ -836,9 +836,9 @@ xmlName.Equals("em", StringComparison.Ordinal))
 
     public void HandleMember(MemberInfo info, XmlDoc xmldoc)
     {
-      var signature = String.Empty;
       var mnu = TypeNameUtil.XmlDocMemberName(info);
       var mnm = xmldoc.GetMemberNode(mnu);
+      string signature;
       if (info is MethodBase)
       {
         var method = (MethodBase)info;
@@ -874,9 +874,9 @@ method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
           {
             this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
           }
-          this.paramStr.Clear();
-          this.returnStr.Clear();
-          this.exceptionStr.Clear();
+          _ = this.paramStr.Clear();
+          _ = this.returnStr.Clear();
+          _ = this.exceptionStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
           if (this.paramStr.Length > 0)
           {
@@ -923,7 +923,7 @@ method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
           {
             this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
           }
-          this.paramStr.Clear();
+          _ = this.paramStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
           this.Write("\r\n\r\n");
           this.WriteLine("<<<MEMBER_SUMMARY>>>");
@@ -971,9 +971,9 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
           {
             this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
           }
-          this.paramStr.Clear();
-          this.returnStr.Clear();
-          this.exceptionStr.Clear();
+          _ = this.paramStr.Clear();
+          _ = this.returnStr.Clear();
+          _ = this.exceptionStr.Clear();
           XmlDoc.VisitInnerNode(mnm, this);
           if (this.paramStr.Length > 0)
           {
@@ -1202,11 +1202,11 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
     {
       if (this.currentBuffer != null)
       {
-        this.currentBuffer.Append(ln);
+        _ = this.currentBuffer.Append(ln);
       }
       else
       {
-        this.buffer.Append(ln);
+        _ = this.buffer.Append(ln);
       }
     }
 
@@ -1214,13 +1214,13 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
     {
       if (this.currentBuffer != null)
       {
-        this.currentBuffer.Append(ln);
-        this.currentBuffer.Append("\r\n");
+        _ = this.currentBuffer.Append(ln);
+        _ = this.currentBuffer.Append("\r\n");
       }
       else
       {
-        this.buffer.Append(ln);
-        this.buffer.Append("\r\n");
+        _ = this.buffer.Append(ln);
+        _ = this.buffer.Append("\r\n");
       }
     }
 

@@ -39,7 +39,7 @@ namespace PeterO.Cbor
       if ((val >> 63) != 0)
       {
         EInteger bigintAdd = EInteger.One << 63;
-        lval += (EInteger)bigintAdd;
+        lval += bigintAdd;
       }
       return lval;
     }
@@ -183,7 +183,7 @@ untagged.AsNumber().IsNegative())
 
     private CBORObject ReadStringArrayMap(int type, long uadditional)
     {
-      bool canonical = this.options.Ctap2Canonical;
+      _ = this.options.Ctap2Canonical;
       if (type == 2 || type == 3)
       { // Byte string or text string
         if ((uadditional >> 31) != 0)
@@ -229,7 +229,7 @@ untagged.AsNumber().IsNegative())
         ++this.depth;
         for (long i = 0; i < uadditional; ++i)
         {
-          cbor.Add(
+          _ = cbor.Add(
             this.ReadInternal());
         }
         --this.depth;
@@ -447,7 +447,7 @@ count);
         return fixedObject;
       }
       // Read fixed-length data
-      byte[] data = null;
+      byte[] data;
       if (expectedLength != 0)
       {
         data = new byte[expectedLength];
@@ -495,7 +495,7 @@ count);
                   if (nextByte != 0x40)
                   {
                     // NOTE: 0x40 means the empty byte string
-                    ReadByteData(this.stream, len, ms);
+                    _ = ReadByteData(this.stream, len, ms);
                   }
                 }
                 if (ms.Position > Int32.MaxValue)
@@ -570,7 +570,7 @@ count);
                 CBORObject o = this.ReadForFirstByte(
                     headByte);
                 --this.depth;
-                cbor.Add(o);
+                _ = cbor.Add(o);
                 ++vtindex;
               }
               return cbor;
@@ -609,7 +609,8 @@ count);
           default: throw new CBORException("Unexpected data encountered");
         }
       }
-      EInteger bigintAdditional = EInteger.Zero;
+
+      _ = EInteger.Zero;
       uadditional = ReadDataLength(this.stream, firstbyte, type);
       // The following doesn't check for major types 0 and 1,
       // since all of them are fixed-length types and are
@@ -776,8 +777,8 @@ count);
         case 25:
           {
             ReadHelper(stream, data, 0, 2);
-            int lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
-            lowAdditional |= (int)(data[1] & (int)0xff);
+            int lowAdditional = (data[0] & 0xff) << 8;
+            lowAdditional |= data[1] & 0xff;
             if (!allowNonShortest && lowAdditional < 256)
             {
               throw new CBORException("Non-shortest CBOR form");
@@ -787,10 +788,10 @@ count);
         case 26:
           {
             ReadHelper(stream, data, 0, 4);
-            long uadditional = ((long)(data[0] & 0xffL)) << 24;
-            uadditional |= ((long)(data[1] & 0xffL)) << 16;
-            uadditional |= ((long)(data[2] & 0xffL)) << 8;
-            uadditional |= (long)(data[3] & 0xffL);
+            long uadditional = (data[0] & 0xffL) << 24;
+            uadditional |= (data[1] & 0xffL) << 16;
+            uadditional |= (data[2] & 0xffL) << 8;
+            uadditional |= data[3] & 0xffL;
             if (!allowNonShortest && (uadditional >> 16) == 0)
             {
               throw new CBORException("Non-shortest CBOR form");
@@ -801,14 +802,14 @@ count);
           {
             ReadHelper(stream, data, 0, 8);
             // Treat return value as an unsigned integer
-            long uadditional = ((long)(data[0] & 0xffL)) << 56;
-            uadditional |= ((long)(data[1] & 0xffL)) << 48;
-            uadditional |= ((long)(data[2] & 0xffL)) << 40;
-            uadditional |= ((long)(data[3] & 0xffL)) << 32;
-            uadditional |= ((long)(data[4] & 0xffL)) << 24;
-            uadditional |= ((long)(data[5] & 0xffL)) << 16;
-            uadditional |= ((long)(data[6] & 0xffL)) << 8;
-            uadditional |= (long)(data[7] & 0xffL);
+            long uadditional = (data[0] & 0xffL) << 56;
+            uadditional |= (data[1] & 0xffL) << 48;
+            uadditional |= (data[2] & 0xffL) << 40;
+            uadditional |= (data[3] & 0xffL) << 32;
+            uadditional |= (data[4] & 0xffL) << 24;
+            uadditional |= (data[5] & 0xffL) << 16;
+            uadditional |= (data[6] & 0xffL) << 8;
+            uadditional |= data[7] & 0xffL;
             if (!allowNonShortest && (uadditional >> 32) == 0)
             {
               throw new CBORException("Non-shortest CBOR form");

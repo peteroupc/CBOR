@@ -13,8 +13,8 @@ namespace PeterO.Cbor
 {
   internal static class CBORDataUtilitiesTextString
   {
-    private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
-    private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
+    private const long DoubleNegInfinity = unchecked(0xfffL << 52);
+    private const long DoublePosInfinity = unchecked(0x7ffL << 52);
 
     internal static CBORObject ParseJSONNumber(
       string chars,
@@ -35,7 +35,8 @@ namespace PeterO.Cbor
       {
         return null;
       }
-      JSONOptions opt = options ?? CBORDataUtilities.DefaultOptions;
+
+      _ = options ?? CBORDataUtilities.DefaultOptions;
       bool preserveNegativeZero = options.PreserveNegativeZero;
       JSONOptions.ConversionMode kind = options.NumberConversion;
       int endPos = offset + count;
@@ -269,7 +270,7 @@ namespace PeterO.Cbor
         int vi = numOffset;
         for (; vi < endPos; ++vi)
         {
-          v = (v * 10) + (int)(chars[vi] - '0');
+          v = (v * 10) + (chars[vi] - '0');
         }
         if ((v != 0 || !negative) && v < (1L << 53) - 1)
         {
@@ -320,7 +321,7 @@ CBORObject.FromObject(ei);
             {
               ++digitCount;
             }
-            lv = checked((lv * 10) + (int)(chars[vi] - '0'));
+            lv = checked((lv * 10) + (chars[vi] - '0'));
           }
           for (vi = decimalPointPos + 1; vi < endPos; ++vi)
           {
@@ -333,7 +334,7 @@ CBORObject.FromObject(ei);
             {
               ++digitCount;
             }
-            lv = checked((lv * 10) + (int)(chars[vi] - '0'));
+            lv = checked((lv * 10) + (chars[vi] - '0'));
           }
           if (negative)
           {

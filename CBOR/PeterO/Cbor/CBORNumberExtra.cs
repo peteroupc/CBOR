@@ -161,7 +161,7 @@ this.ToEIntegerIfExact().ToSByteChecked();
       }
       if (this.IsZero())
       {
-        return (ushort)0;
+        return 0;
       }
       if (this.IsNegative())
       {

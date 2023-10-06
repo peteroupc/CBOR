@@ -43,9 +43,9 @@ namespace PeterO.Cbor
           return 0;
         }
         // check major types
-        if (((int)bytesA[0] & 0xe0) != ((int)bytesB[0] & 0xe0))
+        if ((bytesA[0] & 0xe0) != (bytesB[0] & 0xe0))
         {
-          return ((int)bytesA[0] & 0xe0) < ((int)bytesB[0] & 0xe0) ? -1 : 1;
+          return (bytesA[0] & 0xe0) < (bytesB[0] & 0xe0) ? -1 : 1;
         }
         // check lengths
         if (bytesA.Length != bytesB.Length)
@@ -57,8 +57,8 @@ namespace PeterO.Cbor
         {
           if (bytesA[i] != bytesB[i])
           {
-            int ai = ((int)bytesA[i]) & 0xff;
-            int bi = ((int)bytesB[i]) & 0xff;
+            int ai = bytesA[i] & 0xff;
+            int bi = bytesB[i] & 0xff;
             return (ai < bi) ? -1 : 1;
           }
         }
@@ -144,8 +144,8 @@ namespace PeterO.Cbor
         {
           if (abs[i] != bbs[i])
           {
-            int ai = ((int)abs[i]) & 0xff;
-            int bi = ((int)bbs[i]) & 0xff;
+            int ai = abs[i] & 0xff;
+            int bi = bbs[i] & 0xff;
             return (ai < bi) ? -1 : 1;
           }
         }
@@ -225,7 +225,7 @@ namespace PeterO.Cbor
         {
           using (var ms = new MemoryStream())
           {
-            CBORObject.WriteValue(ms, 4, cbor.Count);
+            _ = CBORObject.WriteValue(ms, 4, cbor.Count);
             for (var i = 0; i < cbor.Count; ++i)
             {
               if (depth >= 3 && IsArrayOrMap(cbor[i]))
@@ -262,7 +262,7 @@ namespace PeterO.Cbor
           sortedKeys.Sort(ByteComparer);
           using (var ms = new MemoryStream())
           {
-            CBORObject.WriteValue(ms, 5, cbor.Count);
+            _ = CBORObject.WriteValue(ms, 5, cbor.Count);
             byte[] lastKey = null;
             for (var i = 0; i < sortedKeys.Count; ++i)
             {
@@ -295,7 +295,7 @@ namespace PeterO.Cbor
       {
         long bits = cbor.AsDoubleBits();
         return new byte[] {
-          (byte)0xfb,
+          0xfb,
           (byte)((bits >> 56) & 0xffL),
           (byte)((bits >> 48) & 0xffL),
           (byte)((bits >> 40) & 0xffL),

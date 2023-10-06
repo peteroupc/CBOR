@@ -36,7 +36,7 @@ namespace Test
       {
         if (str.Length == 1)
         {
-          this.WriteCodePoint((int)str[0]);
+          this.WriteCodePoint(str[0]);
         }
         else
         {
@@ -53,7 +53,7 @@ namespace Test
       }
       else
       {
-        this.builder.Append(str);
+        _ = this.builder.Append(str);
       }
     }
 
@@ -61,13 +61,13 @@ namespace Test
     {
       if (this.outputStream == null)
       {
-        this.builder.Append(str, index, length);
+        _ = this.builder.Append(str, index, length);
       }
       else
       {
         if (length == 1)
         {
-          this.WriteCodePoint((int)str[index]);
+          this.WriteCodePoint(str[index]);
         }
         else
         {
@@ -119,7 +119,7 @@ length);
       }
       if (this.outputStream == null)
       {
-        DataUtilities.ReadUtf8FromBytes(
+        _ = DataUtilities.ReadUtf8FromBytes(
           bytes,
           index,
           length,
@@ -131,7 +131,7 @@ length);
         for (var i = 0; i < length; ++i)
         {
           byte b = bytes[i + index];
-          if ((((int)b) & 0x7f) != b)
+          if ((b & 0x7f) != b)
           {
             throw new ArgumentException("str is non-ASCII");
           }
@@ -147,7 +147,7 @@ length);
         // Code point is in the Basic Latin range (U+0000 to U+007F)
         if (this.outputStream == null)
         {
-          this.builder.Append((char)codePoint);
+          _ = this.builder.Append((char)codePoint);
         }
         else
         {
@@ -209,14 +209,14 @@ length);
         if (codePoint <= 0xffff)
         {
           {
-            this.builder.Append((char)codePoint);
+            _ = this.builder.Append((char)codePoint);
           }
         }
         else if (codePoint <= 0x10ffff)
         {
-          this.builder.Append((char)((((codePoint - 0x10000) >> 10) & 0x3ff) |
+          _ = this.builder.Append((char)((((codePoint - 0x10000) >> 10) & 0x3ff) |
               0xd800));
-          this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) |
+          _ = this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) |
               0xdc00));
         }
       }

@@ -52,7 +52,7 @@ namespace Test
           index = index2 + delimLength;
         }
       }
-      return (string[])strings.ToArray();
+      return strings.ToArray();
     }
 
     private static int ToHexNumber(int c)
@@ -96,7 +96,6 @@ namespace Test
       var bytesNeeded = 0;
       var lower = 0x80;
       var upper = 0xbf;
-      var markedPos = -1;
       var retString = new StringBuilder();
       for (int i = 0; i < len; ++i)
       {
@@ -117,18 +116,16 @@ namespace Test
                 // this is the lead byte
                 if (b < 0x80)
                 {
-                  retString.Append((char)b);
+                  _ = retString.Append((char)b);
                   continue;
                 }
                 else if (b >= 0xc2 && b <= 0xdf)
                 {
-                  markedPos = i;
                   bytesNeeded = 1;
                   cp = b - 0xc0;
                 }
                 else if (b >= 0xe0 && b <= 0xef)
                 {
-                  markedPos = i;
                   lower = (b == 0xe0) ? 0xa0 : 0x80;
                   upper = (b == 0xed) ? 0x9f : 0xbf;
                   bytesNeeded = 2;
@@ -136,7 +133,6 @@ namespace Test
                 }
                 else if (b >= 0xf0 && b <= 0xf4)
                 {
-                  markedPos = i;
                   lower = (b == 0xf0) ? 0x90 : 0x80;
                   upper = (b == 0xf4) ? 0x8f : 0xbf;
                   bytesNeeded = 3;
@@ -164,7 +160,6 @@ namespace Test
                 upper = 0xbf;
                 ++bytesSeen;
                 cp += (b - 0x80) << (6 * (bytesNeeded - bytesSeen));
-                markedPos = i;
                 if (bytesSeen != bytesNeeded)
                 {
                   // continue if not all bytes needed
@@ -179,14 +174,14 @@ namespace Test
                 if (ret <= 0xffff)
                 {
                   {
-                    retString.Append((char)ret);
+                    _ = retString.Append((char)ret);
                   }
                 }
                 else
                 {
-                  retString.Append((char)((((ret - 0x10000) >> 10) &
+                  _ = retString.Append((char)((((ret - 0x10000) >> 10) &
                         0x3ff) | 0xd800));
-                  retString.Append((char)(((ret - 0x10000) & 0x3ff) |
+                  _ = retString.Append((char)(((ret - 0x10000) & 0x3ff) |
                       0xdc00));
                 }
                 continue;
@@ -203,7 +198,7 @@ namespace Test
         // append the code point as is (we already
         // checked for ASCII characters so this will
         // be simple
-        retString.Append((char)(c & 0xff));
+        _ = retString.Append((char)(c & 0xff));
       }
       if (bytesNeeded > 0)
       {
@@ -299,7 +294,7 @@ namespace Test
         }
         ++index; // move to after the start bracket
       }
-      return (string[])path.ToArray();
+      return path.ToArray();
     }
 
     private static readonly string Digits = "0123456789";
@@ -336,13 +331,13 @@ namespace Test
         while (value > 9)
         {
           int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-          char digit = Digits[(int)(value - (intdivvalue * 10))];
+          char digit = Digits[value - (intdivvalue * 10)];
           chars[count--] = digit;
           value = intdivvalue;
         }
         if (value != 0)
         {
-          chars[count--] = Digits[(int)value];
+          chars[count--] = Digits[value];
         }
         if (neg)
         {
@@ -359,20 +354,20 @@ namespace Test
       while (value >= 163840)
       {
         int intdivvalue = value / 10;
-        char digit = Digits[(int)(value - (intdivvalue * 10))];
+        char digit = Digits[value - (intdivvalue * 10)];
         chars[count--] = digit;
         value = intdivvalue;
       }
       while (value > 9)
       {
         int intdivvalue = unchecked((((value >> 1) * 52429) >> 18) & 16383);
-        char digit = Digits[(int)(value - (intdivvalue * 10))];
+        char digit = Digits[value - (intdivvalue * 10)];
         chars[count--] = digit;
         value = intdivvalue;
       }
       if (value != 0)
       {
-        chars[count--] = Digits[(int)value];
+        chars[count--] = Digits[value];
       }
       if (neg)
       {
@@ -443,17 +438,17 @@ namespace Test
         if (IsList(value))
         {
           IList<Object> newList = ConvertToList(value);
-          cbor.Add(ConvertListsToCBOR(newList));
+          _ = cbor.Add(ConvertListsToCBOR(newList));
         }
         else if (value != null)
         {
           // Convert the list's descendents
           // if they are lists
-          cbor.Add(ConvertListsToCBOR(value));
+          _ = cbor.Add(ConvertListsToCBOR(value));
         }
         else
         {
-          cbor.Add(dict[i]);
+          _ = cbor.Add(dict[i]);
         }
       }
       return cbor;
@@ -472,17 +467,17 @@ namespace Test
         if (IsList(value))
         {
           IList<Object> newList = ConvertToList(value);
-          cbor.Add(key, ConvertListsToCBOR(newList));
+          _ = cbor.Add(key, ConvertListsToCBOR(newList));
         }
         else if (value != null)
         {
           // Convert the dictionary's descendents
           // if they are lists
-          cbor.Add(key, ConvertListsToCBOR(value));
+          _ = cbor.Add(key, ConvertListsToCBOR(value));
         }
         else
         {
-          cbor.Add(key, dict[key]);
+          _ = cbor.Add(key, dict[key]);
         }
       }
       return cbor;
@@ -506,7 +501,7 @@ namespace Test
         {
           // Convert the list's descendents
           // if they are lists
-          ConvertLists(value);
+          _ = ConvertLists(value);
         }
       }
     }
@@ -530,7 +525,7 @@ namespace Test
         {
           // Convert the dictionary's descendents
           // if they are lists
-          ConvertLists(value);
+          _ = ConvertLists(value);
         }
       }
       return dict;

@@ -51,7 +51,7 @@ namespace PeterO.Cbor
              obj.HasMostOuterTag(266) ||
              obj.HasMostOuterTag(267))
       {
-        ValidateObject(obj);
+        _ = ValidateObject(obj);
         try
         {
           return new Uri(obj.AsString());
@@ -81,7 +81,7 @@ namespace PeterO.Cbor
       {
         tag = 267;
       }
-      return CBORObject.FromObjectAndTag(uriString, (int)tag);
+      return CBORObject.FromObjectAndTag(uriString, tag);
     }
   }
 }

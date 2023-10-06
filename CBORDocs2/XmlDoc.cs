@@ -75,7 +75,7 @@ namespace PeterO.DocGen
         var sb = new StringBuilder();
         foreach (var c in this.children)
         {
-          sb.Append(c.GetContent());
+          _ = sb.Append(c.GetContent());
         }
         return sb.ToString();
       }
@@ -128,7 +128,7 @@ namespace PeterO.DocGen
       }
       if (emptyElement)
       {
-        reader.Read();
+        _ = reader.Read();
         return node;
       }
       var depth = 0;
@@ -139,14 +139,14 @@ namespace PeterO.DocGen
       {
         if (doread)
         {
-          reader.Read();
+          _ = reader.Read();
         }
         doread = true;
         if (reader.NodeType == XmlNodeType.EndElement)
         {
           if (depth <= 0)
           {
-            reader.Read();
+            _ = reader.Read();
             break;
           }
           nodeStack.RemoveAt(nodeStack.Count - 1);
@@ -179,13 +179,13 @@ namespace PeterO.DocGen
           reader.NodeType == XmlNodeType.Text)
         {
           var sb = new StringBuilder().Append(reader.Value);
-          reader.Read();
+          _ = reader.Read();
           while (reader.NodeType == XmlNodeType.SignificantWhitespace ||
             reader.NodeType == XmlNodeType.Whitespace ||
             reader.NodeType == XmlNodeType.Text)
           {
-            sb.Append(reader.Value);
-            reader.Read();
+            _ = sb.Append(reader.Value);
+            _ = reader.Read();
           }
           doread = false;
           nodeStack[nodeStack.Count - 1].AppendChild(
@@ -208,7 +208,7 @@ namespace PeterO.DocGen
       {
         if (String.IsNullOrEmpty(node.LocalName))
         {
-          this.sb.Append(node.GetContent());
+          _ = this.sb.Append(node.GetContent());
         }
         else
         {
@@ -216,11 +216,11 @@ namespace PeterO.DocGen
           var n = node.GetAttribute("name");
           if (c != null)
           {
-            this.sb.Append(c);
+            _ = this.sb.Append(c);
           }
           else if (n != null)
           {
-            this.sb.Append(n);
+            _ = this.sb.Append(n);
           }
         }
         XmlDoc.VisitInnerNode(node, this);
@@ -264,7 +264,7 @@ namespace PeterO.DocGen
           {
             var sv = new SummaryVisitor();
             sv.VisitNode(c);
-            sb.Append(sv.ToString()).Append("\r\n\r\n");
+            _ = sb.Append(sv.ToString()).Append("\r\n\r\n");
           }
         }
         var summary = sb.ToString();
@@ -280,14 +280,14 @@ namespace PeterO.DocGen
       {
         using (var reader = XmlReader.Create(stream))
         {
-          reader.Read();
+          _ = reader.Read();
           reader.ReadStartElement("doc");
           while (reader.IsStartElement())
           {
             // Console.WriteLine(reader.LocalName);
             if (reader.LocalName.Equals("members", StringComparison.Ordinal))
             {
-              reader.Read();
+              _ = reader.Read();
               while (reader.IsStartElement())
               {
                 if (reader.LocalName.Equals("member",

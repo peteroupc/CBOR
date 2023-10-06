@@ -45,7 +45,7 @@ namespace PeterO
       for (var i = 0; i < 20; ++i)
       {
         var array = new byte[rand.UniformInt(100000) + 1];
-        rand.GetBytes(array, 0, array.Length);
+        _ = rand.GetBytes(array, 0, array.Length);
         DateTime utcn = DateTime.UtcNow;
         CBORTest.TestRandomOne(array);
         var span = DateTime.UtcNow - utcn;

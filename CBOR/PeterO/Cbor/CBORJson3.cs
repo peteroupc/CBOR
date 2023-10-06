@@ -46,13 +46,13 @@ namespace PeterO.Cbor
     {
       int c;
       int startIndex = this.index;
-      var endIndex = -1;
       int ep = this.endPos;
       string js = this.jstring;
       int idx = this.index;
+      int endIndex;
       while (true)
       {
-        c = idx < ep ? ((int)js[idx++]) & 0xffff : -1;
+        c = idx < ep ? js[idx++] & 0xffff : -1;
         if (c == -1 || c < 0x20)
         {
           this.index = idx;
@@ -74,11 +74,11 @@ namespace PeterO.Cbor
         }
       }
       this.sb = this.sb ?? new StringBuilder();
-      this.sb.Remove(0, this.sb.Length);
-      this.sb.Append(js, startIndex, endIndex - startIndex);
+      _ = this.sb.Remove(0, this.sb.Length);
+      _ = this.sb.Append(js, startIndex, endIndex - startIndex);
       while (true)
       {
-        c = this.index < ep ? ((int)js[this.index++]) &
+        c = this.index < ep ? js[this.index++] &
           0xffff : -1;
         if (c == -1 || c < 0x20)
         {
@@ -87,8 +87,8 @@ namespace PeterO.Cbor
         switch (c)
         {
           case '\\':
-            endIndex = this.index - 1;
-            c = this.index < ep ? ((int)js[this.index++]) &
+            _ = this.index - 1;
+            c = this.index < ep ? js[this.index++] &
               0xffff : -1;
             switch (c)
             {
@@ -96,22 +96,22 @@ namespace PeterO.Cbor
               case '/':
               case '\"':
                 // Slash is now allowed to be escaped under RFC 8259
-                this.sb.Append((char)c);
+                _ = this.sb.Append((char)c);
                 break;
               case 'b':
-                this.sb.Append('\b');
+                _ = this.sb.Append('\b');
                 break;
               case 'f':
-                this.sb.Append('\f');
+                _ = this.sb.Append('\f');
                 break;
               case 'n':
-                this.sb.Append('\n');
+                _ = this.sb.Append('\n');
                 break;
               case 'r':
-                this.sb.Append('\r');
+                _ = this.sb.Append('\r');
                 break;
               case 't':
-                this.sb.Append('\t');
+                _ = this.sb.Append('\t');
                 break;
               case 'u':
                 { // Unicode escape
@@ -120,7 +120,7 @@ namespace PeterO.Cbor
                   for (var i = 0; i < 4; ++i)
                   {
                     int ch = this.index < ep ?
-                      ((int)js[this.index++]) : -1;
+                      js[this.index++] : -1;
                     if (ch >= '0' && ch <= '9')
                     {
                       c <<= 4;
@@ -145,13 +145,13 @@ namespace PeterO.Cbor
                   if ((c & 0xf800) != 0xd800)
                   {
                     // Non-surrogate
-                    this.sb.Append((char)c);
+                    _ = this.sb.Append((char)c);
                   }
                   else if ((c & 0xfc00) == 0xd800)
                   {
-                    int ch = this.index < ep ? ((int)js[this.index++]) : -1;
+                    int ch = this.index < ep ? js[this.index++] : -1;
                     if (ch != '\\' || (this.index < ep ?
-                        ((int)js[this.index++]) : -1) != 'u')
+                        js[this.index++] : -1) != 'u')
                     {
                       this.RaiseError("Invalid escaped character");
                     }
@@ -159,7 +159,7 @@ namespace PeterO.Cbor
                     for (var i = 0; i < 4; ++i)
                     {
                       ch = this.index < ep ?
-                        ((int)js[this.index++]) : -1;
+                        js[this.index++] : -1;
                       if (ch >= '0' && ch <= '9')
                       {
                         c2 <<= 4;
@@ -187,8 +187,8 @@ namespace PeterO.Cbor
                     }
                     else
                     {
-                      this.sb.Append((char)c);
-                      this.sb.Append((char)c2);
+                      _ = this.sb.Append((char)c);
+                      _ = this.sb.Append((char)c2);
                     }
                   }
                   else
@@ -212,14 +212,14 @@ namespace PeterO.Cbor
               if ((c & 0xf800) != 0xd800)
               {
                 // Non-surrogate
-                this.sb.Append((char)c);
+                _ = this.sb.Append((char)c);
               }
               else if ((c & 0xfc00) == 0xd800 && this.index < ep &&
                 (js[this.index] & 0xfc00) == 0xdc00)
               {
                 // Surrogate pair
-                this.sb.Append((char)c);
-                this.sb.Append(js[this.index]);
+                _ = this.sb.Append((char)c);
+                _ = this.sb.Append(js[this.index]);
                 ++this.index;
               }
               else
@@ -239,7 +239,7 @@ namespace PeterO.Cbor
       // DebugUtility.Log("js=" + (jstring));
       CBORObject obj;
       int numberStartIndex = this.index - 1;
-      int c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+      int c = this.index < this.endPos ? this.jstring[this.index++] &
         0xffff : -1;
       if (c < '0' || c > '9')
       {
@@ -248,7 +248,7 @@ namespace PeterO.Cbor
       if (this.index < this.endPos && c != '0')
       {
         // Check for negative single-digit
-        int c2 = ((int)this.jstring[this.index]) & 0xffff;
+        int c2 = this.jstring[this.index] & 0xffff;
         if (c2 == ',' || c2 == ']' || c2 == '}')
         {
           ++this.index;
@@ -331,7 +331,7 @@ namespace PeterO.Cbor
       var needObj = true;
       int numberStartIndex = this.index - 1;
       // DebugUtility.Log("js=" + (jstring));
-      c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+      c = this.index < this.endPos ? this.jstring[this.index++] &
         0xffff : -1;
       if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
           c == 'e' || c == 'E'))
@@ -349,16 +349,16 @@ namespace PeterO.Cbor
           // Leading zero followed by any digit is not allowed
           this.RaiseError("JSON number can't be parsed.");
         }
-        cval = (cval * 10) + (int)(c - '0');
-        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) : -1;
+        cval = (cval * 10) + (c - '0');
+        c = this.index < this.endPos ? this.jstring[this.index++] : -1;
         if (c >= '0' && c <= '9')
         {
           var digits = 2;
           while (digits < 9 && (c >= '0' && c <= '9'))
           {
-            cval = (cval * 10) + (int)(c - '0');
+            cval = (cval * 10) + (c - '0');
             c = this.index < this.endPos ?
-              ((int)this.jstring[this.index++]) : -1;
+              this.jstring[this.index++] : -1;
             ++digits;
           }
           if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
@@ -449,11 +449,11 @@ namespace PeterO.Cbor
       int depth)
     {
       int c = firstChar;
-      CBORObject obj = null;
       if (c < 0)
       {
         this.RaiseError("Unexpected end of data");
       }
+      CBORObject obj;
       switch (c)
       {
         case '"':
@@ -484,9 +484,9 @@ namespace PeterO.Cbor
           {
             // Parse true
             if (this.endPos - this.index <= 2 ||
-              (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
-              (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
-              (((int)this.jstring[this.index + 2]) & 0xFF) != 'e')
+              (this.jstring[this.index] & 0xFF) != 'r' ||
+              (this.jstring[this.index + 1] & 0xFF) != 'u' ||
+              (this.jstring[this.index + 2] & 0xFF) != 'e')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -498,10 +498,10 @@ namespace PeterO.Cbor
           {
             // Parse false
             if (this.endPos - this.index <= 3 ||
-              (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
-              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
-              (((int)this.jstring[this.index + 3]) & 0xFF) != 'e')
+              (this.jstring[this.index] & 0xFF) != 'a' ||
+              (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+              (this.jstring[this.index + 2] & 0xFF) != 's' ||
+              (this.jstring[this.index + 3] & 0xFF) != 'e')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -513,9 +513,9 @@ namespace PeterO.Cbor
           {
             // Parse null
             if (this.endPos - this.index <= 2 ||
-              (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
-              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.jstring[this.index + 2]) & 0xFF) != 'l')
+              (this.jstring[this.index] & 0xFF) != 'u' ||
+              (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+              (this.jstring[this.index + 2] & 0xFF) != 'l')
             {
               this.RaiseError("Value can't be parsed.");
             }

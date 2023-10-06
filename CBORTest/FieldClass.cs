@@ -1,6 +1,5 @@
 namespace Test
 {
-#pragma warning disable CA1823
 #pragma warning disable CS0169
 #pragma warning disable CS0414
 #pragma warning disable CA1051

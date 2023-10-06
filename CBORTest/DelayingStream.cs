@@ -9,6 +9,10 @@ namespace Test
   {
     private readonly Stream ms;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DelayingStream"/> class.
+    /// </summary>
+    /// <param name="ms"></param>
     public DelayingStream(Stream ms)
     {
       if (ms == null)
@@ -18,14 +22,25 @@ namespace Test
       this.ms = ms;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DelayingStream"/> class.
+    /// </summary>
+    /// <param name="bytes"></param>
     public DelayingStream(byte[] bytes) : this(new MemoryStream(bytes))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DelayingStream"/> class.
+    /// </summary>
     public DelayingStream() : this(new MemoryStream())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DelayingStream"/> class.
+    /// </summary>
+    /// <param name="size"></param>
     public DelayingStream(int size) : this(new MemoryStream(size))
     {
     }
@@ -35,6 +50,7 @@ namespace Test
       this.ms.Dispose();
     }
 
+    /// <inheritdoc/>
     public override long Length
     {
       get
@@ -43,16 +59,19 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override long Seek(long pos, SeekOrigin origin)
     {
       return this.ms.Seek(pos, origin);
     }
 
+    /// <inheritdoc/>
     public override void SetLength(long len)
     {
       this.ms.SetLength(len);
     }
 
+    /// <inheritdoc/>
     public override long Position
     {
       get
@@ -76,6 +95,7 @@ namespace Test
       throw new NotSupportedException();
     }
 
+    /// <inheritdoc/>
     public override bool CanRead
     {
       get
@@ -84,6 +104,7 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override bool CanSeek
     {
       get
@@ -92,6 +113,7 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override bool CanWrite
     {
       get
@@ -100,6 +122,7 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override int Read(byte[] bytes, int offset, int count)
     {
       if (bytes == null)
@@ -145,16 +168,19 @@ count);
       return 1;
     }
 
+    /// <inheritdoc/>
     public override void Flush()
     {
       this.ms.Flush();
     }
 
+    /// <inheritdoc/>
     public override void Write(byte[] bytes, int offset, int count)
     {
       this.ms.Write(bytes, offset, count);
     }
 
+    /// <inheritdoc/>
     public override void WriteByte(byte c)
     {
       this.ms.WriteByte(c);

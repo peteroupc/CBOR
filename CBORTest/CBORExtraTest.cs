@@ -1,6 +1,3 @@
-#pragma warning disable SA1118
-#pragma warning disable SA1034
-#pragma warning disable SA2227
 /*
 Written by Peter O.
 Any copyright to this work is released to the Public Domain.
@@ -29,17 +26,17 @@ namespace Test
     {
       var x = new int[4];
       int r = rand.UniformInt(0x10000);
-      r |= ((int)rand.UniformInt(0x10000)) << 16;
+      r |= rand.UniformInt(0x10000) << 16;
       x[0] = r;
       if (rand.UniformInt(2) == 0)
       {
         r = rand.UniformInt(0x10000);
-        r |= ((int)rand.UniformInt(0x10000)) << 16;
+        r |= rand.UniformInt(0x10000) << 16;
         x[1] = r;
         if (rand.UniformInt(2) == 0)
         {
           r = rand.UniformInt(0x10000);
-          r |= ((int)rand.UniformInt(0x10000)) << 16;
+          r |= rand.UniformInt(0x10000) << 16;
           x[2] = r;
         }
       }
@@ -64,7 +61,7 @@ namespace Test
           decimal d = RandomDecimal(rand, i);
           CBORObject obj = ToObjectTest.TestToFromObjectRoundTrip(d);
           CBORTestCommon.AssertRoundTrip(obj);
-          decimal decimalOther = 0m;
+          decimal decimalOther;
           try
           {
             decimalOther = obj.ToObject<decimal>();
@@ -80,7 +77,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(EDecimal.NaN).ToObject<decimal>();
+        _ = CBORObject.FromObject(EDecimal.NaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -94,7 +91,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(
+        _ = CBORObject.FromObject(
           EDecimal.SignalingNaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
@@ -109,7 +106,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf)
         .ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
@@ -124,7 +121,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf)
         .ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
@@ -139,7 +136,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).ToObject<decimal>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -153,7 +150,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(EFloat.SignalingNaN).ToObject<decimal>();
+        _ = CBORObject.FromObject(EFloat.SignalingNaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
       catch (OverflowException)
@@ -167,7 +164,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatPosInf)
         .ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
@@ -182,7 +179,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
         .ToObject<decimal>();
         Assert.Fail("Should have failed");
       }
@@ -256,6 +253,7 @@ namespace Test
     {
       private List<CustomEnum> w = new List<CustomEnum>();
 
+      /// <inheritdoc/>
       public CustomEnum this[int index]
       {
         get
@@ -269,6 +267,7 @@ namespace Test
         }
       }
 
+      /// <inheritdoc/>
       public int Count
       {
         get
@@ -277,6 +276,7 @@ namespace Test
         }
       }
 
+      /// <inheritdoc/>
       public bool IsReadOnly
       {
         get
@@ -285,52 +285,62 @@ namespace Test
         }
       }
 
+      /// <inheritdoc/>
       public void Add(CustomEnum item)
       {
         ((IList<CustomEnum>)this.w).Add(item);
       }
 
+      /// <inheritdoc/>
       public void Clear()
       {
         ((IList<CustomEnum>)this.w).Clear();
       }
 
+      /// <inheritdoc/>
       public bool Contains(CustomEnum item)
       {
         return ((IList<CustomEnum>)this.w).Contains(item);
       }
 
+      /// <inheritdoc/>
       public void CopyTo(CustomEnum[] array, int arrayIndex)
       {
         ((IList<CustomEnum>)this.w).CopyTo(array, arrayIndex);
       }
 
+      /// <inheritdoc/>
       public int IndexOf(CustomEnum item)
       {
         return ((IList<CustomEnum>)this.w).IndexOf(item);
       }
 
+      /// <inheritdoc/>
       public void Insert(int index, CustomEnum item)
       {
         ((IList<CustomEnum>)this.w).Insert(index, item);
       }
 
+      /// <inheritdoc/>
       public bool Remove(CustomEnum item)
       {
         return ((IList<CustomEnum>)this.w).Remove(item);
       }
 
+      /// <inheritdoc/>
       public void RemoveAt(int index)
       {
         ((IList<CustomEnum>)this.w).RemoveAt(index);
       }
 
+      /// <inheritdoc/>
       public System.Collections.Generic.IEnumerator<CustomEnum>
 GetEnumerator()
       {
         return ((IList<CustomEnum>)this.w).GetEnumerator();
       }
 
+      /// <inheritdoc/>
       System.Collections.IEnumerator
 System.Collections.IEnumerable.GetEnumerator()
       {
@@ -346,6 +356,7 @@ System.Collections.IEnumerable.GetEnumerator()
     {
       private List<byte> w = new List<byte>();
 
+      /// <inheritdoc/>
       public byte this[int index]
       {
         get
@@ -359,6 +370,7 @@ System.Collections.IEnumerable.GetEnumerator()
         }
       }
 
+      /// <inheritdoc/>
       public int Count
       {
         get
@@ -367,6 +379,7 @@ System.Collections.IEnumerable.GetEnumerator()
         }
       }
 
+      /// <inheritdoc/>
       public bool IsReadOnly
       {
         get
@@ -375,52 +388,62 @@ System.Collections.IEnumerable.GetEnumerator()
         }
       }
 
+      /// <inheritdoc/>
       public void Add(byte item)
       {
         ((IList<byte>)this.w).Add(item);
       }
 
+      /// <inheritdoc/>
       public void Clear()
       {
         ((IList<byte>)this.w).Clear();
       }
 
+      /// <inheritdoc/>
       public bool Contains(byte item)
       {
         return ((IList<byte>)this.w).Contains(item);
       }
 
+      /// <inheritdoc/>
       public void CopyTo(byte[] array, int arrayIndex)
       {
         ((IList<byte>)this.w).CopyTo(array, arrayIndex);
       }
 
+      /// <inheritdoc/>
       public int IndexOf(byte item)
       {
         return ((IList<byte>)this.w).IndexOf(item);
       }
 
+      /// <inheritdoc/>
       public void Insert(int index, byte item)
       {
         ((IList<byte>)this.w).Insert(index, item);
       }
 
+      /// <inheritdoc/>
       public bool Remove(byte item)
       {
         return ((IList<byte>)this.w).Remove(item);
       }
 
+      /// <inheritdoc/>
       public void RemoveAt(int index)
       {
         ((IList<byte>)this.w).RemoveAt(index);
       }
 
+      /// <inheritdoc/>
       public System.Collections.Generic.IEnumerator<byte>
 GetEnumerator()
       {
         return ((IList<byte>)this.w).GetEnumerator();
       }
 
+      /// <inheritdoc/>
       System.Collections.IEnumerator
 System.Collections.IEnumerable.GetEnumerator()
       {
@@ -703,7 +726,7 @@ select x;
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
-      obj = CBORObject.FromObject((object)RangeExclusive(0, 10));
+      obj = CBORObject.FromObject(RangeExclusive(0, 10));
 
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
@@ -737,8 +760,6 @@ select new
 #endif
     }
 
-#pragma warning disable CA1814
-
 #if !NET20 && !NET40
     [Test]
     public void TestReadOnlyCollection()
@@ -747,8 +768,7 @@ select new
         0, 1, 99, 2, 3, 99,
       });
       CBORObject cbor;
-      CBORObject
-expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
+      _ = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       cbor = CBORObject.FromObject(roc);
       roc = cbor.ToObject<ReadOnlyCollection<int>>();
       List<int> list;
@@ -780,7 +800,7 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       Assert.AreEqual(99, list[5]);
       try
       {
-        cbor.ToObject<ReadOnlyDictionary<int, int>>();
+        _ = cbor.ToObject<ReadOnlyDictionary<int, int>>();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -794,7 +814,7 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       }
       try
       {
-        cbor.ToObject<IReadOnlyDictionary<int, int>>();
+        _ = cbor.ToObject<IReadOnlyDictionary<int, int>>();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -810,7 +830,7 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       // InvalidOperationException (due to AsString)
       try
       {
-        cbor.ToObject<ReadOnlyCollection<string>>();
+        _ = cbor.ToObject<ReadOnlyCollection<string>>();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -824,7 +844,7 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       }
       try
       {
-        cbor.ToObject<IReadOnlyList<string>>();
+        _ = cbor.ToObject<IReadOnlyList<string>>();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -838,7 +858,7 @@ expected = CBORObject.NewArray().Add(0).Add(1).Add(99).Add(2).Add(3).Add(99);
       }
       try
       {
-        cbor.ToObject<IReadOnlyCollection<string>>();
+        _ = cbor.ToObject<IReadOnlyCollection<string>>();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -880,7 +900,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       // InvalidOperationException
       try
       {
-        cbor.ToObject<ReadOnlyDictionary<int, int>>();
+        _ = cbor.ToObject<ReadOnlyDictionary<int, int>>();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -894,7 +914,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        cbor.ToObject<IReadOnlyDictionary<int, int>>();
+        _ = cbor.ToObject<IReadOnlyDictionary<int, int>>();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -947,7 +967,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     {
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.147483647E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -957,7 +977,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483647E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -967,7 +987,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483647E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -981,7 +1001,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483647E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -995,7 +1015,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836470000002E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1005,7 +1025,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836470000002E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1015,7 +1035,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836470000002E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1029,7 +1049,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836470000002E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1043,7 +1063,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836469999998E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1053,7 +1073,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836469999998E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1063,7 +1083,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836469999998E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1077,7 +1097,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836469999998E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1091,7 +1111,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.147483648E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1101,7 +1121,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483648E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1111,7 +1131,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483648E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1125,7 +1145,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483648E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1139,7 +1159,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836480000005E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1149,7 +1169,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836480000005E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1159,7 +1179,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836480000005E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1173,7 +1193,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836480000005E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1187,7 +1207,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836479999998E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1197,7 +1217,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836479999998E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1207,7 +1227,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836479999998E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1221,7 +1241,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836479999998E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1235,7 +1255,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.147483646E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1245,7 +1265,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483646E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1255,7 +1275,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483646E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1269,7 +1289,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.147483646E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1283,7 +1303,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836460000002E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1293,7 +1313,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836460000002E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1303,7 +1323,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836460000002E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1317,7 +1337,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836460000002E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1331,7 +1351,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836459999998E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -1341,7 +1361,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836459999998E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1351,7 +1371,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836459999998E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1365,7 +1385,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.1474836459999998E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1379,7 +1399,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483648E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1393,7 +1413,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483648E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1407,7 +1427,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483648E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1421,7 +1441,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483648E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1435,7 +1455,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836479999998E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1449,7 +1469,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836479999998E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1463,7 +1483,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836479999998E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1477,7 +1497,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836479999998E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1491,7 +1511,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836480000005E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1505,7 +1525,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836480000005E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1519,7 +1539,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836480000005E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1533,7 +1553,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836480000005E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1547,7 +1567,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483647E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1561,7 +1581,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483647E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1575,7 +1595,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483647E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1589,7 +1609,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483647E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1603,7 +1623,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836469999998E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1617,7 +1637,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836469999998E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1631,7 +1651,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836469999998E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1645,7 +1665,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836469999998E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1659,7 +1679,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836470000002E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1673,7 +1693,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836470000002E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1687,7 +1707,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836470000002E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1701,7 +1721,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836470000002E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1715,7 +1735,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483649E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1729,7 +1749,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483649E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1743,7 +1763,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483649E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1757,7 +1777,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.147483649E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1771,7 +1791,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836489999995E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1785,7 +1805,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836489999995E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1799,7 +1819,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836489999995E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1813,7 +1833,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836489999995E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1827,7 +1847,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836490000005E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1841,7 +1861,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836490000005E9d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -1855,7 +1875,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836490000005E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1869,7 +1889,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474836490000005E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1883,7 +1903,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854776E18d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1897,7 +1917,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854776E18d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1907,7 +1927,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854776E18d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1921,7 +1941,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854776E18d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1935,7 +1955,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854778E18d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -1949,7 +1969,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854778E18d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -1959,7 +1979,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854778E18d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -1973,7 +1993,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.223372036854778E18d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -1987,7 +2007,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.2233720368547748E18d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2001,7 +2021,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.2233720368547748E18d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2011,7 +2031,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.2233720368547748E18d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2025,7 +2045,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.2233720368547748E18d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2039,7 +2059,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854776E18d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2053,7 +2073,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854776E18d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2067,7 +2087,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854776E18d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2081,7 +2101,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854776E18d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2095,7 +2115,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233720368547748E18d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2109,7 +2129,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233720368547748E18d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2123,7 +2143,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233720368547748E18d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2137,7 +2157,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233720368547748E18d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2151,7 +2171,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854778E18d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2165,7 +2185,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854778E18d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2179,7 +2199,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854778E18d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2193,7 +2213,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372036854778E18d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2207,7 +2227,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -2216,7 +2236,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -2225,7 +2245,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -2234,7 +2254,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -2247,7 +2267,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.000000000004d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -2257,7 +2277,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.000000000004d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2267,7 +2287,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.000000000004d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -2277,7 +2297,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.000000000004d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2291,7 +2311,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.999999999996d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -2301,7 +2321,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.999999999996d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2311,7 +2331,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.999999999996d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -2321,7 +2341,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.999999999996d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2335,7 +2355,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -2344,7 +2364,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -2353,7 +2373,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -2362,7 +2382,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -2375,7 +2395,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32768.00000000001d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -2385,7 +2405,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32768.00000000001d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2395,7 +2415,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32768.00000000001d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -2405,7 +2425,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32768.00000000001d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2419,7 +2439,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.999999999996d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -2429,7 +2449,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.999999999996d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2439,7 +2459,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.999999999996d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -2449,7 +2469,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32767.999999999996d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2463,7 +2483,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -2472,7 +2492,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -2481,7 +2501,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -2490,7 +2510,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -2503,7 +2523,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.000000000004d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -2513,7 +2533,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.000000000004d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2523,7 +2543,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.000000000004d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -2533,7 +2553,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32766.000000000004d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2547,7 +2567,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32765.999999999996d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -2557,7 +2577,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32765.999999999996d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -2567,7 +2587,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32765.999999999996d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -2577,7 +2597,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           32765.999999999996d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2591,7 +2611,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -2604,7 +2624,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -2617,7 +2637,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -2630,7 +2650,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -2643,7 +2663,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.999999999996d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2657,7 +2677,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.999999999996d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2671,7 +2691,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.999999999996d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2685,7 +2705,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.999999999996d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2699,7 +2719,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.00000000001d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2713,7 +2733,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.00000000001d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2727,7 +2747,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.00000000001d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2741,7 +2761,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.00000000001d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2755,7 +2775,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -2768,7 +2788,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -2781,7 +2801,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -2794,7 +2814,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -2807,7 +2827,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32766.999999999996d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2821,7 +2841,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32766.999999999996d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2835,7 +2855,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32766.999999999996d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2849,7 +2869,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32766.999999999996d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2863,7 +2883,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.000000000004d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2877,7 +2897,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.000000000004d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2891,7 +2911,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.000000000004d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -2905,7 +2925,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32767.000000000004d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -2919,7 +2939,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -2932,7 +2952,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -2945,7 +2965,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -2958,7 +2978,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -2971,7 +2991,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.99999999999d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -2985,7 +3005,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.99999999999d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -2999,7 +3019,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.99999999999d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -3013,7 +3033,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32768.99999999999d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3027,7 +3047,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32769.00000000001d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -3041,7 +3061,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32769.00000000001d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -3055,7 +3075,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32769.00000000001d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -3069,7 +3089,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -32769.00000000001d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3083,7 +3103,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3092,7 +3112,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3101,7 +3121,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3110,7 +3130,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -3119,7 +3139,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3128,7 +3148,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3137,7 +3157,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3146,7 +3166,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.9E-324d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -3155,7 +3175,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3164,7 +3184,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3173,7 +3193,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3182,7 +3202,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-4.9E-324d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -3191,7 +3211,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3200,7 +3220,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3209,7 +3229,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3218,7 +3238,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -3227,7 +3247,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.0000000000000002d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3237,7 +3257,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.0000000000000002d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3247,7 +3267,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.0000000000000002d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3257,7 +3277,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.0000000000000002d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -3267,7 +3287,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           0.9999999999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3277,7 +3297,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           0.9999999999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3287,7 +3307,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           0.9999999999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3297,7 +3317,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           0.9999999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -3307,7 +3327,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -3320,7 +3340,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -3333,7 +3353,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -3346,7 +3366,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -3355,7 +3375,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -0.9999999999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3365,7 +3385,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -0.9999999999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3375,7 +3395,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -0.9999999999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3385,7 +3405,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -0.9999999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -3395,7 +3415,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -1.0000000000000002d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -3409,7 +3429,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -1.0000000000000002d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -3423,7 +3443,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -1.0000000000000002d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -3437,7 +3457,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -1.0000000000000002d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -3447,7 +3467,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3456,7 +3476,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3465,7 +3485,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3474,7 +3494,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -3487,7 +3507,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.00000000000003d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3497,7 +3517,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.00000000000003d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3507,7 +3527,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.00000000000003d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3517,7 +3537,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.00000000000003d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3531,7 +3551,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.99999999999997d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3541,7 +3561,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.99999999999997d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3551,7 +3571,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.99999999999997d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3561,7 +3581,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.99999999999997d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3575,7 +3595,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3584,7 +3604,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3593,7 +3613,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3602,7 +3622,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -3615,7 +3635,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           256.00000000000006d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3625,7 +3645,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           256.00000000000006d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3635,7 +3655,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           256.00000000000006d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3645,7 +3665,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           256.00000000000006d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3659,7 +3679,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.99999999999997d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3669,7 +3689,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.99999999999997d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3679,7 +3699,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.99999999999997d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3689,7 +3709,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           255.99999999999997d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3703,7 +3723,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3712,7 +3732,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3721,7 +3741,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -3730,7 +3750,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -3743,7 +3763,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.00000000000003d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3753,7 +3773,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.00000000000003d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3763,7 +3783,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.00000000000003d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3773,7 +3793,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           254.00000000000003d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3787,7 +3807,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           253.99999999999997d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -3797,7 +3817,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           253.99999999999997d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3807,7 +3827,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           253.99999999999997d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -3817,7 +3837,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           253.99999999999997d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3831,7 +3851,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2.14748365E9f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3840,7 +3860,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.14748365E9f).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3850,7 +3870,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.14748365E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -3864,7 +3884,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.14748365E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3878,7 +3898,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3887,7 +3907,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -3896,7 +3916,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.1474839E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -3910,7 +3930,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2.1474839E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -3923,7 +3943,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2.14748352E9f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -3932,7 +3952,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.14748352E9f).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -3942,7 +3962,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           2.14748352E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -3956,7 +3976,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   2.14748352E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -3970,7 +3990,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -2.14748365E9f).ToObject<uint>();
       }
       catch (OverflowException)
@@ -3984,7 +4004,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.14748365E9f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -3998,7 +4018,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.14748365E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4012,7 +4032,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.14748365E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4026,7 +4046,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -2.14748352E9f).ToObject<uint>();
       }
       catch (OverflowException)
@@ -4040,7 +4060,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.14748352E9f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -4054,7 +4074,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.14748352E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4068,7 +4088,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.14748352E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4082,7 +4102,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-2.1474839E9f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4095,7 +4115,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -2.1474839E9f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -4109,7 +4129,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -2.1474839E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4123,7 +4143,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -2.1474839E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4137,7 +4157,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4150,7 +4170,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4159,7 +4179,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   9.223372E18f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4173,7 +4193,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.223372E18f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4186,7 +4206,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4199,7 +4219,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4208,7 +4228,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   9.223373E18f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4222,7 +4242,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.223373E18f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4235,7 +4255,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(9.2233715E18f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4248,7 +4268,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   9.2233715E18f).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -4258,7 +4278,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           9.2233715E18f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4272,7 +4292,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   9.2233715E18f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4286,7 +4306,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-9.223372E18f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4299,7 +4319,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -9.223372E18f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -4313,7 +4333,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223372E18f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4327,7 +4347,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -9.223372E18f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4341,7 +4361,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -9.2233715E18f).ToObject<uint>();
       }
       catch (OverflowException)
@@ -4355,7 +4375,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233715E18f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -4369,7 +4389,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233715E18f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4383,7 +4403,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.2233715E18f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4397,7 +4417,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-9.223373E18f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4410,7 +4430,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -9.223373E18f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -4424,7 +4444,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -9.223373E18f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -4438,7 +4458,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -9.223373E18f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -4452,7 +4472,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -4461,7 +4481,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4470,7 +4490,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -4479,47 +4499,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<sbyte>();
-      }
-      catch (OverflowException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4532,7 +4512,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -4541,7 +4521,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4550,7 +4530,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -4559,47 +4539,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<sbyte>();
-      }
-      catch (OverflowException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.002f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4612,7 +4552,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -4621,7 +4561,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4630,7 +4570,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -4639,47 +4579,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<sbyte>();
-      }
-      catch (OverflowException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4692,7 +4592,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -4701,7 +4601,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4710,7 +4610,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -4719,47 +4619,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<sbyte>();
-      }
-      catch (OverflowException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4772,7 +4632,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -4781,7 +4641,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -4790,7 +4650,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -4799,20 +4659,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<sbyte>();
-      }
-      catch (OverflowException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32768.004f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4825,7 +4672,34 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32767.998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4838,7 +4712,34 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4851,7 +4752,34 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32766.002f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4864,7 +4792,34 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(32765.998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4877,7 +4832,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4890,7 +4845,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -4903,7 +4858,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -4916,7 +4871,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4929,7 +4884,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4942,7 +4897,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -4955,7 +4910,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -4968,7 +4923,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -4981,7 +4936,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -4994,7 +4949,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5007,7 +4962,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5020,7 +4975,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.004f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5033,7 +4988,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5046,7 +5001,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5059,7 +5014,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5072,7 +5027,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5085,7 +5040,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5098,7 +5053,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5111,7 +5066,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5124,7 +5079,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32766.998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5137,7 +5092,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5150,7 +5105,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5163,7 +5118,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5176,7 +5131,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32767.002f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5189,7 +5144,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5202,7 +5157,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5215,7 +5170,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5228,7 +5183,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5241,7 +5196,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5254,7 +5209,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5267,7 +5222,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5280,223 +5235,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32768.996f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5509,7 +5248,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5522,7 +5261,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5535,7 +5274,11 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<ushort>();
+      }
+      catch (OverflowException)
+      {
+        // NOTE: Intentionally empty
       }
       catch (Exception ex)
       {
@@ -5544,7 +5287,11 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-32769.004f).ToObject<sbyte>();
+      }
+      catch (OverflowException)
+      {
+        // NOTE: Intentionally empty
       }
       catch (Exception ex)
       {
@@ -5553,7 +5300,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5562,7 +5309,280 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.0f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.4E-45f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.4E-45f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.0000001f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0.99999994f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<uint>();
+      }
+      catch (OverflowException)
+      {
+        // NOTE: Intentionally empty
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<ulong>();
+      }
+      catch (OverflowException)
+      {
+        // NOTE: Intentionally empty
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<ushort>();
+      }
+      catch (OverflowException)
+      {
+        // NOTE: Intentionally empty
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   -0.99999994f).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -5572,7 +5592,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-0.99999994f).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -5581,7 +5601,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -5594,7 +5614,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -5607,7 +5627,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -5620,7 +5640,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-1.0000001f).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -5629,7 +5649,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5638,7 +5658,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5647,7 +5667,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5656,7 +5676,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5669,7 +5689,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5678,7 +5698,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5687,7 +5707,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5696,7 +5716,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.00002f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5709,7 +5729,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5718,7 +5738,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5727,7 +5747,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5736,7 +5756,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.99998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5749,7 +5769,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5758,7 +5778,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5767,7 +5787,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5776,7 +5796,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5789,7 +5809,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5798,7 +5818,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5807,7 +5827,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5816,7 +5836,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(256.00003f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5829,7 +5849,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5838,7 +5858,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5847,7 +5867,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5856,7 +5876,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(255.99998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5869,7 +5889,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5878,7 +5898,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5887,7 +5907,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5896,7 +5916,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5909,7 +5929,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5918,7 +5938,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5927,7 +5947,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5936,7 +5956,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(254.00002f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5949,7 +5969,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5958,7 +5978,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -5967,7 +5987,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -5976,7 +5996,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(253.99998f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -5989,7 +6009,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -5998,7 +6018,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -6007,7 +6027,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -6016,7 +6036,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -6029,7 +6049,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.00000000001d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6039,7 +6059,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.00000000001d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6049,7 +6069,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.00000000001d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -6059,7 +6079,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.00000000001d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6073,7 +6093,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.99999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6083,7 +6103,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.99999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6093,7 +6113,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.99999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -6103,7 +6123,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.99999999999d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6117,7 +6137,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -6126,7 +6146,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -6135,7 +6155,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -6148,7 +6168,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -6161,7 +6181,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65536.00000000001d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6171,7 +6191,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65536.00000000001d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6181,7 +6201,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65536.00000000001d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6195,7 +6215,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65536.00000000001d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6209,7 +6229,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.99999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6219,7 +6239,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.99999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6229,7 +6249,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.99999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -6239,7 +6259,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65535.99999999999d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6253,7 +6273,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -6262,7 +6282,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -6271,7 +6291,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -6280,7 +6300,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -6293,7 +6313,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.00000000001d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6303,7 +6323,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.00000000001d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6313,7 +6333,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.00000000001d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -6323,7 +6343,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65534.00000000001d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6337,7 +6357,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65533.99999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6347,7 +6367,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65533.99999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6357,7 +6377,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65533.99999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -6367,7 +6387,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           65533.99999999999d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6381,7 +6401,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.294967295E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6391,7 +6411,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967295E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6401,7 +6421,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967295E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6415,7 +6435,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967295E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6429,7 +6449,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672950000005E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6439,7 +6459,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672950000005E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6449,7 +6469,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672950000005E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6463,7 +6483,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672950000005E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6477,7 +6497,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672949999995E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6487,7 +6507,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672949999995E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6497,7 +6517,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672949999995E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6511,7 +6531,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672949999995E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6525,7 +6545,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.294967296E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -6539,7 +6559,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6549,7 +6569,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6563,7 +6583,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6577,7 +6597,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296000001E9d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -6591,7 +6611,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296000001E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6601,7 +6621,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296000001E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6615,7 +6635,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967296000001E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6629,7 +6649,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672959999995E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6639,7 +6659,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672959999995E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6649,7 +6669,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672959999995E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6663,7 +6683,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672959999995E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6677,7 +6697,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.294967294E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6687,7 +6707,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967294E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6697,7 +6717,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967294E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6711,7 +6731,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.294967294E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6725,7 +6745,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672940000005E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6735,7 +6755,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672940000005E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6745,7 +6765,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672940000005E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6759,7 +6779,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672940000005E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6773,7 +6793,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672939999995E9d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -6783,7 +6803,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672939999995E9d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6793,7 +6813,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672939999995E9d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6807,7 +6827,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.2949672939999995E9d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6821,7 +6841,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709552E19d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -6835,7 +6855,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709552E19d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -6849,7 +6869,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709552E19d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6863,7 +6883,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709552E19d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6877,7 +6897,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709556E19d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -6891,7 +6911,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709556E19d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -6905,7 +6925,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709556E19d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6919,7 +6939,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744073709556E19d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6933,7 +6953,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.844674407370955E19d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -6947,7 +6967,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.844674407370955E19d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -6957,7 +6977,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.844674407370955E19d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -6971,7 +6991,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.844674407370955E19d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -6985,7 +7005,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -6998,7 +7018,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -7011,7 +7031,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -7024,7 +7044,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -7033,7 +7053,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.99999999999999d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -7047,7 +7067,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.99999999999999d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -7061,7 +7081,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.99999999999999d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -7075,7 +7095,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.99999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7085,7 +7105,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.00000000000003d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -7099,7 +7119,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.00000000000003d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -7113,7 +7133,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.00000000000003d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -7127,7 +7147,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.00000000000003d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7137,7 +7157,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -7150,7 +7170,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -7163,7 +7183,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -7176,7 +7196,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -7185,7 +7205,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -126.99999999999999d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -7199,7 +7219,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -126.99999999999999d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -7213,7 +7233,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -126.99999999999999d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -7227,7 +7247,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -126.99999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7237,7 +7257,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.00000000000001d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -7251,7 +7271,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.00000000000001d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -7265,7 +7285,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.00000000000001d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -7279,7 +7299,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -127.00000000000001d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7289,7 +7309,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -7302,7 +7322,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -7315,7 +7335,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -7328,7 +7348,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -7341,7 +7361,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.99999999999997d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -7355,7 +7375,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.99999999999997d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -7369,7 +7389,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.99999999999997d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -7383,7 +7403,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -128.99999999999997d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7393,7 +7413,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -129.00000000000003d).ToObject<uint>();
       }
       catch (OverflowException)
@@ -7407,7 +7427,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -129.00000000000003d).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -7421,7 +7441,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -129.00000000000003d).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -7435,7 +7455,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           -129.00000000000003d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -7449,7 +7469,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7458,7 +7478,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7467,7 +7487,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -7476,7 +7496,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -7485,7 +7505,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.00000000000001d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -7495,7 +7515,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.00000000000001d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -7505,7 +7525,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.00000000000001d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -7515,7 +7535,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.00000000000001d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7525,7 +7545,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.99999999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -7535,7 +7555,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.99999999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -7545,7 +7565,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.99999999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -7555,7 +7575,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.99999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7565,7 +7585,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7574,7 +7594,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7583,7 +7603,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -7592,7 +7612,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0d).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -7605,7 +7625,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           128.00000000000003d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -7615,7 +7635,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           128.00000000000003d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -7625,7 +7645,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           128.00000000000003d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -7635,7 +7655,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           128.00000000000003d).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -7649,7 +7669,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.99999999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -7659,7 +7679,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.99999999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -7669,7 +7689,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.99999999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -7679,7 +7699,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           127.99999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7689,7 +7709,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7698,7 +7718,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7707,7 +7727,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -7716,7 +7736,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0d).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -7725,7 +7745,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.00000000000001d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -7735,7 +7755,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.00000000000001d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -7745,7 +7765,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.00000000000001d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -7755,7 +7775,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           126.00000000000001d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7765,7 +7785,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           125.99999999999999d).ToObject<uint>();
       }
       catch (Exception ex)
@@ -7775,7 +7795,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           125.99999999999999d).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -7785,7 +7805,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           125.99999999999999d).ToObject<ushort>();
       }
       catch (Exception ex)
@@ -7795,7 +7815,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           125.99999999999999d).ToObject<sbyte>();
       }
       catch (Exception ex)
@@ -7805,7 +7825,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7814,7 +7834,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7823,7 +7843,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -7832,7 +7852,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -7845,7 +7865,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7854,7 +7874,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7863,7 +7883,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -7872,7 +7892,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.004f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -7885,7 +7905,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7894,7 +7914,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7903,7 +7923,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -7912,7 +7932,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.996f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -7925,7 +7945,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7934,7 +7954,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7943,7 +7963,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -7956,7 +7976,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -7969,7 +7989,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -7978,7 +7998,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -7987,7 +8007,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8000,7 +8020,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65536.01f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8013,7 +8033,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -8022,7 +8042,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -8031,7 +8051,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -8040,7 +8060,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65535.996f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8053,7 +8073,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -8062,7 +8082,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -8071,7 +8091,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -8080,7 +8100,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8093,7 +8113,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -8102,7 +8122,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -8111,7 +8131,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -8120,7 +8140,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65534.004f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8133,7 +8153,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -8142,7 +8162,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -8151,7 +8171,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -8160,7 +8180,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(65533.996f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8173,7 +8193,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8186,7 +8206,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -8195,7 +8215,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.2949673E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -8209,7 +8229,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.2949673E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8222,7 +8242,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8235,7 +8255,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -8244,7 +8264,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.2949678E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -8258,7 +8278,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.2949678E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8271,7 +8291,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(4.29496704E9f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -8280,7 +8300,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.29496704E9f).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -8290,7 +8310,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           4.29496704E9f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -8304,7 +8324,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   4.29496704E9f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -8318,7 +8338,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.8446744E19f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8331,7 +8351,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   1.8446744E19f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -8345,7 +8365,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446744E19f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -8359,7 +8379,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   1.8446744E19f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -8373,7 +8393,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.8446746E19f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8386,7 +8406,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   1.8446746E19f).ToObject<ulong>();
       }
       catch (OverflowException)
@@ -8400,7 +8420,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446746E19f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -8414,7 +8434,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   1.8446746E19f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -8428,7 +8448,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1.8446743E19f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8441,7 +8461,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   1.8446743E19f).ToObject<ulong>();
       }
       catch (Exception ex)
@@ -8451,7 +8471,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           1.8446743E19f).ToObject<ushort>();
       }
       catch (OverflowException)
@@ -8465,7 +8485,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
   1.8446743E19f).ToObject<sbyte>();
       }
       catch (OverflowException)
@@ -8479,7 +8499,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8492,7 +8512,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8505,7 +8525,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8518,7 +8538,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.0f).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -8527,20 +8547,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<uint>();
-      }
-      catch (OverflowException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8553,7 +8560,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8566,16 +8573,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8588,7 +8586,16 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.99999f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8601,7 +8608,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8614,16 +8621,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8636,7 +8634,16 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.00002f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8649,7 +8656,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8662,16 +8669,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8684,7 +8682,16 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.0f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8697,7 +8704,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8710,16 +8717,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8732,7 +8730,16 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-126.99999f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8745,7 +8752,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8758,16 +8765,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8780,7 +8778,16 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-127.00001f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8793,7 +8800,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8806,7 +8813,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8819,7 +8826,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -8832,7 +8839,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8845,7 +8852,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8858,16 +8865,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8880,7 +8878,16 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-128.99998f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -8893,7 +8900,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -8906,7 +8913,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -8919,142 +8926,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<sbyte>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<uint>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<ulong>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<ushort>();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw;
-      }
-      try
-      {
-        ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(-129.00002f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -9067,7 +8939,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -9076,7 +8948,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -9085,7 +8957,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -9094,7 +8966,115 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.0f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.00001f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.99999f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.0f).ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -9107,7 +9087,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -9116,7 +9096,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -9125,7 +9105,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -9134,7 +9114,11 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(128.00002f).ToObject<sbyte>();
+      }
+      catch (OverflowException)
+      {
+        // NOTE: Intentionally empty
       }
       catch (Exception ex)
       {
@@ -9143,7 +9127,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -9152,7 +9136,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -9161,7 +9145,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -9170,7 +9154,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(127.99999f).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -9179,7 +9163,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -9188,7 +9172,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -9197,7 +9181,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -9206,7 +9190,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.0f).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -9215,7 +9199,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<uint>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -9224,7 +9208,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<ulong>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<ulong>();
       }
       catch (Exception ex)
       {
@@ -9233,7 +9217,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<ushort>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<ushort>();
       }
       catch (Exception ex)
       {
@@ -9242,7 +9226,43 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(126.00001f).ToObject<sbyte>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<uint>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<ulong>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<ushort>();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw;
+      }
+      try
+      {
+        _ = ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
       }
       catch (Exception ex)
       {
@@ -9283,13 +9303,13 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     {
       int t;
       var dividendHigh = 0;
-      int intDivisor = ((int)divisor) & 0xffff;
+      int intDivisor = divisor & 0xffff;
       for (var i = 0; i < 32; ++i)
       {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
-        dividendHigh = unchecked((int)(dividendHigh | ((int)((dividendLow >>
-                    31) & 1))));
+        dividendHigh = unchecked(dividendHigh | (dividendLow >>
+                    31) & 1);
         dividendLow <<= 1;
         t |= dividendHigh;
         // unsigned greater-than-or-equal check
@@ -9302,19 +9322,19 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
           }
         }
       }
-      return returnRemainder ? unchecked((short)(((int)dividendHigh) &
-            0xffff)) : unchecked((short)(((int)dividendLow) & 0xffff));
+      return returnRemainder ? unchecked((short)(dividendHigh &
+            0xffff)) : unchecked((short)(dividendLow & 0xffff));
     }
 
     private static short DivideUnsigned(int x, short y)
     {
       unchecked
       {
-        int iy = ((int)y) & 0xffff;
+        int iy = y & 0xffff;
         if ((x >> 31) == 0)
         {
           // x is already nonnegative
-          return (short)(((int)x / iy) & 0xffff);
+          return (short)((x / iy) & 0xffff);
         }
         return Divide32By16(x, y, false);
       }
@@ -9403,14 +9423,14 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
           TestCommon.IntToString(i));
         {
           CBORObject objectTemp =
-            ToObjectTest.TestToFromObjectRoundTrip((decimal)i +
+            ToObjectTest.TestToFromObjectRoundTrip(i +
               0.1m);
-          string objectTemp2 = ((EDecimal)((decimal)i + 0.1m)).ToString();
+          string objectTemp2 = ((EDecimal)(i + 0.1m)).ToString();
           CBORTestCommon.AssertJSONSer(objectTemp, objectTemp2);
         }
         CBORTestCommon.AssertJSONSer(
-          ToObjectTest.TestToFromObjectRoundTrip((decimal)i + 0.1111m),
-          ((EDecimal)((decimal)i + 0.1111m)).ToString());
+          ToObjectTest.TestToFromObjectRoundTrip(i + 0.1111m),
+          ((EDecimal)(i + 0.1111m)).ToString());
       }
     }
 
@@ -9450,7 +9470,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       CBORObject cbor = CBORObject.FromObject(nvalue);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
       nvalue = null;
-      cbor = CBORObject.FromObject(nvalue);
+      _ = CBORObject.FromObject(nvalue);
       uint? unvalue = 1u;
       cbor = CBORObject.FromObject(unvalue);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
@@ -9480,7 +9500,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
         ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MaxValue);
       try
       {
-        dbl1.ToObject<ushort>();
+        _ = dbl1.ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -9493,7 +9513,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl1.ToObject<sbyte>();
+        _ = dbl1.ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -9506,7 +9526,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl1.ToObject<uint>();
+        _ = dbl1.ToObject<uint>();
       }
       catch (OverflowException)
       {
@@ -9519,7 +9539,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl1.ToObject<ulong>();
+        _ = dbl1.ToObject<ulong>();
       }
       catch (OverflowException)
       {
@@ -9532,7 +9552,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl2.ToObject<ushort>();
+        _ = dbl2.ToObject<ushort>();
       }
       catch (OverflowException)
       {
@@ -9545,7 +9565,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl2.ToObject<sbyte>();
+        _ = dbl2.ToObject<sbyte>();
       }
       catch (OverflowException)
       {
@@ -9558,7 +9578,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl2.ToObject<uint>();
+        _ = dbl2.ToObject<uint>();
       }
       catch (Exception ex)
       {
@@ -9567,7 +9587,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       }
       try
       {
-        dbl2.ToObject<ulong>();
+        _ = dbl2.ToObject<ulong>();
       }
       catch (Exception ex)
       {

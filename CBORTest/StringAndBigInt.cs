@@ -59,7 +59,7 @@ namespace Test
       var builder = new StringBuilder();
       if (rand.GetInt32(2) == 0)
       {
-        builder.Append('-');
+        _ = builder.Append('-');
         negative = true;
       }
       int radixpowint = radix * radix * radix * radix;
@@ -76,40 +76,39 @@ namespace Test
         int digit3 = digitvalues % radix;
         digitvalues /= radix;
         int digit4 = digitvalues % radix;
-        digitvalues /= radix;
         count += 4;
         int bits = rand.GetInt32(16);
         if ((bits & 0x01) == 0)
         {
-          builder.Append(ValueDigits[digit]);
+          _ = builder.Append(ValueDigits[digit]);
         }
         else
         {
-          builder.Append(ValueDigitsLower[digit]);
+          _ = builder.Append(ValueDigitsLower[digit]);
         }
         if ((bits & 0x02) == 0)
         {
-          builder.Append(ValueDigits[digit2]);
+          _ = builder.Append(ValueDigits[digit2]);
         }
         else
         {
-          builder.Append(ValueDigitsLower[digit2]);
+          _ = builder.Append(ValueDigitsLower[digit2]);
         }
         if ((bits & 0x04) == 0)
         {
-          builder.Append(ValueDigits[digit3]);
+          _ = builder.Append(ValueDigits[digit3]);
         }
         else
         {
-          builder.Append(ValueDigitsLower[digit3]);
+          _ = builder.Append(ValueDigitsLower[digit3]);
         }
         if ((bits & 0x08) == 0)
         {
-          builder.Append(ValueDigits[digit4]);
+          _ = builder.Append(ValueDigits[digit4]);
         }
         else
         {
-          builder.Append(ValueDigitsLower[digit4]);
+          _ = builder.Append(ValueDigitsLower[digit4]);
         }
         int digits = (((((digit * radix) + digit2) *
                 radix) + digit3) * radix) + digit4;
@@ -122,11 +121,11 @@ namespace Test
         int digit = rand.GetInt32(radix);
         if (rand.GetInt32(2) == 0)
         {
-          builder.Append(ValueDigits[digit]);
+          _ = builder.Append(ValueDigits[digit]);
         }
         else
         {
-          builder.Append(ValueDigitsLower[digit]);
+          _ = builder.Append(ValueDigitsLower[digit]);
         }
         bv *= radixpow1;
         var bigintTmp = (EInteger)digit;

@@ -77,7 +77,7 @@ namespace Test
     {
       try
       {
-        DataUtilities.CodePointAt(null, 0);
+        _ = DataUtilities.CodePointAt(null, 0);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -229,7 +229,7 @@ namespace Test
     {
       try
       {
-        DataUtilities.CodePointBefore(null, 0);
+        _ = DataUtilities.CodePointBefore(null, 0);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -368,7 +368,7 @@ namespace Test
       var sb = new StringBuilder();
       for (var i = 0; i < num; ++i)
       {
-        sb.Append(c);
+        _ = sb.Append(c);
       }
       return sb.ToString();
     }
@@ -389,7 +389,7 @@ namespace Test
     {
       try
       {
-        DataUtilities.GetUtf8Bytes("\ud800", false);
+        _ = DataUtilities.GetUtf8Bytes("\ud800", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -403,7 +403,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -417,7 +417,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
+        _ = DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -431,7 +431,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -445,7 +445,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -459,7 +459,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes(null, true);
+        _ = DataUtilities.GetUtf8Bytes(null, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -473,7 +473,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\ud800", false);
+        _ = DataUtilities.GetUtf8Bytes("\ud800", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -487,7 +487,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -501,7 +501,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\ud800X", false);
+        _ = DataUtilities.GetUtf8Bytes("\ud800X", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -515,7 +515,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00X", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00X", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -529,7 +529,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
+        _ = DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -543,7 +543,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -557,7 +557,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00\ud800\udc00", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00\ud800\udc00", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -571,7 +571,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\ud800\ud800\udc00", false);
+        _ = DataUtilities.GetUtf8Bytes("\ud800\ud800\udc00", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -585,7 +585,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
+        _ = DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -637,7 +637,7 @@ namespace Test
     {
       try
       {
-        DataUtilities.GetUtf8Length(null, true);
+        _ = DataUtilities.GetUtf8Length(null, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -653,7 +653,7 @@ namespace Test
       Assert.AreEqual(-1, DataUtilities.GetUtf8Length("ABC\ud800", false));
       try
       {
-        DataUtilities.GetUtf8Length(null, true);
+        _ = DataUtilities.GetUtf8Length(null, true);
       }
       catch (ArgumentNullException)
       {
@@ -666,7 +666,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8Length(null, false);
+        _ = DataUtilities.GetUtf8Length(null, false);
       }
       catch (ArgumentNullException)
       {
@@ -783,7 +783,7 @@ namespace Test
 
       try
       {
-        DataUtilities.GetUtf8String(null, 0, 1, false);
+        _ = DataUtilities.GetUtf8String(null, 0, 1, false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -797,7 +797,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(null, false);
+        _ = DataUtilities.GetUtf8String(null, false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -811,7 +811,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(null, 0, 1, true);
+        _ = DataUtilities.GetUtf8String(null, 0, 1, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -825,7 +825,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(new byte[] { 0 }, -1, 1, true);
+        _ = DataUtilities.GetUtf8String(new byte[] { 0 }, -1, 1, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -839,7 +839,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(new byte[] { 0 }, 2, 1, true);
+        _ = DataUtilities.GetUtf8String(new byte[] { 0 }, 2, 1, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -853,7 +853,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(new byte[] { 0 }, 0, -1, true);
+        _ = DataUtilities.GetUtf8String(new byte[] { 0 }, 0, -1, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -867,7 +867,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(new byte[] { 0 }, 0, 2, true);
+        _ = DataUtilities.GetUtf8String(new byte[] { 0 }, 0, 2, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -881,7 +881,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(new byte[] { 0 }, 1, 1, true);
+        _ = DataUtilities.GetUtf8String(new byte[] { 0 }, 1, 1, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -913,7 +913,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.GetUtf8String(
+        _ = DataUtilities.GetUtf8String(
           new byte[] { 0x41, 0x42, 0x43, 0x80 },
           0,
           4,
@@ -934,7 +934,7 @@ namespace Test
       {
         try
         {
-          DataUtilities.GetUtf8String(seq, false);
+          _ = DataUtilities.GetUtf8String(seq, false);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentException)
@@ -951,7 +951,7 @@ namespace Test
         Assert.AreEqual('\ufffd', strret[0]);
         try
         {
-          DataUtilities.GetUtf8String(seq, 0, seq.Length, false);
+          _ = DataUtilities.GetUtf8String(seq, 0, seq.Length, false);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentException)
@@ -1010,7 +1010,7 @@ namespace Test
             Assert.AreEqual(expectedString, builder.ToString());
           }
           ms.Position = 0;
-          builder.Remove(0, builder.Length);
+          _ = builder.Remove(0, builder.Length);
           ret = DataUtilities.ReadUtf8(ms, length, builder, false);
           Assert.AreEqual(noReplaceRet, ret);
           if (noReplaceRet == 0)
@@ -1024,7 +1024,7 @@ namespace Test
         }
         if (bytes.Length >= length)
         {
-          builder.Remove(0, builder.Length);
+          _ = builder.Remove(0, builder.Length);
           ret = DataUtilities.ReadUtf8FromBytes(
             bytes,
             0,
@@ -1036,7 +1036,7 @@ namespace Test
           {
             Assert.AreEqual(expectedString, builder.ToString());
           }
-          builder.Remove(0, builder.Length);
+          _ = builder.Remove(0, builder.Length);
           ret = DataUtilities.ReadUtf8FromBytes(
             bytes,
             0,
@@ -1061,7 +1061,7 @@ namespace Test
     {
       try
       {
-        DataUtilities.ReadUtf8(null, 1, null, true);
+        _ = DataUtilities.ReadUtf8(null, 1, null, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -1078,7 +1078,7 @@ namespace Test
         {
           try
           {
-            DataUtilities.ReadUtf8(ms, 1, null, true);
+            _ = DataUtilities.ReadUtf8(ms, 1, null, true);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentNullException)
@@ -1097,7 +1097,7 @@ namespace Test
         {
           try
           {
-            DataUtilities.ReadUtf8(ms, 1, null, false);
+            _ = DataUtilities.ReadUtf8(ms, 1, null, false);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentNullException)
@@ -1245,10 +1245,10 @@ namespace Test
     [Test]
     public void TestReadUtf8FromBytes()
     {
-      var builder = new StringBuilder();
+      _ = new StringBuilder();
       try
       {
-        DataUtilities.WriteUtf8("x", 0, 1, null, true);
+        _ = DataUtilities.WriteUtf8("x", 0, 1, null, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -1262,7 +1262,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(null, 0, 1, new StringBuilder(), true);
+        _ = DataUtilities.ReadUtf8FromBytes(null, 0, 1, new StringBuilder(), true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -1276,7 +1276,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(
+        _ = DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           -1,
           1,
@@ -1295,7 +1295,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(
+        _ = DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           2,
           1,
@@ -1314,7 +1314,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(
+        _ = DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           0,
           -1,
@@ -1333,7 +1333,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(
+        _ = DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           0,
           2,
@@ -1352,7 +1352,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(
+        _ = DataUtilities.ReadUtf8FromBytes(
           new byte[] { 0 },
           1,
           1,
@@ -1371,7 +1371,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, 0, 1, null, false);
+        _ = DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, 0, 1, null, false);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -1383,7 +1383,7 @@ namespace Test
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      builder = new StringBuilder();
+      StringBuilder builder = new StringBuilder();
       {
         long numberTemp = DataUtilities.ReadUtf8FromBytes(
             new byte[] { 0xf0, 0x90, 0x80, 0x80 },
@@ -1418,7 +1418,7 @@ namespace Test
     {
       try
       {
-        DataUtilities.ReadUtf8ToString(null);
+        _ = DataUtilities.ReadUtf8ToString(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -1432,7 +1432,7 @@ namespace Test
       }
       try
       {
-        DataUtilities.ReadUtf8ToString(null, 1, true);
+        _ = DataUtilities.ReadUtf8ToString(null, 1, true);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -1451,7 +1451,7 @@ namespace Test
         {
           try
           {
-            DataUtilities.ReadUtf8ToString(ms, -1, false);
+            _ = DataUtilities.ReadUtf8ToString(ms, -1, false);
             Assert.Fail("Should have failed");
           }
           catch (IOException)
@@ -1531,7 +1531,7 @@ namespace Test
       {
         try
         {
-          DataUtilities.WriteUtf8(null, 0, 1, null, false);
+          _ = DataUtilities.WriteUtf8(null, 0, 1, null, false);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -1545,7 +1545,7 @@ namespace Test
         }
         try
         {
-          DataUtilities.WriteUtf8("xyz", 0, 1, null, false);
+          _ = DataUtilities.WriteUtf8("xyz", 0, 1, null, false);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -1559,7 +1559,7 @@ namespace Test
         }
         try
         {
-          DataUtilities.WriteUtf8(null, null, false);
+          _ = DataUtilities.WriteUtf8(null, null, false);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -1573,7 +1573,7 @@ namespace Test
         }
         try
         {
-          DataUtilities.WriteUtf8("xyz", null, false);
+          _ = DataUtilities.WriteUtf8("xyz", null, false);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -1590,7 +1590,7 @@ namespace Test
           {
             try
             {
-              DataUtilities.WriteUtf8("x", null, true);
+              _ = DataUtilities.WriteUtf8("x", null, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1604,7 +1604,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 0, 1, null, true);
+              _ = DataUtilities.WriteUtf8("x", 0, 1, null, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1618,7 +1618,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 0, 1, null, true, true);
+              _ = DataUtilities.WriteUtf8("x", 0, 1, null, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1632,7 +1632,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8(null, 0, 1, ms, true);
+              _ = DataUtilities.WriteUtf8(null, 0, 1, ms, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1646,7 +1646,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", -1, 1, ms, true);
+              _ = DataUtilities.WriteUtf8("x", -1, 1, ms, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1660,7 +1660,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 2, 1, ms, true);
+              _ = DataUtilities.WriteUtf8("x", 2, 1, ms, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1674,7 +1674,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 0, -1, ms, true);
+              _ = DataUtilities.WriteUtf8("x", 0, -1, ms, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1688,7 +1688,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 0, 2, ms, true);
+              _ = DataUtilities.WriteUtf8("x", 0, 2, ms, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1702,7 +1702,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 1, 1, ms, true);
+              _ = DataUtilities.WriteUtf8("x", 1, 1, ms, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1716,7 +1716,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8(null, 0, 1, ms, true, true);
+              _ = DataUtilities.WriteUtf8(null, 0, 1, ms, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1730,7 +1730,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", -1, 1, ms, true, true);
+              _ = DataUtilities.WriteUtf8("x", -1, 1, ms, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1744,7 +1744,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 2, 1, ms, true, true);
+              _ = DataUtilities.WriteUtf8("x", 2, 1, ms, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1758,7 +1758,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 0, -1, ms, true, true);
+              _ = DataUtilities.WriteUtf8("x", 0, -1, ms, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1772,7 +1772,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 0, 2, ms, true, true);
+              _ = DataUtilities.WriteUtf8("x", 0, 2, ms, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1786,7 +1786,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8("x", 1, 1, ms, true, true);
+              _ = DataUtilities.WriteUtf8("x", 1, 1, ms, true, true);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -1800,7 +1800,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8(null, null, false);
+              _ = DataUtilities.WriteUtf8(null, null, false);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1814,7 +1814,7 @@ namespace Test
             }
             try
             {
-              DataUtilities.WriteUtf8(null, ms, false);
+              _ = DataUtilities.WriteUtf8(null, ms, false);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentNullException)
@@ -1832,7 +1832,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\r1", 0, 3, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\r1", 0, 3, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1841,7 +1841,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\n1", 0, 3, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\n1", 0, 3, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1850,7 +1850,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\r\n1", 0, 4, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\r\n1", 0, 4, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1859,7 +1859,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\r\r1", 0, 4, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\r\r1", 0, 4, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1868,7 +1868,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\n\r1", 0, 4, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\n\r1", 0, 4, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1877,7 +1877,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\r\r\n1", 0, 5, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\r\r\n1", 0, 5, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1886,7 +1886,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\n\r\n1", 0, 5, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\n\r\n1", 0, 5, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1895,7 +1895,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\n\n\r1", 0, 5, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\n\n\r1", 0, 5, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());
@@ -1904,7 +1904,7 @@ namespace Test
           {
             using (var ms = new Test.DelayingStream())
             {
-              DataUtilities.WriteUtf8("0\r\r\r1", 0, 5, ms, true, true);
+              _ = DataUtilities.WriteUtf8("0\r\r\r1", 0, 5, ms, true, true);
               TestCommon.AssertByteArraysEqual(
                 new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
                 ms.ToArray());

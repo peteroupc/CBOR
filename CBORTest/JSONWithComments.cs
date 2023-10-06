@@ -57,7 +57,7 @@ namespace Test
       var escaped = false;
       while (true)
       {
-        c = idx < ep ? ((int)js[idx++]) & 0xffff : -1;
+        c = idx < ep ? js[idx++] & 0xffff : -1;
         if (c == -1 || c < 0x20)
         {
           this.index = idx;
@@ -90,11 +90,11 @@ namespace Test
     {
       CBORObject obj;
       int numberStartIndex = this.index - 1;
-      int numberEndIndex = numberStartIndex;
       int c;
+      int numberEndIndex;
       while (true)
       {
-        c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
+        c = this.index < this.endPos ? this.jstring[this.index++] &
           0xffff : -1;
         if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
             c == 'e' || c == 'E'))
@@ -136,11 +136,11 @@ namespace Test
       int depth)
     {
       int c = firstChar;
-      CBORObject obj = null;
       if (c < 0)
       {
         this.RaiseError("Unexpected end of data");
       }
+      CBORObject obj;
       switch (c)
       {
         case '"':
@@ -168,9 +168,9 @@ namespace Test
           {
             // Parse true
             if (this.endPos - this.index <= 2 ||
-              (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
-              (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
-              (((int)this.jstring[this.index + 2]) & 0xFF) != 'e')
+              (this.jstring[this.index] & 0xFF) != 'r' ||
+              (this.jstring[this.index + 1] & 0xFF) != 'u' ||
+              (this.jstring[this.index + 2] & 0xFF) != 'e')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -182,10 +182,10 @@ namespace Test
           {
             // Parse false
             if (this.endPos - this.index <= 3 ||
-              (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
-              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
-              (((int)this.jstring[this.index + 3]) & 0xFF) != 'e')
+              (this.jstring[this.index] & 0xFF) != 'a' ||
+              (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+              (this.jstring[this.index + 2] & 0xFF) != 's' ||
+              (this.jstring[this.index + 3] & 0xFF) != 'e')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -197,9 +197,9 @@ namespace Test
           {
             // Parse null
             if (this.endPos - this.index <= 2 ||
-              (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
-              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-              (((int)this.jstring[this.index + 2]) & 0xFF) != 'l')
+              (this.jstring[this.index] & 0xFF) != 'u' ||
+              (this.jstring[this.index + 1] & 0xFF) != 'l' ||
+              (this.jstring[this.index + 2] & 0xFF) != 'l')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -365,7 +365,7 @@ namespace Test
     {
       // Parse nonstandard comments before JSON keys
       var hasHash = false;
-      var i = 0;
+      int i;
       for (i = index; i < endPos; ++i)
       {
         if (jstring[i] == '#')
@@ -409,7 +409,7 @@ namespace Test
     {
       // Parse nonstandard comments before JSON keys
       var hasHash = false;
-      var i = 0;
+      int i;
       for (i = index; i < endPos; ++i)
       {
         if (jstring[i] == '#')
@@ -478,7 +478,7 @@ namespace Test
               break;
             }
           }
-          sb.Append((char)0x20);
+          _ = sb.Append((char)0x20);
         }
         else if (c == 0x0a)
         {
@@ -494,13 +494,13 @@ namespace Test
           if (c <= 0xffff)
           {
             {
-              sb.Append((char)c);
+              _ = sb.Append((char)c);
             }
           }
           else if (c <= 0x10ffff)
           {
-            sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
-            sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
+            _ = sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
+            _ = sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
           }
         }
       }
@@ -515,26 +515,26 @@ namespace Test
         CBORObject obj = this.currPointer[i];
         if (obj.Type == CBORType.Integer)
         {
-          sb.Append("/");
-          sb.Append(obj.ToJSONString());
+          _ = sb.Append("/");
+          _ = sb.Append(obj.ToJSONString());
         }
         else if (obj.Type == CBORType.TextString)
         {
-          sb.Append("/");
+          _ = sb.Append("/");
           string str = obj.AsString();
           for (var j = 0; j < str.Length; ++j)
           {
             if (str[j] == '/')
             {
-              sb.Append("~1");
+              _ = sb.Append("~1");
             }
             else if (str[j] == '~')
             {
-              sb.Append("~0");
+              _ = sb.Append("~0");
             }
             else
             {
-              sb.Append(str[j]);
+              _ = sb.Append(str[j]);
             }
           }
         }
@@ -716,7 +716,7 @@ namespace Test
         }
         this.SetPointer(CBORObject.FromObject(arrayIndex));
         arrayIndex = checked(arrayIndex + 1);
-        myArrayList.Add(
+        _ = myArrayList.Add(
           this.NextJSONValue(
             c,
             nextchar,

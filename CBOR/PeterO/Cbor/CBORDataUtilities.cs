@@ -19,13 +19,12 @@ namespace PeterO.Cbor
   {
     private const string HexAlphabet = "0123456789ABCDEF";
 
-    private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
-    private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
+    private const long DoubleNegInfinity = unchecked(0xfffL << 52);
+    private const long DoublePosInfinity = unchecked(0x7ffL << 52);
 
     internal static string ToStringHelper(CBORObject obj, int depth)
     {
       StringBuilder sb = null;
-      string simvalue = null;
       CBORType type = obj.Type;
       CBORObject curobject;
       if (obj.IsTagged)
@@ -50,46 +49,47 @@ namespace PeterO.Cbor
         while (curobject.IsTagged)
         {
           EInteger ei = curobject.MostOuterTag;
-          sb.Append(ei.ToString());
-          sb.Append('(');
+          _ = sb.Append(ei.ToString());
+          _ = sb.Append('(');
           curobject = curobject.UntagOne();
         }
       }
+      string simvalue;
       switch (type)
       {
         case CBORType.SimpleValue:
           sb = sb ?? new StringBuilder();
           if (obj.IsUndefined)
           {
-            sb.Append("undefined");
+            _ = sb.Append("undefined");
           }
           else if (obj.IsNull)
           {
-            sb.Append("null");
+            _ = sb.Append("null");
           }
           else
           {
-            sb.Append("simple(");
+            _ = sb.Append("simple(");
             int thisItemInt = obj.SimpleValue;
             char c;
             if (thisItemInt >= 100)
             {
               // NOTE: '0'-'9' have ASCII code 0x30-0x39
               c = (char)(0x30 + ((thisItemInt / 100) % 10));
-              sb.Append(c);
+              _ = sb.Append(c);
             }
             if (thisItemInt >= 10)
             {
               c = (char)(0x30 + ((thisItemInt / 10) % 10));
-              sb.Append(c);
+              _ = sb.Append(c);
               c = (char)(0x30 + (thisItemInt % 10));
             }
             else
             {
               c = (char)(0x30 + thisItemInt);
             }
-            sb.Append(c);
-            sb.Append(')');
+            _ = sb.Append(c);
+            _ = sb.Append(')');
           }
           break;
         case CBORType.Boolean:
@@ -99,7 +99,7 @@ namespace PeterO.Cbor
           {
             return simvalue;
           }
-          sb.Append(simvalue);
+          _ = sb.Append(simvalue);
           break;
         case CBORType.FloatingPoint:
           {
@@ -112,27 +112,27 @@ namespace PeterO.Cbor
             {
               return simvalue;
             }
-            sb.Append(simvalue);
+            _ = sb.Append(simvalue);
             break;
           }
         case CBORType.ByteString:
           {
             sb = sb ?? new StringBuilder();
-            sb.Append("h'");
+            _ = sb.Append("h'");
             byte[] data = obj.GetByteString();
             int length = data.Length;
             for (var i = 0; i < length; ++i)
             {
-              sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
-              sb.Append(HexAlphabet[data[i] & 15]);
+              _ = sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
+              _ = sb.Append(HexAlphabet[data[i] & 15]);
             }
-            sb.Append((char)0x27);
+            _ = sb.Append((char)0x27);
             break;
           }
         case CBORType.TextString:
           {
             sb = sb == null ? new StringBuilder() : sb;
-            sb.Append('\"');
+            _ = sb.Append('\"');
             string ostring = obj.AsString();
             int length = ostring.Length;
             for (var i = 0; i < length; ++i)
@@ -140,40 +140,40 @@ namespace PeterO.Cbor
               int cp = DataUtilities.CodePointAt(ostring, i, 0);
               if (cp >= 0x10000)
               {
-                sb.Append("\\U");
-                sb.Append(HexAlphabet[(cp >> 20) & 15]);
-                sb.Append(HexAlphabet[(cp >> 16) & 15]);
-                sb.Append(HexAlphabet[(cp >> 12) & 15]);
-                sb.Append(HexAlphabet[(cp >> 8) & 15]);
-                sb.Append(HexAlphabet[(cp >> 4) & 15]);
-                sb.Append(HexAlphabet[cp & 15]);
+                _ = sb.Append("\\U");
+                _ = sb.Append(HexAlphabet[(cp >> 20) & 15]);
+                _ = sb.Append(HexAlphabet[(cp >> 16) & 15]);
+                _ = sb.Append(HexAlphabet[(cp >> 12) & 15]);
+                _ = sb.Append(HexAlphabet[(cp >> 8) & 15]);
+                _ = sb.Append(HexAlphabet[(cp >> 4) & 15]);
+                _ = sb.Append(HexAlphabet[cp & 15]);
                 ++i;
               }
-              else if (cp >= 0x7F || cp < 0x20 || cp == (int)'\\' || cp ==
-  (int)'\"')
+              else if (cp >= 0x7F || cp < 0x20 || cp == '\\' || cp ==
+  '\"')
               {
-                sb.Append("\\u");
-                sb.Append(HexAlphabet[(cp >> 12) & 15]);
-                sb.Append(HexAlphabet[(cp >> 8) & 15]);
-                sb.Append(HexAlphabet[(cp >> 4) & 15]);
-                sb.Append(HexAlphabet[cp & 15]);
+                _ = sb.Append("\\u");
+                _ = sb.Append(HexAlphabet[(cp >> 12) & 15]);
+                _ = sb.Append(HexAlphabet[(cp >> 8) & 15]);
+                _ = sb.Append(HexAlphabet[(cp >> 4) & 15]);
+                _ = sb.Append(HexAlphabet[cp & 15]);
               }
               else
               {
-                sb.Append((char)cp);
+                _ = sb.Append((char)cp);
               }
             }
-            sb.Append('\"');
+            _ = sb.Append('\"');
             break;
           }
         case CBORType.Array:
           {
             sb = sb ?? new StringBuilder();
             var first = true;
-            sb.Append('[');
+            _ = sb.Append('[');
             if (depth >= 50)
             {
-              sb.Append("...");
+              _ = sb.Append("...");
             }
             else
             {
@@ -181,23 +181,23 @@ namespace PeterO.Cbor
               {
                 if (!first)
                 {
-                  sb.Append(", ");
+                  _ = sb.Append(", ");
                 }
-                sb.Append(ToStringHelper(obj[i], depth + 1));
+                _ = sb.Append(ToStringHelper(obj[i], depth + 1));
                 first = false;
               }
             }
-            sb.Append(']');
+            _ = sb.Append(']');
             break;
           }
         case CBORType.Map:
           {
             sb = sb ?? new StringBuilder();
             var first = true;
-            sb.Append('{');
+            _ = sb.Append('{');
             if (depth >= 50)
             {
-              sb.Append("...");
+              _ = sb.Append("...");
             }
             else
             {
@@ -210,21 +210,21 @@ namespace PeterO.Cbor
                 CBORObject value = entry.Value;
                 if (!first)
                 {
-                  sb.Append(", ");
+                  _ = sb.Append(", ");
                 }
-                sb.Append(ToStringHelper(key, depth + 1));
-                sb.Append(": ");
-                sb.Append(ToStringHelper(value, depth + 1));
+                _ = sb.Append(ToStringHelper(key, depth + 1));
+                _ = sb.Append(": ");
+                _ = sb.Append(ToStringHelper(value, depth + 1));
                 first = false;
               }
             }
-            sb.Append('}');
+            _ = sb.Append('}');
             break;
           }
         default:
           {
             sb = sb ?? new StringBuilder();
-            sb.Append("???");
+            _ = sb.Append("???");
             break;
           }
       }
@@ -232,7 +232,7 @@ namespace PeterO.Cbor
       curobject = obj;
       while (curobject.IsTagged)
       {
-        sb.Append(')');
+        _ = sb.Append(')');
         curobject = curobject.UntagOne();
       }
       return sb.ToString();

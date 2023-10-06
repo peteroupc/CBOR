@@ -223,7 +223,7 @@ namespace Test
 
     public static void TestFailingJSON(string str, JSONOptions opt)
     {
-      byte[] bytes = null;
+      byte[] bytes;
       try
       {
         bytes = DataUtilities.GetUtf8Bytes(str, false);
@@ -234,7 +234,7 @@ namespace Test
         // Check only FromJSONString
         try
         {
-          CBORObject.FromJSONString(str, opt);
+          _ = CBORObject.FromJSONString(str, opt);
           Assert.Fail("Should have failed: str = " + str);
         }
         catch (CBORException)
@@ -252,7 +252,7 @@ namespace Test
       {
         try
         {
-          CBORObject.ReadJSON(ms, opt);
+          _ = CBORObject.ReadJSON(ms, opt);
           Assert.Fail("Should have failed: str = " + str);
         }
         catch (CBORException)
@@ -267,7 +267,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromJSONString(str, opt);
+        _ = CBORObject.FromJSONString(str, opt);
         Assert.Fail("Should have failed: str = " + str);
       }
       catch (CBORException)
@@ -399,9 +399,9 @@ namespace Test
     {
       CBORObject cbor = CBORObject.NewMap();
       CBORObject cborNull = CBORObject.Null;
-      cbor.Add(null, true);
+      _ = cbor.Add(null, true);
       Assert.AreEqual(CBORObject.True, cbor[cborNull]);
-      cbor.Add("key", null);
+      _ = cbor.Add("key", null);
       Assert.AreEqual(CBORObject.Null, cbor["key"]);
     }
 
@@ -426,7 +426,7 @@ namespace Test
         // NOTE: Avoid generating high-exponent numbers for this test
         CBORObject o1 = CBORTestCommon.RandomNumber(r, true);
         CBORObject o2 = CBORTestCommon.RandomNumber(r, true);
-        EDecimal cmpCobj = null;
+        EDecimal cmpCobj;
         try
         {
           cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
@@ -442,7 +442,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2).AsNumber().Add(null);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2).AsNumber().Add(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -475,7 +475,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().ToObject(typeof(byte));
+        _ = CBORObject.NewArray().ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -489,7 +489,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().ToObject(typeof(byte));
+        _ = CBORObject.NewMap().ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -503,7 +503,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.ToObject(typeof(byte));
+        _ = CBORObject.True.ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -517,7 +517,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.ToObject(typeof(byte));
+        _ = CBORObject.False.ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -531,7 +531,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.ToObject(typeof(byte));
+        _ = CBORObject.Undefined.ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -545,7 +545,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           String.Empty).ToObject(typeof(byte));
         Assert.Fail("Should have failed");
       }
@@ -568,7 +568,7 @@ namespace Test
         if (numberinfo["byte"].AsBoolean())
         {
           var bb = (byte)cbornumber.ToObject(typeof(byte));
-          int ibb = ((int)bb) & 0xff;
+          int ibb = bb & 0xff;
           Assert.AreEqual(
             TestCommon.StringToInt(numberinfo["integer"].AsString()),
             ibb);
@@ -577,7 +577,7 @@ namespace Test
         {
           try
           {
-            cbornumber.ToObject(typeof(byte));
+            _ = cbornumber.ToObject(typeof(byte));
             Assert.Fail("Should have failed " + cbornumber);
           }
           catch (OverflowException)
@@ -604,7 +604,7 @@ namespace Test
       {
         try
         {
-          ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
+          _ = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         }
         catch (OverflowException)
         {
@@ -620,7 +620,7 @@ namespace Test
       {
         try
         {
-          ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
+          _ = ToObjectTest.TestToFromObjectRoundTrip(i).ToObject(typeof(byte));
         }
         catch (OverflowException)
         {
@@ -639,7 +639,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().AsDouble();
+        _ = CBORObject.NewArray().AsDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -653,7 +653,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsDouble();
+        _ = CBORObject.NewMap().AsDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -667,7 +667,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.AsDouble();
+        _ = CBORObject.True.AsDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -681,7 +681,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsDouble();
+        _ = CBORObject.False.AsDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -695,7 +695,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsDouble();
+        _ = CBORObject.Undefined.AsDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -709,7 +709,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsDouble();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -742,7 +742,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().ToObject(typeof(short));
+        _ = CBORObject.NewArray().ToObject(typeof(short));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -756,7 +756,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().ToObject(typeof(short));
+        _ = CBORObject.NewMap().ToObject(typeof(short));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -770,7 +770,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.ToObject(typeof(short));
+        _ = CBORObject.True.ToObject(typeof(short));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -784,7 +784,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.ToObject(typeof(short));
+        _ = CBORObject.False.ToObject(typeof(short));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -798,7 +798,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.ToObject(typeof(short));
+        _ = CBORObject.Undefined.ToObject(typeof(short));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -812,7 +812,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           String.Empty).ToObject(typeof(short));
         Assert.Fail("Should have failed");
       }
@@ -842,7 +842,7 @@ namespace Test
         {
           try
           {
-            cbornumber.ToObject(typeof(short));
+            _ = cbornumber.ToObject(typeof(short));
             Assert.Fail("Should have failed " + cbornumber);
           }
           catch (OverflowException)
@@ -863,7 +863,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().AsInt32();
+        _ = CBORObject.NewArray().AsInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -877,7 +877,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsInt32();
+        _ = CBORObject.NewMap().AsInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -891,7 +891,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.AsInt32();
+        _ = CBORObject.True.AsInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -905,7 +905,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsInt32();
+        _ = CBORObject.False.AsInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -919,7 +919,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsInt32();
+        _ = CBORObject.Undefined.AsInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -933,7 +933,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsInt32();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -980,7 +980,7 @@ namespace Test
         {
           try
           {
-            cbornumber.AsInt32();
+            _ = cbornumber.AsInt32();
             Assert.Fail("Should have failed " + cbornumber);
           }
           catch (OverflowException)
@@ -996,7 +996,7 @@ namespace Test
           {
             try
             {
-              cbornumberdouble.AsInt32();
+              _ = cbornumberdouble.AsInt32();
               Assert.Fail("Should have failed");
             }
             catch (OverflowException)
@@ -1013,7 +1013,7 @@ namespace Test
           {
             try
             {
-              cbornumbersingle.AsInt32();
+              _ = cbornumbersingle.AsInt32();
               Assert.Fail("Should have failed");
             }
             catch (OverflowException)
@@ -1035,7 +1035,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().ToObject(typeof(long));
+        _ = CBORObject.NewArray().ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1049,7 +1049,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().ToObject(typeof(long));
+        _ = CBORObject.NewMap().ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1063,7 +1063,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.ToObject(typeof(long));
+        _ = CBORObject.True.ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1077,7 +1077,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.ToObject(typeof(long));
+        _ = CBORObject.False.ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1091,7 +1091,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.ToObject(typeof(long));
+        _ = CBORObject.Undefined.ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1105,7 +1105,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           String.Empty).ToObject(typeof(long));
         Assert.Fail("Should have failed");
       }
@@ -1153,7 +1153,7 @@ namespace Test
         {
           try
           {
-            cbornumber.ToObject(typeof(long));
+            _ = cbornumber.ToObject(typeof(long));
             Assert.Fail("Should have failed " + cbornumber);
           }
           catch (OverflowException)
@@ -1169,7 +1169,7 @@ namespace Test
           {
             try
             {
-              cbornumberdouble.ToObject(typeof(long));
+              _ = cbornumberdouble.ToObject(typeof(long));
               Assert.Fail("Should have failed");
             }
             catch (OverflowException)
@@ -1186,7 +1186,7 @@ namespace Test
           {
             try
             {
-              cbornumbersingle.ToObject(typeof(long));
+              _ = cbornumbersingle.ToObject(typeof(long));
               Assert.Fail("Should have failed");
             }
             catch (OverflowException)
@@ -1214,7 +1214,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().AsSingle();
+        _ = CBORObject.NewArray().AsSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1228,7 +1228,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsSingle();
+        _ = CBORObject.NewMap().AsSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1242,7 +1242,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.AsSingle();
+        _ = CBORObject.True.AsSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1256,7 +1256,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsSingle();
+        _ = CBORObject.False.AsSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1270,7 +1270,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsSingle();
+        _ = CBORObject.Undefined.AsSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1284,7 +1284,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsSingle();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1324,7 +1324,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(CBORObject.Null).AsString();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(CBORObject.Null).AsString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1338,7 +1338,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(true).AsString();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(true).AsString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1352,7 +1352,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(false).AsString();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(false).AsString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1366,7 +1366,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(5).AsString();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(5).AsString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1380,7 +1380,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsString();
+        _ = CBORObject.NewArray().AsString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1394,7 +1394,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsString();
+        _ = CBORObject.NewMap().AsString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1437,7 +1437,7 @@ namespace Test
     {
       try
       {
-        CBORObject.True.AsNumber().CanFitInDouble();
+        _ = CBORObject.True.AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1455,7 +1455,7 @@ namespace Test
     {
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
                .AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
@@ -1474,7 +1474,7 @@ namespace Test
     {
       try
       {
-        CBORObject.NewArray().AsNumber().CanFitInDouble();
+        _ = CBORObject.NewArray().AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1488,7 +1488,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().CanFitInDouble();
+        _ = CBORObject.NewMap().AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1506,7 +1506,7 @@ namespace Test
     {
       try
       {
-        CBORObject.False.AsNumber().CanFitInDouble();
+        _ = CBORObject.False.AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1520,7 +1520,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.AsNumber().CanFitInDouble();
+        _ = CBORObject.Null.AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1538,7 +1538,7 @@ namespace Test
     {
       try
       {
-        CBORObject.Undefined.AsNumber().CanFitInDouble();
+        _ = CBORObject.Undefined.AsNumber().CanFitInDouble();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1747,7 +1747,7 @@ namespace Test
           0).AsNumber().CanFitInSingle());
       try
       {
-        CBORObject.True.AsNumber().CanFitInSingle();
+        _ = CBORObject.True.AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1761,7 +1761,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
                .AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
@@ -1776,7 +1776,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber().CanFitInSingle();
+        _ = CBORObject.NewArray().AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1790,7 +1790,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().CanFitInSingle();
+        _ = CBORObject.NewMap().AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1804,7 +1804,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsNumber().CanFitInSingle();
+        _ = CBORObject.False.AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1818,7 +1818,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.AsNumber().CanFitInSingle();
+        _ = CBORObject.Null.AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1832,7 +1832,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsNumber().CanFitInSingle();
+        _ = CBORObject.Undefined.AsNumber().CanFitInSingle();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1916,7 +1916,7 @@ namespace Test
         .AsNumber().CanTruncatedIntFitInInt32());
       try
       {
-        CBORObject.True.AsNumber().CanTruncatedIntFitInInt32();
+        _ = CBORObject.True.AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1930,7 +1930,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
                .AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
@@ -1945,7 +1945,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber().CanTruncatedIntFitInInt32();
+        _ = CBORObject.NewArray().AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1959,7 +1959,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().CanTruncatedIntFitInInt32();
+        _ = CBORObject.NewMap().AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1973,7 +1973,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsNumber().CanTruncatedIntFitInInt32();
+        _ = CBORObject.False.AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -1987,7 +1987,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.AsNumber().CanTruncatedIntFitInInt32();
+        _ = CBORObject.Null.AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2001,7 +2001,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsNumber().CanTruncatedIntFitInInt32();
+        _ = CBORObject.Undefined.AsNumber().CanTruncatedIntFitInInt32();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2097,7 +2097,7 @@ namespace Test
         .AsNumber().CanTruncatedIntFitInInt64());
       try
       {
-        CBORObject.True.AsNumber().CanTruncatedIntFitInInt64();
+        _ = CBORObject.True.AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2111,7 +2111,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
                .AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
@@ -2126,7 +2126,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber().CanTruncatedIntFitInInt64();
+        _ = CBORObject.NewArray().AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2140,7 +2140,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().CanTruncatedIntFitInInt64();
+        _ = CBORObject.NewMap().AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2154,7 +2154,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsNumber().CanTruncatedIntFitInInt64();
+        _ = CBORObject.False.AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2168,7 +2168,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.AsNumber().CanTruncatedIntFitInInt64();
+        _ = CBORObject.Null.AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2182,7 +2182,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsNumber().CanTruncatedIntFitInInt64();
+        _ = CBORObject.Undefined.AsNumber().CanTruncatedIntFitInInt64();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -2285,15 +2285,15 @@ namespace Test
     public void TestSlowCompareTo2()
     {
       CBORObject cbor1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x3b, 0x00, 0x00, 0x00, (byte)0xd3, (byte)0xe1, 0x26,
-        (byte)0xf9, 0x3b, (byte)0xc2, 0x4c, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01,
+        0xc5,
+        0x82, 0x3b, 0x00, 0x00, 0x00, 0xd3, 0xe1, 0x26,
+        0xf9, 0x3b, 0xc2, 0x4c, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01,
         0x01, 0x00, 0x00, 0x01, 0x00, 0x00,
       });
       CBORObject cbor2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x3b, 0x00, 0x00, 0x00, 0x56, (byte)0xe9, 0x21, (byte)0xda,
-        (byte)0xe9, (byte)0xc2, 0x58, 0x2a, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0xc4,
+        0x82, 0x3b, 0x00, 0x00, 0x00, 0x56, 0xe9, 0x21, 0xda,
+        0xe9, 0xc2, 0x58, 0x2a, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x01, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
         0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01,
         0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x01, 0x00, 0x01,
@@ -2309,35 +2309,35 @@ namespace Test
     public void TestSlowCompareTo6()
     {
       CBORObject cbor1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x7a, 0x50, (byte)0xe0, 0x1f,
-        (byte)0xc6, (byte)0xc2, 0x4c, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01,
+        0xc5,
+        0x82, 0x1b, 0x00, 0x00, 0x00, 0x7a, 0x50, 0xe0, 0x1f,
+        0xc6, 0xc2, 0x4c, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01,
         0x00, 0x00, 0x00, 0x01, 0x01,
       });
       CBORObject cbor2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x19, 0x01, 0x60, (byte)0xc2, 0x58, (byte)0x87, (byte)0xbb,
-        (byte)0xf8, 0x74, (byte)0xbe, (byte)0xcc, 0x46, 0x6b, 0x02, 0x3c,
-        (byte)0x84, (byte)0xe9, (byte)0xd1, (byte)0xe9, 0x3c, (byte)0xd3,
-        (byte)0xd5, 0x20, (byte)0xc1, 0x7e, 0x17, 0x09, 0x0f, (byte)0xdd, 0x73,
-        0x5d, (byte)0xe4, 0x51, (byte)0xd6, 0x10, 0x52, 0x2e, 0x6c, 0x77,
-        (byte)0x9f, 0x5e, 0x4f, 0x58, 0x72, 0x38, 0x43, (byte)0xb0, 0x28, 0x5a,
-        0x6c, (byte)0xe5, (byte)0xd2, 0x36, (byte)0x9e, 0x69, 0x50, (byte)0xf9,
-        0x62, 0x7f, (byte)0xcb, (byte)0xf5, 0x12, (byte)0x8c, 0x37, 0x2d,
-        (byte)0x8e, 0x4f, (byte)0x83, 0x5c, (byte)0xd6, 0x6d, 0x5e, (byte)0xf0,
-        0x65, 0x12, 0x4a, 0x0a, (byte)0x81, (byte)0x89, (byte)0xed, 0x20, 0x50,
-        (byte)0xca, 0x0e, (byte)0x81, (byte)0xbc, (byte)0x9e, (byte)0x83, 0x66,
-        (byte)0xb1, (byte)0xcd, 0x23, (byte)0xee, 0x24, 0x2e, (byte)0xec, 0x77,
-        0x13, (byte)0x89, (byte)0xbd, (byte)0xfb, 0x47, (byte)0xd1, 0x02, 0x1c,
-        0x4e, (byte)0xf5, 0x30, 0x59, 0x75, (byte)0xce, (byte)0xa8, (byte)0xaf,
-        0x23, 0x51, 0x7e, 0x26, (byte)0xaa, (byte)0xed, (byte)0xe9, 0x34, 0x02,
-        0x31, 0x70, (byte)0xe3, 0x3f, 0x71, (byte)0x9a, (byte)0x9a, (byte)0xe9,
-        (byte)0xf3, 0x6d, (byte)0xd7, 0x28, 0x18, (byte)0xa2, (byte)0xb5,
-        (byte)0x8b, (byte)0xca, 0x11, (byte)0x99,
+        0xc4,
+        0x82, 0x19, 0x01, 0x60, 0xc2, 0x58, 0x87, 0xbb,
+        0xf8, 0x74, 0xbe, 0xcc, 0x46, 0x6b, 0x02, 0x3c,
+        0x84, 0xe9, 0xd1, 0xe9, 0x3c, 0xd3,
+        0xd5, 0x20, 0xc1, 0x7e, 0x17, 0x09, 0x0f, 0xdd, 0x73,
+        0x5d, 0xe4, 0x51, 0xd6, 0x10, 0x52, 0x2e, 0x6c, 0x77,
+        0x9f, 0x5e, 0x4f, 0x58, 0x72, 0x38, 0x43, 0xb0, 0x28, 0x5a,
+        0x6c, 0xe5, 0xd2, 0x36, 0x9e, 0x69, 0x50, 0xf9,
+        0x62, 0x7f, 0xcb, 0xf5, 0x12, 0x8c, 0x37, 0x2d,
+        0x8e, 0x4f, 0x83, 0x5c, 0xd6, 0x6d, 0x5e, 0xf0,
+        0x65, 0x12, 0x4a, 0x0a, 0x81, 0x89, 0xed, 0x20, 0x50,
+        0xca, 0x0e, 0x81, 0xbc, 0x9e, 0x83, 0x66,
+        0xb1, 0xcd, 0x23, 0xee, 0x24, 0x2e, 0xec, 0x77,
+        0x13, 0x89, 0xbd, 0xfb, 0x47, 0xd1, 0x02, 0x1c,
+        0x4e, 0xf5, 0x30, 0x59, 0x75, 0xce, 0xa8, 0xaf,
+        0x23, 0x51, 0x7e, 0x26, 0xaa, 0xed, 0xe9, 0x34, 0x02,
+        0x31, 0x70, 0xe3, 0x3f, 0x71, 0x9a, 0x9a, 0xe9,
+        0xf3, 0x6d, 0xd7, 0x28, 0x18, 0xa2, 0xb5,
+        0x8b, 0xca, 0x11, 0x99,
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
+      _ = TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -2345,22 +2345,22 @@ namespace Test
     public void TestSlowCompareTo5()
     {
       CBORObject cbor1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x1b, 0x00, 0x00, 0x10, 0x57, (byte)0xa5, (byte)0x96,
-        (byte)0xbe, 0x7b, (byte)0xc2, 0x53, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0xc5,
+        0x82, 0x1b, 0x00, 0x00, 0x10, 0x57, 0xa5, 0x96,
+        0xbe, 0x7b, 0xc2, 0x53, 0x01, 0x01, 0x00, 0x00, 0x00, 0x01,
         0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01,
         0x00,
       });
       CBORObject cbor2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x19, 0x01, (byte)0x84, (byte)0xc2, 0x53, 0x20, 0x44, 0x52,
-        0x64, (byte)0x9d, (byte)0xea, (byte)0xe8, 0x57, 0x13, (byte)0xa3, 0x7c,
-        (byte)0xeb, 0x5e, 0x0e, 0x54, (byte)0xc8, (byte)0xf0, (byte)0xb2,
+        0xc4,
+        0x82, 0x19, 0x01, 0x84, 0xc2, 0x53, 0x20, 0x44, 0x52,
+        0x64, 0x9d, 0xea, 0xe8, 0x57, 0x13, 0xa3, 0x7c,
+        0xeb, 0x5e, 0x0e, 0x54, 0xc8, 0xf0, 0xb2,
         0x58,
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
-      TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
+      _ = TestCommon.CompareTestReciprocal(cbor1.AsNumber(), cbor2.AsNumber());
     }
 
     [Test]
@@ -2368,20 +2368,20 @@ namespace Test
     public void TestSlowCompareTo()
     {
       CBORObject cbor1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x3b, 0x00, 0x00, 0x00, 0x15, (byte)0xfc, (byte)0xa0,
-        (byte)0xd9, (byte)0xf9, (byte)0xc3, 0x58, 0x36, 0x02, (byte)0x83, 0x3b,
-        0x3c, (byte)0x99, (byte)0xdb, (byte)0xe4, (byte)0xfc, 0x2a, 0x69, 0x69,
-        (byte)0xe7, 0x63, (byte)0xb7, 0x5d, 0x48, (byte)0xcf, 0x51, 0x33,
-        (byte)0xd7, (byte)0xc3, 0x59, 0x4d, 0x63, 0x3c, (byte)0xbb, (byte)0x9d,
-        0x43, 0x2d, (byte)0xd1, 0x51, 0x39, 0x1f, 0x03, 0x22, 0x5c, 0x13,
-        (byte)0xed, 0x02, (byte)0xca, (byte)0xda, 0x09, 0x22, 0x07, (byte)0x9f,
-        0x34, (byte)0x84, (byte)0xb4, 0x22, (byte)0xa8, 0x26, (byte)0x9f, 0x35,
-        (byte)0x8d,
+        0xc5,
+        0x82, 0x3b, 0x00, 0x00, 0x00, 0x15, 0xfc, 0xa0,
+        0xd9, 0xf9, 0xc3, 0x58, 0x36, 0x02, 0x83, 0x3b,
+        0x3c, 0x99, 0xdb, 0xe4, 0xfc, 0x2a, 0x69, 0x69,
+        0xe7, 0x63, 0xb7, 0x5d, 0x48, 0xcf, 0x51, 0x33,
+        0xd7, 0xc3, 0x59, 0x4d, 0x63, 0x3c, 0xbb, 0x9d,
+        0x43, 0x2d, 0xd1, 0x51, 0x39, 0x1f, 0x03, 0x22, 0x5c, 0x13,
+        0xed, 0x02, 0xca, 0xda, 0x09, 0x22, 0x07, 0x9f,
+        0x34, 0x84, 0xb4, 0x22, 0xa8, 0x26, 0x9f, 0x35,
+        0x8d,
       });
       CBORObject cbor2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x24, 0x26,
+        0xc4,
+        0x82, 0x24, 0x26,
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
@@ -2393,16 +2393,16 @@ namespace Test
     public void TestSlowCompareTo3()
     {
       CBORObject cbor1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x3b, 0x04, 0x55, 0x0a, 0x12, (byte)0x94, (byte)0xf8, 0x1f,
-        (byte)0x9b, (byte)0xc2, 0x58, 0x1f, 0x01, 0x00, 0x00, 0x01, 0x01, 0x00,
+        0xc5,
+        0x82, 0x3b, 0x04, 0x55, 0x0a, 0x12, 0x94, 0xf8, 0x1f,
+        0x9b, 0xc2, 0x58, 0x1f, 0x01, 0x00, 0x00, 0x01, 0x01, 0x00,
         0x00, 0x01, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01,
         0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x01,
         0x00,
       });
       CBORObject cbor2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x39, 0x02, 0x03, (byte)0xc2, 0x58, 0x2d, 0x01, 0x00, 0x00,
+        0xc4,
+        0x82, 0x39, 0x02, 0x03, 0xc2, 0x58, 0x2d, 0x01, 0x00, 0x00,
         0x00, 0x00, 0x01, 0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
         0x00, 0x01, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x01, 0x01, 0x00,
@@ -2418,32 +2418,32 @@ namespace Test
     public void TestSlowCompareTo4()
     {
       CBORObject cbor1 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc4,
-        (byte)0x82, 0x2f, 0x3b, 0x00, 0x1e, (byte)0xdc, 0x5d, 0x51, 0x5d, 0x26,
-        (byte)0xb7,
+        0xc4,
+        0x82, 0x2f, 0x3b, 0x00, 0x1e, 0xdc, 0x5d, 0x51, 0x5d, 0x26,
+        0xb7,
       });
       CBORObject cbor2 = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xc5,
-        (byte)0x82, 0x3b, 0x00, 0x18, 0x72, 0x44, 0x49, (byte)0xd0, 0x0c,
-        (byte)0xb6, (byte)0xc3, 0x58, (byte)0x88, 0x0a, (byte)0xd0, 0x12,
-        (byte)0x93, (byte)0xcb, 0x0a, 0x30, 0x2d, 0x11, 0x36, 0x59, 0x5a,
-        (byte)0xfe, (byte)0x81, 0x79, (byte)0x80, (byte)0x86, (byte)0xb8, 0x2f,
-        0x26, 0x4b, (byte)0xf4, 0x70, (byte)0xb4, 0x37, 0x3b, 0x7a, 0x1d,
-        (byte)0x89, 0x4b, (byte)0xd4, 0x75, 0x07, (byte)0xad, 0x0c, (byte)0x90,
-        0x6b, 0x1f, 0x53, (byte)0xf7, (byte)0xc3, (byte)0xde, 0x61, (byte)0xf2,
-        0x62, 0x78, (byte)0x8a, 0x29, 0x31, 0x44, (byte)0xdd, 0x20, (byte)0xa4,
-        0x79, 0x76, 0x59, (byte)0xb7, (byte)0xf7, 0x7c, 0x37, (byte)0xb8, 0x47,
-        (byte)0xcf, (byte)0x96, (byte)0xf8, (byte)0x85, (byte)0xae, (byte)0xee,
-        (byte)0xb4, 0x06, 0x13, (byte)0xef, (byte)0xd1, (byte)0xe6, 0x36,
-        (byte)0xa5, (byte)0xfe, (byte)0xec, (byte)0x8f, (byte)0x8e, 0x00,
-        (byte)0xaa, (byte)0xc2, (byte)0xd4, 0x77, (byte)0xcf, (byte)0xea,
-        (byte)0xff, 0x4d, 0x12, 0x0b, (byte)0xf5, 0x08, (byte)0xc4, 0x0f, 0x08,
-        (byte)0xa7, 0x07, (byte)0xb6, 0x45, 0x47, (byte)0x89, (byte)0xba, 0x5a,
-        (byte)0xde, 0x6c, 0x69, 0x6a, 0x49, (byte)0xba, (byte)0xb2, (byte)0xd9,
-        0x0f, (byte)0x9c, (byte)0xa4, (byte)0xec, 0x48, (byte)0xd2, 0x71, 0x50,
-        (byte)0xde, (byte)0x96, (byte)0x99, (byte)0x9e, (byte)0x89, 0x33,
-        (byte)0x8f, 0x6f, (byte)0xa8, 0x30, (byte)0xa1, 0x0a, 0x0f, (byte)0xab,
-        (byte)0xfe, (byte)0xbe,
+        0xc5,
+        0x82, 0x3b, 0x00, 0x18, 0x72, 0x44, 0x49, 0xd0, 0x0c,
+        0xb6, 0xc3, 0x58, 0x88, 0x0a, 0xd0, 0x12,
+        0x93, 0xcb, 0x0a, 0x30, 0x2d, 0x11, 0x36, 0x59, 0x5a,
+        0xfe, 0x81, 0x79, 0x80, 0x86, 0xb8, 0x2f,
+        0x26, 0x4b, 0xf4, 0x70, 0xb4, 0x37, 0x3b, 0x7a, 0x1d,
+        0x89, 0x4b, 0xd4, 0x75, 0x07, 0xad, 0x0c, 0x90,
+        0x6b, 0x1f, 0x53, 0xf7, 0xc3, 0xde, 0x61, 0xf2,
+        0x62, 0x78, 0x8a, 0x29, 0x31, 0x44, 0xdd, 0x20, 0xa4,
+        0x79, 0x76, 0x59, 0xb7, 0xf7, 0x7c, 0x37, 0xb8, 0x47,
+        0xcf, 0x96, 0xf8, 0x85, 0xae, 0xee,
+        0xb4, 0x06, 0x13, 0xef, 0xd1, 0xe6, 0x36,
+        0xa5, 0xfe, 0xec, 0x8f, 0x8e, 0x00,
+        0xaa, 0xc2, 0xd4, 0x77, 0xcf, 0xea,
+        0xff, 0x4d, 0x12, 0x0b, 0xf5, 0x08, 0xc4, 0x0f, 0x08,
+        0xa7, 0x07, 0xb6, 0x45, 0x47, 0x89, 0xba, 0x5a,
+        0xde, 0x6c, 0x69, 0x6a, 0x49, 0xba, 0xb2, 0xd9,
+        0x0f, 0x9c, 0xa4, 0xec, 0x48, 0xd2, 0x71, 0x50,
+        0xde, 0x96, 0x99, 0x9e, 0x89, 0x33,
+        0x8f, 0x6f, 0xa8, 0x30, 0xa1, 0x0a, 0x0f, 0xab,
+        0xfe, 0xbe,
       });
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
@@ -2486,7 +2486,7 @@ namespace Test
         {
           CBORObject o1 = list[i];
           CBORObject o2 = list[j];
-          TestCommon.CompareTestReciprocal(o1, o2);
+          _ = TestCommon.CompareTestReciprocal(o1, o2);
         }
       }
       Console.WriteLine("Sorting");
@@ -2646,7 +2646,7 @@ namespace Test
     {
       try
       {
-        CBORObject.DecodeFromBytes(null);
+        _ = CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -2660,7 +2660,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(new byte[] { });
+        _ = CBORObject.DecodeFromBytes(new byte[] { });
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2674,7 +2674,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(new byte[] { 0 }, null);
+        _ = CBORObject.DecodeFromBytes(new byte[] { 0 }, null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -2688,7 +2688,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(new byte[] { 0x1c });
+        _ = CBORObject.DecodeFromBytes(new byte[] { 0x1c });
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2702,7 +2702,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(null);
+        _ = CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -2716,7 +2716,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(new byte[] { 0x1e });
+        _ = CBORObject.DecodeFromBytes(new byte[] { 0x1e });
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2730,7 +2730,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(new byte[] { 0xfe });
+        _ = CBORObject.DecodeFromBytes(new byte[] { 0xfe });
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2744,7 +2744,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeFromBytes(new byte[] { 0xff });
+        _ = CBORObject.DecodeFromBytes(new byte[] { 0xff });
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2765,7 +2765,7 @@ namespace Test
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x02, 0x03 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes, new
+        _ = CBORObject.DecodeFromBytes(bytes, new
           CBOREncodeOptions("allowduplicatekeys=0"));
       }
       catch (Exception ex)
@@ -2776,7 +2776,7 @@ namespace Test
       bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes, new
+        _ = CBORObject.DecodeFromBytes(bytes, new
           CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       }
@@ -2793,7 +2793,7 @@ namespace Test
       try
       {
         string opts = "allowduplicatekeys=1;useindeflengthstrings=1";
-        CBORObject.DecodeFromBytes(bytes,
+        _ = CBORObject.DecodeFromBytes(bytes,
           new CBOREncodeOptions(opts));
       }
       catch (Exception ex)
@@ -2804,7 +2804,7 @@ namespace Test
       bytes = new byte[] { 0xa2, 0x60, 0x00, 0x60, 0x03 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes, new
+        _ = CBORObject.DecodeFromBytes(bytes, new
           CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       }
@@ -2823,7 +2823,7 @@ namespace Test
       };
       try
       {
-        CBORObject.DecodeFromBytes(bytes, new
+        _ = CBORObject.DecodeFromBytes(bytes, new
           CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       }
@@ -2839,7 +2839,7 @@ namespace Test
       bytes = new byte[] { 0xa2, 0x61, 0x41, 0x00, 0x61, 0x41, 0x03 };
       try
       {
-        CBORObject.DecodeFromBytes(bytes, new
+        _ = CBORObject.DecodeFromBytes(bytes, new
           CBOREncodeOptions("allowduplicatekeys=0"));
         Assert.Fail("Should have failed");
       }
@@ -2872,7 +2872,7 @@ namespace Test
       bytes = new byte[] { 0, 1, 0x61 };
       try
       {
-        CBORObject.DecodeSequenceFromBytes(bytes);
+        _ = CBORObject.DecodeSequenceFromBytes(bytes);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2887,7 +2887,7 @@ namespace Test
       bytes = new byte[] { 0x61 };
       try
       {
-        CBORObject.DecodeSequenceFromBytes(bytes);
+        _ = CBORObject.DecodeSequenceFromBytes(bytes);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -2910,7 +2910,7 @@ namespace Test
       Assert.AreEqual(0, objs.Length);
       try
       {
-        CBORObject.DecodeSequenceFromBytes(null);
+        _ = CBORObject.DecodeSequenceFromBytes(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -2924,7 +2924,7 @@ namespace Test
       }
       try
       {
-        CBORObject.DecodeSequenceFromBytes(bytes, null);
+        _ = CBORObject.DecodeSequenceFromBytes(bytes, null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -2982,7 +2982,7 @@ namespace Test
       {
         try
         {
-          CBORObject.ReadSequence(ms);
+          _ = CBORObject.ReadSequence(ms);
           Assert.Fail("Should have failed");
         }
         catch (CBORException)
@@ -3000,7 +3000,7 @@ namespace Test
       {
         try
         {
-          CBORObject.ReadSequence(ms);
+          _ = CBORObject.ReadSequence(ms);
           Assert.Fail("Should have failed");
         }
         catch (CBORException)
@@ -3048,7 +3048,7 @@ namespace Test
       Assert.AreEqual(0, objs.Length);
       try
       {
-        CBORObject.ReadSequence(null);
+        _ = CBORObject.ReadSequence(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -3064,7 +3064,7 @@ namespace Test
       {
         try
         {
-          CBORObject.ReadSequence(ms, null);
+          _ = CBORObject.ReadSequence(ms, null);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -3246,7 +3246,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.EncodeToBytes(null);
+        _ = CBORObject.True.EncodeToBytes(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -3525,7 +3525,7 @@ namespace Test
     public void TestEquals()
     {
       var cborbytes = new byte[] {
-        (byte)0xd8, 0x1e, (byte)0x82, 0x00, 0x19,
+        0xd8, 0x1e, 0x82, 0x00, 0x19,
         0x0f, 0x50,
       };
       CBORObject cbor = CBORObject.DecodeFromBytes(cborbytes);
@@ -3686,11 +3686,11 @@ namespace Test
       }
       foreach (string str in ValueJsonSucceeds)
       {
-        TestSucceedingJSON(str);
+        _ = TestSucceedingJSON(str);
       }
       try
       {
-        CBORObject.FromJSONString("\ufeff\u0020 {}");
+        _ = CBORObject.FromJSONString("\ufeff\u0020 {}");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -3704,7 +3704,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromJSONString("[]", (JSONOptions)null);
+        _ = CBORObject.FromJSONString("[]", null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -3836,7 +3836,7 @@ namespace Test
         CBORObject.FromObject((EDecimal)null));
       try
       {
-        CBORObject.FromObject(ERational.Create(10, 2));
+        _ = CBORObject.FromObject(ERational.Create(10, 2));
       }
       catch (Exception ex)
       {
@@ -3846,7 +3846,7 @@ namespace Test
       cbor = CBORObject.True;
       try
       {
-        CBORObject.FromObject(cbor[0]);
+        _ = CBORObject.FromObject(cbor[0]);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -3875,7 +3875,7 @@ namespace Test
       try
       {
         cbor = CBORObject.False;
-        CBORObject.FromObject(cbor.Keys);
+        _ = CBORObject.FromObject(cbor.Keys);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -3889,7 +3889,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip('\udddd');
+        _ = ToObjectTest.TestToFromObjectRoundTrip('\udddd');
       }
       catch (Exception ex)
       {
@@ -3898,7 +3898,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(CBORObject.NewArray().Keys);
+        _ = CBORObject.FromObject(CBORObject.NewArray().Keys);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -3912,7 +3912,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(CBORObject.NewArray().AsNumber().Sign);
+        _ = CBORObject.FromObject(CBORObject.NewArray().AsNumber().Sign);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -3926,7 +3926,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(CBORObject.NewMap().AsNumber().Sign);
+        _ = CBORObject.FromObject(CBORObject.NewMap().AsNumber().Sign);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -3990,7 +3990,7 @@ namespace Test
       cbor = CBORObject.FromObject("ValueXYZ");
       try
       {
-        cbor.ToObject(typeof(EnumClass));
+        _ = cbor.ToObject(typeof(EnumClass));
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -4005,7 +4005,7 @@ namespace Test
       cbor = CBORObject.FromObject(true);
       try
       {
-        cbor.ToObject(typeof(EnumClass));
+        _ = cbor.ToObject(typeof(EnumClass));
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -4026,7 +4026,7 @@ namespace Test
       cbor = CBORObject.FromObject(999);
       try
       {
-        cbor.ToObject(typeof(EnumClass));
+        _ = cbor.ToObject(typeof(EnumClass));
         Assert.Fail("Should have failed -- " +
           cbor.ToObject(typeof(EnumClass)));
       }
@@ -4104,7 +4104,6 @@ namespace Test
       Assert.AreEqual("TestValue2", dict["TestKey2"]);
     }
 
-#pragma warning disable CA1034
     // nesting a public type is needed
     // here for testing purposes
     public sealed class NestedPODClass
@@ -4120,7 +4119,6 @@ namespace Test
         private set;
       }
     }
-#pragma warning restore CA1034
 
     [Test]
     public void TestBase64Extras()
@@ -4189,10 +4187,9 @@ namespace Test
       var valueCcFF = new PODOptions(false, false);
       var valueCcFT = new PODOptions(false, true);
       var valueCcTT = new PODOptions(true, true);
-      CBORObject co;
       CBORObjectTest.CheckPropertyNames(ao);
       var arrao = new PODClass[] { ao, ao };
-      co = CBORObject.FromObject(arrao, valueCcTF);
+      _ = CBORObject.FromObject(arrao, valueCcTF);
       CBORObjectTest.CheckArrayPropertyNames(
         CBORObject.FromObject(arrao, valueCcTF),
         2,
@@ -4273,7 +4270,7 @@ namespace Test
       EInteger bigvalue = EInteger.FromString("99999999999999999999999999999");
       try
       {
-        CBORObject.FromObjectAndTag(2, bigvalue);
+        _ = CBORObject.FromObjectAndTag(2, bigvalue);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4287,7 +4284,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObjectAndTag(2, -1);
+        _ = CBORObject.FromObjectAndTag(2, -1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4301,7 +4298,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObjectAndTag(CBORObject.Null, -1);
+        _ = CBORObject.FromObjectAndTag(CBORObject.Null, -1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4315,7 +4312,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObjectAndTag(CBORObject.Null, 999999);
+        _ = CBORObject.FromObjectAndTag(CBORObject.Null, 999999);
       }
       catch (Exception ex)
       {
@@ -4325,7 +4322,7 @@ namespace Test
       EInteger eintNull = null;
       try
       {
-        CBORObject.FromObjectAndTag(2, eintNull);
+        _ = CBORObject.FromObjectAndTag(2, eintNull);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -4339,7 +4336,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObjectAndTag(2, EInteger.FromString("-1"));
+        _ = CBORObject.FromObjectAndTag(2, EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4358,7 +4355,7 @@ namespace Test
     {
       try
       {
-        CBORObject.FromSimpleValue(-1);
+        _ = CBORObject.FromSimpleValue(-1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4372,7 +4369,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromSimpleValue(256);
+        _ = CBORObject.FromSimpleValue(256);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4390,7 +4387,7 @@ namespace Test
         {
           try
           {
-            CBORObject.FromSimpleValue(i);
+            _ = CBORObject.FromSimpleValue(i);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentException)
@@ -4417,7 +4414,7 @@ namespace Test
       EInteger bigvalue = EInteger.FromString("99999999999999999999999999999");
       try
       {
-        CBORObject.FromObject(2).WithTag(bigvalue);
+        _ = CBORObject.FromObject(2).WithTag(bigvalue);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4431,7 +4428,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(2).WithTag(-1);
+        _ = CBORObject.FromObject(2).WithTag(-1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4445,7 +4442,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(CBORObject.Null).WithTag(-1);
+        _ = CBORObject.FromObject(CBORObject.Null).WithTag(-1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4459,7 +4456,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(CBORObject.Null).WithTag(999999);
+        _ = CBORObject.FromObject(CBORObject.Null).WithTag(999999);
       }
       catch (Exception ex)
       {
@@ -4469,7 +4466,7 @@ namespace Test
       EInteger eintNull = null;
       try
       {
-        CBORObject.FromObject(2).WithTag(eintNull);
+        _ = CBORObject.FromObject(2).WithTag(eintNull);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -4483,7 +4480,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromObject(2).WithTag(EInteger.FromString("-1"));
+        _ = CBORObject.FromObject(2).WithTag(EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4502,7 +4499,7 @@ namespace Test
     {
       try
       {
-        CBORObject.True.GetByteString();
+        _ = CBORObject.True.GetByteString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4516,7 +4513,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(0).GetByteString();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(0).GetByteString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4530,7 +4527,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip("test").GetByteString();
+        _ = ToObjectTest.TestToFromObjectRoundTrip("test").GetByteString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4544,7 +4541,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.GetByteString();
+        _ = CBORObject.False.GetByteString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4558,7 +4555,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().GetByteString();
+        _ = CBORObject.NewArray().GetByteString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4572,7 +4569,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().GetByteString();
+        _ = CBORObject.NewMap().GetByteString();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4603,7 +4600,7 @@ namespace Test
     {
       try
       {
-        CBORObject.True.HasTag(-1);
+        _ = CBORObject.True.HasTag(-1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4618,7 +4615,7 @@ namespace Test
       try
       {
         const EInteger ValueBigintNull = null;
-        CBORObject.True.HasTag(ValueBigintNull);
+        _ = CBORObject.True.HasTag(ValueBigintNull);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -4632,7 +4629,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.HasTag(EInteger.FromString("-1"));
+        _ = CBORObject.True.HasTag(EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -4675,7 +4672,7 @@ namespace Test
         ToObjectTest.TestToFromObjectRoundTrip(0).AsNumber().IsFinite());
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4689,7 +4686,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber().IsFinite();
+        _ = CBORObject.NewArray().AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4703,7 +4700,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().IsFinite();
+        _ = CBORObject.NewMap().AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4718,7 +4715,7 @@ namespace Test
       cbor = CBORObject.True;
       try
       {
-        cbor.AsNumber().IsFinite();
+        _ = cbor.AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4733,7 +4730,7 @@ namespace Test
       cbor = CBORObject.False;
       try
       {
-        cbor.AsNumber().IsFinite();
+        _ = cbor.AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4748,7 +4745,7 @@ namespace Test
       cbor = CBORObject.Null;
       try
       {
-        cbor.AsNumber().IsFinite();
+        _ = cbor.AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4763,7 +4760,7 @@ namespace Test
       cbor = CBORObject.Undefined;
       try
       {
-        cbor.AsNumber().IsFinite();
+        _ = cbor.AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4777,7 +4774,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().IsFinite();
+        _ = CBORObject.NewMap().AsNumber().IsFinite();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4831,8 +4828,8 @@ namespace Test
       Assert.IsTrue(CBORObject.PositiveInfinity.AsNumber().IsInfinity());
       Assert.IsTrue(CBORObject.NegativeInfinity.AsNumber().IsInfinity());
       Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfa, 0x7f,
-        (byte)0x80, 0x00, 0x00,
+        0xfa, 0x7f,
+        0x80, 0x00, 0x00,
       }).AsNumber().IsInfinity());
     }
 
@@ -4843,7 +4840,7 @@ namespace Test
 
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(0).AsNumber().IsInteger());
-      cbor = ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
+      _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty);
       cbor = ToObjectTest.TestToFromObjectRoundTrip(
           EInteger.FromRadixString(
             "8000000000000000",
@@ -4913,7 +4910,7 @@ namespace Test
     {
       try
       {
-        CBORObject.True.AsNumber();
+        _ = CBORObject.True.AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4927,7 +4924,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4941,7 +4938,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber();
+        _ = CBORObject.NewArray().AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4955,7 +4952,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber();
+        _ = CBORObject.NewMap().AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4969,7 +4966,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsNumber();
+        _ = CBORObject.False.AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4983,7 +4980,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.AsNumber();
+        _ = CBORObject.Null.AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -4997,7 +4994,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsNumber();
+        _ = CBORObject.Undefined.AsNumber();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -5456,8 +5453,8 @@ namespace Test
     [Test]
     public void TestMostOuterTag()
     {
-      CBORObject cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
-      cbor = CBORObject.FromObjectAndTag(CBORObject.True, 1000);
+      _ = CBORObject.FromObjectAndTag(CBORObject.True, 999);
+      CBORObject cbor = CBORObject.FromObjectAndTag(CBORObject.True, 1000);
       Assert.AreEqual(EInteger.FromString("1000"), cbor.MostOuterTag);
       cbor = CBORObject.True;
       Assert.AreEqual(EInteger.FromString("-1"), cbor.MostOuterTag);
@@ -5468,7 +5465,7 @@ namespace Test
     {
       try
       {
-        CBORObject.Read(null);
+        _ = CBORObject.Read(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -5486,7 +5483,7 @@ namespace Test
         {
           try
           {
-            CBORObject.Read(ms2, null);
+            _ = CBORObject.Read(ms2, null);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentNullException)
@@ -5513,7 +5510,7 @@ namespace Test
       {
         try
         {
-          CBORObject.ReadJSONSequence(ms);
+          _ = CBORObject.ReadJSONSequence(ms);
           Assert.Fail("Should have failed");
         }
         catch (CBORException)
@@ -5600,38 +5597,38 @@ namespace Test
       bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x0d };
       ExpectJsonSequenceOne(bytes, CBORObject.FromObject("A"));
       bytes = new byte[] {
-        0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
-        (byte)0x65, 0x0a,
+        0x1e, 0x66, 0x61, 0x6c, 0x73,
+        0x65, 0x0a,
       };
       ExpectJsonSequenceOne(bytes, CBORObject.False);
       bytes = new byte[] {
-        0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
-        (byte)0x65,
+        0x1e, 0x66, 0x61, 0x6c, 0x73,
+        0x65,
       };
       ExpectJsonSequenceOne(bytes, null);
       bytes = new byte[] {
-        0x1e, (byte)0x66, (byte)0x61, (byte)0x6c, (byte)0x73,
-        (byte)0x65, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65, 0x0a,
+        0x1e, 0x66, 0x61, 0x6c, 0x73,
+        0x65, 0x74, 0x72, 0x75, 0x65, 0x0a,
       };
       ExpectJsonSequenceOne(bytes, null);
       bytes = new byte[] {
-        0x1e, (byte)0x74, (byte)0x72, (byte)0x75, (byte)0x65,
+        0x1e, 0x74, 0x72, 0x75, 0x65,
         0x0a,
       };
       ExpectJsonSequenceOne(bytes, CBORObject.True);
       bytes = new byte[] {
-        0x1e, (byte)0x74, (byte)0x72, (byte)0x75,
-        (byte)0x65,
+        0x1e, 0x74, 0x72, 0x75,
+        0x65,
       };
       ExpectJsonSequenceOne(bytes, null);
       bytes = new byte[] {
-        0x1e, (byte)0x6e, (byte)0x75, (byte)0x6c, (byte)0x6c,
+        0x1e, 0x6e, 0x75, 0x6c, 0x6c,
         0x0a,
       };
       ExpectJsonSequenceOne(bytes, CBORObject.Null);
       bytes = new byte[] {
-        0x1e, (byte)0x6e, (byte)0x75, (byte)0x6c,
-        (byte)0x6c,
+        0x1e, 0x6e, 0x75, 0x6c,
+        0x6c,
       };
       ExpectJsonSequenceOne(bytes, null);
       bytes = new byte[] { 0x1e, 0x22, 0x41, 0x22, 0x1e, (byte)'[', (byte)']' };
@@ -5705,7 +5702,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(ms2, (JSONOptions)null);
+            _ = CBORObject.ReadJSON(ms2, null);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentNullException)
@@ -5725,7 +5722,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(ms);
+            _ = CBORObject.ReadJSON(ms);
           }
           catch (Exception ex)
           {
@@ -5741,7 +5738,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(ms2);
+            _ = CBORObject.ReadJSON(ms2);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -5761,7 +5758,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(ms2a);
+            _ = CBORObject.ReadJSON(ms2a);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -5781,7 +5778,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(ms2b);
+            _ = CBORObject.ReadJSON(ms2b);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -5802,7 +5799,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(ms3);
+            _ = CBORObject.ReadJSON(ms3);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6019,7 +6016,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6042,7 +6039,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6064,7 +6061,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6088,7 +6085,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6110,7 +6107,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6132,7 +6129,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6154,7 +6151,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6175,7 +6172,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6192,7 +6189,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6209,7 +6206,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6230,7 +6227,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6250,7 +6247,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6270,7 +6267,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6290,7 +6287,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6310,7 +6307,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6330,7 +6327,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6350,7 +6347,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6370,7 +6367,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6390,7 +6387,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6410,7 +6407,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6431,7 +6428,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6451,7 +6448,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6471,7 +6468,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6491,7 +6488,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6511,7 +6508,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6531,7 +6528,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6551,7 +6548,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6571,7 +6568,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6593,7 +6590,7 @@ namespace Test
         {
           try
           {
-            CBORObject.ReadJSON(msjson);
+            _ = CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -6679,7 +6676,7 @@ namespace Test
       {
         try
         {
-          CBORObject.ReadJSON(msjson);
+          _ = CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
         }
         catch (CBORException)
@@ -6700,10 +6697,10 @@ namespace Test
     public void TestEncodeToBytesCircularRefs()
     {
       CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
-      cbor.Add(cbor);
+      _ = cbor.Add(cbor);
       try
       {
-        cbor.EncodeToBytes();
+        _ = cbor.EncodeToBytes();
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -6716,10 +6713,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add(cbor, "test");
+      _ = cbor.Add(cbor, "test");
       try
       {
-        cbor.EncodeToBytes();
+        _ = cbor.EncodeToBytes();
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -6732,10 +6729,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", cbor);
+      _ = cbor.Add("test", cbor);
       try
       {
-        cbor.EncodeToBytes();
+        _ = cbor.EncodeToBytes();
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -6748,10 +6745,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewArray().Add(1).Add(2);
-      cbor.Add(CBORObject.NewArray().Add(cbor));
+      _ = cbor.Add(CBORObject.NewArray().Add(cbor));
       try
       {
-        cbor.EncodeToBytes();
+        _ = cbor.EncodeToBytes();
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -6764,10 +6761,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+      _ = cbor.Add(CBORObject.NewArray().Add(cbor), "test");
       try
       {
-        cbor.EncodeToBytes();
+        _ = cbor.EncodeToBytes();
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -6780,10 +6777,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", CBORObject.NewArray().Add(cbor));
+      _ = cbor.Add("test", CBORObject.NewArray().Add(cbor));
       try
       {
-        cbor.EncodeToBytes();
+        _ = cbor.EncodeToBytes();
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -6801,10 +6798,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs1()
     {
       CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
-      cbor.Add(cbor);
+      _ = cbor.Add(cbor);
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6821,10 +6818,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs4()
     {
       CBORObject cbor = CBORObject.NewArray().Add(1).Add(2);
-      cbor.Add(CBORObject.NewArray().Add(cbor));
+      _ = cbor.Add(CBORObject.NewArray().Add(cbor));
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6841,10 +6838,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs2()
     {
       CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add(cbor, "test");
+      _ = cbor.Add(cbor, "test");
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6861,10 +6858,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs3()
     {
       CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", cbor);
+      _ = cbor.Add("test", cbor);
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6881,10 +6878,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs5()
     {
       CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add(CBORObject.NewArray().Add(cbor), "test");
+      _ = cbor.Add(CBORObject.NewArray().Add(cbor), "test");
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6901,10 +6898,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs6()
     {
       CBORObject cbor = CBORObject.NewMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", CBORObject.NewArray().Add(cbor));
+      _ = cbor.Add("test", CBORObject.NewArray().Add(cbor));
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6922,10 +6919,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs3a()
     {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", cbor);
+      _ = cbor.Add("test", cbor);
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6943,10 +6940,10 @@ namespace Test
     {
       CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", cbor);
+      _ = cbor.Add("test", cbor);
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6966,10 +6963,10 @@ namespace Test
       CBORObject cbor;
 
       cbor = CBORObject.NewOrderedMap().Add("abc", 2).Add("def", 4);
-      cbor.Add("test", cbor);
+      _ = cbor.Add("test", cbor);
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -6989,10 +6986,10 @@ namespace Test
       CBORObject cbor;
 
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
-      cbor.Add("test", cbor);
+      _ = cbor.Add("test", cbor);
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7011,10 +7008,10 @@ namespace Test
     {
       CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
-      cbor.Add(CBORObject.NewOrderedMap().Add("jkl", cbor), "test");
+      _ = cbor.Add(CBORObject.NewOrderedMap().Add("jkl", cbor), "test");
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7027,10 +7024,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
-      cbor.Add("test", CBORObject.NewOrderedMap().Add("jkl", cbor));
+      _ = cbor.Add("test", CBORObject.NewOrderedMap().Add("jkl", cbor));
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7043,10 +7040,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
-      cbor.Add(CBORObject.NewOrderedMap().Add(cbor, "jkl"), "test");
+      _ = cbor.Add(CBORObject.NewOrderedMap().Add(cbor, "jkl"), "test");
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7059,10 +7056,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
-      cbor.Add("test", CBORObject.NewOrderedMap().Add(cbor, "jkl"));
+      _ = cbor.Add("test", CBORObject.NewOrderedMap().Add(cbor, "jkl"));
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7080,11 +7077,11 @@ namespace Test
             "jkl").Add("mno",
             1);
         object objectTemp2 = "test";
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7101,11 +7098,11 @@ namespace Test
         object objectTemp = "test";
         object objectTemp2 = CBORObject.NewOrderedMap().Add(cbor,
             "jkl").Add("mno", 1);
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7122,11 +7119,11 @@ namespace Test
         object objectTemp = "test";
         object objectTemp2 = CBORObject.NewOrderedMap().Add("mno",
             1).Add(cbor, "jkl");
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7143,11 +7140,11 @@ namespace Test
         object objectTemp = CBORObject.NewOrderedMap().Add("mno", 1).Add(cbor,
             "jkl");
         object objectTemp2 = "test";
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7161,20 +7158,20 @@ namespace Test
       }
       // No circular refs
       cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", CBORObject.NewOrderedMap());
+      _ = cbor.Add("test", CBORObject.NewOrderedMap());
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("abc", 2).Add("def", 4);
-      cbor.Add("test", CBORObject.NewOrderedMap());
+      _ = cbor.Add("test", CBORObject.NewOrderedMap());
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
-      cbor.Add("test", CBORObject.NewOrderedMap());
+      _ = cbor.Add("test", CBORObject.NewOrderedMap());
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = CBORObject.NewOrderedMap().Add("jkl",
             CBORObject.NewOrderedMap());
         object objectTemp2 = "test";
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
@@ -7182,7 +7179,7 @@ namespace Test
         object objectTemp = "test";
         object objectTemp2 = CBORObject.NewOrderedMap().Add("jkl",
             CBORObject.NewOrderedMap());
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
@@ -7191,7 +7188,7 @@ namespace Test
           CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),
             "jkl");
         object objectTemp2 = "test";
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
@@ -7200,16 +7197,16 @@ namespace Test
         object objectTemp2 = CBORObject.NewOrderedMap()
           .Add(CBORObject.NewOrderedMap(),
             "jkl");
-        cbor.Add(objectTemp, objectTemp2);
+        _ = cbor.Add(objectTemp, objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
-        CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),
+        _ = CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),
           "jkl").Add("mno",
             1);
         object objectTemp2 = "test";
-        cbor.Add("test", objectTemp2);
+        _ = cbor.Add("test", objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
@@ -7218,7 +7215,7 @@ namespace Test
           CBORObject.NewOrderedMap().Add(CBORObject.NewOrderedMap(),
             "jkl").Add("mno",
             1);
-        cbor.Add("test", objectTemp2);
+        _ = cbor.Add("test", objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
@@ -7227,7 +7224,7 @@ namespace Test
           CBORObject.NewOrderedMap().Add("mno", 1).Add(
             CBORObject.NewOrderedMap(),
             "jkl");
-        cbor.Add("test", objectTemp2);
+        _ = cbor.Add("test", objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
@@ -7236,7 +7233,7 @@ namespace Test
           CBORObject.NewOrderedMap().Add("mno", 1).Add(
             CBORObject.NewOrderedMap(),
             "jkl");
-        cbor.Add(objectTemp, "test");
+        _ = cbor.Add(objectTemp, "test");
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
     }
@@ -7245,10 +7242,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs2a()
     {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add(cbor, "test");
+      _ = cbor.Add(cbor, "test");
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7267,10 +7264,10 @@ namespace Test
     {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       CBORObject cbor2 = CBORObject.NewArray().Add(cbor);
-      cbor.Add(cbor2, "test");
+      _ = cbor.Add(cbor2, "test");
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7287,10 +7284,10 @@ namespace Test
     public void TestCalcEncodedSizeCircularRefs6a()
     {
       CBORObject cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
-      cbor.Add("test", CBORObject.NewArray().Add(cbor));
+      _ = cbor.Add("test", CBORObject.NewArray().Add(cbor));
       try
       {
-        cbor.CalcEncodedSize();
+        _ = cbor.CalcEncodedSize();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -7373,7 +7370,7 @@ namespace Test
             "x")));
       try
       {
-        cbor.Remove((CBORObject)null);
+        _ = cbor.Remove(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -7405,7 +7402,7 @@ namespace Test
             "x")));
       try
       {
-        cbor.Remove((CBORObject)null);
+        _ = cbor.Remove(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -7430,7 +7427,7 @@ namespace Test
       Assert.IsTrue(cbor.ContainsKey("c"));
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1).Remove("x");
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1).Remove("x");
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7444,7 +7441,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.Remove("x");
+        _ = CBORObject.False.Remove("x");
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7458,7 +7455,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.Remove("x");
+        _ = CBORObject.Null.Remove("x");
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7472,7 +7469,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1)
         .Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
         Assert.Fail("Should have failed");
       }
@@ -7487,7 +7484,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
+        _ = CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7501,7 +7498,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
+        _ = CBORObject.Null.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7528,7 +7525,7 @@ namespace Test
       Assert.AreEqual(ToObjectTest.TestToFromObjectRoundTrip("c"), cbor[1]);
       try
       {
-        CBORObject.NewMap().RemoveAt(0);
+        _ = CBORObject.NewMap().RemoveAt(0);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7542,7 +7539,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(1).RemoveAt(0);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(1).RemoveAt(0);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7556,7 +7553,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.RemoveAt(0);
+        _ = CBORObject.False.RemoveAt(0);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7570,7 +7567,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.RemoveAt(0);
+        _ = CBORObject.Null.RemoveAt(0);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7590,7 +7587,7 @@ namespace Test
       CBORObject cbor = CBORObject.NewMap().Add("x", 0).Add("y", 1);
       Assert.AreEqual(0, cbor["x"].AsInt32());
       Assert.AreEqual(1, cbor["y"].AsInt32());
-      cbor.Set("x", 5).Set("z", 6);
+      _ = cbor.Set("x", 5).Set("z", 6);
       Assert.AreEqual(5, cbor["x"].AsInt32());
       Assert.AreEqual(6, cbor["z"].AsInt32());
       cbor = CBORObject.NewArray().Add(1).Add(2).Add(3).Add(4);
@@ -7599,7 +7596,7 @@ namespace Test
       Assert.AreEqual(3, cbor[2].AsInt32());
       try
       {
-        cbor.Set(-1, 0);
+        _ = cbor.Set(-1, 0);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7613,7 +7610,7 @@ namespace Test
       }
       try
       {
-        cbor.Set(4, 0);
+        _ = cbor.Set(4, 0);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7627,7 +7624,7 @@ namespace Test
       }
       try
       {
-        cbor.Set(999, 0);
+        _ = cbor.Set(999, 0);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7642,7 +7639,7 @@ namespace Test
       CBORObject cbor2 = CBORObject.True;
       try
       {
-        cbor2.Set(0, 0);
+        _ = cbor2.Set(0, 0);
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -7654,9 +7651,9 @@ namespace Test
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor.Set(0, 99);
+      _ = cbor.Set(0, 99);
       Assert.AreEqual(99, cbor[0].AsInt32());
-      cbor.Set(3, 199);
+      _ = cbor.Set(3, 199);
       Assert.AreEqual(199, cbor[3].AsInt32());
     }
 
@@ -7753,7 +7750,7 @@ namespace Test
     {
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(2).AsNumber().Subtract(null);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(2).AsNumber().Subtract(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -7898,13 +7895,13 @@ namespace Test
         0x01, 0xfe, 0xdd, 0xfd, 0xdc,
         0x01, 0xfe, 0xdd, 0xfd, 0xdc,
       };
-      cbor.Add(b64bytes);
-      TestSucceedingJSON(cbor.ToJSONString());
+      _ = cbor.Add(b64bytes);
+      _ = TestSucceedingJSON(cbor.ToJSONString());
       cbor = CBORObject.NewMap();
-      cbor.Add("key", "\ud800\udc00");
+      _ = cbor.Add("key", "\ud800\udc00");
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
       }
       catch (Exception ex)
       {
@@ -7914,7 +7911,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("key", "\ud800");
+        _ = cbor.Add("key", "\ud800");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7929,7 +7926,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("key", "\udc00");
+        _ = cbor.Add("key", "\udc00");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7944,7 +7941,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("key", "\ud800\udc00\ud800");
+        _ = cbor.Add("key", "\ud800\udc00\ud800");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7959,7 +7956,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("key", "\udc00\udc00\ud800");
+        _ = cbor.Add("key", "\udc00\udc00\ud800");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -7972,10 +7969,10 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewMap();
-      cbor.Add("\ud800\udc00", "value");
+      _ = cbor.Add("\ud800\udc00", "value");
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
       }
       catch (Exception ex)
       {
@@ -7985,22 +7982,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("\ud800", "value");
-        Assert.Fail("Should have failed");
-      }
-      catch (ArgumentException)
-      {
-        // NOTE: Intentionally empty
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      cbor = CBORObject.NewMap();
-      try
-      {
-        cbor.Add("\udc00", "value");
+        _ = cbor.Add("\ud800", "value");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8015,7 +7997,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("\ud800\udc00\ud800", "value");
+        _ = cbor.Add("\udc00", "value");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8030,7 +8012,7 @@ namespace Test
       cbor = CBORObject.NewMap();
       try
       {
-        cbor.Add("\udc00\udc00\ud800", "value");
+        _ = cbor.Add("\ud800\udc00\ud800", "value");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8042,21 +8024,10 @@ namespace Test
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.NewArray();
-      cbor.Add("\ud800\udc00");
+      cbor = CBORObject.NewMap();
       try
       {
-        cbor.ToJSONString();
-      }
-      catch (Exception ex)
-      {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      cbor = CBORObject.NewArray();
-      try
-      {
-        cbor.Add("\ud800");
+        _ = cbor.Add("\udc00\udc00\ud800", "value");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8069,9 +8040,20 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewArray();
+      _ = cbor.Add("\ud800\udc00");
       try
       {
-        cbor.Add("\udc00");
+        _ = cbor.ToJSONString();
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewArray();
+      try
+      {
+        _ = cbor.Add("\ud800");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8086,7 +8068,7 @@ namespace Test
       cbor = CBORObject.NewArray();
       try
       {
-        cbor.Add("\ud800\udc00\ud800");
+        _ = cbor.Add("\udc00");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8101,7 +8083,22 @@ namespace Test
       cbor = CBORObject.NewArray();
       try
       {
-        cbor.Add("\udc00\udc00\ud800");
+        _ = cbor.Add("\ud800\udc00\ud800");
+        Assert.Fail("Should have failed");
+      }
+      catch (ArgumentException)
+      {
+        // NOTE: Intentionally empty
+      }
+      catch (Exception ex)
+      {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      cbor = CBORObject.NewArray();
+      try
+      {
+        _ = cbor.Add("\udc00\udc00\ud800");
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8122,7 +8119,7 @@ namespace Test
       cbor = CBORObject.NewMap().Add("true", 1).Add(true, 1);
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -8137,7 +8134,7 @@ namespace Test
       cbor = CBORObject.NewMap().Add("true", 1).Add(false, 1);
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
       }
       catch (Exception ex)
       {
@@ -8148,7 +8145,7 @@ namespace Test
         .Add(CBORObject.FromObjectAndTag("9999-01-01T00:00:00Z", 0), 1);
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -8163,7 +8160,7 @@ namespace Test
       cbor = CBORObject.NewMap().Add("34", 1).Add(34, 1);
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -8178,7 +8175,7 @@ namespace Test
       cbor = CBORObject.NewMap().Add("-34", 1).Add(-34, 1);
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -8193,7 +8190,7 @@ namespace Test
       cbor = CBORObject.NewMap().Add("-34", 1).Add(-35, 1);
       try
       {
-        cbor.ToJSONString();
+        _ = cbor.ToJSONString();
       }
       catch (Exception ex)
       {
@@ -8207,7 +8204,7 @@ namespace Test
     {
       try
       {
-        CBORObject.FromFloatingPointBits(0, 0);
+        _ = CBORObject.FromFloatingPointBits(0, 0);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8221,7 +8218,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromFloatingPointBits(0, 1);
+        _ = CBORObject.FromFloatingPointBits(0, 1);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8235,7 +8232,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromFloatingPointBits(0, 3);
+        _ = CBORObject.FromFloatingPointBits(0, 3);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8249,7 +8246,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromFloatingPointBits(0, 5);
+        _ = CBORObject.FromFloatingPointBits(0, 5);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8263,7 +8260,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromFloatingPointBits(0, 6);
+        _ = CBORObject.FromFloatingPointBits(0, 6);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8277,7 +8274,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromFloatingPointBits(0, 7);
+        _ = CBORObject.FromFloatingPointBits(0, 7);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8291,7 +8288,7 @@ namespace Test
       }
       try
       {
-        CBORObject.FromFloatingPointBits(0, 9);
+        _ = CBORObject.FromFloatingPointBits(0, 9);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -8352,7 +8349,7 @@ namespace Test
           "\"9AD6F0E8\"",
           stringTemp);
       }
-      o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] {
+      _ = ToObjectTest.TestToFromObjectRoundTrip(new byte[] {
         0x9a, 0xd6,
         0xff, 0xe8,
       });
@@ -8436,125 +8433,125 @@ namespace Test
       CBORObject cbor;
 
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xda, 0x00, 0x1d,
-        (byte)0xdb, 0x03, (byte)0xd9, 0x01, 0x0d, (byte)0x83, 0x00, 0x00,
+        0xda, 0x00, 0x1d,
+        0xdb, 0x03, 0xd9, 0x01, 0x0d, 0x83, 0x00, 0x00,
         0x03,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
 
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xda, 0x00, 0x14,
+        0xda, 0x00, 0x14,
         0x57,
-        (byte)0xce,
-        (byte)0xc5,
-        (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
-        (byte)0x87,
-        (byte)0xc3, 0x50, 0x5e,
-        (byte)0xec,
-        (byte)0xfd, 0x73, 0x50, 0x64,
-        (byte)0xa1, 0x1f, 0x10,
-        (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65,
+        0xce,
+        0xc5,
+        0x82, 0x1a, 0x46, 0x5a, 0x37,
+        0x87,
+        0xc3, 0x50, 0x5e,
+        0xec,
+        0xfd, 0x73, 0x50, 0x64,
+        0xa1, 0x1f, 0x10,
+        0xc4, 0xff, 0xf2, 0xc4, 0xc9, 0x65,
         0x12,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
 
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfa, 0x56, 0x00,
+        0xfa, 0x56, 0x00,
         0x69, 0x2a,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xf9, (byte)0xfc,
+        0xf9, 0xfc,
         0x00,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xa2,
-        (byte)0x82,
-        (byte)0xf6,
-        (byte)0x82,
-        (byte)0xfb, 0x3c,
-        (byte)0xf0, 0x03, 0x42,
-        (byte)0xcb, 0x54, 0x6c,
-        (byte)0x85,
-        (byte)0x82,
-        (byte)0xc5,
-        (byte)0x82, 0x18,
-        (byte)0xba, 0x0a,
-        (byte)0xfa,
-        (byte)0x84,
-        (byte)0xa0, 0x57,
-        (byte)0x97, 0x42, 0x00, 0x01, 0x65, 0x62, 0x7d, 0x45, 0x20, 0x6c, 0x41,
+        0xa2,
+        0x82,
+        0xf6,
+        0x82,
+        0xfb, 0x3c,
+        0xf0, 0x03, 0x42,
+        0xcb, 0x54, 0x6c,
+        0x85,
+        0x82,
+        0xc5,
+        0x82, 0x18,
+        0xba, 0x0a,
+        0xfa,
+        0x84,
+        0xa0, 0x57,
+        0x97, 0x42, 0x00, 0x01, 0x65, 0x62, 0x7d, 0x45, 0x20, 0x6c, 0x41,
         0x00,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0x82,
-        (byte)0xfa,
-        (byte)0xe0,
-        (byte)0xa0,
-        (byte)0x9d,
-        (byte)0xba,
-        (byte)0x82,
-        (byte)0x82,
-        (byte)0xf7, (byte)0xa2, (byte)0xa0, (byte)0xf7, 0x60, 0x41, 0x00,
-        (byte)0xf4,
+        0x82,
+        0xfa,
+        0xe0,
+        0xa0,
+        0x9d,
+        0xba,
+        0x82,
+        0x82,
+        0xf7, 0xa2, 0xa0, 0xf7, 0x60, 0x41, 0x00,
+        0xf4,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfa, (byte)0xc7,
-        (byte)0x80, 0x01, (byte)0x80,
+        0xfa, 0xc7,
+        0x80, 0x01, 0x80,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xa5, 0x64, 0x69,
+        0xa5, 0x64, 0x69,
         0x74, 0x65, 0x6d, 0x6a, 0x61, 0x6e, 0x79, 0x20, 0x73, 0x74, 0x72, 0x69,
         0x6e, 0x67, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x63,
         0x6d, 0x61, 0x70,
-        (byte)0xa1, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x65,
+        0xa1, 0x66, 0x6e, 0x75, 0x6d, 0x62, 0x65, 0x72, 0x18, 0x2a, 0x65,
         0x61, 0x72, 0x72, 0x61, 0x79,
-        (byte)0x82,
-        (byte)0xf9, 0x63,
-        (byte)0xce, 0x63, 0x78, 0x79, 0x7a, 0x65, 0x62, 0x79, 0x74, 0x65, 0x73,
+        0x82,
+        0xf9, 0x63,
+        0xce, 0x63, 0x78, 0x79, 0x7a, 0x65, 0x62, 0x79, 0x74, 0x65, 0x73,
         0x43, 0x00, 0x01, 0x02,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xda, 0x00, 0x14,
+        0xda, 0x00, 0x14,
         0x57,
-        (byte)0xce,
-        (byte)0xc5,
-        (byte)0x82, 0x1a, 0x46, 0x5a, 0x37,
-        (byte)0x87,
-        (byte)0xc3, 0x50, 0x5e,
-        (byte)0xec,
-        (byte)0xfd, 0x73, 0x50, 0x64,
-        (byte)0xa1, 0x1f, 0x10,
-        (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65,
+        0xce,
+        0xc5,
+        0x82, 0x1a, 0x46, 0x5a, 0x37,
+        0x87,
+        0xc3, 0x50, 0x5e,
+        0xec,
+        0xfd, 0x73, 0x50, 0x64,
+        0xa1, 0x1f, 0x10,
+        0xc4, 0xff, 0xf2, 0xc4, 0xc9, 0x65,
         0x12,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfa, (byte)0xc7,
-        (byte)0x80, 0x01, (byte)0x80,
+        0xfa, 0xc7,
+        0x80, 0x01, 0x80,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0x82,
-        (byte)0xda, 0x00, 0x0a,
-        (byte)0xe8,
-        (byte)0xb6,
-        (byte)0xfb, 0x43,
-        (byte)0xc0, 0x00, 0x00,
-        (byte)0xd5, 0x42, 0x7f,
-        (byte)0xdc, (byte)0xfa, 0x71, (byte)0x80, (byte)0xd7, (byte)0xc8,
+        0x82,
+        0xda, 0x00, 0x0a,
+        0xe8,
+        0xb6,
+        0xfb, 0x43,
+        0xc0, 0x00, 0x00,
+        0xd5, 0x42, 0x7f,
+        0xdc, 0xfa, 0x71, 0x80, 0xd7, 0xc8,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
       cbor = CBORObject.DecodeFromBytes(new byte[] {
-        (byte)0xfa, 0x29, 0x0a,
-        0x4c, (byte)0x9e,
+        0xfa, 0x29, 0x0a,
+        0x4c, 0x9e,
       });
-      CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
     }
 
     [Test]
@@ -8633,7 +8630,7 @@ namespace Test
           CBORObject cborTemp1 =
             ToObjectTest.TestToFromObjectRoundTrip(longValue);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)longValue);
+            ToObjectTest.TestToFromObjectRoundTrip(longValue);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8659,7 +8656,7 @@ namespace Test
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(longValue));
           }
-          TestWriteObj((object)longValue, longValue);
+          TestWriteObj(longValue, longValue);
         }
 
         EInteger bigintVal = EInteger.FromInt64(longValue);
@@ -8667,7 +8664,7 @@ namespace Test
           CBORObject cborTemp1 =
             ToObjectTest.TestToFromObjectRoundTrip(bigintVal);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)bigintVal);
+            ToObjectTest.TestToFromObjectRoundTrip(bigintVal);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8693,18 +8690,18 @@ namespace Test
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(bigintVal));
           }
-          TestWriteObj((object)bigintVal, bigintVal);
+          TestWriteObj(bigintVal, bigintVal);
         }
 
-        if (longValue >= (long)Int32.MinValue && longValue <=
-          (long)Int32.MaxValue)
+        if (longValue >= int.MinValue && longValue <=
+          int.MaxValue)
         {
           var intval = (int)longValue;
           {
             CBORObject cborTemp1 =
               ToObjectTest.TestToFromObjectRoundTrip(intval);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)intval);
+              ToObjectTest.TestToFromObjectRoundTrip(intval);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try
             {
@@ -8730,7 +8727,7 @@ namespace Test
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(intval));
             }
-            TestWriteObj((object)intval, intval);
+            TestWriteObj(intval, intval);
           }
         }
         if (longValue >= -32768L && longValue <= 32767)
@@ -8739,7 +8736,7 @@ namespace Test
           CBORObject cborTemp1 = ToObjectTest
             .TestToFromObjectRoundTrip(shortval);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)shortval);
+            ToObjectTest.TestToFromObjectRoundTrip(shortval);
           TestCommon.CompareTestEqualAndConsistent(
             cborTemp1,
             cborTemp2);
@@ -8767,7 +8764,7 @@ namespace Test
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(shortval));
           }
-          TestWriteObj((object)shortval, shortval);
+          TestWriteObj(shortval, shortval);
         }
         if (longValue >= 0L && longValue <= 255)
         {
@@ -8776,7 +8773,7 @@ namespace Test
             CBORObject cborTemp1 =
               ToObjectTest.TestToFromObjectRoundTrip(byteval);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)byteval);
+              ToObjectTest.TestToFromObjectRoundTrip(byteval);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1,
               cborTemp2);
             try
@@ -8803,7 +8800,7 @@ namespace Test
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(byteval));
             }
-            TestWriteObj((object)byteval, byteval);
+            TestWriteObj(byteval, byteval);
           }
         }
       }
@@ -8823,7 +8820,7 @@ namespace Test
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(str);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)str);
+            ToObjectTest.TestToFromObjectRoundTrip(str);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8847,16 +8844,16 @@ namespace Test
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)str, null);
+          TestWriteObj(str, null);
         }
 
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(
               "test");
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)"test");
+            ToObjectTest.TestToFromObjectRoundTrip("test");
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8884,14 +8881,14 @@ namespace Test
               AssertReadThree(ms.ToArray(), objectTemp2);
             }
           }
-          TestWriteObj((object)"test", "test");
+          TestWriteObj("test", "test");
         }
 
         str = TestCommon.Repeat("test", 4000);
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(str);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)str);
+            ToObjectTest.TestToFromObjectRoundTrip(str);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8917,7 +8914,7 @@ namespace Test
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(str));
           }
-          TestWriteObj((object)str, str);
+          TestWriteObj(str, str);
         }
 
         long[] values = {
@@ -8936,7 +8933,7 @@ namespace Test
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(0.0f);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)0.0f);
+            ToObjectTest.TestToFromObjectRoundTrip(0.0f);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8962,13 +8959,13 @@ namespace Test
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(0.0f));
           }
-          TestWriteObj((object)0.0f, 0.0f);
+          TestWriteObj(0.0f, 0.0f);
         }
 
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(2.6);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)2.6);
+            ToObjectTest.TestToFromObjectRoundTrip(2.6);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -8994,14 +8991,14 @@ namespace Test
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(2.6));
           }
-          TestWriteObj((object)2.6, 2.6);
+          TestWriteObj(2.6, 2.6);
         }
 
         CBORObject cbor = null;
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(cbor);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)cbor);
+            ToObjectTest.TestToFromObjectRoundTrip(cbor);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9025,16 +9022,16 @@ namespace Test
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)cbor, null);
+          TestWriteObj(cbor, null);
         }
 
         object aobj = null;
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(aobj);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)aobj);
+            ToObjectTest.TestToFromObjectRoundTrip(aobj);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9058,9 +9055,9 @@ namespace Test
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)aobj, null);
+          TestWriteObj(aobj, null);
         }
       }
       catch (IOException ex)
@@ -9072,8 +9069,6 @@ namespace Test
 
     public static void TestWrite3()
     {
-      EFloat ef = null;
-      EDecimal ed = null;
       var fr = new RandomGenerator();
       try
       {
@@ -9082,7 +9077,7 @@ namespace Test
           var b = (byte)(i & 0xff);
           using (var ms = new Test.DelayingStream())
           {
-            CBORObject.Write((byte)b, ms);
+            CBORObject.Write(b, ms);
             CBORObject cobj = CBORObject.DecodeFromBytes(ms.ToArray());
             Assert.AreEqual(i, cobj.AsInt32());
           }
@@ -9090,12 +9085,12 @@ namespace Test
 
         for (var i = 0; i < 50; ++i)
         {
-          ef = RandomObjects.RandomEFloat(fr);
+          EFloat ef = RandomObjects.RandomEFloat(fr);
           if (!ef.IsNaN())
           {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ef);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)ef);
+              ToObjectTest.TestToFromObjectRoundTrip(ef);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try
             {
@@ -9121,7 +9116,7 @@ namespace Test
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(ef));
             }
-            TestWriteObj((object)ef, ef);
+            TestWriteObj(ef, ef);
           }
 
           ef = EFloat.Create(
@@ -9130,7 +9125,7 @@ namespace Test
           {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ef);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)ef);
+              ToObjectTest.TestToFromObjectRoundTrip(ef);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try
             {
@@ -9164,17 +9159,17 @@ cborTemp1.AsNumber().IsZero())
                   ToObjectTest.TestToFromObjectRoundTrip(ef));
               }
             }
-            TestWriteObj((object)ef, ef);
+            TestWriteObj(ef, ef);
           }
         }
         for (var i = 0; i < 50; ++i)
         {
-          ed = RandomObjects.RandomEDecimal(fr);
+          EDecimal ed = RandomObjects.RandomEDecimal(fr);
           if (!ed.IsNaN())
           {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ed);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)ed);
+              ToObjectTest.TestToFromObjectRoundTrip(ed);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try
             {
@@ -9211,7 +9206,7 @@ cborTemp1.AsNumber().IsZero())
             if (!(cborTemp1.AsNumber().IsNegative() &&
 cborTemp1.AsNumber().IsZero()))
             {
-              TestWriteObj((object)ed, ed);
+              TestWriteObj(ed, ed);
             }
           }
 
@@ -9221,7 +9216,7 @@ cborTemp1.AsNumber().IsZero()))
           {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ed);
             CBORObject cborTemp2 =
-              ToObjectTest.TestToFromObjectRoundTrip((object)ed);
+              ToObjectTest.TestToFromObjectRoundTrip(ed);
             TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
             try
             {
@@ -9247,7 +9242,7 @@ cborTemp1.AsNumber().IsZero()))
                 ms.ToArray(),
                 ToObjectTest.TestToFromObjectRoundTrip(ed));
             }
-            TestWriteObj((object)ed, ed);
+            TestWriteObj(ed, ed);
           }
         }
       }
@@ -9269,7 +9264,7 @@ cborTemp1.AsNumber().IsZero()))
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ef);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)ef);
+            ToObjectTest.TestToFromObjectRoundTrip(ef);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9293,16 +9288,16 @@ cborTemp1.AsNumber().IsZero()))
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)ef, null);
+          TestWriteObj(ef, null);
         }
 
         ef = EFloat.FromString("20");
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ef);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)ef);
+            ToObjectTest.TestToFromObjectRoundTrip(ef);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9328,14 +9323,14 @@ cborTemp1.AsNumber().IsZero()))
               ms.ToArray(),
               ToObjectTest.TestToFromObjectRoundTrip(ef));
           }
-          TestWriteObj((object)ef, ef);
+          TestWriteObj(ef, ef);
         }
 
         ERational er = null;
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(er);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)er);
+            ToObjectTest.TestToFromObjectRoundTrip(er);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9359,9 +9354,9 @@ cborTemp1.AsNumber().IsZero()))
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)er, null);
+          TestWriteObj(er, null);
         }
         do
         {
@@ -9370,7 +9365,7 @@ cborTemp1.AsNumber().IsZero()))
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(er);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)er);
+            ToObjectTest.TestToFromObjectRoundTrip(er);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9404,14 +9399,14 @@ cborTemp1.AsNumber().IsZero())
                 ToObjectTest.TestToFromObjectRoundTrip(er));
             }
           }
-          TestWriteObj((object)er, er);
+          TestWriteObj(er, er);
         }
 
         EDecimal ed = null;
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ed);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)ed);
+            ToObjectTest.TestToFromObjectRoundTrip(ed);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9435,9 +9430,9 @@ cborTemp1.AsNumber().IsZero())
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)ed, null);
+          TestWriteObj(ed, null);
         }
 
         EInteger bigint = null;
@@ -9445,7 +9440,7 @@ cborTemp1.AsNumber().IsZero())
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(
               bigint);
           CBORObject cborTemp2 =
-            ToObjectTest.TestToFromObjectRoundTrip((object)bigint);
+            ToObjectTest.TestToFromObjectRoundTrip(bigint);
           TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
           try
           {
@@ -9469,9 +9464,9 @@ cborTemp1.AsNumber().IsZero())
             cborTemp1.WriteTo(ms);
             AssertReadThree(
               ms.ToArray(),
-              ToObjectTest.TestToFromObjectRoundTrip((object)null));
+              ToObjectTest.TestToFromObjectRoundTrip(null));
           }
-          TestWriteObj((object)bigint, null);
+          TestWriteObj(bigint, null);
         }
       }
       catch (IOException ex)
@@ -9747,7 +9742,7 @@ cborTemp1.AsNumber().IsZero())
     {
       CBORObject cbor = CBORObject.NewMap()
         .Add("name", "Example");
-      byte[] bytes = CBORTestCommon.CheckEncodeToBytes(cbor);
+      _ = CBORTestCommon.CheckEncodeToBytes(cbor);
     }
 
     private static void TestWriteObj(object obj, object objTest)
@@ -9796,7 +9791,7 @@ cborTemp1.AsNumber().IsZero())
       {
         try
         {
-          CBORObject.WriteValue(null, 0, 0);
+          _ = CBORObject.WriteValue(null, 0, 0);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -9810,7 +9805,7 @@ cborTemp1.AsNumber().IsZero())
         }
         try
         {
-          CBORObject.WriteValue(null, 1, 0);
+          _ = CBORObject.WriteValue(null, 1, 0);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -9824,7 +9819,7 @@ cborTemp1.AsNumber().IsZero())
         }
         try
         {
-          CBORObject.WriteValue(null, 2, 0);
+          _ = CBORObject.WriteValue(null, 2, 0);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -9838,7 +9833,7 @@ cborTemp1.AsNumber().IsZero())
         }
         try
         {
-          CBORObject.WriteValue(null, 3, 0);
+          _ = CBORObject.WriteValue(null, 3, 0);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -9852,7 +9847,7 @@ cborTemp1.AsNumber().IsZero())
         }
         try
         {
-          CBORObject.WriteValue(null, 4, 0);
+          _ = CBORObject.WriteValue(null, 4, 0);
           Assert.Fail("Should have failed");
         }
         catch (ArgumentNullException)
@@ -9868,7 +9863,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.WriteValue(ms, -1, 0);
+            _ = CBORObject.WriteValue(ms, -1, 0);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentException)
@@ -9882,7 +9877,7 @@ cborTemp1.AsNumber().IsZero())
           }
           try
           {
-            CBORObject.WriteValue(ms, 8, 0);
+            _ = CBORObject.WriteValue(ms, 8, 0);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentException)
@@ -9896,7 +9891,7 @@ cborTemp1.AsNumber().IsZero())
           }
           try
           {
-            CBORObject.WriteValue(ms, 7, 256);
+            _ = CBORObject.WriteValue(ms, 7, 256);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentException)
@@ -9910,7 +9905,7 @@ cborTemp1.AsNumber().IsZero())
           }
           try
           {
-            CBORObject.WriteValue(ms, 7, Int32.MaxValue);
+            _ = CBORObject.WriteValue(ms, 7, Int32.MaxValue);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentException)
@@ -9924,7 +9919,7 @@ cborTemp1.AsNumber().IsZero())
           }
           try
           {
-            CBORObject.WriteValue(ms, 7, Int64.MaxValue);
+            _ = CBORObject.WriteValue(ms, 7, Int64.MaxValue);
             Assert.Fail("Should have failed");
           }
           catch (ArgumentException)
@@ -9940,7 +9935,7 @@ cborTemp1.AsNumber().IsZero())
           {
             try
             {
-              CBORObject.WriteValue(ms, i, -1);
+              _ = CBORObject.WriteValue(ms, i, -1);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -9954,7 +9949,7 @@ cborTemp1.AsNumber().IsZero())
             }
             try
             {
-              CBORObject.WriteValue(ms, i, Int32.MinValue);
+              _ = CBORObject.WriteValue(ms, i, Int32.MinValue);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -9968,7 +9963,7 @@ cborTemp1.AsNumber().IsZero())
             }
             try
             {
-              CBORObject.WriteValue(ms, i, -1L);
+              _ = CBORObject.WriteValue(ms, i, -1L);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -9982,7 +9977,7 @@ cborTemp1.AsNumber().IsZero())
             }
             try
             {
-              CBORObject.WriteValue(ms, i, Int64.MinValue);
+              _ = CBORObject.WriteValue(ms, i, Int64.MinValue);
               Assert.Fail("Should have failed");
             }
             catch (ArgumentException)
@@ -9999,7 +9994,7 @@ cborTemp1.AsNumber().IsZero())
           {
             try
             {
-              CBORObject.WriteValue(ms, i, Int32.MaxValue);
+              _ = CBORObject.WriteValue(ms, i, Int32.MaxValue);
             }
             catch (Exception ex)
             {
@@ -10008,7 +10003,7 @@ cborTemp1.AsNumber().IsZero())
             }
             try
             {
-              CBORObject.WriteValue(ms, i, Int64.MaxValue);
+              _ = CBORObject.WriteValue(ms, i, Int64.MaxValue);
             }
             catch (Exception ex)
             {
@@ -10079,7 +10074,7 @@ cborTemp1.AsNumber().IsZero())
       var list = new List<CBORObject>();
       var options = new CBOREncodeOptions("keepkeyorder=true");
       Assert.IsTrue(options.KeepKeyOrder);
-      bytes = new byte[] { (byte)0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
+      bytes = new byte[] { 0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes, options);
       foreach (CBORObject key in cbor.Keys)
       {
@@ -10091,7 +10086,7 @@ cborTemp1.AsNumber().IsZero())
       bytes2 = cbor.EncodeToBytes();
       TestCommon.AssertByteArraysEqual(bytes, bytes2);
       list = new List<CBORObject>();
-      bytes = new byte[] { (byte)0xbf, 0x01, 0, 0x02, 0, 0x03, 0, 0xff };
+      bytes = new byte[] { 0xbf, 0x01, 0, 0x02, 0, 0x03, 0, 0xff };
       cbor = CBORObject.DecodeFromBytes(bytes, options);
       foreach (CBORObject key in cbor.Keys)
       {
@@ -10100,11 +10095,11 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(CBORObject.FromObject(1), list[0]);
       Assert.AreEqual(CBORObject.FromObject(2), list[1]);
       Assert.AreEqual(CBORObject.FromObject(3), list[2]);
-      bytes = new byte[] { (byte)0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
+      bytes = new byte[] { 0xa3, 0x01, 0, 0x02, 0, 0x03, 0 };
       bytes2 = cbor.EncodeToBytes();
       TestCommon.AssertByteArraysEqual(bytes, bytes2);
       list = new List<CBORObject>();
-      bytes = new byte[] { (byte)0xa3, 0x03, 0, 0x02, 0, 0x01, 0 };
+      bytes = new byte[] { 0xa3, 0x03, 0, 0x02, 0, 0x01, 0 };
       cbor = CBORObject.DecodeFromBytes(bytes, options);
       foreach (CBORObject key in cbor.Keys)
       {
@@ -10116,7 +10111,7 @@ cborTemp1.AsNumber().IsZero())
       bytes2 = cbor.EncodeToBytes();
       TestCommon.AssertByteArraysEqual(bytes, bytes2);
       list = new List<CBORObject>();
-      bytes = new byte[] { (byte)0xbf, 0x03, 0, 0x02, 0, 0x01, 0, 0xff };
+      bytes = new byte[] { 0xbf, 0x03, 0, 0x02, 0, 0x01, 0, 0xff };
       cbor = CBORObject.DecodeFromBytes(bytes, options);
       foreach (CBORObject key in cbor.Keys)
       {
@@ -10125,7 +10120,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(CBORObject.FromObject(3), list[0]);
       Assert.AreEqual(CBORObject.FromObject(2), list[1]);
       Assert.AreEqual(CBORObject.FromObject(1), list[2]);
-      bytes = new byte[] { (byte)0xa3, 0x03, 0, 0x02, 0, 0x01, 0 };
+      bytes = new byte[] { 0xa3, 0x03, 0, 0x02, 0, 0x01, 0 };
       bytes2 = cbor.EncodeToBytes();
       TestCommon.AssertByteArraysEqual(bytes, bytes2);
 
@@ -10177,7 +10172,7 @@ cborTemp1.AsNumber().IsZero())
       {
         for (var i = 0; i < 0x10000; ++i)
         {
-          bytes[0] = (byte)0xf9;
+          bytes[0] = 0xf9;
           bytes[1] = (byte)((i >> 8) & 0xff);
           bytes[2] = (byte)(i & 0xff);
           CBORObject cbor = CBORObject.DecodeFromBytes(bytes);
@@ -10185,7 +10180,7 @@ cborTemp1.AsNumber().IsZero())
           {
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 2);
@@ -10193,7 +10188,7 @@ cborTemp1.AsNumber().IsZero())
             }
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
                 2);
@@ -10205,7 +10200,7 @@ cborTemp1.AsNumber().IsZero())
         bytes = new byte[5];
         for (var i = 0; i < 100000; ++i)
         {
-          bytes[0] = (byte)0xfa;
+          bytes[0] = 0xfa;
           for (var j = 1; j <= 4; ++j)
           {
             bytes[j] = (byte)r.UniformInt(256);
@@ -10216,7 +10211,7 @@ cborTemp1.AsNumber().IsZero())
           {
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 4);
@@ -10224,7 +10219,7 @@ cborTemp1.AsNumber().IsZero())
             }
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
                 4);
@@ -10236,7 +10231,7 @@ cborTemp1.AsNumber().IsZero())
         bytes = new byte[9];
         for (var i = 0; i < 100000; ++i)
         {
-          bytes[0] = (byte)0xfb;
+          bytes[0] = 0xfb;
           for (var j = 1; j <= 8; ++j)
           {
             bytes[j] = (byte)r.UniformInt(256);
@@ -10246,7 +10241,7 @@ cborTemp1.AsNumber().IsZero())
           {
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsDouble(),
                 8);
@@ -10256,7 +10251,7 @@ cborTemp1.AsNumber().IsZero())
             byte[] c2bytes = null;
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 cbor.AsSingle(),
                 8);
@@ -10266,7 +10261,7 @@ cborTemp1.AsNumber().IsZero())
             }
             using (var ms = new Test.DelayingStream())
             {
-              CBORObject.WriteFloatingPointValue(
+              _ = CBORObject.WriteFloatingPointValue(
                 ms,
                 c2.AsSingle(),
                 8);
@@ -10278,7 +10273,7 @@ cborTemp1.AsNumber().IsZero())
               {
                 try
                 {
-                  CBORObject.WriteFloatingPointValue(ms, cbor.AsSingle(), 5);
+                  _ = CBORObject.WriteFloatingPointValue(ms, cbor.AsSingle(), 5);
                   Assert.Fail("Should have failed");
                 }
                 catch (ArgumentException)
@@ -10292,7 +10287,7 @@ cborTemp1.AsNumber().IsZero())
                 }
                 try
                 {
-                  CBORObject.WriteFloatingPointValue(null, cbor.AsSingle(), 4);
+                  _ = CBORObject.WriteFloatingPointValue(null, cbor.AsSingle(), 4);
                   Assert.Fail("Should have failed");
                 }
                 catch (ArgumentNullException)
@@ -10472,7 +10467,7 @@ cborTemp1.AsNumber().IsZero())
       {
         try
         {
-          actual.ApplyJSONPatch(patch);
+          _ = actual.ApplyJSONPatch(patch);
           Assert.Fail("Should have failed");
         }
         catch (CBORException)
@@ -10857,7 +10852,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try
       {
-        cbor.AtJSONPointer(null);
+        _ = cbor.AtJSONPointer(null);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10871,7 +10866,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/");
+        _ = cbor.AtJSONPointer("/");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10885,7 +10880,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo");
+        _ = cbor.AtJSONPointer("/foo");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10901,7 +10896,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try
       {
-        cbor.AtJSONPointer(null);
+        _ = cbor.AtJSONPointer(null);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10915,7 +10910,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/");
+        _ = cbor.AtJSONPointer("/");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10929,7 +10924,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo");
+        _ = cbor.AtJSONPointer("/foo");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10945,7 +10940,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try
       {
-        cbor.AtJSONPointer(null);
+        _ = cbor.AtJSONPointer(null);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10959,7 +10954,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/");
+        _ = cbor.AtJSONPointer("/");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10973,7 +10968,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo");
+        _ = cbor.AtJSONPointer("/foo");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -10989,7 +10984,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try
       {
-        cbor.AtJSONPointer(null);
+        _ = cbor.AtJSONPointer(null);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11003,7 +10998,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/");
+        _ = cbor.AtJSONPointer("/");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11017,7 +11012,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo");
+        _ = cbor.AtJSONPointer("/foo");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11033,7 +11028,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try
       {
-        cbor.AtJSONPointer(null);
+        _ = cbor.AtJSONPointer(null);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11047,7 +11042,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/");
+        _ = cbor.AtJSONPointer("/");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11061,7 +11056,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo");
+        _ = cbor.AtJSONPointer("/foo");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11073,11 +11068,11 @@ cborTemp1.AsNumber().IsZero())
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor.Add(3);
+      _ = cbor.Add(3);
       Assert.AreEqual(cbor[0], cbor.AtJSONPointer("/0"));
       try
       {
-        cbor.AtJSONPointer("/1");
+        _ = cbor.AtJSONPointer("/1");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11091,7 +11086,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/-");
+        _ = cbor.AtJSONPointer("/-");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11107,7 +11102,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor, cbor.AtJSONPointer(String.Empty));
       try
       {
-        cbor.AtJSONPointer(null);
+        _ = cbor.AtJSONPointer(null);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11121,7 +11116,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/");
+        _ = cbor.AtJSONPointer("/");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11136,7 +11131,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(cbor["foo"], cbor.AtJSONPointer("/foo"));
       try
       {
-        cbor.AtJSONPointer("/bar");
+        _ = cbor.AtJSONPointer("/bar");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11166,7 +11161,7 @@ cborTemp1.AsNumber().IsZero())
       Assert.AreEqual(CBORObject.FromObject(678), cbor.AtJSONPointer("/foo/0"));
       try
       {
-        cbor.AtJSONPointer("/foo/1");
+        _ = cbor.AtJSONPointer("/foo/1");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11180,7 +11175,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo/-");
+        _ = cbor.AtJSONPointer("/foo/-");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11194,7 +11189,7 @@ cborTemp1.AsNumber().IsZero())
       }
       try
       {
-        cbor.AtJSONPointer("/foo/-1");
+        _ = cbor.AtJSONPointer("/foo/-1");
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -11235,7 +11230,7 @@ cborTemp1.AsNumber().IsZero())
       {
         CBORObject cbor = CBORObject.FromObjectAndTag(dtstr, 0);
         var dt = (DateTime)cbor.ToObject(typeof(DateTime));
-        ToObjectTest.TestToFromObjectRoundTrip(dt);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(dt);
       }
     }
 
@@ -11249,10 +11244,10 @@ cborTemp1.AsNumber().IsZero())
       CBORObject cbornum;
       cbornum = CBORObject.FromObjectAndTag(str, 0);
       var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx);
+      _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
       cbornum = CBORObject.FromObjectAndTag(ei, 1);
       var dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+      _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
       TestCommon.AssertEqualsHashCode(dtx, dtx2);
       if (ei == null)
       {
@@ -11263,7 +11258,7 @@ cborTemp1.AsNumber().IsZero())
         cbornum = CBORObject.FromObjectAndTag(ei.ToInt64Checked(), 1);
         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
         TestCommon.AssertEqualsHashCode(dtx, dtx2);
-        ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
       }
       EFloat ef1 = EFloat.FromEInteger(ei).Plus(EContext.Binary64);
       EFloat ef2 = EFloat.FromEInteger(ei);
@@ -11272,11 +11267,11 @@ cborTemp1.AsNumber().IsZero())
         cbornum = CBORObject.FromObjectAndTag(ef1, 1);
         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
         TestCommon.AssertEqualsHashCode(dtx, dtx2);
-        ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
         cbornum = CBORObject.FromObjectAndTag(ef1.ToDouble(), 1);
         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
         TestCommon.AssertEqualsHashCode(dtx, dtx2);
-        ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
       }
     }
 
@@ -11285,10 +11280,10 @@ cborTemp1.AsNumber().IsZero())
       CBORObject cbornum;
       cbornum = CBORObject.FromObjectAndTag(str, 0);
       var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx);
+      _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
       cbornum = CBORObject.FromObjectAndTag(dbl, 1);
       var dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
-      ToObjectTest.TestToFromObjectRoundTrip(dtx2);
+      _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
       TestCommon.AssertEqualsHashCode(dtx, dtx2);
     }
 
@@ -11302,7 +11297,7 @@ cborTemp1.AsNumber().IsZero())
       try
       {
         var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-        ToObjectTest.TestToFromObjectRoundTrip(dtx);
+        _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
       }
       catch (CBORException)
       {
@@ -11609,7 +11604,7 @@ cborTemp1.AsNumber().IsZero())
         try
         {
           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-          ToObjectTest.TestToFromObjectRoundTrip(dtx);
+          _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
         }
         catch (CBORException)
         {
@@ -11623,7 +11618,7 @@ cborTemp1.AsNumber().IsZero())
         try
         {
           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
-          ToObjectTest.TestToFromObjectRoundTrip(dtx);
+          _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
         }
         catch (CBORException)
         {
@@ -11633,7 +11628,7 @@ cborTemp1.AsNumber().IsZero())
       string dateStr = "1970-01-01T00:00:00.000Z";
       CBORObject cbor = CBORObject.FromObjectAndTag(dateStr, 0);
       dt = (DateTime)cbor.ToObject(typeof(DateTime));
-      CBORObject cbor2 = CBORObject.FromObjectAndTag(0, 1);
+      _ = CBORObject.FromObjectAndTag(0, 1);
       dt2 = (DateTime)cbor.ToObject(typeof(DateTime));
       Assert.AreEqual(dt2, dt);
     }
@@ -11650,33 +11645,33 @@ cborTemp1.AsNumber().IsZero())
         }
         else if (x < 10)
         {
-          sb.Append('&');
+          _ = sb.Append('&');
         }
         else if (x < 20)
         {
-          sb.Append('=');
+          _ = sb.Append('=');
         }
         else if (x < 25)
         {
           string hex = "0123456789ABCDEF";
-          sb.Append('%');
-          sb.Append(hex[irg.GetInt32(hex.Length)]);
-          sb.Append(hex[irg.GetInt32(hex.Length)]);
+          _ = sb.Append('%');
+          _ = sb.Append(hex[irg.GetInt32(hex.Length)]);
+          _ = sb.Append(hex[irg.GetInt32(hex.Length)]);
         }
         else if (x < 30)
         {
           string hex = "0123456789abcdef";
-          sb.Append('%');
-          sb.Append(hex[irg.GetInt32(hex.Length)]);
-          sb.Append(hex[irg.GetInt32(hex.Length)]);
+          _ = sb.Append('%');
+          _ = sb.Append(hex[irg.GetInt32(hex.Length)]);
+          _ = sb.Append(hex[irg.GetInt32(hex.Length)]);
         }
         else if (x < 95)
         {
-          sb.Append((char)(irg.GetInt32(0x5e) + 0x21));
+          _ = sb.Append((char)(irg.GetInt32(0x5e) + 0x21));
         }
         else
         {
-          sb.Append((char)irg.GetInt32(0x80));
+          _ = sb.Append((char)irg.GetInt32(0x80));
         }
       }
       return sb.ToString();
@@ -11814,7 +11809,7 @@ cborTemp1.AsNumber().IsZero())
         "-2.8131427974929237E+240}";
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
       }
       catch (Exception ex)
       {
@@ -12182,7 +12177,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONString(str);
+            _ = CBORObject.FromJSONString(str);
           }
           catch (Exception ex)
           {
@@ -12191,7 +12186,7 @@ cborTemp1.AsNumber().IsZero())
           }
           try
           {
-            CBORObject.FromJSONBytes(bytes);
+            _ = CBORObject.FromJSONBytes(bytes);
           }
           catch (Exception ex)
           {
@@ -12203,7 +12198,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONString(str);
+            _ = CBORObject.FromJSONString(str);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -12217,7 +12212,7 @@ cborTemp1.AsNumber().IsZero())
           }
           try
           {
-            CBORObject.FromJSONBytes(bytes);
+            _ = CBORObject.FromJSONBytes(bytes);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -12246,7 +12241,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONBytes(bytes);
+            _ = CBORObject.FromJSONBytes(bytes);
           }
           catch (Exception ex)
           {
@@ -12258,7 +12253,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONBytes(bytes);
+            _ = CBORObject.FromJSONBytes(bytes);
             Assert.Fail("Should have failed bytes " + i);
           }
           catch (CBORException)
@@ -12277,7 +12272,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONBytes(bytes);
+            _ = CBORObject.FromJSONBytes(bytes);
           }
           catch (Exception ex)
           {
@@ -12289,7 +12284,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONBytes(bytes);
+            _ = CBORObject.FromJSONBytes(bytes);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -12317,7 +12312,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONString(str);
+            _ = CBORObject.FromJSONString(str);
           }
           catch (Exception ex)
           {
@@ -12329,7 +12324,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONString(str);
+            _ = CBORObject.FromJSONString(str);
             Assert.Fail("Should have failed string " + i);
           }
           catch (CBORException)
@@ -12349,7 +12344,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONString(str);
+            _ = CBORObject.FromJSONString(str);
           }
           catch (Exception ex)
           {
@@ -12361,7 +12356,7 @@ cborTemp1.AsNumber().IsZero())
         {
           try
           {
-            CBORObject.FromJSONString(str);
+            _ = CBORObject.FromJSONString(str);
             Assert.Fail("Should have failed");
           }
           catch (CBORException)
@@ -12388,7 +12383,7 @@ cborTemp1.AsNumber().IsZero())
         AssertJSONDouble(
           rvstring,
           "double",
-          (double)rv);
+          rv);
         AssertJSONInteger(
           rvstring,
           "intorfloat",
@@ -12399,15 +12394,15 @@ cborTemp1.AsNumber().IsZero())
       AssertJSONDouble(
         TestCommon.IntToString(Int32.MaxValue),
         "double",
-        (double)Int32.MaxValue);
+        int.MaxValue);
       AssertJSONDouble(
         TestCommon.IntToString(Int32.MaxValue),
         "double",
-        (double)Int32.MaxValue);
+        int.MaxValue);
       AssertJSONDouble(
         TestCommon.IntToString(Int32.MinValue),
         "double",
-        (double)Int32.MinValue);
+        int.MinValue);
     }
 
     [Test]
@@ -12418,32 +12413,32 @@ cborTemp1.AsNumber().IsZero())
       AssertJSONDouble("0", "double", 0.0);
       cbor = FromJSON("[0, 1, 2, 3]", "double");
       Assert.AreEqual(4, cbor.Count);
-      Assert.AreEqual((double)0.0, cbor[0].AsDouble());
-      Assert.AreEqual((double)1.0, cbor[1].AsDouble());
-      Assert.AreEqual((double)2.0, cbor[2].AsDouble());
-      Assert.AreEqual((double)3.0, cbor[3].AsDouble());
+      Assert.AreEqual(0.0, cbor[0].AsDouble());
+      Assert.AreEqual(1.0, cbor[1].AsDouble());
+      Assert.AreEqual(2.0, cbor[2].AsDouble());
+      Assert.AreEqual(3.0, cbor[3].AsDouble());
       cbor = FromJSON("[0]", "double");
       Assert.AreEqual(1, cbor.Count);
-      Assert.AreEqual((double)0.0, cbor[0].AsDouble());
+      Assert.AreEqual(0.0, cbor[0].AsDouble());
       cbor = FromJSON("[-0]", "double");
       Assert.AreEqual(1, cbor.Count);
       cbor = FromJSON("[1]", "double");
       Assert.AreEqual(1, cbor.Count);
-      Assert.AreEqual((double)1.0, cbor[0].AsDouble());
+      Assert.AreEqual(1.0, cbor[0].AsDouble());
       cbor = FromJSON("[-1]", "double");
       Assert.AreEqual(1, cbor.Count);
-      Assert.AreEqual((double)-1.0, cbor[0].AsDouble());
+      Assert.AreEqual(-1.0, cbor[0].AsDouble());
       cbor = FromJSON("[-1022,-1023,-1024,-1025,1022,1023,1024,1025]",
           "double");
       Assert.AreEqual(8, cbor.Count);
-      Assert.AreEqual((double)-1022.0, cbor[0].AsDouble());
-      Assert.AreEqual((double)-1023.0, cbor[1].AsDouble());
-      Assert.AreEqual((double)-1024.0, cbor[2].AsDouble());
-      Assert.AreEqual((double)-1025.0, cbor[3].AsDouble());
-      Assert.AreEqual((double)1022.0, cbor[4].AsDouble());
-      Assert.AreEqual((double)1023.0, cbor[5].AsDouble());
-      Assert.AreEqual((double)1024.0, cbor[6].AsDouble());
-      Assert.AreEqual((double)1025.0, cbor[7].AsDouble());
+      Assert.AreEqual(-1022.0, cbor[0].AsDouble());
+      Assert.AreEqual(-1023.0, cbor[1].AsDouble());
+      Assert.AreEqual(-1024.0, cbor[2].AsDouble());
+      Assert.AreEqual(-1025.0, cbor[3].AsDouble());
+      Assert.AreEqual(1022.0, cbor[4].AsDouble());
+      Assert.AreEqual(1023.0, cbor[5].AsDouble());
+      Assert.AreEqual(1024.0, cbor[6].AsDouble());
+      Assert.AreEqual(1025.0, cbor[7].AsDouble());
     }
 
     [Test]
@@ -12485,7 +12480,7 @@ cborTemp1.AsNumber().IsZero())
       {
         try
         {
-          FromJSON(str, jsonop);
+          _ = FromJSON(str, jsonop);
           Assert.Fail("Should have failed");
         }
         catch (CBORException)
@@ -12502,7 +12497,7 @@ cborTemp1.AsNumber().IsZero())
       string json = TestCommon.Repeat("0", 1000000);
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12525,7 +12520,7 @@ cborTemp1.AsNumber().IsZero())
       jsonop = new JSONOptions("numberconversion=double");
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12540,7 +12535,7 @@ cborTemp1.AsNumber().IsZero())
       jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12555,7 +12550,7 @@ cborTemp1.AsNumber().IsZero())
       jsonop = new JSONOptions("numberconversion=intorfloat");
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12571,7 +12566,7 @@ cborTemp1.AsNumber().IsZero())
       jsonop = new JSONOptions("numberconversion=double");
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12586,7 +12581,7 @@ cborTemp1.AsNumber().IsZero())
       jsonop = new JSONOptions("numberconversion=intorfloatfromdouble");
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12601,7 +12596,7 @@ cborTemp1.AsNumber().IsZero())
       jsonop = new JSONOptions("numberconversion=intorfloat");
       try
       {
-        FromJSON(json, jsonop);
+        _ = FromJSON(json, jsonop);
         Assert.Fail("Should have failed");
       }
       catch (CBORException)
@@ -12663,284 +12658,284 @@ cborTemp1.AsNumber().IsZero())
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xba, 0x00, 0x00, 0x00, 0x03,
-  (byte)0xf9,
-  (byte)0x83, 0x1d,
-  (byte)0xda,
-  (byte)0xb6,
-  (byte)0xda, 0x50, 0x56, 0x1a, 0x50,
-  (byte)0xe3, 0x2c, 0x7a, 0x16,
-  (byte)0xfa, 0x50, 0x32, 0x73, 0x07,
-  (byte)0xfa, (byte)0xb9, 0x2d, 0x73, (byte)0xce, 0x38, (byte)0xd0,
+  0xba, 0x00, 0x00, 0x00, 0x03,
+  0xf9,
+  0x83, 0x1d,
+  0xda,
+  0xb6,
+  0xda, 0x50, 0x56, 0x1a, 0x50,
+  0xe3, 0x2c, 0x7a, 0x16,
+  0xfa, 0x50, 0x32, 0x73, 0x07,
+  0xfa, 0xb9, 0x2d, 0x73, 0xce, 0x38, 0xd0,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xbf,
-  (byte)0x9f,
-  (byte)0xbf, 0x39, 0x20,
-  (byte)0x8f, 0x4a, 0x1f, 0x46, 0x26, 0x0b, 0x3e, 0x72, 0x2c, 0x7f, 0x11,
+  0xbf,
+  0x9f,
+  0xbf, 0x39, 0x20,
+  0x8f, 0x4a, 0x1f, 0x46, 0x26, 0x0b, 0x3e, 0x72, 0x2c, 0x7f, 0x11,
   0x2e, 0x39,
-  (byte)0x9d,
-  (byte)0xba, 0x1a, 0x11,
-  (byte)0x8d,
-  (byte)0xc0,
-  (byte)0xb4, 0x38,
-  (byte)0xb6,
-  (byte)0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-  (byte)0xd8, 0x3b,
-  (byte)0x99, 0x00, 0x02, 0x3b, 0x05,
-  (byte)0xbb,
-  (byte)0xea,
-  (byte)0x8e, 0x4b,
-  (byte)0xd3, 0x5e, 0x22,
-  (byte)0x9f, 0x59, 0x00, 0x00,
-  (byte)0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x41, 0x20,
-  (byte)0xbf, 0x1a, 0x00, 0x00, 0x00, 0x61,
-  (byte)0xb9, 0x00, 0x01, 0x1a, 0x00, 0x00, 0x00, 0x0e,
-  (byte)0xba, 0x00, 0x00, 0x00, 0x00,
-  (byte)0xff,
-  (byte)0xff,
-  (byte)0xff,
-  (byte)0xd8, 0x22,
-  (byte)0xf8,
-  (byte)0x93,
-  (byte)0xd9,
-  (byte)0xaf, 0x33, 0x19,
-  (byte)0xf0,
-  (byte)0xf0,
-  (byte)0xf9,
-  (byte)0x85,
-  (byte)0x93,
-  (byte)0x99, 0x00, 0x01, 0x3a,
-  (byte)0xb5,
-  (byte)0xfb, 0x4d, 0x43,
-  (byte)0x98, 0x00,
-  (byte)0xff, (byte)0xfa, (byte)0xb0, (byte)0xb4, (byte)0xdc, 0x6d,
-  (byte)0xff,
+  0x9d,
+  0xba, 0x1a, 0x11,
+  0x8d,
+  0xc0,
+  0xb4, 0x38,
+  0xb6,
+  0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+  0xd8, 0x3b,
+  0x99, 0x00, 0x02, 0x3b, 0x05,
+  0xbb,
+  0xea,
+  0x8e, 0x4b,
+  0xd3, 0x5e, 0x22,
+  0x9f, 0x59, 0x00, 0x00,
+  0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x41, 0x20,
+  0xbf, 0x1a, 0x00, 0x00, 0x00, 0x61,
+  0xb9, 0x00, 0x01, 0x1a, 0x00, 0x00, 0x00, 0x0e,
+  0xba, 0x00, 0x00, 0x00, 0x00,
+  0xff,
+  0xff,
+  0xff,
+  0xd8, 0x22,
+  0xf8,
+  0x93,
+  0xd9,
+  0xaf, 0x33, 0x19,
+  0xf0,
+  0xf0,
+  0xf9,
+  0x85,
+  0x93,
+  0x99, 0x00, 0x01, 0x3a,
+  0xb5,
+  0xfb, 0x4d, 0x43,
+  0x98, 0x00,
+  0xff, 0xfa, 0xb0, 0xb4, 0xdc, 0x6d,
+  0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xdb, 0x0d,
-  (byte)0xcb, 0x5d, 0x78,
-  (byte)0x92,
-  (byte)0xc2,
-  (byte)0xc7, 0x2b,
-  (byte)0xb9, 0x00, 0x02, 0x39,
-  (byte)0xee,
-  (byte)0xa0, (byte)0xa0, 0x1a, 0x0e, (byte)0xd9, (byte)0xec, (byte)0xca,
-  (byte)0xf2,
+  0xdb, 0x0d,
+  0xcb, 0x5d, 0x78,
+  0x92,
+  0xc2,
+  0xc7, 0x2b,
+  0xb9, 0x00, 0x02, 0x39,
+  0xee,
+  0xa0, 0xa0, 0x1a, 0x0e, 0xd9, 0xec, 0xca,
+  0xf2,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xbf,
-  (byte)0xfb,
-  (byte)0xb1, 0x21,
-  (byte)0x93,
-  (byte)0x8c,
-  (byte)0xc6,
-  (byte)0xf3,
-  (byte)0xcf,
-  (byte)0xb7, (byte)0xf8, 0x76, 0x18, (byte)0xda, 0x39, 0x60, (byte)0xf4,
-  (byte)0xff,
+  0xbf,
+  0xfb,
+  0xb1, 0x21,
+  0x93,
+  0x8c,
+  0xc6,
+  0xf3,
+  0xcf,
+  0xb7, 0xf8, 0x76, 0x18, 0xda, 0x39, 0x60, 0xf4,
+  0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  0x00, 0x02, (byte)0xf0, 0x0d, 0x2a, 0x21,
+  0xbb, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x02, 0xf0, 0x0d, 0x2a, 0x21,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xba, 0x00, 0x00, 0x00, 0x02,
-  (byte)0xf9, 0x48, 0x37,
-  (byte)0xda,
-  (byte)0xb5, 0x72,
-  (byte)0xcf,
-  (byte)0xf8, 0x31, 0x3b, 0x06, 0x78,
-  (byte)0xdb, 0x44, 0x7d, (byte)0xba, (byte)0xbd, 0x7d, 0x39, (byte)0x98,
-  (byte)0xb9,
+  0xba, 0x00, 0x00, 0x00, 0x02,
+  0xf9, 0x48, 0x37,
+  0xda,
+  0xb5, 0x72,
+  0xcf,
+  0xf8, 0x31, 0x3b, 0x06, 0x78,
+  0xdb, 0x44, 0x7d, 0xba, 0xbd, 0x7d, 0x39, 0x98,
+  0xb9,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1");
         var bytes = new byte[] {
-  (byte)0xbf, 0x0d,
-  (byte)0xdb, 0x7f, 0x53,
-  (byte)0xd5, 0x1e,
-  (byte)0xab, 0x1f,
-  (byte)0xb2,
-  (byte)0xc2,
-  (byte)0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00, 0x09,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf,
-  (byte)0xbf, 0x00,
-  (byte)0xf0,
-  (byte)0x9d,
-  (byte)0x84,
-  (byte)0xa1,
-  (byte)0xff, 0x1a, 0x00, 0x46, 0x31,
-  (byte)0xdf, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, (byte)0xff, 0x3a, 0x0a, (byte)0xaa, (byte)0xf2, 0x00,
-  (byte)0xff,
+  0xbf, 0x0d,
+  0xdb, 0x7f, 0x53,
+  0xd5, 0x1e,
+  0xab, 0x1f,
+  0xb2,
+  0xc2,
+  0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00, 0x09,
+  0xf0,
+  0xb8,
+  0xbf,
+  0xbf, 0x00,
+  0xf0,
+  0x9d,
+  0x84,
+  0xa1,
+  0xff, 0x1a, 0x00, 0x46, 0x31,
+  0xdf, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0xff, 0x3a, 0x0a, 0xaa, 0xf2, 0x00,
+  0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1");
         var bytes = new byte[] {
-  (byte)0xbf, 0x0d,
-  (byte)0xdb, 0x7f, 0x53,
-  (byte)0xd5, 0x1e,
-  (byte)0xab, 0x1f, 0x23,
-  (byte)0xc2,
-  (byte)0xb8, 0x02, 0x7f, 0x69,
-  (byte)0xc2,
-  (byte)0xa8, 0x7f, 0x39, 0x7f,
-  (byte)0xe4,
-  (byte)0xa1,
-  (byte)0xae, 0x1c,
-  (byte)0xff, 0x17, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-  (byte)0xec,
-  (byte)0x90,
-  (byte)0xb2, 0x0a, (byte)0xff, (byte)0xfa, 0x12, 0x49, 0x20, 0x61,
-  (byte)0xff,
+  0xbf, 0x0d,
+  0xdb, 0x7f, 0x53,
+  0xd5, 0x1e,
+  0xab, 0x1f, 0x23,
+  0xc2,
+  0xb8, 0x02, 0x7f, 0x69,
+  0xc2,
+  0xa8, 0x7f, 0x39, 0x7f,
+  0xe4,
+  0xa1,
+  0xae, 0x1c,
+  0xff, 0x17, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
+  0xec,
+  0x90,
+  0xb2, 0x0a, 0xff, 0xfa, 0x12, 0x49, 0x20, 0x61,
+  0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1");
         var bytes = new byte[] {
-  (byte)0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x01,
-  (byte)0xd8, 0x52,
-  (byte)0xbf, 0x0c,
-  (byte)0xf9, 0x68, 0x67, 0x3b,
-  (byte)0xdb,
-  (byte)0x85, 0x5b, 0x59,
-  (byte)0xfd, 0x03, 0x6c,
-  (byte)0x80,
-  (byte)0xf8,
-  (byte)0xc4, 0x7f, 0x67, 0x73, 0x2b, 0x51, 0x31, 0x5d, 0x26, 0x67,
-  (byte)0xff, 0x5f, 0x5b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
-  (byte)0xc7,
-  (byte)0xb9, 0x6b,
-  (byte)0xb0,
-  (byte)0xb6,
-  (byte)0xbe, 0x6d,
-  (byte)0x9e, 0x41, 0x34, 0x5a, 0x00, 0x00, 0x00, 0x02,
-  (byte)0xc4, 0x4a,
-  (byte)0xff, 0x67,
-  (byte)0xe1,
-  (byte)0x99,
-  (byte)0x92,
-  (byte)0xf0,
-  (byte)0xb5, (byte)0xa4, (byte)0xa2, 0x3a, 0x77, 0x11, 0x4c, 0x6f,
-  (byte)0xff,
+  0xd8, 0x52,
+  0xbf, 0x0c,
+  0xf9, 0x68, 0x67, 0x3b,
+  0xdb,
+  0x85, 0x5b, 0x59,
+  0xfd, 0x03, 0x6c,
+  0x80,
+  0xf8,
+  0xc4, 0x7f, 0x67, 0x73, 0x2b, 0x51, 0x31, 0x5d, 0x26, 0x67,
+  0xff, 0x5f, 0x5b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
+  0xc7,
+  0xb9, 0x6b,
+  0xb0,
+  0xb6,
+  0xbe, 0x6d,
+  0x9e, 0x41, 0x34, 0x5a, 0x00, 0x00, 0x00, 0x02,
+  0xc4, 0x4a,
+  0xff, 0x67,
+  0xe1,
+  0x99,
+  0x92,
+  0xf0,
+  0xb5, 0xa4, 0xa2, 0x3a, 0x77, 0x11, 0x4c, 0x6f,
+  0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x01,
-  (byte)0x9f,
-  (byte)0xf9, 0x03,
-  (byte)0xf1, 0x3b, 0x1a, 0x6f,
-  (byte)0xc2, 0x1b,
-  (byte)0xce, 0x23,
-  (byte)0xcb, 0x2e,
-  (byte)0xbf,
-  (byte)0xf8, 0x25,
-  (byte)0xfb, 0x01, 0x54, 0x4a, 0x78, 0x13,
-  (byte)0xff, 0x12,
-  (byte)0x91,
-  (byte)0xff,
-  (byte)0xbf, 0x78, 0x04, 0x7a, 0x43, 0x30, 0x04, 0x41, 0x55, 0x7f, 0x7a,
+  0x9f,
+  0xf9, 0x03,
+  0xf1, 0x3b, 0x1a, 0x6f,
+  0xc2, 0x1b,
+  0xce, 0x23,
+  0xcb, 0x2e,
+  0xbf,
+  0xf8, 0x25,
+  0xfb, 0x01, 0x54, 0x4a, 0x78, 0x13,
+  0xff, 0x12,
+  0x91,
+  0xff,
+  0xbf, 0x78, 0x04, 0x7a, 0x43, 0x30, 0x04, 0x41, 0x55, 0x7f, 0x7a,
   0x00, 0x00, 0x00, 0x03,
-  (byte)0xda,
-  (byte)0xb3, 0x64, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x58,
-  (byte)0xff, 0x39, (byte)0xa2, 0x48, (byte)0xff, (byte)0xff,
+  0xda,
+  0xb3, 0x64, 0x7b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x58,
+  0xff, 0x39, 0xa2, 0x48, 0xff, 0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1");
         var bytes = new byte[] {
-  (byte)0x81,
-  (byte)0xda,
-  (byte)0x8a, 0x18, 0x00, 0x00,
-  (byte)0xda,
-  (byte)0xd5,
-  (byte)0xf5,
-  (byte)0x96, 0x10,
-  (byte)0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-  (byte)0xbf, 0x6f, 0x22, 0x65, 0x65,
-  (byte)0xf1,
-  (byte)0x86,
-  (byte)0x9d,
-  (byte)0xad, 0x22, 0x42,
-  (byte)0xc5,
-  (byte)0xb1, 0x62, 0x58, 0x01, 0x5e,
-  (byte)0xda, 0x47, 0x47,
-  (byte)0x87,
-  (byte)0x94,
-  (byte)0xed, 0x7f, 0x6c,
-  (byte)0xf0,
-  (byte)0x9c,
-  (byte)0xbc,
-  (byte)0x96, 0x2f, 0x47, 0x7c, 0x00, 0x50, 0x67, 0x67, 0x10, 0x78, 0x03,
-  (byte)0xc3,
-  (byte)0x90, 0x17,
-  (byte)0xff, 0x19,
-  (byte)0xd2,
-  (byte)0xe7,
-  (byte)0x99, 0x00, 0x01, 0x1b, 0x2a, 0x6e, 0x6f, 0x67, 0x4b, 0x18, 0x60,
+  0x81,
+  0xda,
+  0x8a, 0x18, 0x00, 0x00,
+  0xda,
+  0xd5,
+  0xf5,
+  0x96, 0x10,
+  0x9b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+  0xbf, 0x6f, 0x22, 0x65, 0x65,
+  0xf1,
+  0x86,
+  0x9d,
+  0xad, 0x22, 0x42,
+  0xc5,
+  0xb1, 0x62, 0x58, 0x01, 0x5e,
+  0xda, 0x47, 0x47,
+  0x87,
+  0x94,
+  0xed, 0x7f, 0x6c,
+  0xf0,
+  0x9c,
+  0xbc,
+  0x96, 0x2f, 0x47, 0x7c, 0x00, 0x50, 0x67, 0x67, 0x10, 0x78, 0x03,
+  0xc3,
+  0x90, 0x17,
+  0xff, 0x19,
+  0xd2,
+  0xe7,
+  0x99, 0x00, 0x01, 0x1b, 0x2a, 0x6e, 0x6f, 0x67, 0x4b, 0x18, 0x60,
   0x51, 0x1b, 0x46,
-  (byte)0x9f, (byte)0xd3, (byte)0xb7, (byte)0xf4, 0x74, (byte)0xad, 0x6c,
-  (byte)0xff,
+  0x9f, 0xd3, 0xb7, 0xf4, 0x74, 0xad, 0x6c,
+  0xff,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
       {
         var options = new CBOREncodeOptions("allowduplicatekeys=1;keepkeyorder=1");
         var bytes = new byte[] {
-  (byte)0xda,
-  (byte)0xcf,
-  (byte)0xf0,
-  (byte)0xbe, 0x18,
-  (byte)0x99, 0x00, 0x01,
-  (byte)0xb9, 0x00, 0x01,
-  (byte)0xbf, 0x7f, 0x61, 0x5d, 0x7a, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00,
+  0xda,
+  0xcf,
+  0xf0,
+  0xbe, 0x18,
+  0x99, 0x00, 0x01,
+  0xb9, 0x00, 0x01,
+  0xbf, 0x7f, 0x61, 0x5d, 0x7a, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00,
   0x20, 0x5a, 0x66, 0x1c, 0x7a, 0x00, 0x00, 0x00, 0x02, 0x7d, 0x7f, 0x60,
   0x78, 0x01, 0x43,
-  (byte)0xff, 0x1a,
-  (byte)0xca, 0x5c,
-  (byte)0x83, 0x47, 0x7f, 0x79, 0x00, 0x0a,
-  (byte)0xcc,
-  (byte)0x88, 0x00, 0x73, 0x5f, 0x00, 0x26, 0x08, 0x72, 0x60,
-  (byte)0xff, 0x00,
-  (byte)0xff, 0x1b,
-  (byte)0xbb, 0x19, (byte)0xbf, (byte)0x9f, 0x55, (byte)0xee, 0x56, 0x09,
+  0xff, 0x1a,
+  0xca, 0x5c,
+  0x83, 0x47, 0x7f, 0x79, 0x00, 0x0a,
+  0xcc,
+  0x88, 0x00, 0x73, 0x5f, 0x00, 0x26, 0x08, 0x72, 0x60,
+  0xff, 0x00,
+  0xff, 0x1b,
+  0xbb, 0x19, 0xbf, 0x9f, 0x55, 0xee, 0x56, 0x09,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes, options));
       }
@@ -13004,8 +12999,8 @@ cborTemp1.AsNumber().IsZero())
     [Test]
     public void TestRegressionFour()
     {
-      CBORObject o1 = CBORObject.FromObject(new byte[] { (byte)5, (byte)2 });
-      CBORObject o2 = CBORObject.FromObject(new byte[] { (byte)0x85, (byte)2 });
+      CBORObject o1 = CBORObject.FromObject(new byte[] { 5, 2 });
+      CBORObject o2 = CBORObject.FromObject(new byte[] { 0x85, 2 });
       TestCommon.CompareTestLess(o1, o2);
     }
 
@@ -13013,51 +13008,51 @@ cborTemp1.AsNumber().IsZero())
     public void TestRegressionOne()
     {
       {
-        CBOREncodeOptions options = new CBOREncodeOptions();
+        _ = new CBOREncodeOptions();
         byte[] bytes = new byte[] {
-  (byte)0xbf, 0x0d,
-  (byte)0xdb, 0x7f, 0x53,
-  (byte)0xd5, 0x1e,
-  (byte)0xab, 0x1f,
-  (byte)0xb2,
-  (byte)0xc2,
-  (byte)0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00, 0x09,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf,
-  (byte)0xbf, 0x00,
-  (byte)0xf0,
-  (byte)0x9d,
-  (byte)0x84,
-  (byte)0xa1,
-  (byte)0xff, 0x1a, 0x00, 0x46, 0x31,
-  (byte)0xdf, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, (byte)0xff, 0x3a, 0x0a, (byte)0xaa, (byte)0xf2, 0x00,
-  (byte)0xff,
+  0xbf, 0x0d,
+  0xdb, 0x7f, 0x53,
+  0xd5, 0x1e,
+  0xab, 0x1f,
+  0xb2,
+  0xc2,
+  0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00, 0x09,
+  0xf0,
+  0xb8,
+  0xbf,
+  0xbf, 0x00,
+  0xf0,
+  0x9d,
+  0x84,
+  0xa1,
+  0xff, 0x1a, 0x00, 0x46, 0x31,
+  0xdf, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0xff, 0x3a, 0x0a, 0xaa, 0xf2, 0x00,
+  0xff,
 };
         byte[] encodedBytes = new byte[] {
-  (byte)0xa1, 0x0d,
-  (byte)0xdb, 0x7f, 0x53,
-  (byte)0xd5, 0x1e,
-  (byte)0xab, 0x1f,
-  (byte)0xb2,
-  (byte)0xc2,
-  (byte)0xa2, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, 0x3a, 0x0a,
-  (byte)0xaa,
-  (byte)0xf2, 0x00, 0x69,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf,
-  (byte)0xbf, 0x00,
-  (byte)0xf0, (byte)0x9d, (byte)0x84, (byte)0xa1, 0x1a, 0x00, 0x46, 0x31,
-  (byte)0xdf,
+  0xa1, 0x0d,
+  0xdb, 0x7f, 0x53,
+  0xd5, 0x1e,
+  0xab, 0x1f,
+  0xb2,
+  0xc2,
+  0xa2, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0x3a, 0x0a,
+  0xaa,
+  0xf2, 0x00, 0x69,
+  0xf0,
+  0xb8,
+  0xbf,
+  0xbf, 0x00,
+  0xf0, 0x9d, 0x84, 0xa1, 0x1a, 0x00, 0x46, 0x31,
+  0xdf,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes));
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(encodedBytes));
@@ -13068,40 +13063,40 @@ cborTemp1.AsNumber().IsZero())
     public void TestRegressionTwo()
     {
       {
-        CBOREncodeOptions options = new CBOREncodeOptions();
+        _ = new CBOREncodeOptions();
         byte[] bytes = new byte[] {
-  (byte)0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00,
+  0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00,
   0x09,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf,
-  (byte)0xbf, 0x00,
-  (byte)0xf0,
-  (byte)0x9d,
-  (byte)0x84,
-  (byte)0xa1,
-  (byte)0xff, 0x1a, 0x00, 0x46, 0x31,
-  (byte)0xdf, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, (byte)0xff, 0x3a, 0x0a, (byte)0xaa, (byte)0xf2, 0x00,
+  0xf0,
+  0xb8,
+  0xbf,
+  0xbf, 0x00,
+  0xf0,
+  0x9d,
+  0x84,
+  0xa1,
+  0xff, 0x1a, 0x00, 0x46, 0x31,
+  0xdf, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0xff, 0x3a, 0x0a, 0xaa, 0xf2, 0x00,
 };
         byte[] encodedBytes = new byte[] {
-  (byte)0xa2, 0x69, 0x05, 0x47, 0x76, 0x4f,
+  0xa2, 0x69, 0x05, 0x47, 0x76, 0x4f,
   0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, 0x3a, 0x0a,
-  (byte)0xaa,
-  (byte)0xf2, 0x00, 0x69,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf,
-  (byte)0xbf, 0x00,
-  (byte)0xf0, (byte)0x9d, (byte)0x84, (byte)0xa1, 0x1a, 0x00, 0x46, 0x31,
-  (byte)0xdf,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0x3a, 0x0a,
+  0xaa,
+  0xf2, 0x00, 0x69,
+  0xf0,
+  0xb8,
+  0xbf,
+  0xbf, 0x00,
+  0xf0, 0x9d, 0x84, 0xa1, 0x1a, 0x00, 0x46, 0x31,
+  0xdf,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes));
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(encodedBytes));
@@ -13112,35 +13107,35 @@ cborTemp1.AsNumber().IsZero())
     public void TestRegressionThree()
     {
       {
-        CBOREncodeOptions options = new CBOREncodeOptions();
+        _ = new CBOREncodeOptions();
         byte[] bytes = new byte[] {
-  (byte)0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00,
+  0xb8, 0x02, 0x7f, 0x7a, 0x00, 0x00, 0x00,
   0x09,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf,
-  (byte)0xbf, 0x00,
-  (byte)0xf0,
-  (byte)0x9d,
-  (byte)0x84,
-  (byte)0xa1,
-  (byte)0xff, 0, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, (byte)0xff, 0,
+  0xf0,
+  0xb8,
+  0xbf,
+  0xbf, 0x00,
+  0xf0,
+  0x9d,
+  0x84,
+  0xa1,
+  0xff, 0, 0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0xff, 0,
 };
         byte[] encodedBytes = new byte[] {
-  (byte)0xa2, 0x69, 0x05, 0x47, 0x76, 0x4f,
+  0xa2, 0x69, 0x05, 0x47, 0x76, 0x4f,
   0x01,
-  (byte)0xf4,
-  (byte)0x80,
-  (byte)0x80,
-  (byte)0x80, 0, 0x69,
-  (byte)0xf0,
-  (byte)0xb8,
-  (byte)0xbf, (byte)0xbf, 0x00, (byte)0xf0, (byte)0x9d, (byte)0x84,
-  (byte)0xa1, 0,
+  0xf4,
+  0x80,
+  0x80,
+  0x80, 0, 0x69,
+  0xf0,
+  0xb8,
+  0xbf, 0xbf, 0x00, 0xf0, 0x9d, 0x84,
+  0xa1, 0,
 };
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(bytes));
         CBORTestCommon.AssertRoundTrip(CBORObject.DecodeFromBytes(encodedBytes));
@@ -13153,47 +13148,47 @@ cborTemp1.AsNumber().IsZero())
       CBORObject a, b, c, d;
       var bytes = new byte[] {
     0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-    (byte)0xf4,
-    (byte)0x80,
-    (byte)0x80,
-    (byte)0x80,
+    0xf4,
+    0x80,
+    0x80,
+    0x80,
   };
       a = CBORObject.DecodeFromBytes(bytes);
       c = a;
       bytes = new byte[] {
     0x7f, 0x69, 0x05, 0x47, 0x76, 0x4f, 0x01,
-    (byte)0xf4,
-    (byte)0x80,
-    (byte)0x80,
-    (byte)0x80, (byte)0xff,
+    0xf4,
+    0x80,
+    0x80,
+    0x80, 0xff,
   };
       b = CBORObject.DecodeFromBytes(bytes);
       d = b;
       TestCommon.CompareTestEqual(a, b);
       bytes = new byte[] {
     0x7f, 0x7a, 0x00, 0x00, 0x00, 0x09,
-    (byte)0xf0,
-    (byte)0xb8,
-    (byte)0xbf,
-    (byte)0xbf, 0x00,
-    (byte)0xf0,
-    (byte)0x9d,
-    (byte)0x84,
-    (byte)0xa1,
-    (byte)0xff,
+    0xf0,
+    0xb8,
+    0xbf,
+    0xbf, 0x00,
+    0xf0,
+    0x9d,
+    0x84,
+    0xa1,
+    0xff,
   };
       a = CBORObject.DecodeFromBytes(bytes);
       bytes = new byte[] {
     0x7f, 0x69,
-    (byte)0xf0,
-    (byte)0xb8,
-    (byte)0xbf,
-    (byte)0xbf, 0x00,
-    (byte)0xf0,
-    (byte)0x9d,
-    (byte)0x84,
-    (byte)0xa1,
-    (byte)0xff,
+    0xf0,
+    0xb8,
+    0xbf,
+    0xbf, 0x00,
+    0xf0,
+    0x9d,
+    0x84,
+    0xa1,
+    0xff,
   };
       b = CBORObject.DecodeFromBytes(bytes);
       TestCommon.CompareTestEqual(a, b);
@@ -13202,11 +13197,11 @@ cborTemp1.AsNumber().IsZero())
       TestCommon.CompareTestLess(d, a);
       TestCommon.CompareTestLess(d, b);
       CBORObject o1 = CBORObject.NewMap();
-      o1.Add(b, CBORObject.FromObject(0));
-      o1.Add(c, CBORObject.FromObject(0));
+      _ = o1.Add(b, CBORObject.FromObject(0));
+      _ = o1.Add(c, CBORObject.FromObject(0));
       CBORObject o2 = CBORObject.NewMap();
-      o2.Add(c, CBORObject.FromObject(0));
-      o2.Add(b, CBORObject.FromObject(0));
+      _ = o2.Add(c, CBORObject.FromObject(0));
+      _ = o2.Add(b, CBORObject.FromObject(0));
       TestCommon.CompareTestEqual(a, b);
     }
 
@@ -13215,462 +13210,462 @@ cborTemp1.AsNumber().IsZero())
     public void TestSlowDecode()
     {
       byte[] bytes = new byte[] {
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa3,
-  (byte)0xf0, 0x02,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2, 0x02,
-  (byte)0xf7,
-  (byte)0xa0, 0x02,
-  (byte)0xa3,
-  (byte)0xf0, 0x01,
-  (byte)0xf1, 0x01,
-  (byte)0xf2,
-  (byte)0xf7,
-  (byte)0xf7,
-  (byte)0xf5,
-  (byte)0xa0, 0x01,
-  (byte)0xa3,
-  (byte)0xa3, 0x00,
-  (byte)0xf5, 0x01,
-  (byte)0xf4, 0x02, 0x02, 0x02,
-  (byte)0xa0, 0x01,
-  (byte)0xa3, 0x00,
-  (byte)0xa0, 0x01,
-  (byte)0xa0, 0x02, 0x02,
-  (byte)0xf6, 0x02, 0x40,
-  (byte)0xf5, 0x02,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xf0, 0x02,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2,
-  (byte)0xf6, 0x00,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2, 0x02,
-  (byte)0xf3, 0x01, 0x02,
-  (byte)0xa0,
-  (byte)0xa0,
-  (byte)0xa3,
-  (byte)0xf0, 0x00,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2,
-  (byte)0xf5, 0x00, 0x40,
-  (byte)0xf4,
-  (byte)0xf4,
-  (byte)0xa4, 0x00,
-  (byte)0xf6, 0x01,
-  (byte)0xf4, 0x02, 0x00, 0x40, 0x01,
-  (byte)0xf5,
-  (byte)0xa4,
-  (byte)0xf0,
-  (byte)0xa0,
-  (byte)0xf1,
-  (byte)0xa0,
-  (byte)0xf2,
-  (byte)0xf4, 0x40, 0x00, 0x02, 0x01,
-  (byte)0xa3,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2,
-  (byte)0xf6,
-  (byte)0xf3,
-  (byte)0xf4,
-  (byte)0xa0,
-  (byte)0xa3, 0x00, 0x00, 0x01,
-  (byte)0xf4, 0x02,
-  (byte)0xf7,
-  (byte)0xf6,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2,
-  (byte)0xf6,
-  (byte)0xf3, 0x01, 0x40,
-  (byte)0xa0, 0x00,
-  (byte)0xa4, 0x00, 0x02, 0x01,
-  (byte)0xa0, 0x02, 0x01, 0x40, 0x00,
-  (byte)0xf4,
-  (byte)0xa4,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf5,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2,
-  (byte)0xf7,
-  (byte)0xf4,
-  (byte)0xa3, 0x00,
-  (byte)0xf6, 0x01, 0x02, 0x02,
-  (byte)0xf5,
-  (byte)0xf5,
-  (byte)0xa3,
-  (byte)0xa3,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf4,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2,
-  (byte)0xf6, 0x01,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf4,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2, 0x02, 0x01,
-  (byte)0xa0,
-  (byte)0xf6,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2, 0x00,
-  (byte)0xf3, 0x01, 0x01,
-  (byte)0xf4,
-  (byte)0xa3,
-  (byte)0xf1, 0x01,
-  (byte)0xf2, 0x00,
-  (byte)0xf3,
-  (byte)0xf6,
-  (byte)0xf5,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2,
-  (byte)0xa0,
-  (byte)0xf3,
-  (byte)0xf6,
-  (byte)0xf4, 0x40, 0x02, 0x02,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2,
-  (byte)0xf4,
-  (byte)0xf3,
-  (byte)0xf7, 0x40, 0x01, 0x00,
-  (byte)0xa4,
-  (byte)0xf0,
-  (byte)0xf6,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2, 0x00, 0x40,
-  (byte)0xf5,
-  (byte)0xa0,
-  (byte)0xa4,
-  (byte)0xa3, 0x00, 0x00, 0x01,
-  (byte)0xf5, 0x02,
-  (byte)0xf6, 0x00,
-  (byte)0xa0, 0x00,
-  (byte)0xa3, 0x00, 0x02, 0x01, 0x02, 0x02, 0x00, 0x02, 0x40, 0x02, 0x00,
-  (byte)0xf6,
-  (byte)0xa3, 0x00,
-  (byte)0xf7, 0x01, 0x00, 0x02, 0x01, 0x02,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xa4, 0x00,
-  (byte)0xf4, 0x01,
-  (byte)0xf5, 0x02, 0x00, 0x40,
-  (byte)0xf7, 0x00,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2,
-  (byte)0xf4,
-  (byte)0xf3,
-  (byte)0xf5, 0x40,
-  (byte)0xa0,
-  (byte)0xf7,
-  (byte)0xa4, 0x00, 0x00, 0x01,
-  (byte)0xa0, 0x02,
-  (byte)0xf5, 0x40, 0x00, 0x02, 0x40, 0x01,
-  (byte)0xf7,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa3, 0x00,
-  (byte)0xf6, 0x01,
-  (byte)0xf4, 0x02,
-  (byte)0xf4, 0x02,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf6,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2, 0x01,
-  (byte)0xf4,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2,
-  (byte)0xa0,
-  (byte)0xf3, 0x01,
-  (byte)0xf6,
-  (byte)0xa0,
-  (byte)0xf6,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf5,
-  (byte)0xf1, 0x00,
-  (byte)0xf2,
-  (byte)0xf5, 0x02, 0x40,
-  (byte)0xf6,
-  (byte)0xf6,
-  (byte)0xa4,
-  (byte)0xf0, 0x01,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2,
-  (byte)0xf6, 0x40,
-  (byte)0xf4,
-  (byte)0xa0,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xa4, 0x00,
-  (byte)0xa0, 0x01, 0x00, 0x02,
-  (byte)0xf6, 0x40,
-  (byte)0xf4, 0x00,
-  (byte)0xa4,
-  (byte)0xa4,
-  (byte)0xf0,
-  (byte)0xf4,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2, 0x00, 0x40,
-  (byte)0xa0,
-  (byte)0xf6,
-  (byte)0xa4, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x40,
-  (byte)0xf6,
-  (byte)0xa0,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2,
-  (byte)0xf4,
-  (byte)0xf3,
-  (byte)0xf4, 0x40,
-  (byte)0xf5,
-  (byte)0xa0, 0x40,
-  (byte)0xf7, 0x02,
-  (byte)0xa4,
-  (byte)0xa4, 0x00, 0x02, 0x01, 0x02, 0x02, 0x01, 0x40,
-  (byte)0xf5,
-  (byte)0xf7,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xa0,
-  (byte)0xf2,
-  (byte)0xf6,
-  (byte)0xf3,
-  (byte)0xf4, 0x40,
-  (byte)0xf6,
-  (byte)0xf4,
-  (byte)0xa4,
-  (byte)0xf0, 0x00,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2, 0x02, 0x40,
-  (byte)0xf4,
-  (byte)0xf4, 0x40, 0x02,
-  (byte)0xf4,
-  (byte)0xf6,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2,
-  (byte)0xf6,
-  (byte)0xf3, 0x00,
-  (byte)0xf7,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf7,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2, 0x00, 0x01, 0x40, 0x01, 0x01, 0x00,
-  (byte)0xf7,
-  (byte)0xa0, 0x00,
-  (byte)0xa3,
-  (byte)0xa4,
-  (byte)0xf1, 0x02,
-  (byte)0xf2,
-  (byte)0xf4,
-  (byte)0xf3,
-  (byte)0xf7, 0x40,
-  (byte)0xf6,
-  (byte)0xf7,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2,
-  (byte)0xf4,
-  (byte)0xf3,
-  (byte)0xf4, 0x40,
-  (byte)0xf6,
-  (byte)0xf6,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2, 0x00,
-  (byte)0xf3,
-  (byte)0xf4,
-  (byte)0xf5,
-  (byte)0xa0,
-  (byte)0xf6,
-  (byte)0xa3, 0x00, 0x01, 0x01,
-  (byte)0xa0, 0x02, 0x01,
-  (byte)0xa0, 0x40, 0x02, 0x00,
-  (byte)0xf5, 0x40,
-  (byte)0xf5,
-  (byte)0xa0,
-  (byte)0xa4,
-  (byte)0xa3, 0x00,
-  (byte)0xf5, 0x01, 0x02, 0x02, 0x00,
-  (byte)0xf6,
-  (byte)0xa0,
-  (byte)0xf6,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2,
-  (byte)0xf5,
-  (byte)0xf3,
-  (byte)0xf5, 0x00, 0x40,
-  (byte)0xf5,
-  (byte)0xf6, 0x02, 0x40, 0x01, 0x01,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xa0,
-  (byte)0xf2, 0x01,
-  (byte)0xf3,
-  (byte)0xf5, 0x40, 0x00, 0x02,
-  (byte)0xa0,
-  (byte)0xa0, 0x00,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf4,
-  (byte)0xf1,
-  (byte)0xa0,
-  (byte)0xf2, 0x00, 0x01, 0x40, 0x02, 0x00,
-  (byte)0xa4,
-  (byte)0xf0, 0x01,
-  (byte)0xf1, 0x02,
-  (byte)0xf2,
-  (byte)0xa0, 0x40,
-  (byte)0xf5, 0x02,
-  (byte)0xa4,
-  (byte)0xa3,
-  (byte)0xf0, 0x00,
-  (byte)0xf1, 0x01,
-  (byte)0xf2,
-  (byte)0xf5,
-  (byte)0xf7,
-  (byte)0xa3,
-  (byte)0xa3,
-  (byte)0xf1, 0x01,
-  (byte)0xf2, 0x01,
-  (byte)0xf3, 0x01,
-  (byte)0xa0,
-  (byte)0xa0, 0x01,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2, 0x00,
-  (byte)0xf3,
-  (byte)0xf4,
-  (byte)0xf6, 0x02,
-  (byte)0xa3,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2, 0x01,
-  (byte)0xf3,
-  (byte)0xf4, 0x02, 0x40, 0x00,
-  (byte)0xa0, 0x40,
-  (byte)0xa0,
-  (byte)0xf5,
-  (byte)0xa4,
-  (byte)0xf0,
-  (byte)0xf7,
-  (byte)0xf1,
-  (byte)0xf4,
-  (byte)0xf2,
-  (byte)0xa0, 0x40,
-  (byte)0xa0, 0x00,
-  (byte)0xa4, 0x00, 0x00, 0x01,
-  (byte)0xa0, 0x02,
-  (byte)0xf5, 0x40,
-  (byte)0xf7,
-  (byte)0xf7, 0x00,
-  (byte)0xa3, 0x00, 0x01, 0x01, 0x01, 0x02,
-  (byte)0xf4,
-  (byte)0xf7,
-  (byte)0xf7,
-  (byte)0xa0,
-  (byte)0xa0,
-  (byte)0xa3,
-  (byte)0xf0,
-  (byte)0xf6,
-  (byte)0xf1, 0x01,
-  (byte)0xf2, 0x01, 0x00,
-  (byte)0xf6, 0x40,
-  (byte)0xf6,
-  (byte)0xf6,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf7,
-  (byte)0xf2, 0x01,
-  (byte)0xf3, 0x01, 0x40,
-  (byte)0xf7,
-  (byte)0xf5,
-  (byte)0xa4,
-  (byte)0xf1,
-  (byte)0xf6,
-  (byte)0xf2, 0x00,
-  (byte)0xf3,
-  (byte)0xa0, 0x40, 0x01, 0x02, 0x40, 0x01,
-  (byte)0xa0,
-  (byte)0xa0, 0x02, 0x40, 0x01, 0x02,
-  (byte)0xa4,
-  (byte)0xf0,
-  (byte)0xf4,
-  (byte)0xf1,
-  (byte)0xf5,
-  (byte)0xf2,
-  (byte)0xf5, 0x40,
-  (byte)0xf7,
-  (byte)0xa0,
-  (byte)0xf5,
-  (byte)0xa0,
-  (byte)0xf5,
-  (byte)0xa3, 0x00,
-  (byte)0xf6, 0x01, (byte)0xf6, 0x02, (byte)0xa0, (byte)0xf4, 0x40,
-  (byte)0xf7,
+  0xa4,
+  0xa3,
+  0xa4,
+  0xa3,
+  0xa3,
+  0xf0, 0x02,
+  0xf1,
+  0xf5,
+  0xf2, 0x02,
+  0xf7,
+  0xa0, 0x02,
+  0xa3,
+  0xf0, 0x01,
+  0xf1, 0x01,
+  0xf2,
+  0xf7,
+  0xf7,
+  0xf5,
+  0xa0, 0x01,
+  0xa3,
+  0xa3, 0x00,
+  0xf5, 0x01,
+  0xf4, 0x02, 0x02, 0x02,
+  0xa0, 0x01,
+  0xa3, 0x00,
+  0xa0, 0x01,
+  0xa0, 0x02, 0x02,
+  0xf6, 0x02, 0x40,
+  0xf5, 0x02,
+  0xa4,
+  0xa3,
+  0xf0, 0x02,
+  0xf1,
+  0xf7,
+  0xf2,
+  0xf6, 0x00,
+  0xa3,
+  0xa4,
+  0xa3,
+  0xf1,
+  0xf4,
+  0xf2, 0x02,
+  0xf3, 0x01, 0x02,
+  0xa0,
+  0xa0,
+  0xa3,
+  0xf0, 0x00,
+  0xf1,
+  0xf7,
+  0xf2,
+  0xf5, 0x00, 0x40,
+  0xf4,
+  0xf4,
+  0xa4, 0x00,
+  0xf6, 0x01,
+  0xf4, 0x02, 0x00, 0x40, 0x01,
+  0xf5,
+  0xa4,
+  0xf0,
+  0xa0,
+  0xf1,
+  0xa0,
+  0xf2,
+  0xf4, 0x40, 0x00, 0x02, 0x01,
+  0xa3,
+  0xa3,
+  0xf1,
+  0xf6,
+  0xf2,
+  0xf6,
+  0xf3,
+  0xf4,
+  0xa0,
+  0xa3, 0x00, 0x00, 0x01,
+  0xf4, 0x02,
+  0xf7,
+  0xf6,
+  0xa3,
+  0xa4,
+  0xf1,
+  0xf5,
+  0xf2,
+  0xf6,
+  0xf3, 0x01, 0x40,
+  0xa0, 0x00,
+  0xa4, 0x00, 0x02, 0x01,
+  0xa0, 0x02, 0x01, 0x40, 0x00,
+  0xf4,
+  0xa4,
+  0xa4,
+  0xa3,
+  0xf0,
+  0xf5,
+  0xf1,
+  0xf7,
+  0xf2,
+  0xf7,
+  0xf4,
+  0xa3, 0x00,
+  0xf6, 0x01, 0x02, 0x02,
+  0xf5,
+  0xf5,
+  0xa3,
+  0xa3,
+  0xa3,
+  0xf0,
+  0xf4,
+  0xf1,
+  0xf5,
+  0xf2,
+  0xf6, 0x01,
+  0xa3,
+  0xa4,
+  0xa4,
+  0xa3,
+  0xa4,
+  0xa3,
+  0xa3,
+  0xf0,
+  0xf4,
+  0xf1,
+  0xf6,
+  0xf2, 0x02, 0x01,
+  0xa0,
+  0xf6,
+  0xa3,
+  0xf1,
+  0xf7,
+  0xf2, 0x00,
+  0xf3, 0x01, 0x01,
+  0xf4,
+  0xa3,
+  0xf1, 0x01,
+  0xf2, 0x00,
+  0xf3,
+  0xf6,
+  0xf5,
+  0xa3,
+  0xf1,
+  0xf5,
+  0xf2,
+  0xa0,
+  0xf3,
+  0xf6,
+  0xf4, 0x40, 0x02, 0x02,
+  0xa4,
+  0xa3,
+  0xa4,
+  0xf1,
+  0xf7,
+  0xf2,
+  0xf4,
+  0xf3,
+  0xf7, 0x40, 0x01, 0x00,
+  0xa4,
+  0xf0,
+  0xf6,
+  0xf1,
+  0xf5,
+  0xf2, 0x00, 0x40,
+  0xf5,
+  0xa0,
+  0xa4,
+  0xa3, 0x00, 0x00, 0x01,
+  0xf5, 0x02,
+  0xf6, 0x00,
+  0xa0, 0x00,
+  0xa3, 0x00, 0x02, 0x01, 0x02, 0x02, 0x00, 0x02, 0x40, 0x02, 0x00,
+  0xf6,
+  0xa3, 0x00,
+  0xf7, 0x01, 0x00, 0x02, 0x01, 0x02,
+  0xa3,
+  0xa4,
+  0xa4, 0x00,
+  0xf4, 0x01,
+  0xf5, 0x02, 0x00, 0x40,
+  0xf7, 0x00,
+  0xa4,
+  0xf1,
+  0xf6,
+  0xf2,
+  0xf4,
+  0xf3,
+  0xf5, 0x40,
+  0xa0,
+  0xf7,
+  0xa4, 0x00, 0x00, 0x01,
+  0xa0, 0x02,
+  0xf5, 0x40, 0x00, 0x02, 0x40, 0x01,
+  0xf7,
+  0xa4,
+  0xa3,
+  0xa3, 0x00,
+  0xf6, 0x01,
+  0xf4, 0x02,
+  0xf4, 0x02,
+  0xa3,
+  0xf0,
+  0xf6,
+  0xf1,
+  0xf4,
+  0xf2, 0x01,
+  0xf4,
+  0xa3,
+  0xa4,
+  0xa3,
+  0xf1,
+  0xf4,
+  0xf2,
+  0xa0,
+  0xf3, 0x01,
+  0xf6,
+  0xa0,
+  0xf6,
+  0xa3,
+  0xf0,
+  0xf5,
+  0xf1, 0x00,
+  0xf2,
+  0xf5, 0x02, 0x40,
+  0xf6,
+  0xf6,
+  0xa4,
+  0xf0, 0x01,
+  0xf1,
+  0xf4,
+  0xf2,
+  0xf6, 0x40,
+  0xf4,
+  0xa0,
+  0xa4,
+  0xa3,
+  0xa4, 0x00,
+  0xa0, 0x01, 0x00, 0x02,
+  0xf6, 0x40,
+  0xf4, 0x00,
+  0xa4,
+  0xa4,
+  0xf0,
+  0xf4,
+  0xf1,
+  0xf5,
+  0xf2, 0x00, 0x40,
+  0xa0,
+  0xf6,
+  0xa4, 0x00, 0x00, 0x01, 0x02, 0x02, 0x02, 0x40,
+  0xf6,
+  0xa0,
+  0xa4,
+  0xf1,
+  0xf5,
+  0xf2,
+  0xf4,
+  0xf3,
+  0xf4, 0x40,
+  0xf5,
+  0xa0, 0x40,
+  0xf7, 0x02,
+  0xa4,
+  0xa4, 0x00, 0x02, 0x01, 0x02, 0x02, 0x01, 0x40,
+  0xf5,
+  0xf7,
+  0xa4,
+  0xf1,
+  0xa0,
+  0xf2,
+  0xf6,
+  0xf3,
+  0xf4, 0x40,
+  0xf6,
+  0xf4,
+  0xa4,
+  0xf0, 0x00,
+  0xf1,
+  0xf7,
+  0xf2, 0x02, 0x40,
+  0xf4,
+  0xf4, 0x40, 0x02,
+  0xf4,
+  0xf6,
+  0xa3,
+  0xf1,
+  0xf5,
+  0xf2,
+  0xf6,
+  0xf3, 0x00,
+  0xf7,
+  0xa3,
+  0xf0,
+  0xf7,
+  0xf1,
+  0xf5,
+  0xf2, 0x00, 0x01, 0x40, 0x01, 0x01, 0x00,
+  0xf7,
+  0xa0, 0x00,
+  0xa3,
+  0xa4,
+  0xf1, 0x02,
+  0xf2,
+  0xf4,
+  0xf3,
+  0xf7, 0x40,
+  0xf6,
+  0xf7,
+  0xa4,
+  0xf1,
+  0xf6,
+  0xf2,
+  0xf4,
+  0xf3,
+  0xf4, 0x40,
+  0xf6,
+  0xf6,
+  0xa4,
+  0xa3,
+  0xf1,
+  0xf6,
+  0xf2, 0x00,
+  0xf3,
+  0xf4,
+  0xf5,
+  0xa0,
+  0xf6,
+  0xa3, 0x00, 0x01, 0x01,
+  0xa0, 0x02, 0x01,
+  0xa0, 0x40, 0x02, 0x00,
+  0xf5, 0x40,
+  0xf5,
+  0xa0,
+  0xa4,
+  0xa3, 0x00,
+  0xf5, 0x01, 0x02, 0x02, 0x00,
+  0xf6,
+  0xa0,
+  0xf6,
+  0xa3,
+  0xf1,
+  0xf6,
+  0xf2,
+  0xf5,
+  0xf3,
+  0xf5, 0x00, 0x40,
+  0xf5,
+  0xf6, 0x02, 0x40, 0x01, 0x01,
+  0xa4,
+  0xf1,
+  0xa0,
+  0xf2, 0x01,
+  0xf3,
+  0xf5, 0x40, 0x00, 0x02,
+  0xa0,
+  0xa0, 0x00,
+  0xa3,
+  0xf0,
+  0xf4,
+  0xf1,
+  0xa0,
+  0xf2, 0x00, 0x01, 0x40, 0x02, 0x00,
+  0xa4,
+  0xf0, 0x01,
+  0xf1, 0x02,
+  0xf2,
+  0xa0, 0x40,
+  0xf5, 0x02,
+  0xa4,
+  0xa3,
+  0xf0, 0x00,
+  0xf1, 0x01,
+  0xf2,
+  0xf5,
+  0xf7,
+  0xa3,
+  0xa3,
+  0xf1, 0x01,
+  0xf2, 0x01,
+  0xf3, 0x01,
+  0xa0,
+  0xa0, 0x01,
+  0xa3,
+  0xf1,
+  0xf4,
+  0xf2, 0x00,
+  0xf3,
+  0xf4,
+  0xf6, 0x02,
+  0xa3,
+  0xf1,
+  0xf4,
+  0xf2, 0x01,
+  0xf3,
+  0xf4, 0x02, 0x40, 0x00,
+  0xa0, 0x40,
+  0xa0,
+  0xf5,
+  0xa4,
+  0xf0,
+  0xf7,
+  0xf1,
+  0xf4,
+  0xf2,
+  0xa0, 0x40,
+  0xa0, 0x00,
+  0xa4, 0x00, 0x00, 0x01,
+  0xa0, 0x02,
+  0xf5, 0x40,
+  0xf7,
+  0xf7, 0x00,
+  0xa3, 0x00, 0x01, 0x01, 0x01, 0x02,
+  0xf4,
+  0xf7,
+  0xf7,
+  0xa0,
+  0xa0,
+  0xa3,
+  0xf0,
+  0xf6,
+  0xf1, 0x01,
+  0xf2, 0x01, 0x00,
+  0xf6, 0x40,
+  0xf6,
+  0xf6,
+  0xa4,
+  0xf1,
+  0xf7,
+  0xf2, 0x01,
+  0xf3, 0x01, 0x40,
+  0xf7,
+  0xf5,
+  0xa4,
+  0xf1,
+  0xf6,
+  0xf2, 0x00,
+  0xf3,
+  0xa0, 0x40, 0x01, 0x02, 0x40, 0x01,
+  0xa0,
+  0xa0, 0x02, 0x40, 0x01, 0x02,
+  0xa4,
+  0xf0,
+  0xf4,
+  0xf1,
+  0xf5,
+  0xf2,
+  0xf5, 0x40,
+  0xf7,
+  0xa0,
+  0xf5,
+  0xa0,
+  0xf5,
+  0xa3, 0x00,
+  0xf6, 0x01, 0xf6, 0x02, 0xa0, 0xf4, 0x40,
+  0xf7,
 };
       var options = new CBOREncodeOptions("allowduplicatekeys=1");
       for (var i = 0; i < 10; ++i)
       {
-        CBORObject.DecodeFromBytes(bytes, options);
+        _ = CBORObject.DecodeFromBytes(bytes, options);
       }
     }
   }

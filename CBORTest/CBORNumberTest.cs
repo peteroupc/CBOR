@@ -213,7 +213,7 @@ namespace Test
     {
       try
       {
-        ToCN(2).Multiply(null);
+        _ = ToCN(2).Multiply(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -249,7 +249,7 @@ namespace Test
     {
       try
       {
-        ToCN(2).Divide(null);
+        _ = ToCN(2).Divide(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -268,7 +268,7 @@ namespace Test
     {
       try
       {
-        ToCN(2).Remainder(null);
+        _ = ToCN(2).Remainder(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -323,8 +323,8 @@ namespace Test
     {
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
-          (object)null).AsNumber().ToEInteger();
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
+          null).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -338,7 +338,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Null.AsNumber().ToEInteger();
+        _ = CBORObject.Null.AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -352,7 +352,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.AsNumber().ToEInteger();
+        _ = CBORObject.True.AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -366,7 +366,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsNumber().ToEInteger();
+        _ = CBORObject.False.AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -380,7 +380,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsNumber().ToEInteger();
+        _ = CBORObject.Undefined.AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -394,7 +394,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber().ToEInteger();
+        _ = CBORObject.NewArray().AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -408,7 +408,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().ToEInteger();
+        _ = CBORObject.NewMap().AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -438,7 +438,7 @@ namespace Test
         {
           try
           {
-            cbornumber.AsNumber().ToEInteger();
+            _ = cbornumber.AsNumber().ToEInteger();
             Assert.Fail("Should have failed");
           }
           catch (OverflowException)
@@ -505,7 +505,7 @@ namespace Test
         string stringTemp =
 
           ToObjectTest.TestToFromObjectRoundTrip(
-            (float)328323f).AsNumber().ToEInteger().ToString();
+            328323f).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "328323",
           stringTemp);
@@ -513,7 +513,7 @@ namespace Test
       {
         string stringTemp =
           ToObjectTest.TestToFromObjectRoundTrip(
-            (double)0.75).AsNumber().ToEInteger()
+            0.75).AsNumber().ToEInteger()
           .ToString();
         Assert.AreEqual(
           "0",
@@ -521,14 +521,14 @@ namespace Test
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-            (double)0.99).AsNumber().ToEInteger().ToString();
+            0.99).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "0",
           stringTemp);
       }
       {
         string stringTemp =
-          ToObjectTest.TestToFromObjectRoundTrip((double)0.0000000000000001)
+          ToObjectTest.TestToFromObjectRoundTrip(0.0000000000000001)
           .AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "0",
@@ -536,7 +536,7 @@ namespace Test
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-            (double)0.5).AsNumber().ToEInteger().ToString();
+            0.5).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "0",
           stringTemp);
@@ -544,7 +544,7 @@ namespace Test
       {
         string stringTemp =
           ToObjectTest.TestToFromObjectRoundTrip(
-            (double)1.5).AsNumber().ToEInteger()
+            1.5).AsNumber().ToEInteger()
           .ToString();
         Assert.AreEqual(
           "1",
@@ -552,7 +552,7 @@ namespace Test
       }
       {
         string stringTemp = ToObjectTest.TestToFromObjectRoundTrip(
-            (double)2.5).AsNumber().ToEInteger().ToString();
+            2.5).AsNumber().ToEInteger().ToString();
         Assert.AreEqual(
           "2",
           stringTemp);
@@ -567,7 +567,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(Single.PositiveInfinity)
         .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
@@ -582,7 +582,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(Single.NegativeInfinity)
         .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
@@ -597,7 +597,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           Single.NaN).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
@@ -612,7 +612,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(Double.PositiveInfinity)
         .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
@@ -627,7 +627,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
+        _ = ToObjectTest.TestToFromObjectRoundTrip(Double.NegativeInfinity)
         .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
@@ -642,7 +642,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           Double.NaN).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       }
@@ -701,7 +701,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewArray().AsNumber().ToEDecimal();
+        _ = CBORObject.NewArray().AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -715,7 +715,7 @@ namespace Test
       }
       try
       {
-        CBORObject.NewMap().AsNumber().ToEDecimal();
+        _ = CBORObject.NewMap().AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -729,7 +729,7 @@ namespace Test
       }
       try
       {
-        CBORObject.True.AsNumber().ToEDecimal();
+        _ = CBORObject.True.AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -743,7 +743,7 @@ namespace Test
       }
       try
       {
-        CBORObject.False.AsNumber().ToEDecimal();
+        _ = CBORObject.False.AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -757,7 +757,7 @@ namespace Test
       }
       try
       {
-        CBORObject.Undefined.AsNumber().ToEDecimal();
+        _ = CBORObject.Undefined.AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       }
       catch (InvalidOperationException)
@@ -771,7 +771,7 @@ namespace Test
       }
       try
       {
-        ToObjectTest.TestToFromObjectRoundTrip(
+        _ = ToObjectTest.TestToFromObjectRoundTrip(
           String.Empty).AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       }

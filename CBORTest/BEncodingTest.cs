@@ -75,10 +75,10 @@ namespace Test
     public void TestList()
     {
       CBORObject beo = CBORObject.NewArray();
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip("two"));
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip("four"));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip("two"));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip("four"));
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsNumber().ToInt64Checked());
       {

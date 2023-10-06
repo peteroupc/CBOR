@@ -13,11 +13,15 @@ namespace PeterO
     private long[] s = new long[2];
     private object syncRoot = new Object();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="XorShift128Plus"/> class.
+    /// </summary>
     public XorShift128Plus()
     {
       this.Seed();
     }
 
+    /// <inheritdoc/>
     public int GetBytes(byte[] bytes, int offset, int length)
     {
       if (bytes == null)

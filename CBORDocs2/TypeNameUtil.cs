@@ -26,7 +26,7 @@ namespace PeterO.DocGen
         }
         for (var i = types.Count - 1; i >= 0; --i)
         {
-          sb.Append('.').Append(UndecorateTypeName(types[i].Name));
+          _ = sb.Append('.').Append(UndecorateTypeName(types[i].Name));
         }
         return sb.ToString();
       }
@@ -45,17 +45,17 @@ namespace PeterO.DocGen
       var sb = new StringBuilder();
       if (t.IsArray)
       {
-        sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
+        _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("[]");
       }
       else if (t.IsPointer)
       {
-        sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
+        _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append('*');
       }
       else if (t.IsByRef)
       {
-        sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
+        _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append('@');
       }
       else if (t.IsGenericParameter)
@@ -63,11 +63,11 @@ namespace PeterO.DocGen
         var ggastr = Convert.ToString(
           t.GenericParameterPosition,
           System.Globalization.CultureInfo.InvariantCulture);
-        sb.Append(genericMethod ? "``" : "`").Append(ggastr);
+        _ = sb.Append(genericMethod ? "``" : "`").Append(ggastr);
       }
       else
       {
-        sb.Append(t.Namespace);
+        _ = sb.Append(t.Namespace);
         Type nt = t;
         var types = new List<Type>();
         types.Add(t);
@@ -78,30 +78,30 @@ namespace PeterO.DocGen
         }
         for (var i = types.Count - 1; i >= 0; --i)
         {
-          sb.Append('.').Append(UndecorateTypeName(types[i].Name));
+          _ = sb.Append('.').Append(UndecorateTypeName(types[i].Name));
           if (types[i].GetGenericArguments().Length > 0)
           {
             if (param)
             {
-              sb.Append('{');
+              _ = sb.Append('{');
               var first = true;
               foreach (var ga in types[i].GetGenericArguments())
               {
                 if (!first)
                 {
-                  sb.Append(',');
+                  _ = sb.Append(',');
                 }
-                sb.Append(XmlDocTypeName(ga, false, genericMethod));
+                _ = sb.Append(XmlDocTypeName(ga, false, genericMethod));
                 first = false;
               }
-              sb.Append('}');
+              _ = sb.Append('}');
             }
             else
             {
               var ggastr = Convert.ToString(
                 types[i].GetGenericArguments().Length,
                 System.Globalization.CultureInfo.InvariantCulture);
-              sb.Append('`').Append(ggastr);
+              _ = sb.Append('`').Append(ggastr);
             }
           }
         }
@@ -123,18 +123,18 @@ namespace PeterO.DocGen
           .Append(cons.IsStatic ? ".#cctor" : ".#ctor");
         if (cons.GetParameters().Length > 0)
         {
-          msb.Append('(');
+          _ = msb.Append('(');
           var first = true;
           foreach (var p in cons.GetParameters())
           {
             if (!first)
             {
-              msb.Append(',');
+              _ = msb.Append(',');
             }
-            msb.Append(XmlDocTypeName(p.ParameterType, true));
+            _ = msb.Append(XmlDocTypeName(p.ParameterType, true));
             first = false;
           }
-          msb.Append(')');
+          _ = msb.Append(')');
         }
         return msb.ToString();
       }
@@ -148,26 +148,26 @@ namespace PeterO.DocGen
         bool genericMethod = gga > 0;
         if (genericMethod)
         {
-          msb.Append("``");
+          _ = msb.Append("``");
           var ggastr = Convert.ToString(
             gga,
             System.Globalization.CultureInfo.InvariantCulture);
-          msb.Append(ggastr);
+          _ = msb.Append(ggastr);
         }
         if (mi.GetParameters().Length > 0)
         {
-          msb.Append('(');
+          _ = msb.Append('(');
           var first = true;
           foreach (var p in mi.GetParameters())
           {
             if (!first)
             {
-              msb.Append(',');
+              _ = msb.Append(',');
             }
-            msb.Append(XmlDocTypeName(p.ParameterType, true, genericMethod));
+            _ = msb.Append(XmlDocTypeName(p.ParameterType, true, genericMethod));
             first = false;
           }
-          msb.Append(')');
+          _ = msb.Append(')');
         }
         if (mi.Name.Equals("op_Explicit", StringComparison.Ordinal) ||
 mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
@@ -175,7 +175,7 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
           var rt = mi.ReturnType;
           if (rt != null)
           {
-            msb.Append('~').Append(XmlDocTypeName(rt, true, genericMethod));
+            _ = msb.Append('~').Append(XmlDocTypeName(rt, true, genericMethod));
           }
         }
         return msb.ToString();
@@ -188,18 +188,18 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
           .Append(pi.Name);
         if (pi.GetIndexParameters().Length > 0)
         {
-          msb.Append('(');
+          _ = msb.Append('(');
           var first = true;
           foreach (var p in pi.GetIndexParameters())
           {
             if (!first)
             {
-              msb.Append(',');
+              _ = msb.Append(',');
             }
-            msb.Append(XmlDocTypeName(p.ParameterType, true));
+            _ = msb.Append(XmlDocTypeName(p.ParameterType, true));
             first = false;
           }
-          msb.Append(')');
+          _ = msb.Append(')');
         }
         return msb.ToString();
       }

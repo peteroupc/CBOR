@@ -13,7 +13,7 @@ namespace Test
       var tm = new CBORTypeMapper();
       try
       {
-        tm.AddTypeName(null);
+        _ = tm.AddTypeName(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -27,7 +27,7 @@ namespace Test
       }
       try
       {
-        tm.AddTypeName(String.Empty);
+        _ = tm.AddTypeName(String.Empty);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -41,7 +41,7 @@ namespace Test
       }
       try
       {
-        tm.AddTypeName("System.Uri");
+        _ = tm.AddTypeName("System.Uri");
       }
       catch (Exception ex)
       {
@@ -56,7 +56,7 @@ namespace Test
       var tm = new CBORTypeMapper();
       try
       {
-        tm.AddTypePrefix(null);
+        _ = tm.AddTypePrefix(null);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentNullException)
@@ -70,7 +70,7 @@ namespace Test
       }
       try
       {
-        tm.AddTypePrefix(String.Empty);
+        _ = tm.AddTypePrefix(String.Empty);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -84,7 +84,7 @@ namespace Test
       }
       try
       {
-        tm.AddTypePrefix("System.Uri");
+        _ = tm.AddTypePrefix("System.Uri");
       }
       catch (Exception ex)
       {

@@ -85,7 +85,7 @@ namespace PeterO.Cbor
     {
       int c;
       this.sb = this.sb ?? new StringBuilder();
-      this.sb.Remove(0, this.sb.Length);
+      _ = this.sb.Remove(0, this.sb.Length);
       while (true)
       {
         c = this.ReadChar();
@@ -103,22 +103,22 @@ namespace PeterO.Cbor
               case '/':
               case '\"':
                 // Slash is now allowed to be escaped under RFC 8259
-                this.sb.Append((char)c);
+                _ = this.sb.Append((char)c);
                 break;
               case 'b':
-                this.sb.Append('\b');
+                _ = this.sb.Append('\b');
                 break;
               case 'f':
-                this.sb.Append('\f');
+                _ = this.sb.Append('\f');
                 break;
               case 'n':
-                this.sb.Append('\n');
+                _ = this.sb.Append('\n');
                 break;
               case 'r':
-                this.sb.Append('\r');
+                _ = this.sb.Append('\r');
                 break;
               case 't':
-                this.sb.Append('\t');
+                _ = this.sb.Append('\t');
                 break;
               case 'u':
                 { // Unicode escape
@@ -151,7 +151,7 @@ namespace PeterO.Cbor
                   if ((c & 0xf800) != 0xd800)
                   {
                     // Non-surrogate
-                    this.sb.Append((char)c);
+                    _ = this.sb.Append((char)c);
                   }
                   else if ((c & 0xfc00) == 0xd800)
                   {
@@ -191,8 +191,8 @@ namespace PeterO.Cbor
                     }
                     else
                     {
-                      this.sb.Append((char)c);
-                      this.sb.Append((char)c2);
+                      _ = this.sb.Append((char)c);
+                      _ = this.sb.Append((char)c2);
                     }
                   }
                   else
@@ -218,13 +218,13 @@ namespace PeterO.Cbor
               // in the stream
               if ((c >> 16) == 0)
               {
-                this.sb.Append((char)c);
+                _ = this.sb.Append((char)c);
               }
               else
               {
-                this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
+                _ = this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) |
                     0xd800));
-                this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
+                _ = this.sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
               }
               break;
             }
@@ -243,13 +243,14 @@ namespace PeterO.Cbor
       {
         this.RaiseError("JSON number can't be parsed.");
       }
-      int cval = -(c - '0');
+
+      _ = -(c - '0');
       int cstart = c;
       c = this.ReadChar();
       this.sb = this.sb ?? new StringBuilder();
-      this.sb.Remove(0, this.sb.Length);
-      this.sb.Append('-');
-      this.sb.Append((char)cstart);
+      _ = this.sb.Remove(0, this.sb.Length);
+      _ = this.sb.Append('-');
+      _ = this.sb.Append((char)cstart);
       var charbuf = new char[32];
       var charbufptr = 0;
       while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
@@ -258,14 +259,14 @@ namespace PeterO.Cbor
         charbuf[charbufptr++] = (char)c;
         if (charbufptr >= 32)
         {
-          this.sb.Append(charbuf, 0, 32);
+          _ = this.sb.Append(charbuf, 0, 32);
           charbufptr = 0;
         }
         c = this.ReadChar();
       }
       if (charbufptr > 0)
       {
-        this.sb.Append(charbuf, 0, charbufptr);
+        _ = this.sb.Append(charbuf, 0, charbufptr);
       }
       // DebugUtility.Log("--nega=" + sw.ElapsedMilliseconds + " ms");
       // check if character can validly appear after a JSON number
@@ -343,8 +344,8 @@ namespace PeterO.Cbor
         case 't':
           {
             // Parse true
-            if ((c = this.ReadChar()) != 'r' || (c = this.ReadChar()) != 'u' ||
-              (c = this.ReadChar()) != 'e')
+            if ((_ = this.ReadChar()) != 'r' || (_ = this.ReadChar()) != 'u' ||
+              (_ = this.ReadChar()) != 'e')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -368,8 +369,8 @@ namespace PeterO.Cbor
         case 'f':
           {
             // Parse false
-            if ((c = this.ReadChar()) != 'a' || (c = this.ReadChar()) != 'l' ||
-              (c = this.ReadChar()) != 's' || (c = this.ReadChar()) != 'e')
+            if ((_ = this.ReadChar()) != 'a' || (_ = this.ReadChar()) != 'l' ||
+              (_ = this.ReadChar()) != 's' || (_ = this.ReadChar()) != 'e')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -393,8 +394,8 @@ namespace PeterO.Cbor
         case 'n':
           {
             // Parse null
-            if ((c = this.ReadChar()) != 'u' || (c = this.ReadChar()) != 'l' ||
-              (c = this.ReadChar()) != 'l')
+            if ((_ = this.ReadChar()) != 'u' || (_ = this.ReadChar()) != 'l' ||
+              (_ = this.ReadChar()) != 'l')
             {
               this.RaiseError("Value can't be parsed.");
             }
@@ -452,7 +453,7 @@ namespace PeterO.Cbor
                 // Leading zero followed by any digit is not allowed
                 this.RaiseError("JSON number can't be parsed.");
               }
-              cval = (cval * 10) + (int)(c - '0');
+              cval = (cval * 10) + (c - '0');
               c = this.ReadChar();
               if (c >= '0' && c <= '9')
               {
@@ -462,7 +463,7 @@ namespace PeterO.Cbor
                 ctmp[1] = csecond;
                 while (digits < 9 && (c >= '0' && c <= '9'))
                 {
-                  cval = (cval * 10) + (int)(c - '0');
+                  cval = (cval * 10) + (c - '0');
                   ctmp[digits++] = c;
                   c = this.ReadChar();
                 }
@@ -470,10 +471,10 @@ namespace PeterO.Cbor
                 {
                   // Not an all-digit number, or too long
                   this.sb = this.sb ?? new StringBuilder();
-                  this.sb.Remove(0, this.sb.Length);
+                  _ = this.sb.Remove(0, this.sb.Length);
                   for (var vi = 0; vi < digits; ++vi)
                   {
-                    this.sb.Append((char)ctmp[vi]);
+                    _ = this.sb.Append((char)ctmp[vi]);
                   }
                 }
                 else
@@ -493,16 +494,16 @@ namespace PeterO.Cbor
               else
               {
                 this.sb = this.sb ?? new StringBuilder();
-                this.sb.Remove(0, this.sb.Length);
-                this.sb.Append((char)cstart);
-                this.sb.Append((char)csecond);
+                _ = this.sb.Remove(0, this.sb.Length);
+                _ = this.sb.Append((char)cstart);
+                _ = this.sb.Append((char)csecond);
               }
             }
             else
             {
               this.sb = this.sb ?? new StringBuilder();
-              this.sb.Remove(0, this.sb.Length);
-              this.sb.Append((char)cstart);
+              _ = this.sb.Remove(0, this.sb.Length);
+              _ = this.sb.Append((char)cstart);
             }
             if (needObj)
             {
@@ -515,14 +516,14 @@ namespace PeterO.Cbor
                 charbuf[charbufptr++] = (char)c;
                 if (charbufptr >= 32)
                 {
-                  this.sb.Append(charbuf, 0, 32);
+                  _ = this.sb.Append(charbuf, 0, 32);
                   charbufptr = 0;
                 }
                 c = this.ReadChar();
               }
               if (charbufptr > 0)
               {
-                this.sb.Append(charbuf, 0, charbufptr);
+                _ = this.sb.Append(charbuf, 0, charbufptr);
               }
               // check if character can validly appear after a JSON number
               if (c != ',' && c != ']' && c != '}' && c != -1 &&
@@ -704,7 +705,7 @@ namespace PeterO.Cbor
           // A record separator was seen, so
           // another JSON text follows
           cj.ResetJSONSequenceMode();
-          cj.SkipRecordSeparators(nextChar, true);
+          _ = cj.SkipRecordSeparators(nextChar, true);
           if (nextChar[0] < 0)
           {
             // Rest of stream had only record separators, so we found
@@ -714,7 +715,7 @@ namespace PeterO.Cbor
           }
         }
       }
-      return (CBORObject[])list.ToArray();
+      return list.ToArray();
     }
 
     private CBORObject ParseJSONObject(int depth)

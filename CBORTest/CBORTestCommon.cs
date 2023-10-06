@@ -62,7 +62,7 @@ ef.Exponent.CompareTo(20000) <= 0)
     public static CBORObject RandomNumber(IRandomGenExtended rand, bool
 lowExponent)
     {
-      object o = null;
+      object o;
       switch (rand.GetInt32(6))
       {
         case 0:
@@ -95,7 +95,7 @@ lowExponent)
 
     public static CBORObject RandomNumberOrRational(IRandomGenExtended rand)
     {
-      object o = null;
+      object o;
       switch (rand.GetInt32(7))
       {
         case 0:
@@ -171,7 +171,7 @@ rand)
       IRandomGenExtended rand,
       int depth)
     {
-      var tag = 0;
+      int tag;
       if (rand.GetInt32(2) == 0)
       {
         int[] tagselection = {
@@ -217,17 +217,17 @@ rand)
         {
           cbor = CBORObject.NewArray();
           object o = RandomObjects.RandomSmallIntegral(rand);
-          cbor.Add(o);
+          _ = cbor.Add(o);
           o = RandomObjects.RandomEInteger(rand);
-          cbor.Add(o);
+          _ = cbor.Add(o);
         }
         else if (tag == 30)
         {
           cbor = CBORObject.NewArray();
           object o = RandomObjects.RandomSmallIntegral(rand);
-          cbor.Add(o);
+          _ = cbor.Add(o);
           o = RandomObjects.RandomEInteger(rand);
-          cbor.Add(o);
+          _ = cbor.Add(o);
         }
         else
         {
@@ -245,7 +245,7 @@ depth)
       CBORObject cborRet = CBORObject.NewArray();
       for (var i = 0; i < count; ++i)
       {
-        cborRet.Add(RandomCBORObject(rand, depth + 1));
+        _ = cborRet.Add(RandomCBORObject(rand, depth + 1));
       }
       return cborRet;
     }

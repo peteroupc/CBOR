@@ -10,6 +10,10 @@ namespace Test
     private readonly Test.DelayingStream ms;
     private readonly int maxSize;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LimitedMemoryStream"/> class.
+    /// </summary>
+    /// <param name="maxSize"></param>
     public LimitedMemoryStream(int maxSize)
     {
       if (maxSize < 0)
@@ -26,6 +30,7 @@ namespace Test
       this.ms.Dispose();
     }
 
+    /// <inheritdoc/>
     public override long Length
     {
       get
@@ -34,11 +39,13 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override long Seek(long pos, SeekOrigin origin)
     {
       throw new NotSupportedException();
     }
 
+    /// <inheritdoc/>
     public override void SetLength(long len)
     {
       if (len > this.maxSize)
@@ -48,6 +55,7 @@ namespace Test
       this.ms.SetLength(len);
     }
 
+    /// <inheritdoc/>
     public override long Position
     {
       get
@@ -61,6 +69,7 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override bool CanRead
     {
       get
@@ -69,6 +78,7 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override bool CanSeek
     {
       get
@@ -77,6 +87,7 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override bool CanWrite
     {
       get
@@ -85,16 +96,19 @@ namespace Test
       }
     }
 
+    /// <inheritdoc/>
     public override int Read(byte[] bytes, int offset, int count)
     {
       throw new NotSupportedException();
     }
 
+    /// <inheritdoc/>
     public override void Flush()
     {
       this.ms.Flush();
     }
 
+    /// <inheritdoc/>
     public override void Write(byte[] bytes, int offset, int count)
     {
       if (this.ms.Position + count > this.maxSize)
@@ -104,6 +118,7 @@ namespace Test
       this.ms.Write(bytes, offset, count);
     }
 
+    /// <inheritdoc/>
     public override void WriteByte(byte c)
     {
       if (this.ms.Position >= this.maxSize)

@@ -305,13 +305,13 @@ namespace PeterO.Cbor
           return false;
         }
         EInteger eivalue = EInteger.FromString(this.refValue);
-        int icount = ((CBORObject)this.jsonobj).Count;
+        int icount = this.jsonobj.Count;
         return eivalue.Sign >= 0 &&
           eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
       }
       else if (this.jsonobj.Type == CBORType.Map)
       {
-        return ((CBORObject)this.jsonobj).ContainsKey(this.refValue);
+        return this.jsonobj.ContainsKey(this.refValue);
       }
       else
       {
@@ -329,10 +329,10 @@ namespace PeterO.Cbor
       {
         if (this.refValue.Equals("-", StringComparison.Ordinal))
         {
-          return ((CBORObject)this.jsonobj).Count;
+          return this.jsonobj.Count;
         }
         EInteger value = EInteger.FromString(this.refValue);
-        int icount = ((CBORObject)this.jsonobj).Count;
+        int icount = this.jsonobj.Count;
         return (value.Sign < 0) ? (-1) :
 ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
 
@@ -361,11 +361,11 @@ namespace PeterO.Cbor
         // Root always exists
         return this.jsonobj;
       }
-      CBORObject tmpcbor = null;
+      CBORObject tmpcbor;
       if (this.jsonobj.Type == CBORType.Array)
       {
         int index = this.GetIndex();
-        if (index >= 0 && index < ((CBORObject)this.jsonobj).Count)
+        if (index >= 0 && index < this.jsonobj.Count)
         {
           tmpcbor = this.jsonobj;
           return tmpcbor[index];
@@ -483,17 +483,17 @@ namespace PeterO.Cbor
         return str;
       }
       var sb = new StringBuilder();
-      sb.Append(str.Substring(0, j));
-      sb.Append(srep);
+      _ = sb.Append(str.Substring(0, j));
+      _ = sb.Append(srep);
       for (int i = j + 1; i < str.Length; ++i)
       {
         if (str[i] == c)
         {
-          sb.Append(srep);
+          _ = sb.Append(srep);
         }
         else
         {
-          sb.Append(str[i]);
+          _ = sb.Append(str[i]);
         }
       }
       return sb.ToString();
@@ -508,7 +508,7 @@ namespace PeterO.Cbor
     {
       if (root.Type == CBORType.Map)
       {
-        var rootObj = (CBORObject)root;
+        var rootObj = root;
         if (rootObj.ContainsKey(keyToFind))
         {
           // Key found in this object,
@@ -519,7 +519,7 @@ namespace PeterO.Cbor
           // if necessary
           if (remove)
           {
-            rootObj.Remove(CBORObject.FromObject(keyToFind));
+            _ = rootObj.Remove(CBORObject.FromObject(keyToFind));
           }
         }
         // Search the key's values

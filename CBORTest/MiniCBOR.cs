@@ -89,15 +89,15 @@ count);
       value &= 0x7fff;
       if (value >= 0x7c00)
       {
-        return ToSingle((int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
+        return ToSingle((0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
       }
       if (value > 0x400)
       {
-        return ToSingle((int)((value + 0x1c000) << 13) | negvalue);
+        return ToSingle((value + 0x1c000) << 13 | negvalue);
       }
       if ((value & 0x400) == value)
       {
-        return ToSingle((int)((value == 0) ? 0 : 0x38800000) | negvalue);
+        return ToSingle(((value == 0) ? 0 : 0x38800000) | negvalue);
       }
       else
       {
@@ -134,7 +134,7 @@ count);
         // Skip tags until a tag character is no longer read
         if (b == 0xd8)
         {
-          stream.ReadByte();
+          _ = stream.ReadByte();
         }
         else if (b == 0xd9)
         {
@@ -235,9 +235,9 @@ count);
       {
         var bytes = new byte[2];
         ReadHelper(stream, bytes, 0, bytes.Length);
-        int b = ((int)bytes[0]) & 0xff;
+        int b = bytes[0] & 0xff;
         b <<= 8;
-        b |= ((int)bytes[1]) & 0xff;
+        b |= bytes[1] & 0xff;
         return (headByte != 0x39) ? b : -1 - b;
       }
       if (kind == 0x1a || kind == 0x3a)
@@ -273,10 +273,8 @@ count);
           b <<= 8;
           b |= ((long)bytes[1]) & 0xff;
           b <<= 8;
-          b |= ((long)bytes[2]) & 0xff;
-          b <<= 8;
-          b |= ((long)bytes[3]) & 0xff;
-          b <<= 8;
+          _ = ((long)bytes[2]) & 0xff;
+          _ = ((long)bytes[3]) & 0xff;
         }
         b = ((long)bytes[4]) & 0xff;
         b <<= 8;
@@ -302,22 +300,22 @@ count);
         // Half-precision
         var bytes = new byte[2];
         ReadHelper(stream, bytes, 0, bytes.Length);
-        b = ((int)bytes[0]) & 0xff;
+        b = bytes[0] & 0xff;
         b <<= 8;
-        b |= ((int)bytes[1]) & 0xff;
+        b |= bytes[1] & 0xff;
         return (double)HalfPrecisionToSingle(b);
       }
       if (headByte == 0xfa)
       {
         var bytes = new byte[4];
         ReadHelper(stream, bytes, 0, bytes.Length);
-        b = ((int)bytes[0]) & 0xff;
+        b = bytes[0] & 0xff;
         b <<= 8;
-        b |= ((int)bytes[1]) & 0xff;
+        b |= bytes[1] & 0xff;
         b <<= 8;
-        b |= ((int)bytes[2]) & 0xff;
+        b |= bytes[2] & 0xff;
         b <<= 8;
-        b |= ((int)bytes[3]) & 0xff;
+        b |= bytes[3] & 0xff;
         return (double)ToSingle(b);
       }
       if (headByte == 0xfb)
@@ -362,18 +360,18 @@ count);
       int b = stream.ReadByte();
       if (b >= 0x00 && b < 0x18)
       {
-        return (double)b;
+        return b;
       }
       if (b >= 0x20 && b < 0x38)
       {
-        return (double)(-1 - (b & 0x1f));
+        return -1 - (b & 0x1f);
       }
       while ((b >> 5) == 6)
       {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8)
         {
-          stream.ReadByte();
+          _ = stream.ReadByte();
         }
         else if (b == 0xd9)
         {
@@ -395,11 +393,11 @@ count);
       }
       if (b >= 0x00 && b < 0x18)
       {
-        return (double)b;
+        return b;
       }
       if (b >= 0x20 && b < 0x38)
       {
-        return (double)(-1 - (b & 0x1f));
+        return -1 - (b & 0x1f);
       }
       if (b == 0xf9 || b == 0xfa || b == 0xfb)
       {
@@ -409,7 +407,7 @@ count);
       if (b == 0x18 || b == 0x19 || b == 0x1a || b == 0x38 ||
         b == 0x39 || b == 0x3a)
       { // covers headbytes 0x18-0x1a and 0x38-0x3A
-        return (double)ReadInteger(stream, b, false);
+        return ReadInteger(stream, b, false);
       }
       throw new IOException("Not a double");
     }
@@ -445,7 +443,7 @@ count);
         // Skip tags until a tag character is no longer read
         if (b == 0xd8)
         {
-          stream.ReadByte();
+          _ = stream.ReadByte();
         }
         else if (b == 0xd9)
         {

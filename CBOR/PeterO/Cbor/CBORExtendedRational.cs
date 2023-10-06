@@ -171,7 +171,7 @@ namespace PeterO.Cbor
       // A rational number is integral if the remainder
       // of the numerator divided by the denominator is 0
       EInteger denom = ef.Denominator;
-      EInteger rem = ef.Numerator % (EInteger)denom;
+      EInteger rem = ef.Numerator % denom;
       return rem.IsZero;
     }
 

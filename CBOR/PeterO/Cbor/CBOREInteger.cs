@@ -149,7 +149,7 @@ namespace PeterO.Cbor
     public object Negate(object obj)
     {
       var bigobj = (EInteger)obj;
-      bigobj = -(EInteger)bigobj;
+      bigobj = -bigobj;
       return bigobj;
     }
 

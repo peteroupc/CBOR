@@ -41,7 +41,7 @@ namespace PeterO.DocGen
               assemblyXml);
       }
       var asm = Assembly.LoadFrom(assemblyFile);
-      Directory.CreateDirectory(directory);
+      _ = Directory.CreateDirectory(directory);
       try
       {
         var xmldoc = new XmlDoc(assemblyXml);

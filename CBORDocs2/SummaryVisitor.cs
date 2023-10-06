@@ -45,12 +45,12 @@ DocVisitor.GetTypeID(type) + ".md)";
     {
       var sb = new StringBuilder();
       string finalString;
-      sb.Append("## API Documentation\r\n\r\n");
+      _ = sb.Append("## API Documentation\r\n\r\n");
       foreach (var key in this.docs.Keys)
       {
         finalString = this.docs[key].Builder.ToString();
-        sb.Append(" * " + this.docs[key].TypeLink + " - ");
-        sb.Append(finalString + "\n");
+        _ = sb.Append(" * " + this.docs[key].TypeLink + " - ");
+        _ = sb.Append(finalString + "\n");
       }
       finalString = DocGenUtil.NormalizeLines(
               sb.ToString());
@@ -99,7 +99,7 @@ currentType.IsPublic))
       }
       else
       {
-        this.docs[typeFullName].Builder.Append(summary)
+        _ = this.docs[typeFullName].Builder.Append(summary)
             .Append("\r\n");
       }
     }

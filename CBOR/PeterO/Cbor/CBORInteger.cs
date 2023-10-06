@@ -27,7 +27,7 @@ namespace PeterO.Cbor
 
     public double AsDouble(object obj)
     {
-      return (double)(long)obj;
+      return (long)obj;
     }
 
     public EDecimal AsEDecimal(object obj)
@@ -62,7 +62,7 @@ namespace PeterO.Cbor
 
     public float AsSingle(object obj)
     {
-      return (float)(long)obj;
+      return (long)obj;
     }
 
     public bool CanFitInDouble(object obj)
