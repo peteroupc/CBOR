@@ -184,29 +184,23 @@ ICBORToFromConverter<DateTime> {
     /// cannot be less than -1439 or greater than 1439. For tags 0 and 1,
     /// this value is always 0.</item></list>.</param>
     /// <returns>Either <c>true</c> if the method is successful, or
-    /// <c>false</c> otherwise.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='year'/> or <paramref name='lesserFields'/> is null, or
-    /// contains fewer elements than required.</exception>
+    /// <c>false</c> otherwise. Returns <c>false</c> if the parameter
+    /// <paramref name='year'/> or <paramref name='lesserFields'/> is null,
+    /// or contains fewer elements than required.</returns>
     public bool TryGetDateTimeFields(CBORObject obj, EInteger[] year, int[]
       lesserFields) {
-      // TODO: In next major version, return false instead of throwing an
-      // exception if the arguments are invalid, to conform to convention
-      // with Try* methods in DotNet.
       if (year == null) {
-        throw new ArgumentNullException(nameof(year));
+        return false;
       }
       EInteger[] outYear = year;
       if (outYear.Length < 1) {
-        throw new ArgumentException("\"year\" + \"'s length\" (" +
-          outYear.Length + ") is not greater or equal to 1");
+        return false;
       }
       if (lesserFields == null) {
-        throw new ArgumentNullException(nameof(lesserFields));
+        return false;
       }
       if (lesserFields.Length < 7) {
-        throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
-          lesserFields.Length + ") is not greater or equal to 7");
+        return false;
       }
       string str = this.TryGetDateTimeFieldsInternal(
           obj,
@@ -233,19 +227,19 @@ ICBORToFromConverter<DateTime> {
         return "Object is null";
       }
       if (year == null) {
-        throw new ArgumentNullException(nameof(year));
+        return "Year is null";
       }
       EInteger[] outYear = year;
       if (outYear.Length < 1) {
-        throw new ArgumentException("\"year\" + \"'s length\" (" +
-          outYear.Length + ") is not greater or equal to 1");
+        return "\"year\" + \"'s length\" (" +
+          outYear.Length + ") is not greater or equal to 1";
       }
       if (lesserFields == null) {
-        throw new ArgumentNullException(nameof(lesserFields));
+        return "Lesser fields is null";
       }
       if (lesserFields.Length < 7) {
-        throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
-          lesserFields.Length + ") is not greater or equal to 7");
+        return "\"lesserFields\" + \"'s length\" (" +
+          lesserFields.Length + ") is not greater or equal to 7";
       }
       if (this.convType == ConversionType.UntaggedNumber) {
         if (obj.IsTagged) {

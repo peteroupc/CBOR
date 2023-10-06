@@ -223,8 +223,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
         if (!haveDecimalPoint && !haveExponent) {
           EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
           if (preserveNegativeZero && ei.IsZero && negative) {
-            // TODO: In next major version, change to EDecimal.NegativeZero
-            return CBORObject.FromFloatingPointBits(0x8000, 2);
+            return CBORObject.FromObject(EDecimal.NegativeZero);
           }
           return CBORObject.FromObject(ei);
         }
@@ -277,10 +276,8 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
             endPos - initialOffset);
         if (ed.IsZero && negative) {
           if (ed.Exponent.IsZero) {
-            // TODO: In next major version, use EDecimal
-            // for preserveNegativeZero
             return preserveNegativeZero ?
-              CBORObject.FromFloatingPointBits(0x8000, 2) :
+              CBORObject.FromObject(EDecimal.NegativeZero) :
               CBORObject.FromObject(0);
           } else if (!preserveNegativeZero) {
             return CBORObject.FromObject(ed.Negate());

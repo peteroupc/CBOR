@@ -4297,10 +4297,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       return !this.IsFalse && !this.IsNull && !this.IsUndefined;
     }
 
-    internal byte AsByteLegacy() {
-      return (byte)this.AsInt32(0, 255);
-    }
-
     /// <summary>Converts this object to a 64-bit floating point
     /// number.</summary>
     /// <returns>The closest 64-bit floating point number to this object.
