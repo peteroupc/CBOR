@@ -1,35 +1,47 @@
 using System;
 using System.IO;
-using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 
-namespace Test {
+namespace Test
+{
   [TestFixture]
-  public class BEncodingTest {
-    private static CBORObject EncodingFromBytes(byte[] b) {
-      try {
-        using (var s = new Test.DelayingStream(b)) {
+  public class BEncodingTest
+  {
+    private static CBORObject EncodingFromBytes(byte[] b)
+    {
+      try
+      {
+        using (var s = new Test.DelayingStream(b))
+        {
           return BEncoding.Read(s);
         }
-      } catch (IOException ex) {
+      }
+      catch (IOException ex)
+      {
         throw new CBORException(String.Empty, ex);
       }
     }
 
-    private static byte[] EncodingToBytes(CBORObject b) {
-      try {
-        using (var ms = new Test.DelayingStream()) {
+    private static byte[] EncodingToBytes(CBORObject b)
+    {
+      try
+      {
+        using (var ms = new Test.DelayingStream())
+        {
           BEncoding.Write(b, ms);
           return ms.ToArray();
         }
-      } catch (IOException ex) {
+      }
+      catch (IOException ex)
+      {
         throw new CBORException(String.Empty, ex);
       }
     }
 
-    public static void DoTestLong(long value) {
+    public static void DoTestLong(long value)
+    {
       String b = "i" + TestCommon.LongToString(value) + "e";
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
             false));
@@ -38,7 +50,8 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
 
-    public static void DoTestString(String value) {
+    public static void DoTestString(String value)
+    {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
             false));
@@ -48,7 +61,8 @@ namespace Test {
     }
 
     [Test]
-    public void TestLong() {
+    public void TestLong()
+    {
       DoTestLong(0);
       DoTestLong(-1);
       DoTestLong(Int32.MinValue);
@@ -58,7 +72,8 @@ namespace Test {
     }
 
     [Test]
-    public void TestList() {
+    public void TestList()
+    {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
       beo.Add(ToObjectTest.TestToFromObjectRoundTrip("two"));
@@ -99,7 +114,8 @@ namespace Test {
     }
 
     [Test]
-    public void TestDictionary() {
+    public void TestDictionary()
+    {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = ToObjectTest.TestToFromObjectRoundTrip(1);
       beo["one"] = ToObjectTest.TestToFromObjectRoundTrip("two");
@@ -140,7 +156,8 @@ namespace Test {
     }
 
     [Test]
-    public void TestString() {
+    public void TestString()
+    {
       DoTestString(String.Empty);
       DoTestString(" ");
       DoTestString("test");

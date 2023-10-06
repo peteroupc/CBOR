@@ -1,7 +1,7 @@
-using System;
-
-namespace PeterO {
-  public interface IRandomGenExtended : IRandomGen {
+namespace PeterO
+{
+  public interface IRandomGenExtended : IRandomGen
+  {
     int GetInt32(int maxExclusive);
 
     long GetInt64(long maxExclusive);

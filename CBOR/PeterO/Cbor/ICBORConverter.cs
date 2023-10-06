@@ -6,13 +6,14 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>Interface implemented by classes that convert objects of
   /// arbitrary types to CBOR objects.</summary>
   /// <typeparam name='T'>Type to convert to a CBOR object.</typeparam>
-  public interface ICBORConverter<T> {
+  public interface ICBORConverter<T>
+  {
     /// <summary>Converts an object to a CBOR object.</summary>
     /// <param name='obj'>An object to convert to a CBOR object.</param>
     /// <returns>A CBOR object.</returns>

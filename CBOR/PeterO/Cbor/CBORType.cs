@@ -8,9 +8,11 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>Represents a type that a CBOR object can have.</summary>
-  public enum CBORType {
+  public enum CBORType
+  {
     /// <summary>This property is no longer used.</summary>
     [Obsolete("Since version 4.0, CBORObject.Type no longer returns this" +
 "\u0020value for any CBOR object - this is a breaking change from " +

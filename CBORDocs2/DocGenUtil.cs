@@ -2,10 +2,14 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace PeterO.DocGen {
-  public static class DocGenUtil {
-    public static string HtmlEscape(string str) {
-      if (str == null) {
+namespace PeterO.DocGen
+{
+  public static class DocGenUtil
+  {
+    public static string HtmlEscape(string str)
+    {
+      if (str == null)
+      {
         return str;
       }
       str = str.Replace("&", "&amp;");
@@ -16,8 +20,10 @@ namespace PeterO.DocGen {
       return str;
     }
 
-    public static string NormalizeLines(string x) {
-      if (String.IsNullOrEmpty(x)) {
+    public static string NormalizeLines(string x)
+    {
+      if (String.IsNullOrEmpty(x))
+      {
         return x;
       }
       x = Regex.Replace(x, @"[ \t]+(?=[\r\n]|$)", String.Empty);
@@ -28,15 +34,20 @@ namespace PeterO.DocGen {
       return x + "\n";
     }
 
-    public static void FileEdit(string filename, string newString) {
+    public static void FileEdit(string filename, string newString)
+    {
       string oldString = null;
-      try {
+      try
+      {
         oldString = File.ReadAllText(filename);
-      } catch (IOException) {
+      }
+      catch (IOException)
+      {
         oldString = null;
       }
       if (oldString == null || !oldString.Equals(newString,
-  StringComparison.Ordinal)) {
+  StringComparison.Ordinal))
+      {
         File.WriteAllText(filename, newString);
       }
     }

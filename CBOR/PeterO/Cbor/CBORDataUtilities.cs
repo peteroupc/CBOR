@@ -9,65 +9,83 @@ https://creativecommons.org/publicdomain/zero/1.0/
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO;
 using PeterO.Numbers;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>Contains methods useful for reading and writing data, with
   /// a focus on CBOR.</summary>
-  public static class CBORDataUtilities {
+  public static class CBORDataUtilities
+  {
     private const string HexAlphabet = "0123456789ABCDEF";
 
     private const long DoubleNegInfinity = unchecked((long)(0xfffL << 52));
     private const long DoublePosInfinity = unchecked((long)(0x7ffL << 52));
 
-    internal static string ToStringHelper(CBORObject obj, int depth) {
+    internal static string ToStringHelper(CBORObject obj, int depth)
+    {
       StringBuilder sb = null;
       string simvalue = null;
       CBORType type = obj.Type;
       CBORObject curobject;
-      if (obj.IsTagged) {
-        if (sb == null) {
-          if (type == CBORType.TextString) {
+      if (obj.IsTagged)
+      {
+        if (sb == null)
+        {
+          if (type == CBORType.TextString)
+          {
             // The default capacity of StringBuilder may be too small
             // for many strings, so set a suggested capacity
             // explicitly
             string str = obj.AsString();
             sb = new StringBuilder(Math.Min(str.Length, 4096) + 16);
-          } else {
+          }
+          else
+          {
             sb = new StringBuilder();
           }
         }
         // Append opening tags if needed
         curobject = obj;
-        while (curobject.IsTagged) {
+        while (curobject.IsTagged)
+        {
           EInteger ei = curobject.MostOuterTag;
           sb.Append(ei.ToString());
           sb.Append('(');
           curobject = curobject.UntagOne();
         }
       }
-      switch (type) {
+      switch (type)
+      {
         case CBORType.SimpleValue:
           sb = sb ?? new StringBuilder();
-          if (obj.IsUndefined) {
+          if (obj.IsUndefined)
+          {
             sb.Append("undefined");
-          } else if (obj.IsNull) {
+          }
+          else if (obj.IsNull)
+          {
             sb.Append("null");
-          } else {
+          }
+          else
+          {
             sb.Append("simple(");
             int thisItemInt = obj.SimpleValue;
             char c;
-            if (thisItemInt >= 100) {
+            if (thisItemInt >= 100)
+            {
               // NOTE: '0'-'9' have ASCII code 0x30-0x39
               c = (char)(0x30 + ((thisItemInt / 100) % 10));
               sb.Append(c);
             }
-            if (thisItemInt >= 10) {
+            if (thisItemInt >= 10)
+            {
               c = (char)(0x30 + ((thisItemInt / 10) % 10));
               sb.Append(c);
               c = (char)(0x30 + (thisItemInt % 10));
-            } else {
+            }
+            else
+            {
               c = (char)(0x30 + thisItemInt);
             }
             sb.Append(c);
@@ -77,117 +95,143 @@ namespace PeterO.Cbor {
         case CBORType.Boolean:
         case CBORType.Integer:
           simvalue = obj.Untag().ToJSONString();
-          if (sb == null) {
+          if (sb == null)
+          {
             return simvalue;
           }
           sb.Append(simvalue);
           break;
-        case CBORType.FloatingPoint: {
-          long bits = obj.AsDoubleBits();
-          simvalue = bits == DoubleNegInfinity ? "-Infinity" : (
-              bits == DoublePosInfinity ? "Infinity" : (
-                CBORUtilities.DoubleBitsNaN(bits) ? "NaN" :
-obj.Untag().ToJSONString()));
-          if (sb == null) {
-            return simvalue;
-          }
-          sb.Append(simvalue);
-          break;
-        }
-        case CBORType.ByteString: {
-          sb = sb ?? new StringBuilder();
-          sb.Append("h'");
-          byte[] data = obj.GetByteString();
-          int length = data.Length;
-          for (var i = 0; i < length; ++i) {
-            sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
-            sb.Append(HexAlphabet[data[i] & 15]);
-          }
-          sb.Append((char)0x27);
-          break;
-        }
-        case CBORType.TextString: {
-          sb = sb == null ? new StringBuilder() : sb;
-          sb.Append('\"');
-          string ostring = obj.AsString();
-          int length = ostring.Length;
-          for (var i = 0; i < length; ++i) {
-            int cp = DataUtilities.CodePointAt(ostring, i, 0);
-            if (cp >= 0x10000) {
-              sb.Append("\\U");
-              sb.Append(HexAlphabet[(cp >> 20) & 15]);
-              sb.Append(HexAlphabet[(cp >> 16) & 15]);
-              sb.Append(HexAlphabet[(cp >> 12) & 15]);
-              sb.Append(HexAlphabet[(cp >> 8) & 15]);
-              sb.Append(HexAlphabet[(cp >> 4) & 15]);
-              sb.Append(HexAlphabet[cp & 15]);
-              ++i;
-            } else if (cp >= 0x7F || cp < 0x20 || cp == (int)'\\' || cp ==
-(int)'\"') {
-              sb.Append("\\u");
-              sb.Append(HexAlphabet[(cp >> 12) & 15]);
-              sb.Append(HexAlphabet[(cp >> 8) & 15]);
-              sb.Append(HexAlphabet[(cp >> 4) & 15]);
-              sb.Append(HexAlphabet[cp & 15]);
-            } else {
-              sb.Append((char)cp);
+        case CBORType.FloatingPoint:
+          {
+            long bits = obj.AsDoubleBits();
+            simvalue = bits == DoubleNegInfinity ? "-Infinity" : (
+                bits == DoublePosInfinity ? "Infinity" : (
+                  CBORUtilities.DoubleBitsNaN(bits) ? "NaN" :
+  obj.Untag().ToJSONString()));
+            if (sb == null)
+            {
+              return simvalue;
             }
+            sb.Append(simvalue);
+            break;
           }
-          sb.Append('\"');
-          break;
-        }
-        case CBORType.Array: {
-          sb = sb ?? new StringBuilder();
-          var first = true;
-          sb.Append('[');
-          if (depth >= 50) {
-            sb.Append("...");
-          } else {
-            for (var i = 0; i < obj.Count; ++i) {
-              if (!first) {
-                sb.Append(", ");
+        case CBORType.ByteString:
+          {
+            sb = sb ?? new StringBuilder();
+            sb.Append("h'");
+            byte[] data = obj.GetByteString();
+            int length = data.Length;
+            for (var i = 0; i < length; ++i)
+            {
+              sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
+              sb.Append(HexAlphabet[data[i] & 15]);
+            }
+            sb.Append((char)0x27);
+            break;
+          }
+        case CBORType.TextString:
+          {
+            sb = sb == null ? new StringBuilder() : sb;
+            sb.Append('\"');
+            string ostring = obj.AsString();
+            int length = ostring.Length;
+            for (var i = 0; i < length; ++i)
+            {
+              int cp = DataUtilities.CodePointAt(ostring, i, 0);
+              if (cp >= 0x10000)
+              {
+                sb.Append("\\U");
+                sb.Append(HexAlphabet[(cp >> 20) & 15]);
+                sb.Append(HexAlphabet[(cp >> 16) & 15]);
+                sb.Append(HexAlphabet[(cp >> 12) & 15]);
+                sb.Append(HexAlphabet[(cp >> 8) & 15]);
+                sb.Append(HexAlphabet[(cp >> 4) & 15]);
+                sb.Append(HexAlphabet[cp & 15]);
+                ++i;
               }
-              sb.Append(ToStringHelper(obj[i], depth + 1));
-              first = false;
-            }
-          }
-          sb.Append(']');
-          break;
-        }
-        case CBORType.Map: {
-          sb = sb ?? new StringBuilder();
-          var first = true;
-          sb.Append('{');
-          if (depth >= 50) {
-            sb.Append("...");
-          } else {
-            ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
-              obj.Entries;
-            foreach (KeyValuePair<CBORObject, CBORObject> entry
-              in entries) {
-              CBORObject key = entry.Key;
-              CBORObject value = entry.Value;
-              if (!first) {
-                sb.Append(", ");
+              else if (cp >= 0x7F || cp < 0x20 || cp == (int)'\\' || cp ==
+  (int)'\"')
+              {
+                sb.Append("\\u");
+                sb.Append(HexAlphabet[(cp >> 12) & 15]);
+                sb.Append(HexAlphabet[(cp >> 8) & 15]);
+                sb.Append(HexAlphabet[(cp >> 4) & 15]);
+                sb.Append(HexAlphabet[cp & 15]);
               }
-              sb.Append(ToStringHelper(key, depth + 1));
-              sb.Append(": ");
-              sb.Append(ToStringHelper(value, depth + 1));
-              first = false;
+              else
+              {
+                sb.Append((char)cp);
+              }
             }
+            sb.Append('\"');
+            break;
           }
-          sb.Append('}');
-          break;
-        }
-        default: {
-          sb = sb ?? new StringBuilder();
-          sb.Append("???");
-          break;
-        }
+        case CBORType.Array:
+          {
+            sb = sb ?? new StringBuilder();
+            var first = true;
+            sb.Append('[');
+            if (depth >= 50)
+            {
+              sb.Append("...");
+            }
+            else
+            {
+              for (var i = 0; i < obj.Count; ++i)
+              {
+                if (!first)
+                {
+                  sb.Append(", ");
+                }
+                sb.Append(ToStringHelper(obj[i], depth + 1));
+                first = false;
+              }
+            }
+            sb.Append(']');
+            break;
+          }
+        case CBORType.Map:
+          {
+            sb = sb ?? new StringBuilder();
+            var first = true;
+            sb.Append('{');
+            if (depth >= 50)
+            {
+              sb.Append("...");
+            }
+            else
+            {
+              ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
+                obj.Entries;
+              foreach (KeyValuePair<CBORObject, CBORObject> entry
+                in entries)
+              {
+                CBORObject key = entry.Key;
+                CBORObject value = entry.Value;
+                if (!first)
+                {
+                  sb.Append(", ");
+                }
+                sb.Append(ToStringHelper(key, depth + 1));
+                sb.Append(": ");
+                sb.Append(ToStringHelper(value, depth + 1));
+                first = false;
+              }
+            }
+            sb.Append('}');
+            break;
+          }
+        default:
+          {
+            sb = sb ?? new StringBuilder();
+            sb.Append("???");
+            break;
+          }
       }
       // Append closing tags if needed
       curobject = obj;
-      while (curobject.IsTagged) {
+      while (curobject.IsTagged)
+      {
         sb.Append(')');
         curobject = curobject.UntagOne();
       }
@@ -210,7 +254,8 @@ obj.Untag().ToJSONString()));
     /// positive zero if the number is a zero that starts with a minus sign
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the string is null or empty.</returns>
-    public static CBORObject ParseJSONNumber(string str) {
+    public static CBORObject ParseJSONNumber(string str)
+    {
       // TODO: Preserve negative zeros in next major version
       return ParseJSONNumber(str, PreserveNegZeroNo);
     }
@@ -236,7 +281,8 @@ obj.Untag().ToJSONString()));
     /// characters, including spaces.</remarks>
     public static CBORObject ParseJSONNumber(
       string str,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       return String.IsNullOrEmpty(str) ? null :
         ParseJSONNumber(str,
           0,
@@ -275,7 +321,8 @@ obj.Untag().ToJSONString()));
     public static CBORObject ParseJSONNumber(
       string str,
       int offset,
-      int count) {
+      int count)
+    {
       return String.IsNullOrEmpty(str) ? null :
         ParseJSONNumber(str,
           offset,
@@ -285,23 +332,30 @@ obj.Untag().ToJSONString()));
 
     internal static CBORObject ParseSmallNumberAsNegative(
       int digit,
-      JSONOptions options) {
-      #if DEBUG
-      if (digit <= 0) {
+      JSONOptions options)
+    {
+#if DEBUG
+      if (digit <= 0)
+      {
         throw new ArgumentException("digit (" + digit + ") is not greater" +
           "\u0020than 0");
       }
-      #endif
+#endif
 
       if (options != null && options.NumberConversion ==
-        JSONOptions.ConversionMode.Double) {
+        JSONOptions.ConversionMode.Double)
+      {
         return CBORObject.FromFloatingPointBits(
            CBORUtilities.IntegerToDoubleBits(-digit),
            8);
-      } else if (options != null && options.NumberConversion ==
-        JSONOptions.ConversionMode.Decimal128) {
+      }
+      else if (options != null && options.NumberConversion ==
+        JSONOptions.ConversionMode.Decimal128)
+      {
         return CBORObject.FromObject(EDecimal.FromInt32(-digit));
-      } else {
+      }
+      else
+      {
         // NOTE: Assumes digit is greater than zero, so PreserveNegativeZeros is
         // irrelevant
         return CBORObject.FromObject(-digit);
@@ -309,23 +363,30 @@ obj.Untag().ToJSONString()));
     }
 
     internal static CBORObject ParseSmallNumber(int digit, JSONOptions
-      options) {
-      #if DEBUG
-      if (digit < 0) {
+      options)
+    {
+#if DEBUG
+      if (digit < 0)
+      {
         throw new ArgumentException("digit (" + digit + ") is not greater" +
           "\u0020or equal to 0");
       }
-      #endif
+#endif
 
       if (options != null && options.NumberConversion ==
-        JSONOptions.ConversionMode.Double) {
+        JSONOptions.ConversionMode.Double)
+      {
         return CBORObject.FromFloatingPointBits(
            CBORUtilities.IntegerToDoubleBits(digit),
            8);
-      } else if (options != null && options.NumberConversion ==
-        JSONOptions.ConversionMode.Decimal128) {
+      }
+      else if (options != null && options.NumberConversion ==
+        JSONOptions.ConversionMode.Decimal128)
+      {
         return CBORObject.FromObject(EDecimal.FromInt32(digit));
-      } else {
+      }
+      else
+      {
         // NOTE: Assumes digit is nonnegative, so PreserveNegativeZeros is irrelevant
         return CBORObject.FromObject(digit);
       }
@@ -363,7 +424,8 @@ obj.Untag().ToJSONString()));
       string str,
       int offset,
       int count,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       return CBORDataUtilitiesTextString.ParseJSONNumber(
         str,
         offset,
@@ -405,7 +467,8 @@ obj.Untag().ToJSONString()));
       byte[] bytes,
       int offset,
       int count,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       return CBORDataUtilitiesByteArrayString.ParseJSONNumber(
         bytes,
         offset,
@@ -436,7 +499,8 @@ obj.Untag().ToJSONString()));
     /// space characters, including spaces.</remarks>
     public static CBORObject ParseJSONNumber(
       byte[] bytes,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       return (bytes == null || bytes.Length == 0) ? null :
         ParseJSONNumber(bytes,
           0,
@@ -475,7 +539,8 @@ obj.Untag().ToJSONString()));
     public static CBORObject ParseJSONNumber(
       byte[] bytes,
       int offset,
-      int count) {
+      int count)
+    {
       return (bytes == null || bytes.Length == 0) ? null :
         ParseJSONNumber(bytes,
           offset,
@@ -493,7 +558,8 @@ obj.Untag().ToJSONString()));
     /// positive zero if the number is a zero that starts with a minus sign
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the byte sequence is null or empty.</returns>
-    public static CBORObject ParseJSONNumber(byte[] bytes) {
+    public static CBORObject ParseJSONNumber(byte[] bytes)
+    {
       // TODO: Preserve negative zeros in next major version
       return ParseJSONNumber(bytes, PreserveNegZeroNo);
     }
@@ -532,7 +598,8 @@ obj.Untag().ToJSONString()));
       char[] chars,
       int offset,
       int count,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       return CBORDataUtilitiesCharArrayString.ParseJSONNumber(
         chars,
         offset,
@@ -563,7 +630,8 @@ obj.Untag().ToJSONString()));
     /// space characters, including spaces.</remarks>
     public static CBORObject ParseJSONNumber(
       char[] chars,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       return (chars == null || chars.Length == 0) ? null :
         ParseJSONNumber(chars,
           0,
@@ -602,7 +670,8 @@ obj.Untag().ToJSONString()));
     public static CBORObject ParseJSONNumber(
       char[] chars,
       int offset,
-      int count) {
+      int count)
+    {
       return (chars == null || chars.Length == 0) ? null :
         ParseJSONNumber(chars,
           offset,
@@ -621,7 +690,8 @@ obj.Untag().ToJSONString()));
     /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
     /// including if the sequence of <c>char</c> s is null or
     /// empty.</returns>
-    public static CBORObject ParseJSONNumber(char[] chars) {
+    public static CBORObject ParseJSONNumber(char[] chars)
+    {
       // TODO: Preserve negative zeros in next major version
       return ParseJSONNumber(chars, PreserveNegZeroNo);
     }

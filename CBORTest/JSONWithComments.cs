@@ -11,13 +11,14 @@ using System.Collections.Generic;
 using System.Text;
 using PeterO;
 using PeterO.Cbor;
-using PeterO.Numbers;
 
 // A JSON-like parser that supports nonstandard
 // comments before JSON keys, but otherwise supports
 // only the standard JSON format
-namespace Test {
-  internal sealed class JSONWithComments {
+namespace Test
+{
+  internal sealed class JSONWithComments
+  {
     private readonly string jstring;
     private readonly IList<CBORObject> currPointer;
     private readonly JSONOptions options;
@@ -27,37 +28,47 @@ namespace Test {
     private int endPos;
 
     // JSON parsing method
-    private int SkipWhitespaceJSON() {
-      while (this.index < this.endPos) {
+    private int SkipWhitespaceJSON()
+    {
+      while (this.index < this.endPos)
+      {
         char c = this.jstring[this.index++];
-        if (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+        if (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+        {
           return c;
         }
       }
       return -1;
     }
 
-    internal void RaiseError(string str) {
+    internal void RaiseError(string str)
+    {
       throw new CBORException(str + " (approx. offset: " +
         Math.Max(0, this.index - 1) + ")");
     }
 
-    private CBORObject NextJSONString() {
+    private CBORObject NextJSONString()
+    {
       int c;
       int startIndex = this.index;
       int ep = this.endPos;
       string js = this.jstring;
       int idx = this.index;
       var escaped = false;
-      while (true) {
+      while (true)
+      {
         c = idx < ep ? ((int)js[idx++]) & 0xffff : -1;
-        if (c == -1 || c < 0x20) {
+        if (c == -1 || c < 0x20)
+        {
           this.index = idx;
           this.RaiseError("Unterminated string");
-        } else if (c == '"') {
+        }
+        else if (c == '"')
+        {
           int endIndex = idx;
           this.index = idx;
-          if (escaped) {
+          if (escaped)
+          {
             return CBORObject.FromJSONString(js.Substring(
                   startIndex - 1,
                   endIndex - (startIndex - 1)));
@@ -65,7 +76,9 @@ namespace Test {
           return
             CBORObject.FromObject(js.Substring(startIndex,
                 (endIndex - 1) - startIndex));
-        } else if (c == '\\') {
+        }
+        else if (c == '\\')
+        {
           this.index = idx++;
           escaped = true;
         }
@@ -73,23 +86,27 @@ namespace Test {
     }
 
     private CBORObject NextJSONNumber(
-      int[] nextChar) {
+      int[] nextChar)
+    {
       CBORObject obj;
       int numberStartIndex = this.index - 1;
       int numberEndIndex = numberStartIndex;
       int c;
-      while (true) {
+      while (true)
+      {
         c = this.index < this.endPos ? ((int)this.jstring[this.index++]) &
           0xffff : -1;
         if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-            c == 'e' || c == 'E')) {
+            c == 'e' || c == 'E'))
+        {
           numberEndIndex = c < 0 ? this.index : this.index - 1;
           obj = CBORDataUtilities.ParseJSONNumber(
               this.jstring.Substring(
                 numberStartIndex,
                 numberEndIndex - numberStartIndex),
               this.options);
-          if (obj == null) {
+          if (obj == null)
+          {
             this.RaiseError("Invalid JSON number");
           }
           break;
@@ -98,12 +115,16 @@ namespace Test {
       c = numberEndIndex >= this.endPos ? -1 : this.jstring[numberEndIndex];
       // check if character can validly appear after a JSON number
       if (c != ',' && c != ']' && c != '}' && c != -1 &&
-        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+      {
         this.RaiseError("Invalid character after JSON number");
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09))
+      {
         nextChar[0] = c;
-      } else {
+      }
+      else
+      {
         nextChar[0] = this.SkipWhitespaceJSON();
       }
       return obj;
@@ -112,72 +133,85 @@ namespace Test {
     private CBORObject NextJSONValue(
       int firstChar,
       int[] nextChar,
-      int depth) {
+      int depth)
+    {
       int c = firstChar;
       CBORObject obj = null;
-      if (c < 0) {
+      if (c < 0)
+      {
         this.RaiseError("Unexpected end of data");
       }
-      switch (c) {
-        case '"': {
-          // Parse a string
-          obj = this.NextJSONString();
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return obj;
-        }
-        case '{': {
-          // Parse an object
-          obj = this.ParseJSONObject(depth + 1);
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return obj;
-        }
-        case '[': {
-          // Parse an array
-          obj = this.ParseJSONArray(depth + 1);
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return obj;
-        }
-        case 't': {
-          // Parse true
-          if (this.endPos - this.index <= 2 ||
-            (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
-            (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
-            (((int)this.jstring[this.index + 2]) & 0xFF) != 'e') {
-            this.RaiseError("Value can't be parsed.");
+      switch (c)
+      {
+        case '"':
+          {
+            // Parse a string
+            obj = this.NextJSONString();
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return obj;
           }
-          this.index += 3;
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return CBORObject.True;
-        }
-        case 'f': {
-          // Parse false
-          if (this.endPos - this.index <= 3 ||
-            (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
-            (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-            (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
-            (((int)this.jstring[this.index + 3]) & 0xFF) != 'e') {
-            this.RaiseError("Value can't be parsed.");
+        case '{':
+          {
+            // Parse an object
+            obj = this.ParseJSONObject(depth + 1);
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return obj;
           }
-          this.index += 4;
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return CBORObject.False;
-        }
-        case 'n': {
-          // Parse null
-          if (this.endPos - this.index <= 2 ||
-            (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
-            (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
-            (((int)this.jstring[this.index + 2]) & 0xFF) != 'l') {
-            this.RaiseError("Value can't be parsed.");
+        case '[':
+          {
+            // Parse an array
+            obj = this.ParseJSONArray(depth + 1);
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return obj;
           }
-          this.index += 3;
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return CBORObject.Null;
-        }
-        case '-': {
-          // Parse a negative number
-          return this.NextJSONNumber(nextChar);
-        }
+        case 't':
+          {
+            // Parse true
+            if (this.endPos - this.index <= 2 ||
+              (((int)this.jstring[this.index]) & 0xFF) != 'r' ||
+              (((int)this.jstring[this.index + 1]) & 0xFF) != 'u' ||
+              (((int)this.jstring[this.index + 2]) & 0xFF) != 'e')
+            {
+              this.RaiseError("Value can't be parsed.");
+            }
+            this.index += 3;
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return CBORObject.True;
+          }
+        case 'f':
+          {
+            // Parse false
+            if (this.endPos - this.index <= 3 ||
+              (((int)this.jstring[this.index]) & 0xFF) != 'a' ||
+              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
+              (((int)this.jstring[this.index + 2]) & 0xFF) != 's' ||
+              (((int)this.jstring[this.index + 3]) & 0xFF) != 'e')
+            {
+              this.RaiseError("Value can't be parsed.");
+            }
+            this.index += 4;
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return CBORObject.False;
+          }
+        case 'n':
+          {
+            // Parse null
+            if (this.endPos - this.index <= 2 ||
+              (((int)this.jstring[this.index]) & 0xFF) != 'u' ||
+              (((int)this.jstring[this.index + 1]) & 0xFF) != 'l' ||
+              (((int)this.jstring[this.index + 2]) & 0xFF) != 'l')
+            {
+              this.RaiseError("Value can't be parsed.");
+            }
+            this.index += 3;
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return CBORObject.Null;
+          }
+        case '-':
+          {
+            // Parse a negative number
+            return this.NextJSONNumber(nextChar);
+          }
         case '0':
         case '1':
         case '2':
@@ -187,43 +221,52 @@ namespace Test {
         case '6':
         case '7':
         case '8':
-        case '9': {
-          // Parse a nonnegative number
-          return this.NextJSONNumber(nextChar);
-        }
-        default: this.RaiseError("Value can't be parsed.");
+        case '9':
+          {
+            // Parse a nonnegative number
+            return this.NextJSONNumber(nextChar);
+          }
+        default:
+          this.RaiseError("Value can't be parsed.");
           break;
       }
       return null;
     }
 
     internal JSONWithComments(string jstring, int index, int endPos, JSONOptions
-      options) {
-      #if DEBUG
-      if (jstring == null) {
+      options)
+    {
+#if DEBUG
+      if (jstring == null)
+      {
         throw new ArgumentNullException(nameof(jstring));
       }
-      if (index < 0) {
+      if (index < 0)
+      {
         throw new ArgumentException("index (" + index + ") is not greater or" +
           "\u0020equal to 0");
       }
-      if (index > jstring.Length) {
+      if (index > jstring.Length)
+      {
         throw new ArgumentException("index (" + index + ") is not less or" +
           "\u0020equal to " + jstring.Length);
       }
-      if (endPos < 0) {
+      if (endPos < 0)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
           "\u0020or equal to 0");
       }
-      if (endPos > jstring.Length) {
+      if (endPos > jstring.Length)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
           "\u0020equal to " + jstring.Length);
       }
-      if (endPos < index) {
+      if (endPos < index)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
           "\u0020or equal to " + index);
       }
-      #endif
+#endif
       this.jstring = jstring;
       this.currPointerStackSize = 0;
       this.currPointer = new List<CBORObject>();
@@ -233,16 +276,19 @@ namespace Test {
       this.options = options;
     }
 
-    internal CBORObject ParseJSON(int[] nextchar) {
+    internal CBORObject ParseJSON(int[] nextchar)
+    {
       int c;
       CBORObject ret;
       c = this.SkipWhitespaceJSON();
-      if (c == '[') {
+      if (c == '[')
+      {
         ret = this.ParseJSONArray(0);
         nextchar[0] = this.SkipWhitespaceJSON();
         return ret;
       }
-      if (c == '{') {
+      if (c == '{')
+      {
         ret = this.ParseJSONObject(0);
         nextchar[0] = this.SkipWhitespaceJSON();
         return ret;
@@ -251,8 +297,10 @@ namespace Test {
     }
 
     public static CBORObject FromJSONString(
-      string jstring) {
-      if (jstring == null) {
+      string jstring)
+    {
+      if (jstring == null)
+      {
         throw new ArgumentNullException(nameof(jstring));
       }
       return FromJSONString(jstring, JSONOptions.Default);
@@ -260,8 +308,10 @@ namespace Test {
 
     public static CBORObject FromJSONString(
       string jstring,
-      JSONOptions options) {
-      if (jstring == null) {
+      JSONOptions options)
+    {
+      if (jstring == null)
+      {
         throw new ArgumentNullException(nameof(jstring));
       }
       return ParseJSONValue(jstring, 0, jstring.Length, options);
@@ -269,8 +319,10 @@ namespace Test {
 
     public static CBORObject FromJSONStringWithPointers(
       string jstring,
-      IDictionary<string, string> valpointers) {
-      if (jstring == null) {
+      IDictionary<string, string> valpointers)
+    {
+      if (jstring == null)
+      {
         throw new ArgumentNullException(nameof(jstring));
       }
       return FromJSONStringWithPointers(
@@ -282,8 +334,10 @@ namespace Test {
     public static CBORObject FromJSONStringWithPointers(
       string jstring,
       JSONOptions options,
-      IDictionary<string, string> valpointers) {
-      if (jstring == null) {
+      IDictionary<string, string> valpointers)
+    {
+      if (jstring == null)
+      {
         throw new ArgumentNullException(nameof(jstring));
       }
       return ParseJSONValueWithPointers(
@@ -294,8 +348,10 @@ namespace Test {
           valpointers);
     }
 
-    internal IList<string[]> Pointers {
-      get {
+    internal IList<string[]> Pointers
+    {
+      get
+      {
         return this.pointers;
       }
     }
@@ -305,30 +361,38 @@ namespace Test {
       int index,
       int endPos,
       JSONOptions options,
-      IDictionary<string, string> valpointers) {
+      IDictionary<string, string> valpointers)
+    {
       // Parse nonstandard comments before JSON keys
       var hasHash = false;
       var i = 0;
-      for (i = index; i < endPos; ++i) {
-        if (jstring[i] == '#') {
-          { hasHash = true;
+      for (i = index; i < endPos; ++i)
+      {
+        if (jstring[i] == '#')
+        {
+          {
+            hasHash = true;
           }
           break;
         }
       }
       // No nonstandard comments, so just use FromJSONString
-      if (!hasHash) {
+      if (!hasHash)
+      {
         return CBORObject.FromJSONString(jstring, index, endPos, options);
       }
       var nextchar = new int[1];
       var cj = new JSONWithComments(jstring, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
-      if (nextchar[0] != -1) {
+      if (nextchar[0] != -1)
+      {
         cj.RaiseError("End of string not reached");
       }
-      if (valpointers != null) {
+      if (valpointers != null)
+      {
         IList<string[]> cjpointers = cj.Pointers;
-        foreach (string[] sa in cjpointers) {
+        foreach (string[] sa in cjpointers)
+        {
           string key = sa[0];
           string val = sa[1];
           valpointers[key] = val;
@@ -341,25 +405,31 @@ namespace Test {
       string jstring,
       int index,
       int endPos,
-      JSONOptions options) {
+      JSONOptions options)
+    {
       // Parse nonstandard comments before JSON keys
       var hasHash = false;
       var i = 0;
-      for (i = index; i < endPos; ++i) {
-        if (jstring[i] == '#') {
-          { hasHash = true;
+      for (i = index; i < endPos; ++i)
+      {
+        if (jstring[i] == '#')
+        {
+          {
+            hasHash = true;
           }
           break;
         }
       }
       // No nonstandard comments, so just use FromJSONString
-      if (!hasHash) {
+      if (!hasHash)
+      {
         return CBORObject.FromJSONString(jstring, index, endPos, options);
       }
       var nextchar = new int[1];
       var cj = new JSONWithComments(jstring, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
-      if (nextchar[0] != -1) {
+      if (nextchar[0] != -1)
+      {
         cj.RaiseError("End of string not reached");
       }
       return obj;
@@ -371,44 +441,64 @@ namespace Test {
     // ignore those three characters if they begin the first
     // comment. This is rather arbitrary, but in any case,
     // a JSON-like format that supports comments is nonstandard.
-    private int NextComment(StringBuilder sb) {
-      while (this.index < this.endPos) {
+    private int NextComment(StringBuilder sb)
+    {
+      while (this.index < this.endPos)
+      {
         int c = this.jstring[this.index++];
-        if (c != 0x0d && c != 0x09 && c != 0x20) {
+        if (c != 0x0d && c != 0x09 && c != 0x20)
+        {
           --this.index;
           break;
         }
       }
-      while (this.index < this.endPos) {
+      while (this.index < this.endPos)
+      {
         int c = DataUtilities.CodePointAt(this.jstring, this.index, 2);
-        if (c < 0) {
+        if (c < 0)
+        {
           this.RaiseError("Invalid text");
         }
-        if (c < 0x10000) {
+        if (c < 0x10000)
+        {
           ++this.index;
-        } else {
+        }
+        else
+        {
           this.index += 2;
         }
-        if (c == 0x0d || c == 0x09 || c == 0x20) {
-          while (this.index < this.endPos) {
+        if (c == 0x0d || c == 0x09 || c == 0x20)
+        {
+          while (this.index < this.endPos)
+          {
             c = this.jstring[this.index++];
-            if (c != 0x0d && c != 0x09 && c != 0x20) {
+            if (c != 0x0d && c != 0x09 && c != 0x20)
+            {
               --this.index;
               break;
             }
           }
           sb.Append((char)0x20);
-        } else if (c == 0x0a) {
+        }
+        else if (c == 0x0a)
+        {
           c = this.SkipWhitespaceJSON();
-          if (c != 0x23) { // '#' character
+          if (c != 0x23)
+          { // '#' character
             // Console.WriteLine("last: " + ((char)c));
             return c;
           }
-        } else {
-          if (c <= 0xffff) {
-            { sb.Append((char)c);
+        }
+        else
+        {
+          if (c <= 0xffff)
+          {
+            {
+              sb.Append((char)c);
             }
-          } else if (c <= 0x10ffff) {
+          }
+          else if (c <= 0x10ffff)
+          {
             sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) | 0xd800));
             sb.Append((char)(((c - 0x10000) & 0x3ff) | 0xdc00));
           }
@@ -417,35 +507,50 @@ namespace Test {
       return -1;
     }
 
-    private string GetJSONPointer() {
+    private string GetJSONPointer()
+    {
       var sb = new StringBuilder();
-      for (var i = 0; i < this.currPointerStackSize; ++i) {
+      for (var i = 0; i < this.currPointerStackSize; ++i)
+      {
         CBORObject obj = this.currPointer[i];
-        if (obj.Type == CBORType.Integer) {
+        if (obj.Type == CBORType.Integer)
+        {
           sb.Append("/");
           sb.Append(obj.ToJSONString());
-        } else if (obj.Type == CBORType.TextString) {
+        }
+        else if (obj.Type == CBORType.TextString)
+        {
           sb.Append("/");
           string str = obj.AsString();
-          for (var j = 0; j < str.Length; ++j) {
-            if (str[j] == '/') {
+          for (var j = 0; j < str.Length; ++j)
+          {
+            if (str[j] == '/')
+            {
               sb.Append("~1");
-            } else if (str[j] == '~') {
+            }
+            else if (str[j] == '~')
+            {
               sb.Append("~0");
-            } else {
+            }
+            else
+            {
               sb.Append(str[j]);
             }
           }
-        } else {
+        }
+        else
+        {
           this.RaiseError("Internal error");
         }
       }
       return sb.ToString();
     }
 
-    private CBORObject ParseJSONObject(int depth) {
+    private CBORObject ParseJSONObject(int depth)
+    {
       // Assumes that the last character read was '{'
-      if (depth > 1000) {
+      if (depth > 1000)
+      {
         this.RaiseError("Too deeply nested");
       }
       int c;
@@ -456,51 +561,63 @@ namespace Test {
       var myHashMap = new SortedDictionary<CBORObject, CBORObject>();
       this.PushPointer();
       string commentKey = null;
-      while (true) {
+      while (true)
+      {
         c = this.SkipWhitespaceJSON();
-        if (c == '#') {
+        if (c == '#')
+        {
           // Nonstandard comment
-          if (myHashMap.Count == 0) {
+          if (myHashMap.Count == 0)
+          {
             var sb = new StringBuilder();
             c = this.NextComment(sb);
             commentKey = sb.ToString();
-          } else {
+          }
+          else
+          {
             this.RaiseError("Unexpected comment");
           }
         }
-        switch (c) {
+        switch (c)
+        {
           case -1:
             this.RaiseError("A JSON object must end with '}'");
             break;
           case '}':
-            if (seenComma) {
+            if (seenComma)
+            {
               // Situation like '{"0"=>1,}'
               this.RaiseError("Trailing comma");
               return null;
             }
-            if (commentKey != null) {
+            if (commentKey != null)
+            {
               string[] keyptr = { commentKey, this.GetJSONPointer() };
               this.pointers.Add(keyptr);
             }
             this.PopPointer();
             return CBORObject.FromObject(myHashMap);
-          default: {
-            // Read the next string
-            if (c < 0) {
-              this.RaiseError("Unexpected end of data");
-              return null;
+          default:
+            {
+              // Read the next string
+              if (c < 0)
+              {
+                this.RaiseError("Unexpected end of data");
+                return null;
+              }
+              if (c != '"')
+              {
+                this.RaiseError("Expected a string as a key");
+                return null;
+              }
+              // Parse a string that represents the object's key
+              obj = this.NextJSONString();
+              key = obj;
+              break;
             }
-            if (c != '"') {
-              this.RaiseError("Expected a string as a key");
-              return null;
-            }
-            // Parse a string that represents the object's key
-            obj = this.NextJSONString();
-            key = obj;
-            break;
-          }
         }
-        if (this.SkipWhitespaceJSON() != ':') {
+        if (this.SkipWhitespaceJSON() != ':')
+        {
           this.RaiseError("Expected a ':' after a key");
         }
         this.SetPointer(key);
@@ -512,17 +629,20 @@ namespace Test {
             depth);
         int newCount = myHashMap.Count;
         if (!this.options.AllowDuplicateKeys &&
-          oldCount == newCount) {
+          oldCount == newCount)
+        {
           this.RaiseError("Duplicate key already exists");
           return null;
         }
-        switch (nextchar[0]) {
+        switch (nextchar[0])
+        {
           case ',':
             seenComma = true;
             break;
           case '}':
             this.PopPointer();
-            if (commentKey != null) {
+            if (commentKey != null)
+            {
               string[] keyptr = { commentKey, this.GetJSONPointer() };
               this.pointers.Add(keyptr);
             }
@@ -534,31 +654,41 @@ namespace Test {
       }
     }
 
-    private void SetPointer(CBORObject obj) {
+    private void SetPointer(CBORObject obj)
+    {
       this.currPointer[this.currPointerStackSize - 1] = obj;
     }
 
-    private void PushPointer() {
-      if (this.currPointerStackSize > this.currPointer.Count) {
+    private void PushPointer()
+    {
+      if (this.currPointerStackSize > this.currPointer.Count)
+      {
         this.RaiseError("Internal error");
       }
-      if (this.currPointerStackSize == this.currPointer.Count) {
+      if (this.currPointerStackSize == this.currPointer.Count)
+      {
         this.currPointer.Add(CBORObject.Null);
-      } else {
+      }
+      else
+      {
         this.currPointer[this.currPointerStackSize] = CBORObject.Null;
       }
       ++this.currPointerStackSize;
     }
-    private void PopPointer() {
-      if (this.currPointerStackSize < 0) {
+    private void PopPointer()
+    {
+      if (this.currPointerStackSize < 0)
+      {
         this.RaiseError("Internal error");
       }
       --this.currPointerStackSize;
     }
 
-    internal CBORObject ParseJSONArray(int depth) {
+    internal CBORObject ParseJSONArray(int depth)
+    {
       // Assumes that the last character read was '['
-      if (depth > 1000) {
+      if (depth > 1000)
+      {
         this.RaiseError("Too deeply nested");
       }
       long arrayIndex = 0;
@@ -566,17 +696,21 @@ namespace Test {
       var seenComma = false;
       var nextchar = new int[1];
       this.PushPointer();
-      while (true) {
+      while (true)
+      {
         int c = this.SkipWhitespaceJSON();
-        if (c == ']') {
-          if (seenComma) {
+        if (c == ']')
+        {
+          if (seenComma)
+          {
             // Situation like '[0,1,]'
             this.RaiseError("Trailing comma");
           }
           this.PopPointer();
           return myArrayList;
         }
-        if (c == ',') {
+        if (c == ',')
+        {
           // Situation like '[,0,1,2]' or '[0,,1]'
           this.RaiseError("Empty array element");
         }
@@ -588,7 +722,8 @@ namespace Test {
             nextchar,
             depth));
         c = nextchar[0];
-        switch (c) {
+        switch (c)
+        {
           case ',':
             seenComma = true;
             break;

@@ -1,15 +1,18 @@
 using System;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>Options for controlling how certain DotNET or Java
   /// objects, such as so-called "plain old data" objects (better known
   /// as POCOs in DotNET or POJOs in Java), are converted to CBOR
   /// objects.</summary>
-  public class PODOptions {
+  public class PODOptions
+  {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.PODOptions'/> class with all the default
     /// options.</summary>
-    public PODOptions() : this(String.Empty) {
+    public PODOptions() : this(String.Empty)
+    {
     }
 
     /// <summary>Initializes a new instance of the
@@ -22,7 +25,8 @@ namespace PeterO.Cbor {
       "CA1801",
       Justification = "'removeIsPrefix' is present for backward compatibility.")]
     [Obsolete("Use the more readable string constructor instead.")]
-    public PODOptions(bool removeIsPrefix, bool useCamelCase) {
+    public PODOptions(bool removeIsPrefix, bool useCamelCase)
+    {
       this.UseCamelCase = useCamelCase;
     }
 
@@ -54,8 +58,10 @@ namespace PeterO.Cbor {
     /// or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
-    public PODOptions(string paramString) {
-      if (paramString == null) {
+    public PODOptions(string paramString)
+    {
+      if (paramString == null)
+      {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
@@ -67,7 +73,8 @@ namespace PeterO.Cbor {
     /// <returns>A text string containing the values of this options
     /// object's properties. The format of the string is the same as the
     /// one described in the String constructor for this class.</returns>
-    public override string ToString() {
+    public override string ToString()
+    {
       return new System.Text.StringBuilder()
         .Append("usecamelcase=").Append(this.UseCamelCase ? "true" :
 "false")
@@ -117,7 +124,8 @@ namespace PeterO.Cbor {
     /// <value><c>true</c> If the names are converted to camel case;
     /// otherwise, <c>false</c>. This property is <c>true</c> by
     /// default.</value>
-    public bool UseCamelCase {
+    public bool UseCamelCase
+    {
       get;
       private set;
     }

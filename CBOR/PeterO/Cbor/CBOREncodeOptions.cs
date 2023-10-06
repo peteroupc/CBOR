@@ -1,9 +1,11 @@
 using System;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>Specifies options for encoding and decoding CBOR
   /// objects.</summary>
-  public sealed class CBOREncodeOptions {
+  public sealed class CBOREncodeOptions
+  {
     /// <summary>Default options for CBOR objects. Disallow duplicate keys,
     /// and always encode strings using definite-length encoding.</summary>
     public static readonly CBOREncodeOptions Default =
@@ -19,7 +21,8 @@ namespace PeterO.Cbor {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class with all the
     /// default options.</summary>
-    public CBOREncodeOptions() : this(String.Empty) {
+    public CBOREncodeOptions() : this(String.Empty)
+    {
     }
 
     /// <summary>Initializes a new instance of the
@@ -33,7 +36,8 @@ namespace PeterO.Cbor {
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys)
-      : this(useIndefLengthStrings, allowDuplicateKeys, false) {
+      : this(useIndefLengthStrings, allowDuplicateKeys, false)
+    {
     }
 
     /// <summary>Initializes a new instance of the
@@ -51,7 +55,8 @@ namespace PeterO.Cbor {
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
-      bool ctap2Canonical) {
+      bool ctap2Canonical)
+    {
       this.ResolveReferences = false;
       this.AllowEmpty = false;
       this.Float64 = false;
@@ -95,8 +100,10 @@ namespace PeterO.Cbor {
     /// just true or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
-    public CBOREncodeOptions(string paramString) {
-      if (paramString == null) {
+    public CBOREncodeOptions(string paramString)
+    {
+      if (paramString == null)
+      {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
@@ -121,7 +128,8 @@ namespace PeterO.Cbor {
     /// <returns>A text string containing the values of this options
     /// object's properties. The format of the string is the same as the
     /// one described in the String constructor for this class.</returns>
-    public override string ToString() {
+    public override string ToString()
+    {
       return new System.Text.StringBuilder()
         .Append("allowduplicatekeys=")
         .Append(this.AllowDuplicateKeys ? "true" : "false")
@@ -193,7 +201,8 @@ namespace PeterO.Cbor {
     /// security problem described here, or to check the maximum nesting
     /// depth of a CBOR array or map before serializing
     /// it.</para></remarks>
-    public bool ResolveReferences {
+    public bool ResolveReferences
+    {
       get;
       private set;
     }
@@ -203,7 +212,8 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to encode strings with an
     /// indefinite-length encoding under certain circumstances. The default
     /// is false.</value>
-    public bool UseIndefLengthStrings {
+    public bool UseIndefLengthStrings
+    {
       get;
       private set;
     }
@@ -216,7 +226,8 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to preserve the order in which a
     /// CBOR map's keys appear when decoding a CBOR object. The default is
     /// false.</value>
-    public bool KeepKeyOrder {
+    public bool KeepKeyOrder
+    {
       get;
       private set;
     }
@@ -229,7 +240,8 @@ namespace PeterO.Cbor {
     /// return <c>null</c> instead of a CBOR object if the stream has no
     /// content or the end of the stream is reached before decoding begins.
     /// The default is false.</value>
-    public bool AllowEmpty {
+    public bool AllowEmpty
+    {
       get;
       private set;
     }
@@ -242,7 +254,8 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to allow duplicate keys when
     /// reading CBOR objects from a data stream. The default is
     /// false.</value>
-    public bool AllowDuplicateKeys {
+    public bool AllowDuplicateKeys
+    {
       get;
       private set;
     }
@@ -256,7 +269,8 @@ namespace PeterO.Cbor {
     /// of whether their value can be encoded without loss in a smaller
     /// form. Used only when encoding CBOR objects. The default is
     /// false.</value>
-    public bool Float64 {
+    public bool Float64
+    {
       get;
       private set;
     }
@@ -280,7 +294,8 @@ namespace PeterO.Cbor {
     /// <value><c>true</c> if CBOR objects are written out using the CTAP2
     /// canonical CBOR encoding form; otherwise, <c>false</c>. The default
     /// is <c>false</c>.</value>
-    public bool Ctap2Canonical {
+    public bool Ctap2Canonical
+    {
       get;
       private set;
     }

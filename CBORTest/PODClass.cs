@@ -2,9 +2,12 @@ using System;
 
 // One property returns an array for testing purposes
 #pragma warning disable CA1819
-namespace Test {
-  public sealed class PODClass {
-    public PODClass() {
+namespace Test
+{
+  public sealed class PODClass
+  {
+    public PODClass()
+    {
       this.PropA = 0;
       this.PropB = 1;
       this.IsPropC = false;
@@ -15,51 +18,61 @@ namespace Test {
       this.StringArray = null;
     }
 
-    public bool HasGoodPrivateProp() {
+    public bool HasGoodPrivateProp()
+    {
       int ppa = this.PrivatePropA;
       return ppa == 2;
     }
 
-    private int PrivatePropA {
+    private int PrivatePropA
+    {
       get;
     }
 
-    public static int StaticPropA {
-      get;
-      set;
-    }
-
-    public int PropA {
+    public static int StaticPropA
+    {
       get;
       set;
     }
 
-    public int PropB {
+    public int PropA
+    {
       get;
       set;
     }
 
-    public bool IsPropC {
+    public int PropB
+    {
       get;
       set;
     }
 
-    public float FloatProp {
+    public bool IsPropC
+    {
       get;
       set;
     }
 
-    public double DoubleProp {
+    public float FloatProp
+    {
       get;
       set;
     }
 
-    public string StringProp {
+    public double DoubleProp
+    {
       get;
       set;
     }
 
-    public string[] StringArray {
+    public string StringProp
+    {
+      get;
+      set;
+    }
+
+    public string[] StringArray
+    {
       get;
       set;
     }
