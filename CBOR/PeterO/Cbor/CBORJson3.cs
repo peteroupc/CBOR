@@ -38,9 +38,9 @@ namespace PeterO.Cbor
     // NOTE: Differs from CBORJson2
     private readonly string jstring;
     private readonly JSONOptions options;
+    private readonly int endPos;
     private StringBuilder sb;
     private int index;
-    private readonly int endPos;
 
     private string NextJSONString()
     {

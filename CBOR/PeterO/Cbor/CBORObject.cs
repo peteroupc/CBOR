@@ -4077,7 +4077,9 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           int right = byteCount - 1;
           for (int i = 0; i < half; ++i, --right)
           {
-            (bytes[right], bytes[i]) = (bytes[i], bytes[right]);
+            byte value = bytes[i];
+            bytes[i] = bytes[right];
+            bytes[right] = value;
           }
         }
         switch (byteCount)

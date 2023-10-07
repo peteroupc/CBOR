@@ -139,7 +139,7 @@ EInteger.FromInt64(longValue).ToString();
     private static CBORObject ReadString(Stream stream, char firstChar)
     {
       var builder = new StringBuilder();
-      if (firstChar is < '0' and > '9')
+      if (firstChar < '0' && firstChar > '9')
       {
         throw new CBORException("Invalid integer encoding");
       }

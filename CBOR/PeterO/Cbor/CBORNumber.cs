@@ -107,27 +107,23 @@ namespace PeterO.Cbor
 
     internal static bool IsNumber(CBORObject o)
     {
-      if (IsUntaggedInteger(o))
+      if (IsUntaggedInteger(o) || (!o.IsTagged && o.Type == CBORType.FloatingPoint))
       {
         return true;
       }
       else
       {
-        return !o.IsTagged && o.Type == CBORType.FloatingPoint
-|| (o.HasOneTag(2) || o.HasOneTag(3)
-                  ? o.Type == CBORType.ByteString
-                  : o.HasOneTag(4) ||
-                           o.HasOneTag(5) ||
-                           o.HasOneTag(264) ||
-                           o.HasOneTag(265) ||
-                           o.HasOneTag(268) ||
-                           o.HasOneTag(269)
-                          ? CheckBigFracToNumber(o,
-                                    o.MostOuterTag.ToInt32Checked())
-                          : (o.HasOneTag(30) ||
-                                        o.HasOneTag(270))
-                        && CheckRationalToNumber(o,
-                                            o.MostOuterTag.ToInt32Checked()));
+        return o.HasOneTag(2) || o.HasOneTag(3)
+          ? o.Type == CBORType.ByteString
+          : o.HasOneTag(4) ||
+            o.HasOneTag(5) ||
+            o.HasOneTag(264) ||
+            o.HasOneTag(265) ||
+            o.HasOneTag(268) ||
+            o.HasOneTag(269)
+            ? CheckBigFracToNumber(o, o.MostOuterTag.ToInt32Checked())
+            : (o.HasOneTag(30) || o.HasOneTag(270))
+              && CheckRationalToNumber(o, o.MostOuterTag.ToInt32Checked());
       }
     }
 

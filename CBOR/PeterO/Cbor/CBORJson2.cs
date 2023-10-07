@@ -37,9 +37,9 @@ namespace PeterO.Cbor
 
     private readonly byte[] bytes;
     private readonly JSONOptions options;
-    private int index;
     private readonly int endPos;
     private static readonly byte[] ValueEmptyBytes = new byte[0];
+    private int index;
 
     private byte[] NextJSONString()
     {

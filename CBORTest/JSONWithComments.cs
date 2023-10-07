@@ -22,9 +22,9 @@ namespace Test
     private readonly string jstring;
     private readonly IList<CBORObject> currPointer;
     private readonly JSONOptions options;
+    private readonly int endPos;
     private int currPointerStackSize;
     private int index;
-    private readonly int endPos;
 
     // JSON parsing method
     private int SkipWhitespaceJSON()

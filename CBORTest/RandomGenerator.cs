@@ -12,10 +12,10 @@ namespace PeterO
   /// random byte generator is as well.</para></summary>
   public sealed class RandomGenerator : IRandomGenExtended
   {
-    private bool valueHaveLastNormal;
     private readonly IRandomGen valueIrg;
-    private double valueLastNormal;
     private readonly object valueNormalLock = new();
+    private bool valueHaveLastNormal;
+    private double valueLastNormal;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RandomGenerator"/> class.Initializes a new instance of the RandomGenerator
