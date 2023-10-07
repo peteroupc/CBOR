@@ -18,7 +18,7 @@
       <ItemGroup>
         <PackageReference Include='Microsoft.NET.Test.Sdk' Version='15.9.0'/>
         <PackageReference Include='NUnit' Version='3.13.2'/>
-        <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='6.0.0'/>
+        <PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='7.0.3'/>
         <PackageReference Include='NUnit3TestAdapter' Version='3.16.1'>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>

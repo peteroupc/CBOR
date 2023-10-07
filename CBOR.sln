@@ -8,6 +8,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CBOR", "CBOR\CBOR.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CBORTest", "CBORTest\CBORTest.csproj", "{8FE63143-541E-448D-8337-A98D1FA51541}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimTester", "TrimTester\TrimTester.csproj", "{DDE5B555-6823-4A30-9DF6-D0777C96F659}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{8FE63143-541E-448D-8337-A98D1FA51541}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FE63143-541E-448D-8337-A98D1FA51541}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FE63143-541E-448D-8337-A98D1FA51541}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDE5B555-6823-4A30-9DF6-D0777C96F659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDE5B555-6823-4A30-9DF6-D0777C96F659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDE5B555-6823-4A30-9DF6-D0777C96F659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDE5B555-6823-4A30-9DF6-D0777C96F659}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
