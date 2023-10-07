@@ -1,4 +1,4 @@
-﻿<Project Sdk='Microsoft.NET.Sdk'>
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
@@ -32,14 +32,15 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
 
   <IsTrimmable>true</IsTrimmable>
+  <LangVersion>11.0</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Debug&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <DebugType>none</DebugType>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
 
@@ -47,12 +48,17 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
   </PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.354'/>
- <AdditionalFiles Include='stylecop.json'/>
-<AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
+  <PackageReference Include="PolySharp" Version="1.13.2">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
 
-<PackageReference Include='PeterO.Numbers' Version='1.8.2'/>
+  <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.2.0-beta.354" />
+ <AdditionalFiles Include="stylecop.json" />
+<AdditionalFiles Include="rules.ruleset" /><PackageReference Include="PeterO.URIUtility" Version="1.0.0" />
 
-<PackageReference Include='PeterO.DataUtilities' Version='1.1'/>
-<PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='7.0.3'/></ItemGroup>
+<PackageReference Include="PeterO.Numbers" Version="1.8.2" />
+
+<PackageReference Include="PeterO.DataUtilities" Version="1.1" />
+<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" PrivateAssets="All" Version="7.0.3" /></ItemGroup>
                   </Project>

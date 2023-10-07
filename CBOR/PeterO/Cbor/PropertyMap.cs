@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace PeterO.Cbor
 {
@@ -543,6 +545,7 @@ namespace PeterO.Cbor
       return t.GetRuntimeProperties();
     }
 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     private static IEnumerable<FieldInfo> GetTypeFields(Type t)
     {
       return t.GetRuntimeFields();
