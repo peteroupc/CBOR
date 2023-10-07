@@ -4077,7 +4077,11 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           int right = byteCount - 1;
           for (int i = 0; i < half; ++i, --right)
           {
-            (bytes[right], bytes[i]) = (bytes[i], bytes[right]);
+            // NOTE: Swapping syntax can't be used in netstandard1.0
+            // because it relies on System.ValueTuple
+            byte tmp = bytes[i];
+            bytes[i] = bytes[right];
+            bytes[right] = tmp;
           }
         }
         switch (byteCount)
