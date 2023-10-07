@@ -162,10 +162,10 @@ rand) {
       } else {
         return rand.GetInt32(100) < 90 ?
           CBORObject.FromObjectAndTag(
-                    RandomCBORObject(rand, depth + 1),
-                  rand.GetInt32(0x100000)) : CBORObject.FromObjectAndTag(
-                    RandomCBORObject(rand, depth + 1),
-                    RandomEIntegerMajorType0(rand));
+            RandomCBORObject(rand, depth + 1),
+            rand.GetInt32(0x100000)) : CBORObject.FromObjectAndTag(
+            RandomCBORObject(rand, depth + 1),
+            RandomEIntegerMajorType0(rand));
       }
       if (tag == 25) {
         tag = 0;

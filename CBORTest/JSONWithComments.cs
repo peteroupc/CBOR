@@ -20,9 +20,9 @@ namespace Test {
     private readonly string jstring;
     private readonly IList<CBORObject> currPointer;
     private readonly JSONOptions options;
+    private readonly int endPos;
     private int currPointerStackSize;
     private int index;
-    private readonly int endPos;
 
     // JSON parsing method
     private int SkipWhitespaceJSON() {
@@ -258,9 +258,8 @@ ArgumentNullException(nameof(jstring)) : FromJSONString(jstring,
       string jstring,
       JSONOptions options) {
       return jstring == null ? throw new
-ArgumentNullException(nameof(jstring)) : ParseJSONValue(jstring, 0,
-  jstring.Length,
-  options);
+        ArgumentNullException(nameof(jstring)) :
+        ParseJSONValue(jstring, 0, jstring.Length, options);
     }
 
     public static CBORObject FromJSONStringWithPointers(

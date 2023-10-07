@@ -7985,7 +7985,7 @@ cborTemp1.AsNumber().IsZero()) {
                 _ = CBORObject.WriteFloatingPointValue(
                   null,
                   cbor.AsSingle(),
-                4);
+                  4);
                 Assert.Fail("Should have failed");
               } catch (ArgumentNullException) {
                 // NOTE: Intentionally empty
