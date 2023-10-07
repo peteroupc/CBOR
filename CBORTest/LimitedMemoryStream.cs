@@ -1,15 +1,23 @@
 using System;
 using System.IO;
 
-namespace Test {
+namespace Test
+{
   /// <summary>Writable stream with a maximum supported byte
   /// size.</summary>
-  public sealed class LimitedMemoryStream : Stream {
+  public sealed class LimitedMemoryStream : Stream
+  {
     private readonly Test.DelayingStream ms;
     private readonly int maxSize;
 
-    public LimitedMemoryStream(int maxSize) {
-      if (maxSize < 0) {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LimitedMemoryStream"/> class.
+    /// </summary>
+    /// <param name="maxSize"></param>
+    public LimitedMemoryStream(int maxSize)
+    {
+      if (maxSize < 0)
+      {
         throw new ArgumentException(
           "maxSize (" + maxSize + ") is not greater or equal to 0");
       }
@@ -17,72 +25,74 @@ namespace Test {
       this.maxSize = maxSize;
     }
 
-    public new void Dispose() {
+    public new void Dispose()
+    {
       this.ms.Dispose();
     }
 
-    public override long Length {
-      get {
-        return this.ms.Length;
-      }
-    }
+    /// <inheritdoc/>
+    public override long Length => this.ms.Length;
 
-    public override long Seek(long pos, SeekOrigin origin) {
+    /// <inheritdoc/>
+    public override long Seek(long pos, SeekOrigin origin)
+    {
       throw new NotSupportedException();
     }
 
-    public override void SetLength(long len) {
-      if (len > this.maxSize) {
+    /// <inheritdoc/>
+    public override void SetLength(long len)
+    {
+      if (len > this.maxSize)
+      {
         throw new NotSupportedException();
       }
       this.ms.SetLength(len);
     }
 
-    public override long Position {
-      get {
-        return this.ms.Position;
-      }
+    /// <inheritdoc/>
+    public override long Position
+    {
+      get => this.ms.Position;
 
-      set {
-        throw new NotSupportedException();
-      }
+      set => throw new NotSupportedException();
     }
 
-    public override bool CanRead {
-      get {
-        return false;
-      }
-    }
+    /// <inheritdoc/>
+    public override bool CanRead => false;
 
-    public override bool CanSeek {
-      get {
-        return false;
-      }
-    }
+    /// <inheritdoc/>
+    public override bool CanSeek => false;
 
-    public override bool CanWrite {
-      get {
-        return this.ms.CanWrite;
-      }
-    }
+    /// <inheritdoc/>
+    public override bool CanWrite => this.ms.CanWrite;
 
-    public override int Read(byte[] bytes, int offset, int count) {
+    /// <inheritdoc/>
+    public override int Read(byte[] bytes, int offset, int count)
+    {
       throw new NotSupportedException();
     }
 
-    public override void Flush() {
+    /// <inheritdoc/>
+    public override void Flush()
+    {
       this.ms.Flush();
     }
 
-    public override void Write(byte[] bytes, int offset, int count) {
-      if (this.ms.Position + count > this.maxSize) {
+    /// <inheritdoc/>
+    public override void Write(byte[] bytes, int offset, int count)
+    {
+      if (this.ms.Position + count > this.maxSize)
+      {
         throw new NotSupportedException();
       }
       this.ms.Write(bytes, offset, count);
     }
 
-    public override void WriteByte(byte c) {
-      if (this.ms.Position >= this.maxSize) {
+    /// <inheritdoc/>
+    public override void WriteByte(byte c)
+    {
+      if (this.ms.Position >= this.maxSize)
+      {
         throw new NotSupportedException();
       }
       this.ms.WriteByte(c);

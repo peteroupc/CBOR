@@ -13,26 +13,31 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace PeterO.DocGen {
-  internal class TypeVisitor {
+namespace PeterO.DocGen
+{
+  internal class TypeVisitor
+  {
     private readonly SortedDictionary<string, DocVisitor> docs;
     private readonly Dictionary<string, MemberSummaryVisitor> memSummaries;
     private readonly Dictionary<string, string> typeIDs;
     private readonly string directory;
 
-    public TypeVisitor(string directory) {
+    public TypeVisitor(string directory)
+    {
       this.docs = new SortedDictionary<string, DocVisitor>();
       this.memSummaries = new Dictionary<string, MemberSummaryVisitor>();
       this.typeIDs = new Dictionary<string, string>();
       this.directory = directory;
     }
 
-    public void Finish() {
-      foreach (var key in this.docs.Keys) {
-        var finalString = this.docs[key].ToString();
+    public void Finish()
+    {
+      foreach (string key in this.docs.Keys)
+      {
+        string finalString = this.docs[key].ToString();
         this.memSummaries[key].Finish();
-        var memSummaryString = this.memSummaries[key].ToString();
-        var filename = Path.Combine(
+        string memSummaryString = this.memSummaries[key].ToString();
+        string filename = Path.Combine(
           this.directory,
           this.typeIDs[key] + ".md");
         finalString = DocGenUtil.NormalizeLines(finalString);
@@ -44,39 +49,51 @@ namespace PeterO.DocGen {
       }
     }
 
-    public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc) {
+    public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc)
+    {
       this.HandleMember(currentType, xmldoc);
-      foreach (var m in currentType.GetFields()) {
-        if (m.IsSpecialName) {
+      foreach (FieldInfo m in currentType.GetFields())
+      {
+        if (m.IsSpecialName)
+        {
           continue;
         }
         this.HandleMember(m, xmldoc);
       }
-      foreach (var m in currentType.GetConstructors()) {
-        if (!m.DeclaringType.Equals(currentType)) {
+      foreach (ConstructorInfo m in currentType.GetConstructors())
+      {
+        if (!m.DeclaringType.Equals(currentType))
+        {
           continue;
         }
         this.HandleMember(m, xmldoc);
       }
-      foreach (var m in currentType.GetMethods()) {
-        if (!m.DeclaringType.Equals(currentType)) {
-          var dtfn = m.DeclaringType.FullName;
-          if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+      foreach (MethodInfo m in currentType.GetMethods())
+      {
+        if (!m.DeclaringType.Equals(currentType))
+        {
+          string dtfn = m.DeclaringType.FullName;
+          if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0)
+          {
             // Console.WriteLine("not declared: " + m);
           }
           continue;
         }
         if (m.IsSpecialName && (
           m.Name.IndexOf("get_", StringComparison.Ordinal) == 0 ||
-          m.Name.IndexOf("set_", StringComparison.Ordinal) == 0)) {
+          m.Name.IndexOf("set_", StringComparison.Ordinal) == 0))
+        {
           continue;
         }
         this.HandleMember(m, xmldoc);
       }
-      foreach (var m in currentType.GetProperties()) {
-        if (!m.DeclaringType.Equals(currentType)) {
-          var dtfn = m.DeclaringType.FullName;
-          if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0) {
+      foreach (PropertyInfo m in currentType.GetProperties())
+      {
+        if (!m.DeclaringType.Equals(currentType))
+        {
+          string dtfn = m.DeclaringType.FullName;
+          if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0)
+          {
             Console.WriteLine("not declared: " + m);
           }
           continue;
@@ -85,23 +102,30 @@ namespace PeterO.DocGen {
       }
     }
 
-    public void HandleMember(MemberInfo info, XmlDoc xmldoc) {
+    public void HandleMember(MemberInfo info, XmlDoc xmldoc)
+    {
       Type currentType;
-      if (info is Type) {
+      if (info is Type)
+      {
         currentType = (Type)info;
-      } else {
-        if (info == null) {
+      }
+      else
+      {
+        if (info == null)
+        {
           return;
         }
         currentType = info.ReflectedType;
       }
       if (currentType == null ||
           !(currentType.IsNested ? currentType.IsNestedPublic :
-currentType.IsPublic)) {
+currentType.IsPublic))
+      {
         return;
       }
-      var typeFullName = currentType.FullName;
-      if (!this.docs.ContainsKey(typeFullName)) {
+      string typeFullName = currentType.FullName;
+      if (!this.docs.ContainsKey(typeFullName))
+      {
         var docVisitor = new DocVisitor();
         this.docs[typeFullName] = docVisitor;
         this.typeIDs[typeFullName] = DocVisitor.GetTypeID(currentType);

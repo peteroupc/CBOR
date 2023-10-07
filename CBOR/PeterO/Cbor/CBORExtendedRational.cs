@@ -6,34 +6,41 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
-using PeterO;
 using PeterO.Numbers;
+using System;
 
-namespace PeterO.Cbor {
-  internal class CBORExtendedRational : ICBORNumber {
-    public bool IsPositiveInfinity(object obj) {
+namespace PeterO.Cbor
+{
+  internal class CBORExtendedRational : ICBORNumber
+  {
+    public bool IsPositiveInfinity(object obj)
+    {
       return ((ERational)obj).IsPositiveInfinity();
     }
 
-    public bool IsInfinity(object obj) {
+    public bool IsInfinity(object obj)
+    {
       return ((ERational)obj).IsInfinity();
     }
 
-    public bool IsNegativeInfinity(object obj) {
+    public bool IsNegativeInfinity(object obj)
+    {
       return ((ERational)obj).IsNegativeInfinity();
     }
 
-    public bool IsNaN(object obj) {
+    public bool IsNaN(object obj)
+    {
       return ((ERational)obj).IsNaN();
     }
 
-    public double AsDouble(object obj) {
+    public double AsDouble(object obj)
+    {
       var er = (ERational)obj;
       return er.ToDouble();
     }
 
-    public EDecimal AsEDecimal(object obj) {
+    public EDecimal AsEDecimal(object obj)
+    {
       var er = (ERational)obj;
       return
 
@@ -41,7 +48,8 @@ namespace PeterO.Cbor {
           EContext.Decimal128.WithUnlimitedExponents());
     }
 
-    public EFloat AsEFloat(object obj) {
+    public EFloat AsEFloat(object obj)
+    {
       var er = (ERational)obj;
       return
 
@@ -49,110 +57,135 @@ namespace PeterO.Cbor {
           EContext.Binary128.WithUnlimitedExponents());
     }
 
-    public float AsSingle(object obj) {
+    public float AsSingle(object obj)
+    {
       var er = (ERational)obj;
       return er.ToSingle();
     }
 
-    public EInteger AsEInteger(object obj) {
+    public EInteger AsEInteger(object obj)
+    {
       var er = (ERational)obj;
       return er.ToEInteger();
     }
 
-    public long AsInt64(object obj) {
+    public long AsInt64(object obj)
+    {
       var ef = (ERational)obj;
-      if (ef.IsFinite) {
-        EInteger bi = ef.ToEInteger();
-        if (bi.CanFitInInt64()) {
+      if (ef.IsFinite)
+      {
+        var bi = ef.ToEInteger();
+        if (bi.CanFitInInt64())
+        {
           return (long)bi;
         }
       }
       throw new OverflowException("This object's value is out of range");
     }
 
-    public bool CanFitInSingle(object obj) {
+    public bool CanFitInSingle(object obj)
+    {
       var ef = (ERational)obj;
       return (!ef.IsFinite) || (ef.CompareTo(ERational.FromSingle(
             ef.ToSingle())) == 0);
     }
 
-    public bool CanFitInDouble(object obj) {
+    public bool CanFitInDouble(object obj)
+    {
       var ef = (ERational)obj;
       return (!ef.IsFinite) || (ef.CompareTo(ERational.FromDouble(
             ef.ToDouble())) == 0);
     }
 
-    public bool CanFitInInt32(object obj) {
+    public bool CanFitInInt32(object obj)
+    {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
-    public bool CanFitInInt64(object obj) {
+    public bool CanFitInInt64(object obj)
+    {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
-    public bool CanFitInUInt64(object obj) {
+    public bool CanFitInUInt64(object obj)
+    {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInUInt64(obj);
     }
 
-    public bool CanTruncatedIntFitInInt64(object obj) {
+    public bool CanTruncatedIntFitInInt64(object obj)
+    {
       var ef = (ERational)obj;
-      if (!ef.IsFinite) {
+      if (!ef.IsFinite)
+      {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.CanFitInInt64();
     }
 
-    public bool CanTruncatedIntFitInInt32(object obj) {
+    public bool CanTruncatedIntFitInInt32(object obj)
+    {
       var ef = (ERational)obj;
-      if (!ef.IsFinite) {
+      if (!ef.IsFinite)
+      {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.CanFitInInt32();
     }
 
-    public bool CanTruncatedIntFitInUInt64(object obj) {
+    public bool CanTruncatedIntFitInUInt64(object obj)
+    {
       var ef = (ERational)obj;
-      if (!ef.IsFinite) {
+      if (!ef.IsFinite)
+      {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.Sign >= 0 && bi.GetUnsignedBitLengthAsInt64() <= 64;
     }
 
-    public bool IsNumberZero(object obj) {
+    public bool IsNumberZero(object obj)
+    {
       var ef = (ERational)obj;
       return ef.IsZero;
     }
 
-    public int Sign(object obj) {
+    public int Sign(object obj)
+    {
       var ef = (ERational)obj;
       return ef.Sign;
     }
 
-    public bool IsIntegral(object obj) {
+    public bool IsIntegral(object obj)
+    {
       var ef = (ERational)obj;
-      if (!ef.IsFinite) {
+      if (!ef.IsFinite)
+      {
         return false;
       }
-      if (ef.Denominator.Equals(EInteger.One)) {
+      if (ef.Denominator.Equals(EInteger.One))
+      {
         return true;
       }
       // A rational number is integral if the remainder
       // of the numerator divided by the denominator is 0
       EInteger denom = ef.Denominator;
-      EInteger rem = ef.Numerator % (EInteger)denom;
+      EInteger rem = ef.Numerator % denom;
       return rem.IsZero;
     }
 
-    public int AsInt32(object obj, int minValue, int maxValue) {
+    public int AsInt32(object obj, int minValue, int maxValue)
+    {
       var ef = (ERational)obj;
-      if (ef.IsFinite) {
-        EInteger bi = ef.ToEInteger();
-        if (bi.CanFitInInt32()) {
-          var ret = (int)bi;
-          if (ret >= minValue && ret <= maxValue) {
+      if (ef.IsFinite)
+      {
+        var bi = ef.ToEInteger();
+        if (bi.CanFitInInt32())
+        {
+          int ret = (int)bi;
+          if (ret >= minValue && ret <= maxValue)
+          {
             return ret;
           }
         }
@@ -160,21 +193,25 @@ namespace PeterO.Cbor {
       throw new OverflowException("This object's value is out of range");
     }
 
-    public object Negate(object obj) {
+    public object Negate(object obj)
+    {
       var ed = (ERational)obj;
       return ed.Negate();
     }
 
-    public object Abs(object obj) {
+    public object Abs(object obj)
+    {
       var ed = (ERational)obj;
       return ed.Abs();
     }
 
-    public ERational AsERational(object obj) {
+    public ERational AsERational(object obj)
+    {
       return (ERational)obj;
     }
 
-    public bool IsNegative(object obj) {
+    public bool IsNegative(object obj)
+    {
       return ((ERational)obj).IsNegative;
     }
   }

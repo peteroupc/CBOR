@@ -3,77 +3,109 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace PeterO.DocGen {
-  internal static class TypeNameUtil {
-    public static string SimpleTypeName(Type t) {
-      if (!t.IsNested) {
+namespace PeterO.DocGen
+{
+  internal static class TypeNameUtil
+  {
+    public static string SimpleTypeName(Type t)
+    {
+      if (!t.IsNested)
+      {
         return t.Namespace + "." + TypeNameUtil.UndecorateTypeName(t.Name);
-      } else {
+      }
+      else
+      {
         Type nt = t;
-        var types = new List<Type>();
-        types.Add(t);
-        var sb = new StringBuilder().Append(t.Namespace);
-        while (nt != null && nt.IsNested) {
+        var types = new List<Type>
+        {
+          t,
+        };
+        StringBuilder sb = new StringBuilder().Append(t.Namespace);
+        while (nt != null && nt.IsNested)
+        {
           types.Add(nt.DeclaringType);
           nt = nt.DeclaringType;
         }
-        for (var i = types.Count - 1; i >= 0; --i) {
-          sb.Append('.').Append(UndecorateTypeName(types[i].Name));
+        for (int i = types.Count - 1; i >= 0; --i)
+        {
+          _ = sb.Append('.').Append(UndecorateTypeName(types[i].Name));
         }
         return sb.ToString();
       }
     }
-    public static string XmlDocTypeName(Type t) {
+    public static string XmlDocTypeName(Type t)
+    {
       return XmlDocTypeName(t, false);
     }
-    public static string XmlDocTypeName(Type t, bool param) {
+    public static string XmlDocTypeName(Type t, bool param)
+    {
       return XmlDocTypeName(t, param, false);
     }
     public static string XmlDocTypeName(Type t, bool param, bool
-        genericMethod) {
+        genericMethod)
+    {
       var sb = new StringBuilder();
-      if (t.IsArray) {
-        sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
+      if (t.IsArray)
+      {
+        _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append("[]");
-        } else if (t.IsPointer) {
-        sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
+      }
+      else if (t.IsPointer)
+      {
+        _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append('*');
-        } else if (t.IsByRef) {
-        sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
+      }
+      else if (t.IsByRef)
+      {
+        _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
           .Append('@');
-        } else if (t.IsGenericParameter) {
-        var ggastr = Convert.ToString(
+      }
+      else if (t.IsGenericParameter)
+      {
+        string ggastr = Convert.ToString(
           t.GenericParameterPosition,
           System.Globalization.CultureInfo.InvariantCulture);
-        sb.Append(genericMethod ? "``" : "`").Append(ggastr);
-      } else {
-        sb.Append(t.Namespace);
+        _ = sb.Append(genericMethod ? "``" : "`").Append(ggastr);
+      }
+      else
+      {
+        _ = sb.Append(t.Namespace);
         Type nt = t;
-        var types = new List<Type>();
-        types.Add(t);
-        while (nt != null && nt.IsNested) {
+        var types = new List<Type>
+        {
+          t,
+        };
+        while (nt != null && nt.IsNested)
+        {
           types.Add(nt.DeclaringType);
           nt = nt.DeclaringType;
         }
-        for (var i = types.Count - 1; i >= 0; --i) {
-          sb.Append('.').Append(UndecorateTypeName(types[i].Name));
-          if (types[i].GetGenericArguments().Length > 0) {
-            if (param) {
-              sb.Append('{');
-              var first = true;
-              foreach (var ga in types[i].GetGenericArguments()) {
-                if (!first) {
-                  sb.Append(',');
+        for (int i = types.Count - 1; i >= 0; --i)
+        {
+          _ = sb.Append('.').Append(UndecorateTypeName(types[i].Name));
+          if (types[i].GetGenericArguments().Length > 0)
+          {
+            if (param)
+            {
+              _ = sb.Append('{');
+              bool first = true;
+              foreach (Type ga in types[i].GetGenericArguments())
+              {
+                if (!first)
+                {
+                  _ = sb.Append(',');
                 }
-                sb.Append(XmlDocTypeName(ga, false, genericMethod));
+                _ = sb.Append(XmlDocTypeName(ga, false, genericMethod));
                 first = false;
               }
-              sb.Append('}');
-            } else {
-              var ggastr = Convert.ToString(
+              _ = sb.Append('}');
+            }
+            else
+            {
+              string ggastr = Convert.ToString(
                 types[i].GetGenericArguments().Length,
                 System.Globalization.CultureInfo.InvariantCulture);
-              sb.Append('`').Append(ggastr);
+              _ = sb.Append('`').Append(ggastr);
             }
           }
         }
@@ -81,84 +113,102 @@ namespace PeterO.DocGen {
       return sb.ToString();
     }
 
-    public static string XmlDocMemberName(object obj) {
-      if (obj is Type) {
+    public static string XmlDocMemberName(object obj)
+    {
+      if (obj is Type)
+      {
         return "T:" + XmlDocTypeName((Type)obj);
       }
-      if (obj is ConstructorInfo) {
+      if (obj is ConstructorInfo)
+      {
         var cons = obj as ConstructorInfo;
-        var msb = new StringBuilder()
+        StringBuilder msb = new StringBuilder()
           .Append("M:").Append(XmlDocTypeName(cons.DeclaringType))
           .Append(cons.IsStatic ? ".#cctor" : ".#ctor");
-        if (cons.GetParameters().Length > 0) {
-          msb.Append('(');
-          var first = true;
-          foreach (var p in cons.GetParameters()) {
-            if (!first) {
-              msb.Append(',');
+        if (cons.GetParameters().Length > 0)
+        {
+          _ = msb.Append('(');
+          bool first = true;
+          foreach (ParameterInfo p in cons.GetParameters())
+          {
+            if (!first)
+            {
+              _ = msb.Append(',');
             }
-            msb.Append(XmlDocTypeName(p.ParameterType, true));
+            _ = msb.Append(XmlDocTypeName(p.ParameterType, true));
             first = false;
           }
-          msb.Append(')');
+          _ = msb.Append(')');
         }
         return msb.ToString();
       }
-      if (obj is MethodInfo) {
+      if (obj is MethodInfo)
+      {
         var mi = obj as MethodInfo;
-        var msb = new StringBuilder()
+        StringBuilder msb = new StringBuilder()
           .Append("M:").Append(XmlDocTypeName(mi.DeclaringType))
           .Append('.').Append(mi.Name);
-        var gga = mi.GetGenericArguments().Length;
+        int gga = mi.GetGenericArguments().Length;
         bool genericMethod = gga > 0;
-        if (genericMethod) {
-          msb.Append("``");
-          var ggastr = Convert.ToString(
+        if (genericMethod)
+        {
+          _ = msb.Append("``");
+          string ggastr = Convert.ToString(
             gga,
             System.Globalization.CultureInfo.InvariantCulture);
-          msb.Append(ggastr);
+          _ = msb.Append(ggastr);
         }
-        if (mi.GetParameters().Length > 0) {
-          msb.Append('(');
-          var first = true;
-          foreach (var p in mi.GetParameters()) {
-            if (!first) {
-              msb.Append(',');
+        if (mi.GetParameters().Length > 0)
+        {
+          _ = msb.Append('(');
+          bool first = true;
+          foreach (ParameterInfo p in mi.GetParameters())
+          {
+            if (!first)
+            {
+              _ = msb.Append(',');
             }
-            msb.Append(XmlDocTypeName(p.ParameterType, true, genericMethod));
+            _ = msb.Append(XmlDocTypeName(p.ParameterType, true, genericMethod));
             first = false;
           }
-          msb.Append(')');
+          _ = msb.Append(')');
         }
         if (mi.Name.Equals("op_Explicit", StringComparison.Ordinal) ||
-mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
-          var rt = mi.ReturnType;
-          if (rt != null) {
-            msb.Append('~').Append(XmlDocTypeName(rt, true, genericMethod));
+mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
+        {
+          Type rt = mi.ReturnType;
+          if (rt != null)
+          {
+            _ = msb.Append('~').Append(XmlDocTypeName(rt, true, genericMethod));
           }
         }
         return msb.ToString();
       }
-      if (obj is PropertyInfo) {
+      if (obj is PropertyInfo)
+      {
         var pi = obj as PropertyInfo;
-        var msb = new StringBuilder().Append("P:")
+        StringBuilder msb = new StringBuilder().Append("P:")
           .Append(XmlDocTypeName(pi.DeclaringType)).Append('.')
           .Append(pi.Name);
-        if (pi.GetIndexParameters().Length > 0) {
-          msb.Append('(');
-          var first = true;
-          foreach (var p in pi.GetIndexParameters()) {
-            if (!first) {
-              msb.Append(',');
+        if (pi.GetIndexParameters().Length > 0)
+        {
+          _ = msb.Append('(');
+          bool first = true;
+          foreach (ParameterInfo p in pi.GetIndexParameters())
+          {
+            if (!first)
+            {
+              _ = msb.Append(',');
             }
-            msb.Append(XmlDocTypeName(p.ParameterType, true));
+            _ = msb.Append(XmlDocTypeName(p.ParameterType, true));
             first = false;
           }
-          msb.Append(')');
+          _ = msb.Append(')');
         }
         return msb.ToString();
       }
-      if (obj is FieldInfo) {
+      if (obj is FieldInfo)
+      {
         string m = "F:" + XmlDocTypeName(((FieldInfo)obj).DeclaringType) +
            "." + ((FieldInfo)obj).Name;
         return m;
@@ -166,22 +216,27 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
       return obj.ToString();
     }
 
-    public static string UndecorateTypeName(string name) {
-      var idx = name.IndexOf('`');
-      if (idx >= 0) {
-        name = name.Substring(0, idx);
+    public static string UndecorateTypeName(string name)
+    {
+      int idx = name.IndexOf('`');
+      if (idx >= 0)
+      {
+        name = name[..idx];
       }
       idx = name.IndexOf('[');
-      if (idx >= 0) {
-        name = name.Substring(0, idx);
+      if (idx >= 0)
+      {
+        name = name[..idx];
       }
       idx = name.IndexOf('*');
-      if (idx >= 0) {
-        name = name.Substring(0, idx);
+      if (idx >= 0)
+      {
+        name = name[..idx];
       }
       idx = name.IndexOf('@');
-      if (idx >= 0) {
-        name = name.Substring(0, idx);
+      if (idx >= 0)
+      {
+        name = name[..idx];
       }
       return name;
     }

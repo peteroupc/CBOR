@@ -1,104 +1,107 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>Includes options to control how CBOR objects are converted
   /// to and from JavaScript Object Notation (JSON).</summary>
-  public sealed class JSONOptions {
+  public sealed class JSONOptions
+  {
     /// <summary>Specifies how JSON numbers are converted to CBOR objects
     /// when decoding JSON (such as via <c>FromJSONString</c> or
     /// <c>ReadJSON</c> ). None of these conversion modes affects how CBOR
     /// objects are later encoded (such as via <c>EncodeToBytes</c>
     /// ).</summary>
-    public enum ConversionMode {
-       /// <summary>JSON numbers are decoded to CBOR using the full precision
-       /// given in the JSON text. The number will be converted to a CBOR
-       /// object as follows: If the number's exponent is 0 (after shifting
-       /// the decimal point to the end of the number without changing its
-       /// value), use the rules given in the
-       /// <c>CBORObject.FromObject(EInteger)</c> method; otherwise, use the
-       /// rules given in the <c>CBORObject.FromObject(EDecimal)</c> method.
-       /// An exception in version 4.x involves negative zeros; if the
-       /// negative zero's exponent is 0, it's written as a CBOR
-       /// floating-point number; otherwise the negative zero is written as an
-       /// EDecimal.</summary>
-       Full,
+    public enum ConversionMode
+    {
+      /// <summary>JSON numbers are decoded to CBOR using the full precision
+      /// given in the JSON text. The number will be converted to a CBOR
+      /// object as follows: If the number's exponent is 0 (after shifting
+      /// the decimal point to the end of the number without changing its
+      /// value), use the rules given in the
+      /// <c>CBORObject.FromObject(EInteger)</c> method; otherwise, use the
+      /// rules given in the <c>CBORObject.FromObject(EDecimal)</c> method.
+      /// An exception in version 4.x involves negative zeros; if the
+      /// negative zero's exponent is 0, it's written as a CBOR
+      /// floating-point number; otherwise the negative zero is written as an
+      /// EDecimal.</summary>
+      Full,
 
-       /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
-       /// approximation as 64-bit binary floating-point numbers (using the
-       /// round-to-nearest/ties-to-even rounding mode). (In some cases,
-       /// numbers extremely close to zero may underflow to positive or
-       /// negative zero, and numbers of extremely large absolute value may
-       /// overflow to infinity.). It's important to note that this mode
-       /// affects only how JSON numbers are
-       /// <i>decoded</i> to a CBOR object; it doesn't affect how
-       /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
-       /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
-       /// floating-point values to the CBOR format in their 16-bit
-       /// ("half-float"), 32-bit ("single-precision"), or 64-bit
-       /// ("double-precision") encoding form depending on the
-       /// value.</summary>
-       Double,
+      /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
+      /// approximation as 64-bit binary floating-point numbers (using the
+      /// round-to-nearest/ties-to-even rounding mode). (In some cases,
+      /// numbers extremely close to zero may underflow to positive or
+      /// negative zero, and numbers of extremely large absolute value may
+      /// overflow to infinity.). It's important to note that this mode
+      /// affects only how JSON numbers are
+      /// <i>decoded</i> to a CBOR object; it doesn't affect how
+      /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
+      /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+      /// floating-point values to the CBOR format in their 16-bit
+      /// ("half-float"), 32-bit ("single-precision"), or 64-bit
+      /// ("double-precision") encoding form depending on the
+      /// value.</summary>
+      Double,
 
-       /// <summary>A JSON number is decoded to CBOR objects either as a CBOR
-       /// integer (major type 0 or 1) if the JSON number represents an
-       /// integer at least -(2^53)+1 and less than 2^53, or as their
-       /// closest-rounded approximation as 64-bit binary floating-point
-       /// numbers (using the round-to-nearest/ties-to-even rounding mode)
-       /// otherwise. For example, the JSON number
-       /// 0.99999999999999999999999999999999999 is not an integer, so it's
-       /// converted to its closest 64-bit binary floating-point
-       /// approximation, namely 1.0. (In some cases, numbers extremely close
-       /// to zero may underflow to positive or negative zero, and numbers of
-       /// extremely large absolute value may overflow to infinity.). It's
-       /// important to note that this mode affects only how JSON numbers are
-       /// <i>decoded</i> to a CBOR object; it doesn't affect how
-       /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
-       /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
-       /// floating-point values to the CBOR format in their 16-bit
-       /// ("half-float"), 32-bit ("single-precision"), or 64-bit
-       /// ("double-precision") encoding form depending on the
-       /// value.</summary>
-       IntOrFloat,
+      /// <summary>A JSON number is decoded to CBOR objects either as a CBOR
+      /// integer (major type 0 or 1) if the JSON number represents an
+      /// integer at least -(2^53)+1 and less than 2^53, or as their
+      /// closest-rounded approximation as 64-bit binary floating-point
+      /// numbers (using the round-to-nearest/ties-to-even rounding mode)
+      /// otherwise. For example, the JSON number
+      /// 0.99999999999999999999999999999999999 is not an integer, so it's
+      /// converted to its closest 64-bit binary floating-point
+      /// approximation, namely 1.0. (In some cases, numbers extremely close
+      /// to zero may underflow to positive or negative zero, and numbers of
+      /// extremely large absolute value may overflow to infinity.). It's
+      /// important to note that this mode affects only how JSON numbers are
+      /// <i>decoded</i> to a CBOR object; it doesn't affect how
+      /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
+      /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+      /// floating-point values to the CBOR format in their 16-bit
+      /// ("half-float"), 32-bit ("single-precision"), or 64-bit
+      /// ("double-precision") encoding form depending on the
+      /// value.</summary>
+      IntOrFloat,
 
-       /// <summary>A JSON number is decoded to CBOR objects either as a CBOR
-       /// integer (major type 0 or 1) if the number's closest-rounded
-       /// approximation as a 64-bit binary floating-point number (using the
-       /// round-to-nearest/ties-to-even rounding mode) represents an integer
-       /// at least -(2^53)+1 and less than 2^53, or as that approximation
-       /// otherwise. For example, the JSON number
-       /// 0.99999999999999999999999999999999999 is the integer 1 when rounded
-       /// to its closest 64-bit binary floating-point approximation (1.0), so
-       /// it's converted to the CBOR integer 1 (major type 0). (In some
-       /// cases, numbers extremely close to zero may underflow to zero, and
-       /// numbers of extremely large absolute value may overflow to
-       /// infinity.). It's important to note that this mode affects only how
-       /// JSON numbers are
-       /// <i>decoded</i> to a CBOR object; it doesn't affect how
-       /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
-       /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
-       /// floating-point values to the CBOR format in their 16-bit
-       /// ("half-float"), 32-bit ("single-precision"), or 64-bit
-       /// ("double-precision") encoding form depending on the
-       /// value.</summary>
-       IntOrFloatFromDouble,
+      /// <summary>A JSON number is decoded to CBOR objects either as a CBOR
+      /// integer (major type 0 or 1) if the number's closest-rounded
+      /// approximation as a 64-bit binary floating-point number (using the
+      /// round-to-nearest/ties-to-even rounding mode) represents an integer
+      /// at least -(2^53)+1 and less than 2^53, or as that approximation
+      /// otherwise. For example, the JSON number
+      /// 0.99999999999999999999999999999999999 is the integer 1 when rounded
+      /// to its closest 64-bit binary floating-point approximation (1.0), so
+      /// it's converted to the CBOR integer 1 (major type 0). (In some
+      /// cases, numbers extremely close to zero may underflow to zero, and
+      /// numbers of extremely large absolute value may overflow to
+      /// infinity.). It's important to note that this mode affects only how
+      /// JSON numbers are
+      /// <i>decoded</i> to a CBOR object; it doesn't affect how
+      /// <c>EncodeToBytes</c> and other methods encode CBOR objects.
+      /// Notably, by default, <c>EncodeToBytes</c> encodes CBOR
+      /// floating-point values to the CBOR format in their 16-bit
+      /// ("half-float"), 32-bit ("single-precision"), or 64-bit
+      /// ("double-precision") encoding form depending on the
+      /// value.</summary>
+      IntOrFloatFromDouble,
 
-       /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
-       /// approximation to an IEEE 854 decimal128 value, using the
-       /// round-to-nearest/ties-to-even rounding mode and the rules for the
-       /// EDecimal form of that approximation as given in the
-       /// <c>CBORObject.FromObject(EDecimal)</c> method. (In some cases,
-       /// numbers extremely close to zero may underflow to zero, and numbers
-       /// of extremely large absolute value may overflow to
-       /// infinity.).</summary>
-       Decimal128,
+      /// <summary>JSON numbers are decoded to CBOR as their closest-rounded
+      /// approximation to an IEEE 854 decimal128 value, using the
+      /// round-to-nearest/ties-to-even rounding mode and the rules for the
+      /// EDecimal form of that approximation as given in the
+      /// <c>CBORObject.FromObject(EDecimal)</c> method. (In some cases,
+      /// numbers extremely close to zero may underflow to zero, and numbers
+      /// of extremely large absolute value may overflow to
+      /// infinity.).</summary>
+      Decimal128,
     }
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
     /// options.</summary>
-    public JSONOptions() : this(String.Empty) {
+    public JSONOptions() : this(string.Empty)
+    {
     }
 
     /// <summary>Initializes a new instance of the
@@ -109,7 +112,8 @@ namespace PeterO.Cbor {
     /// JSON.</param>
     [Obsolete("Use the more readable string constructor instead.")]
     public JSONOptions(bool base64Padding)
-      : this("base64Padding=" + (base64Padding ? "1" : "0")) {
+      : this("base64Padding=" + (base64Padding ? "1" : "0"))
+    {
     }
 
     /// <summary>Initializes a new instance of the
@@ -127,7 +131,8 @@ namespace PeterO.Cbor {
     [Obsolete("Use the more readable string constructor instead.")]
     public JSONOptions(bool base64Padding, bool replaceSurrogates)
       : this("base64Padding=" + (base64Padding ? "1" : "0") +
-           ";replacesurrogates=" + (replaceSurrogates ? "1" : "0")) {
+           ";replacesurrogates=" + (replaceSurrogates ? "1" : "0"))
+    {
     }
 
     /// <summary>Initializes a new instance of the
@@ -174,8 +179,10 @@ namespace PeterO.Cbor {
     /// false.</exception>
     /// <exception cref='ArgumentException'>An unrecognized value for
     /// <c>numberconversion</c> was given.</exception>
-    public JSONOptions(string paramString) {
-      if (paramString == null) {
+    public JSONOptions(string paramString)
+    {
+      if (paramString == null)
+      {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
@@ -205,7 +212,8 @@ namespace PeterO.Cbor {
     /// <returns>A text string containing the values of this options
     /// object's properties. The format of the string is the same as the
     /// one described in the String constructor for this class.</returns>
-    public override string ToString() {
+    public override string ToString()
+    {
       return new StringBuilder()
         .Append("base64padding=").Append(this.Base64Padding ? "true" : "false")
         .Append(";replacesurrogates=")
@@ -234,47 +242,54 @@ namespace PeterO.Cbor {
 "\u0020necessary padding when writing traditional base64 to JSON and" +
 "\u0020includes no padding when writing base64url to JSON, in " +
 "\u0020accordance with the revision of the CBOR specification.")]
-    public bool Base64Padding {
+    public bool Base64Padding
+    {
       get;
       private set;
     }
 
-    private string FromNumberConversion() {
+    private string FromNumberConversion()
+    {
       ConversionMode kind = this.NumberConversion;
-      if (kind == ConversionMode.Full) {
-        return "full";
-      }
-      if (kind == ConversionMode.Double) {
-        return "double";
-      }
-      if (kind == ConversionMode.Decimal128) {
-        return "decimal128";
-      }
-      if (kind == ConversionMode.IntOrFloat) {
-        return "intorfloat";
-      }
-      return (kind == ConversionMode.IntOrFloatFromDouble) ?
+      return kind == ConversionMode.Full
+        ? "full"
+        : kind == ConversionMode.Double
+        ? "double"
+        : kind == ConversionMode.Decimal128
+        ? "decimal128"
+        : kind == ConversionMode.IntOrFloat
+        ? "intorfloat"
+        : (kind == ConversionMode.IntOrFloatFromDouble) ?
 "intorfloatfromdouble" : "full";
     }
 
-    private static ConversionMode ToNumberConversion(string str) {
-      if (str != null) {
-        if (str.Equals("full", StringComparison.Ordinal)) {
+    private static ConversionMode ToNumberConversion(string str)
+    {
+      if (str != null)
+      {
+        if (str.Equals("full", StringComparison.Ordinal))
+        {
           return ConversionMode.Full;
         }
-        if (str.Equals("double", StringComparison.Ordinal)) {
+        if (str.Equals("double", StringComparison.Ordinal))
+        {
           return ConversionMode.Double;
         }
-        if (str.Equals("decimal128", StringComparison.Ordinal)) {
+        if (str.Equals("decimal128", StringComparison.Ordinal))
+        {
           return ConversionMode.Decimal128;
         }
-        if (str.Equals("intorfloat", StringComparison.Ordinal)) {
+        if (str.Equals("intorfloat", StringComparison.Ordinal))
+        {
           return ConversionMode.IntOrFloat;
         }
-        if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
+        if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal))
+        {
           return ConversionMode.IntOrFloatFromDouble;
         }
-      } else {
+      }
+      else
+      {
         return ConversionMode.IntOrFloat;
       }
       throw new ArgumentException("Unrecognized conversion mode");
@@ -292,7 +307,8 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to preserve the distinction
     /// between positive zero and negative zero when decoding JSON. The
     /// default is true.</value>
-    public bool PreserveNegativeZero {
+    public bool PreserveNegativeZero
+    {
       get;
       private set;
     }
@@ -302,7 +318,8 @@ namespace PeterO.Cbor {
     /// are later encoded (such as via <c>EncodeToBytes</c> ).</summary>
     /// <value>A value indicating how JSON numbers are decoded to CBOR. The
     /// default is <c>ConversionMode.Full</c>.</value>
-    public ConversionMode NumberConversion {
+    public ConversionMode NumberConversion
+    {
       get;
       private set;
     }
@@ -313,7 +330,8 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether JSON is written using only code
     /// points from the Basic Latin block (U+0000 to U+007F), also known as
     /// ASCII. Default is false.</value>
-    public bool WriteBasic {
+    public bool WriteBasic
+    {
       get;
       private set;
     }
@@ -325,7 +343,8 @@ namespace PeterO.Cbor {
     /// <value>A value indicating whether to preserve the order in which a
     /// CBOR map's keys appear when decoding JSON. The default is
     /// false.</value>
-    public bool KeepKeyOrder {
+    public bool KeepKeyOrder
+    {
       get;
       private set;
     }
@@ -337,7 +356,8 @@ namespace PeterO.Cbor {
     /// is taken.</summary>
     /// <value>A value indicating whether to allow duplicate keys when
     /// reading JSON. The default is false.</value>
-    public bool AllowDuplicateKeys {
+    public bool AllowDuplicateKeys
+    {
       get;
       private set;
     }
@@ -351,7 +371,8 @@ namespace PeterO.Cbor {
     /// are each replaced with a replacement character, or false if an
     /// exception is thrown when such code points are encountered. The
     /// default is false.</value>
-    public bool ReplaceSurrogates {
+    public bool ReplaceSurrogates
+    {
       get;
       private set;
     }
