@@ -6,27 +6,31 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using PeterO;
-using PeterO.Numbers;
 
-namespace PeterO.Cbor {
-  internal sealed class CBORJson2 {
+namespace PeterO.Cbor
+{
+  internal sealed class CBORJson2
+  {
     // JSON parsing method
-    private int SkipWhitespaceJSON() {
-      while (this.index < this.endPos) {
+    private int SkipWhitespaceJSON()
+    {
+      while (this.index < this.endPos)
+      {
         byte c = this.bytes[this.index++];
-        if (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+        if (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+        {
           return c;
         }
       }
       return -1;
     }
 
-    internal void RaiseError(string str) {
+    internal void RaiseError(string str)
+    {
       throw new CBORException(str + " (approx. offset: " +
         Math.Max(0, this.index - 1) + ")");
     }
@@ -34,403 +38,508 @@ namespace PeterO.Cbor {
     private readonly byte[] bytes;
     private readonly JSONOptions options;
     private int index;
-    private int endPos;
-    private static byte[] valueEmptyBytes = new byte[0];
+    private readonly int endPos;
+    private static readonly byte[] ValueEmptyBytes = new byte[0];
 
-    private byte[] NextJSONString() {
+    private byte[] NextJSONString()
+    {
       int c;
       int startIndex = this.index;
       int batchIndex = startIndex;
-      int batchEnd = startIndex;
       byte[] jbytes = this.bytes;
-      while (true) {
-        if (this.index >= this.endPos) {
+      int batchEnd;
+      while (true)
+      {
+        if (this.index >= this.endPos)
+        {
           this.RaiseError("Unterminated string");
         }
-        c = ((int)jbytes[this.index++]) & 0xff;
-        if (c < 0x20) {
+        c = jbytes[this.index++] & 0xff;
+        if (c < 0x20)
+        {
           this.RaiseError("Invalid character in string literal");
         }
-        if (c == '\\') {
+        if (c == '\\')
+        {
           batchEnd = this.index - 1;
           break;
-        } else if (c == 0x22) {
-          int isize = (this.index - startIndex) - 1;
-          if (isize == 0) {
-            return valueEmptyBytes;
+        }
+        else if (c == 0x22)
+        {
+          int isize = this.index - startIndex - 1;
+          if (isize == 0)
+          {
+            return ValueEmptyBytes;
           }
-          var buf = new byte[isize];
+          byte[] buf = new byte[isize];
           Array.Copy(jbytes, startIndex, buf, 0, isize);
           return buf;
-        } else if (c < 0x80) {
+        }
+        else if (c < 0x80)
+        {
           continue;
-        } else if (c >= 0xc2 && c <= 0xdf) {
+        }
+        else if (c >= 0xc2 && c <= 0xdf)
+        {
           int c1 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
-          if (c1 < 0x80 || c1 > 0xbf) {
+            this.bytes[this.index++] & 0xff : -1;
+          if (c1 < 0x80 || c1 > 0xbf)
+          {
             this.RaiseError("Invalid encoding");
           }
-        } else if (c >= 0xe0 && c <= 0xef) {
+        }
+        else if (c >= 0xe0 && c <= 0xef)
+        {
           int c1 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int c2 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int lower = (c == 0xe0) ? 0xa0 : 0x80;
           int upper = (c == 0xed) ? 0x9f : 0xbf;
-          if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
+          if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf)
+          {
             this.RaiseError("Invalid encoding");
           }
-        } else if (c >= 0xf0 && c <= 0xf4) {
+        }
+        else if (c >= 0xf0 && c <= 0xf4)
+        {
           int c1 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int c2 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int c3 = this.index < this.endPos ?
-            ((int)this.bytes[this.index++]) & 0xff : -1;
+            this.bytes[this.index++] & 0xff : -1;
           int lower = (c == 0xf0) ? 0x90 : 0x80;
           int upper = (c == 0xf4) ? 0x8f : 0xbf;
           if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
-            c3 < 0x80 || c3 > 0xbf) {
+            c3 < 0x80 || c3 > 0xbf)
+          {
             this.RaiseError("Invalid encoding");
           }
-        } else {
+        }
+        else
+        {
           this.RaiseError("Invalid encoding");
         }
       }
-      using (var ms = new MemoryStream()) {
-        if (batchEnd > batchIndex) {
+      using (var ms = new MemoryStream())
+      {
+        if (batchEnd > batchIndex)
+        {
           ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
           this.index = batchEnd;
           batchIndex = batchEnd;
-        } else {
+        }
+        else
+        {
           this.index = startIndex;
           batchIndex = startIndex;
         }
-        while (true) {
+        while (true)
+        {
           batchEnd = this.index;
-          c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
+          c = this.index < this.endPos ? jbytes[this.index++] &
             0xff : -1;
-          if (c == -1) {
+          if (c == -1)
+          {
             this.RaiseError("Unterminated string");
           }
-          if (c < 0x20) {
+          if (c < 0x20)
+          {
             this.RaiseError("Invalid character in string literal");
           }
-          switch (c) {
+          switch (c)
+          {
             case '\\':
-              c = this.index < this.endPos ? ((int)jbytes[this.index++]) &
+              c = this.index < this.endPos ? jbytes[this.index++] &
                 0xff : -1;
-              switch (c) {
+              switch (c)
+              {
                 case '\\':
                 case '/':
                 case '\"':
                   // Slash is now allowed to be escaped under RFC 8259
-                  if (batchEnd > batchIndex) {
+                  if (batchEnd > batchIndex)
+                  {
                     ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
                   batchIndex = this.index;
                   ms.WriteByte((byte)c);
                   break;
                 case 'b':
-                  if (batchEnd > batchIndex) {
+                  if (batchEnd > batchIndex)
+                  {
                     ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
                   batchIndex = this.index;
                   ms.WriteByte((byte)'\b');
                   break;
                 case 'f':
-                  if (batchEnd > batchIndex) {
+                  if (batchEnd > batchIndex)
+                  {
                     ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
                   batchIndex = this.index;
                   ms.WriteByte((byte)'\f');
                   break;
                 case 'n':
-                  if (batchEnd > batchIndex) {
+                  if (batchEnd > batchIndex)
+                  {
                     ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
                   batchIndex = this.index;
                   ms.WriteByte((byte)'\n');
                   break;
                 case 'r':
-                  if (batchEnd > batchIndex) {
+                  if (batchEnd > batchIndex)
+                  {
                     ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
                   batchIndex = this.index;
                   ms.WriteByte((byte)'\r');
                   break;
                 case 't':
-                  if (batchEnd > batchIndex) {
+                  if (batchEnd > batchIndex)
+                  {
                     ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                   }
                   batchIndex = this.index;
                   ms.WriteByte((byte)'\t');
                   break;
-                case 'u': { // Unicode escape
-                  c = 0;
-                  // Consists of 4 hex digits
-                  for (var i = 0; i < 4; ++i) {
-                    int ch = this.index < this.endPos ?
-                      (int)jbytes[this.index++] : -1;
-                    if (ch >= '0' && ch <= '9') {
-                      c <<= 4;
-                      c |= ch - '0';
-                    } else if (ch >= 'A' && ch <= 'F') {
-                      c <<= 4;
-                      c |= ch + 10 - 'A';
-                    } else if (ch >= 'a' && ch <= 'f') {
-                      c <<= 4;
-                      c |= ch + 10 - 'a';
-                    } else {
-                      this.RaiseError(
-                        "Invalid Unicode escaped character");
-                    }
-                  }
-                  if ((c & 0xf800) != 0xd800) {
-                    // Non-surrogate
-                    if (batchEnd > batchIndex) {
-                      ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
-                    }
-                    batchIndex = this.index;
-                    int ic = c;
-                    if (c >= 0x800) {
-                      ms.WriteByte((byte)(0xe0 | ((ic >> 12) & 0x0f)));
-                      ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
-                      ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
-                    } else if (c >= 0x80) {
-                      ms.WriteByte((byte)(0xc0 | ((ic >> 6) & 0x1f)));
-                      ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
-                    } else {
-                      ms.WriteByte((byte)ic);
-                    }
-                  } else if ((c & 0xfc00) == 0xd800) {
-                    int ch;
-                    if (this.index >= this.endPos - 1 ||
-                      jbytes[this.index] != (byte)'\\' ||
-                      jbytes[this.index + 1] != (byte)0x75) {
-                      this.RaiseError("Invalid escaped character");
-                    }
-                    this.index += 2;
-                    var c2 = 0;
-                    for (var i = 0; i < 4; ++i) {
-                      ch = this.index < this.endPos ?
-                        ((int)jbytes[this.index++]) & 0xff : -1;
-                      if (ch >= '0' && ch <= '9') {
-                        c2 <<= 4;
-                        c2 |= ch - '0';
-                      } else if (ch >= 'A' && ch <= 'F') {
-                        c2 <<= 4;
-                        c2 |= ch + 10 - 'A';
-                      } else if (ch >= 'a' && ch <= 'f') {
-                        c2 <<= 4;
-                        c2 |= ch + 10 - 'a';
-                      } else {
+                case 'u':
+                  { // Unicode escape
+                    c = 0;
+                    // Consists of 4 hex digits
+                    for (int i = 0; i < 4; ++i)
+                    {
+                      int ch = this.index < this.endPos ?
+                        jbytes[this.index++] : -1;
+                      if (ch >= '0' && ch <= '9')
+                      {
+                        c <<= 4;
+                        c |= ch - '0';
+                      }
+                      else if (ch >= 'A' && ch <= 'F')
+                      {
+                        c <<= 4;
+                        c |= ch + 10 - 'A';
+                      }
+                      else if (ch >= 'a' && ch <= 'f')
+                      {
+                        c <<= 4;
+                        c |= ch + 10 - 'a';
+                      }
+                      else
+                      {
                         this.RaiseError(
                           "Invalid Unicode escaped character");
                       }
                     }
-                    if ((c2 & 0xfc00) != 0xdc00) {
-                      this.RaiseError("Unpaired surrogate code point");
-                    } else {
-                      if (batchEnd > batchIndex) {
+                    if ((c & 0xf800) != 0xd800)
+                    {
+                      // Non-surrogate
+                      if (batchEnd > batchIndex)
+                      {
                         ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
                       }
                       batchIndex = this.index;
-                      int ic = 0x10000 + (((int)c & 0x3ff) << 10) +
-                        ((int)c2 & 0x3ff);
-                      ms.WriteByte((byte)(0xf0 | ((ic >> 18) & 0x07)));
-                      ms.WriteByte((byte)(0x80 | ((ic >> 12) & 0x3f)));
-                      ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
-                      ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                      int ic = c;
+                      if (c >= 0x800)
+                      {
+                        ms.WriteByte((byte)(0xe0 | ((ic >> 12) & 0x0f)));
+                        ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
+                        ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                      }
+                      else if (c >= 0x80)
+                      {
+                        ms.WriteByte((byte)(0xc0 | ((ic >> 6) & 0x1f)));
+                        ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                      }
+                      else
+                      {
+                        ms.WriteByte((byte)ic);
+                      }
                     }
-                  } else {
-                    this.RaiseError("Unpaired surrogate code point");
+                    else if ((c & 0xfc00) == 0xd800)
+                    {
+                      int ch;
+                      if (this.index >= this.endPos - 1 ||
+                        jbytes[this.index] != (byte)'\\' ||
+                        jbytes[this.index + 1] != 0x75)
+                      {
+                        this.RaiseError("Invalid escaped character");
+                      }
+                      this.index += 2;
+                      int c2 = 0;
+                      for (int i = 0; i < 4; ++i)
+                      {
+                        ch = this.index < this.endPos ?
+                          jbytes[this.index++] & 0xff : -1;
+                        if (ch >= '0' && ch <= '9')
+                        {
+                          c2 <<= 4;
+                          c2 |= ch - '0';
+                        }
+                        else if (ch >= 'A' && ch <= 'F')
+                        {
+                          c2 <<= 4;
+                          c2 |= ch + 10 - 'A';
+                        }
+                        else if (ch >= 'a' && ch <= 'f')
+                        {
+                          c2 <<= 4;
+                          c2 |= ch + 10 - 'a';
+                        }
+                        else
+                        {
+                          this.RaiseError(
+                            "Invalid Unicode escaped character");
+                        }
+                      }
+                      if ((c2 & 0xfc00) != 0xdc00)
+                      {
+                        this.RaiseError("Unpaired surrogate code point");
+                      }
+                      else
+                      {
+                        if (batchEnd > batchIndex)
+                        {
+                          ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
+                        }
+                        batchIndex = this.index;
+                        int ic = 0x10000 + ((c & 0x3ff) << 10) +
+                          (c2 & 0x3ff);
+                        ms.WriteByte((byte)(0xf0 | ((ic >> 18) & 0x07)));
+                        ms.WriteByte((byte)(0x80 | ((ic >> 12) & 0x3f)));
+                        ms.WriteByte((byte)(0x80 | ((ic >> 6) & 0x3f)));
+                        ms.WriteByte((byte)(0x80 | (ic & 0x3f)));
+                      }
+                    }
+                    else
+                    {
+                      this.RaiseError("Unpaired surrogate code point");
+                    }
+                    break;
                   }
-                  break;
-                }
-                default: {
-                  this.RaiseError("Invalid escaped character");
-                  break;
-                }
+                default:
+                  {
+                    this.RaiseError("Invalid escaped character");
+                    break;
+                  }
               }
               break;
             case 0x22: // double quote
-              if (batchEnd > batchIndex) {
+              if (batchEnd > batchIndex)
+              {
                 ms.Write(jbytes, batchIndex, batchEnd - batchIndex);
               }
               return ms.ToArray();
-            default: {
-              if (c <= 0x7f) {
-                // Deliberately empty
-              } else if (c >= 0xc2 && c <= 0xdf) {
-                int c1 = this.index < this.endPos ?
-                  ((int)jbytes[this.index++]) & 0xff : -1;
-                if (c1 < 0x80 || c1 > 0xbf) {
+            default:
+              {
+                if (c <= 0x7f)
+                {
+                  // Deliberately empty
+                }
+                else if (c >= 0xc2 && c <= 0xdf)
+                {
+                  int c1 = this.index < this.endPos ?
+                    jbytes[this.index++] & 0xff : -1;
+                  if (c1 < 0x80 || c1 > 0xbf)
+                  {
+                    this.RaiseError("Invalid encoding");
+                  }
+                }
+                else if (c >= 0xe0 && c <= 0xef)
+                {
+                  int c1 = this.index < this.endPos ?
+                    jbytes[this.index++] & 0xff : -1;
+                  int c2 = this.index < this.endPos ?
+                    jbytes[this.index++] & 0xff : -1;
+                  int lower = (c == 0xe0) ? 0xa0 : 0x80;
+                  int upper = (c == 0xed) ? 0x9f : 0xbf;
+                  if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf)
+                  {
+                    this.RaiseError("Invalid encoding");
+                  }
+                }
+                else if (c >= 0xf0 && c <= 0xf4)
+                {
+                  int c1 = this.index < this.endPos ?
+                    jbytes[this.index++] & 0xff : -1;
+                  int c2 = this.index < this.endPos ?
+                    jbytes[this.index++] & 0xff : -1;
+                  int c3 = this.index < this.endPos ?
+                    jbytes[this.index++] & 0xff : -1;
+                  int lower = (c == 0xf0) ? 0x90 : 0x80;
+                  int upper = (c == 0xf4) ? 0x8f : 0xbf;
+                  if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+                    c3 < 0x80 || c3 > 0xbf)
+                  {
+                    this.RaiseError("Invalid encoding");
+                  }
+                }
+                else
+                {
                   this.RaiseError("Invalid encoding");
                 }
-              } else if (c >= 0xe0 && c <= 0xef) {
-                int c1 = this.index < this.endPos ?
-                  ((int)jbytes[this.index++]) & 0xff : -1;
-                int c2 = this.index < this.endPos ?
-                  ((int)jbytes[this.index++]) & 0xff : -1;
-                int lower = (c == 0xe0) ? 0xa0 : 0x80;
-                int upper = (c == 0xed) ? 0x9f : 0xbf;
-                if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf) {
-                  this.RaiseError("Invalid encoding");
-                }
-              } else if (c >= 0xf0 && c <= 0xf4) {
-                int c1 = this.index < this.endPos ?
-                  ((int)jbytes[this.index++]) & 0xff : -1;
-                int c2 = this.index < this.endPos ?
-                  ((int)jbytes[this.index++]) & 0xff : -1;
-                int c3 = this.index < this.endPos ?
-                  ((int)jbytes[this.index++]) & 0xff : -1;
-                int lower = (c == 0xf0) ? 0x90 : 0x80;
-                int upper = (c == 0xf4) ? 0x8f : 0xbf;
-                if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
-                  c3 < 0x80 || c3 > 0xbf) {
-                  this.RaiseError("Invalid encoding");
-                }
-              } else {
-                this.RaiseError("Invalid encoding");
+                break;
               }
-              break;
-            }
           }
         }
       }
     }
 
     private CBORObject NextJSONNegativeNumber(
-      int[] nextChar) {
+      int[] nextChar)
+    {
       // Assumes the last character read was '-'
       CBORObject obj;
       int numberStartIndex = this.index - 1;
-      int c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+      int c = this.index < this.endPos ? this.bytes[this.index++] &
         0xff : -1;
-      if (c < '0' || c > '9') {
+      if (c < '0' || c > '9')
+      {
         this.RaiseError("JSON number can't be parsed.");
       }
       int cstart = c;
       while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-        c == 'e' || c == 'E') {
-        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        c == 'e' || c == 'E')
+      {
+        c = this.index < this.endPos ? this.bytes[this.index++] &
           0xff : -1;
       }
       // check if character can validly appear after a JSON number
       if (c != ',' && c != ']' && c != '}' && c != -1 &&
-        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+      {
         this.RaiseError("Invalid character after JSON number");
       }
       int numberEndIndex = c < 0 ?
         this.endPos : this.index - 1;
-      if (numberEndIndex - numberStartIndex == 2 && cstart != '0') {
+      if (numberEndIndex - numberStartIndex == 2 && cstart != '0')
+      {
         // Negative single digit other than negative zero
-        obj = CBORDataUtilities.ParseSmallNumberAsNegative((int)(cstart
-              - '0'),
+        obj = CBORDataUtilities.ParseSmallNumberAsNegative(cstart
+              - '0',
             this.options);
-      } else {
+      }
+      else
+      {
         obj = CBORDataUtilities.ParseJSONNumber(
             this.bytes,
             numberStartIndex,
             numberEndIndex - numberStartIndex,
             this.options);
-        #if DEBUG
+#if DEBUG
         if (this.options.NumberConversion == JSONOptions.ConversionMode.Full &&
 (
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,
-           numberEndIndex - numberStartIndex)) != 0) {
-             this.RaiseError(String.Empty + obj);
+           numberEndIndex - numberStartIndex)) != 0)
+        {
+          this.RaiseError(string.Empty + obj);
         }
-        #endif
-        if (obj == null) {
-          string errstr = String.Empty;
+#endif
+        if (obj == null)
+        {
+          string errstr = string.Empty;
           // errstr = (str.Length <= 100) ? str : (str.Substring(0,
           // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-        nextChar[0] = c;
-      } else {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
-    private CBORObject NextJSONNonnegativeNumber(int c, int[] nextChar) {
+    private CBORObject NextJSONNonnegativeNumber(int c, int[] nextChar)
+    {
       // Assumes the last character read was a digit
       CBORObject obj = null;
       int cval = c - '0';
       int cstart = c;
       int startIndex = this.index - 1;
-      var needObj = true;
+      bool needObj = true;
       int numberStartIndex = this.index - 1;
-      c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+      c = this.index < this.endPos ? this.bytes[this.index++] &
         0xff : -1;
       if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-          c == 'e' || c == 'E')) {
+          c == 'e' || c == 'E'))
+      {
         // Optimize for common case where JSON number
         // is a single digit without sign or exponent
         obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
         needObj = false;
-      } else if (c >= '0' && c <= '9') {
+      }
+      else if (c >= '0' && c <= '9')
+      {
         int csecond = c;
-        if (cstart == '0') {
+        if (cstart == '0')
+        {
           // Leading zero followed by any digit is not allowed
           this.RaiseError("JSON number can't be parsed.");
         }
-        cval = (cval * 10) + (int)(c - '0');
-        c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+        cval = (cval * 10) + (c - '0');
+        c = this.index < this.endPos ? this.bytes[this.index++] &
           0xff : -1;
-        if (c >= '0' && c <= '9') {
-          var digits = 2;
-          while (digits < 9 && (c >= '0' && c <= '9')) {
-            cval = (cval * 10) + (int)(c - '0');
+        if (c >= '0' && c <= '9')
+        {
+          int digits = 2;
+          while (digits < 9 && c >= '0' && c <= '9')
+          {
+            cval = (cval * 10) + (c - '0');
             c = this.index < this.endPos ?
-              ((int)this.bytes[this.index++]) & 0xff : -1;
+              this.bytes[this.index++] & 0xff : -1;
             ++digits;
           }
           if (!(c == 'e' || c == 'E' || c == '.' || (c >= '0' && c <=
-                '9'))) {
+                '9')))
+          {
             // All-digit number that's short enough
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
-            #if DEBUG
+#if DEBUG
             if ((
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
-0) {
-               this.RaiseError(String.Empty + obj);
+0)
+            {
+              this.RaiseError(string.Empty + obj);
             }
-            #endif
+#endif
             needObj = false;
           }
-        } else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
-            == 'E')) {
+        }
+        else if (!(c == '-' || c == '+' || c == '.' || c == 'e' || c
+            == 'E'))
+        {
           // Optimize for common case where JSON number
           // is two digits without sign, decimal point, or exponent
           obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
-          #if DEBUG
+#if DEBUG
           if ((
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
-0) { this.RaiseError(String.Empty + obj);
-}
-          #endif
+0)
+          {
+            this.RaiseError(string.Empty + obj);
+          }
+#endif
           needObj = false;
         }
       }
-      if (needObj) {
+      if (needObj)
+      {
         while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-          c == 'e' || c == 'E') {
-          c = this.index < this.endPos ? ((int)this.bytes[this.index++]) &
+          c == 'e' || c == 'E')
+        {
+          c = this.index < this.endPos ? this.bytes[this.index++] &
             0xff : -1;
         }
         // check if character can validly appear after a JSON number
         if (c != ',' && c != ']' && c != '}' && c != -1 &&
-          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+        {
           this.RaiseError("Invalid character after JSON number");
         }
         int numberEndIndex = c < 0 ? this.endPos : this.index - 1;
@@ -439,108 +548,123 @@ namespace PeterO.Cbor {
            numberStartIndex,
            numberEndIndex - numberStartIndex,
            this.options);
-        #if DEBUG
+#if DEBUG
         if (this.options.NumberConversion == JSONOptions.ConversionMode.Full &&
 (
   (EDecimal)obj.ToObject(
   typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,
-           numberEndIndex - numberStartIndex)) != 0) {
-          this.RaiseError(String.Empty + obj); }
-        #endif
-        if (obj == null) {
-          string errstr = String.Empty;
+           numberEndIndex - numberStartIndex)) != 0)
+        {
+          this.RaiseError(string.Empty + obj);
+        }
+#endif
+        if (obj == null)
+        {
+          string errstr = string.Empty;
           // errstr = (str.Length <= 100) ? str : (str.Substring(0,
           // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
-      } else {
+      }
+      else
+      {
         // check if character can validly appear after a JSON number
         if (c != ',' && c != ']' && c != '}' && c != -1 &&
-          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) {
+          c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+        {
           this.RaiseError("Invalid character after JSON number");
         }
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-        nextChar[0] = c;
-      } else {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
     private CBORObject NextJSONValue(
       int firstChar,
       int[] nextChar,
-      int depth) {
+      int depth)
+    {
       int c = firstChar;
-      CBORObject obj = null;
-      if (c < 0) {
+      if (c < 0)
+      {
         this.RaiseError("Unexpected end of data");
       }
-      switch (c) {
-        case '"': {
-          // Parse a string
-          // The tokenizer already checked the string for invalid
-          // surrogate pairs, so just call the CBORObject
-          // constructor directly
-          obj = CBORObject.FromRawUtf8(this.NextJSONString());
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return obj;
-        }
-        case '{': {
-          // Parse an object
-          obj = this.ParseJSONObject(depth + 1);
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return obj;
-        }
-        case '[': {
-          // Parse an array
-          obj = this.ParseJSONArray(depth + 1);
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return obj;
-        }
-        case 't': {
-          // Parse true
-          if (this.endPos - this.index <= 2 ||
-            this.bytes[this.index] != (byte)0x72 ||
-            this.bytes[this.index + 1] != (byte)0x75 ||
-            this.bytes[this.index + 2] != (byte)0x65) {
-            this.RaiseError("Value can't be parsed.");
+      CBORObject obj;
+      switch (c)
+      {
+        case '"':
+          {
+            // Parse a string
+            // The tokenizer already checked the string for invalid
+            // surrogate pairs, so just call the CBORObject
+            // constructor directly
+            obj = CBORObject.FromRawUtf8(this.NextJSONString());
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return obj;
           }
-          this.index += 3;
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return CBORObject.True;
-        }
-        case 'f': {
-          // Parse false
-          if (this.endPos - this.index <= 3 ||
-            this.bytes[this.index] != (byte)0x61 ||
-            this.bytes[this.index + 1] != (byte)0x6c ||
-            this.bytes[this.index + 2] != (byte)0x73 ||
-            this.bytes[this.index + 3] != (byte)0x65) {
-            this.RaiseError("Value can't be parsed.");
+        case '{':
+          {
+            // Parse an object
+            obj = this.ParseJSONObject(depth + 1);
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return obj;
           }
-          this.index += 4;
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return CBORObject.False;
-        }
-        case 'n': {
-          // Parse null
-          if (this.endPos - this.index <= 2 ||
-            this.bytes[this.index] != (byte)0x75 ||
-            this.bytes[this.index + 1] != (byte)0x6c ||
-            this.bytes[this.index + 2] != (byte)0x6c) {
-            this.RaiseError("Value can't be parsed.");
+        case '[':
+          {
+            // Parse an array
+            obj = this.ParseJSONArray(depth + 1);
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return obj;
           }
-          this.index += 3;
-          nextChar[0] = this.SkipWhitespaceJSON();
-          return CBORObject.Null;
-        }
-        case '-': {
-          // Parse a negative number
-          return this.NextJSONNegativeNumber(nextChar);
-        }
+        case 't':
+          {
+            // Parse true
+            if (this.endPos - this.index <= 2 ||
+              this.bytes[this.index] != 0x72 ||
+              this.bytes[this.index + 1] != 0x75 ||
+              this.bytes[this.index + 2] != 0x65)
+            {
+              this.RaiseError("Value can't be parsed.");
+            }
+            this.index += 3;
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return CBORObject.True;
+          }
+        case 'f':
+          {
+            // Parse false
+            if (this.endPos - this.index <= 3 ||
+              this.bytes[this.index] != 0x61 ||
+              this.bytes[this.index + 1] != 0x6c ||
+              this.bytes[this.index + 2] != 0x73 ||
+              this.bytes[this.index + 3] != 0x65)
+            {
+              this.RaiseError("Value can't be parsed.");
+            }
+            this.index += 4;
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return CBORObject.False;
+          }
+        case 'n':
+          {
+            // Parse null
+            if (this.endPos - this.index <= 2 ||
+              this.bytes[this.index] != 0x75 ||
+              this.bytes[this.index + 1] != 0x6c ||
+              this.bytes[this.index + 2] != 0x6c)
+            {
+              this.RaiseError("Value can't be parsed.");
+            }
+            this.index += 3;
+            nextChar[0] = this.SkipWhitespaceJSON();
+            return CBORObject.Null;
+          }
+        case '-':
+          {
+            // Parse a negative number
+            return this.NextJSONNegativeNumber(nextChar);
+          }
         case '0':
         case '1':
         case '2':
@@ -550,10 +674,11 @@ namespace PeterO.Cbor {
         case '6':
         case '7':
         case '8':
-        case '9': {
-          // Parse a nonnegative number
-          return this.NextJSONNonnegativeNumber(c, nextChar);
-        }
+        case '9':
+          {
+            // Parse a nonnegative number
+            return this.NextJSONNonnegativeNumber(c, nextChar);
+          }
         default:
           this.RaiseError("Value can't be parsed.");
           break;
@@ -562,32 +687,39 @@ namespace PeterO.Cbor {
     }
 
     public CBORJson2(byte[] bytes, int index, int endPos, JSONOptions
-      options) {
-      #if DEBUG
-      if (bytes == null) {
+      options)
+    {
+#if DEBUG
+      if (bytes == null)
+      {
         throw new ArgumentNullException(nameof(bytes));
       }
-      if (index < 0) {
+      if (index < 0)
+      {
         throw new ArgumentException("index (" + index + ") is not greater or" +
           "\u0020equal to 0");
       }
-      if (index > bytes.Length) {
+      if (index > bytes.Length)
+      {
         throw new ArgumentException("index (" + index + ") is not less or" +
           "\u0020equal to " + bytes.Length);
       }
-      if (endPos < 0) {
+      if (endPos < 0)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
           "\u0020or equal to 0");
       }
-      if (endPos > bytes.Length) {
+      if (endPos > bytes.Length)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
           "\u0020equal to " + bytes.Length);
       }
-      if (endPos < index) {
+      if (endPos < index)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
           "\u0020or equal to " + index);
       }
-      #endif
+#endif
 
       this.bytes = bytes;
       this.index = index;
@@ -595,16 +727,19 @@ namespace PeterO.Cbor {
       this.options = options;
     }
 
-    public CBORObject ParseJSON(int[] nextchar) {
+    public CBORObject ParseJSON(int[] nextchar)
+    {
       int c;
       CBORObject ret;
       c = this.SkipWhitespaceJSON();
-      if (c == '[') {
+      if (c == '[')
+      {
         ret = this.ParseJSONArray(0);
         nextchar[0] = this.SkipWhitespaceJSON();
         return ret;
       }
-      if (c == '{') {
+      if (c == '{')
+      {
         ret = this.ParseJSONObject(0);
         nextchar[0] = this.SkipWhitespaceJSON();
         return ret;
@@ -616,11 +751,13 @@ namespace PeterO.Cbor {
       byte[] bytes,
       int index,
       int endPos,
-      JSONOptions options) {
-      var nextchar = new int[1];
+      JSONOptions options)
+    {
+      int[] nextchar = new int[1];
       var cj = new CBORJson2(bytes, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
-      if (nextchar[0] != -1) {
+      if (nextchar[0] != -1)
+      {
         cj.RaiseError("End of bytes not reached");
       }
       return obj;
@@ -631,83 +768,99 @@ namespace PeterO.Cbor {
       int index,
       int endPos,
       JSONOptions options,
-      int[] nextchar) {
-      #if DEBUG
-      if (bytes == null) {
+      int[] nextchar)
+    {
+#if DEBUG
+      if (bytes == null)
+      {
         throw new ArgumentNullException(nameof(bytes));
       }
-      if (index < 0) {
+      if (index < 0)
+      {
         throw new ArgumentException("index (" + index + ") is not greater or" +
           "\u0020equal to 0");
       }
-      if (index > bytes.Length) {
+      if (index > bytes.Length)
+      {
         throw new ArgumentException("index (" + index + ") is not less or" +
           "\u0020equal to " + bytes.Length);
       }
-      if (endPos < 0) {
+      if (endPos < 0)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
           "\u0020or equal to 0");
       }
-      if (endPos > bytes.Length) {
+      if (endPos > bytes.Length)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not less or" +
           "\u0020equal to " + bytes.Length);
       }
-      if (endPos < index) {
+      if (endPos < index)
+      {
         throw new ArgumentException("endPos (" + endPos + ") is not greater" +
           "\u0020or equal to " + index);
       }
-      #endif
+#endif
 
       var cj = new CBORJson2(bytes, index, endPos, options);
       return cj.ParseJSON(nextchar);
     }
 
-    private CBORObject ParseJSONObject(int depth) {
+    private CBORObject ParseJSONObject(int depth)
+    {
       // Assumes that the last character read was '{'
-      if (depth > 1000) {
+      if (depth > 1000)
+      {
         this.RaiseError("Too deeply nested");
       }
       int c;
       CBORObject key = null;
       CBORObject obj;
-      var nextchar = new int[1];
-      var seenComma = false;
+      int[] nextchar = new int[1];
+      bool seenComma = false;
       IDictionary<CBORObject, CBORObject> myHashMap =
 this.options.KeepKeyOrder ? PropertyMap.NewOrderedDict() : new
 SortedDictionary<CBORObject, CBORObject>();
-      while (true) {
+      while (true)
+      {
         c = this.SkipWhitespaceJSON();
-        switch (c) {
+        switch (c)
+        {
           case -1:
             this.RaiseError("A JSON object must end with '}'");
             break;
           case '}':
-            if (seenComma) {
+            if (seenComma)
+            {
               // Situation like '{"0"=>1,}'
               this.RaiseError("Trailing comma");
               return null;
             }
             return CBORObject.FromRaw(myHashMap);
-          default: {
-            // Read the next string
-            if (c < 0) {
-              this.RaiseError("Unexpected end of data");
-              return null;
+          default:
+            {
+              // Read the next string
+              if (c < 0)
+              {
+                this.RaiseError("Unexpected end of data");
+                return null;
+              }
+              if (c != '"')
+              {
+                this.RaiseError("Expected a string as a key");
+                return null;
+              }
+              // Parse a string that represents the object's key
+              // The tokenizer already checked the string for invalid
+              // surrogate pairs, so just call the CBORObject
+              // constructor directly
+              obj = CBORObject.FromRawUtf8(this.NextJSONString());
+              key = obj;
+              break;
             }
-            if (c != '"') {
-              this.RaiseError("Expected a string as a key");
-              return null;
-            }
-            // Parse a string that represents the object's key
-            // The tokenizer already checked the string for invalid
-            // surrogate pairs, so just call the CBORObject
-            // constructor directly
-            obj = CBORObject.FromRawUtf8(this.NextJSONString());
-            key = obj;
-            break;
-          }
         }
-        if (this.SkipWhitespaceJSON() != ':') {
+        if (this.SkipWhitespaceJSON() != ':')
+        {
           this.RaiseError("Expected a ':' after a key");
         }
         int oldCount = myHashMap.Count;
@@ -718,40 +871,49 @@ SortedDictionary<CBORObject, CBORObject>();
             depth);
         int newCount = myHashMap.Count;
         if (!this.options.AllowDuplicateKeys &&
-              oldCount == newCount) {
-              this.RaiseError("Duplicate key already exists");
-              return null;
+              oldCount == newCount)
+        {
+          this.RaiseError("Duplicate key already exists");
+          return null;
         }
-        switch (nextchar[0]) {
+        switch (nextchar[0])
+        {
           case ',':
             seenComma = true;
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-          default: this.RaiseError("Expected a ',' or '}'");
+          default:
+            this.RaiseError("Expected a ',' or '}'");
             break;
         }
       }
     }
 
-    internal CBORObject ParseJSONArray(int depth) {
+    internal CBORObject ParseJSONArray(int depth)
+    {
       // Assumes that the last character read was '['
-      if (depth > 1000) {
+      if (depth > 1000)
+      {
         this.RaiseError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();
-      var seenComma = false;
-      var nextchar = new int[1];
-      while (true) {
+      bool seenComma = false;
+      int[] nextchar = new int[1];
+      while (true)
+      {
         int c = this.SkipWhitespaceJSON();
-        if (c == ']') {
-          if (seenComma) {
+        if (c == ']')
+        {
+          if (seenComma)
+          {
             // Situation like '[0,1,]'
             this.RaiseError("Trailing comma");
           }
           return CBORObject.FromRaw(myArrayList);
         }
-        if (c == ',') {
+        if (c == ',')
+        {
           // Situation like '[,0,1,2]' or '[0,,1]'
           this.RaiseError("Empty array element");
         }
@@ -761,13 +923,15 @@ SortedDictionary<CBORObject, CBORObject>();
             nextchar,
             depth));
         c = nextchar[0];
-        switch (c) {
+        switch (c)
+        {
           case ',':
             seenComma = true;
             break;
           case ']':
             return CBORObject.FromRaw(myArrayList);
-          default: this.RaiseError("Expected a ',' or ']'");
+          default:
+            this.RaiseError("Expected a ',' or ']'");
             break;
         }
       }

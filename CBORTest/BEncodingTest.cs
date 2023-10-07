@@ -1,69 +1,79 @@
-using System;
-using System.IO;
-using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using System.IO;
 
-namespace Test {
+namespace Test
+{
   [TestFixture]
-  public class BEncodingTest {
-    private static CBORObject EncodingFromBytes(byte[] b) {
-      try {
-        using (var s = new Test.DelayingStream(b)) {
-          return BEncoding.Read(s);
-        }
-      } catch (IOException ex) {
-        throw new CBORException(String.Empty, ex);
+  public class BEncodingTest
+  {
+    private static CBORObject EncodingFromBytes(byte[] b)
+    {
+      try
+      {
+        using var s = new Test.DelayingStream(b);
+        return BEncoding.Read(s);
+      }
+      catch (IOException ex)
+      {
+        throw new CBORException(string.Empty, ex);
       }
     }
 
-    private static byte[] EncodingToBytes(CBORObject b) {
-      try {
-        using (var ms = new Test.DelayingStream()) {
-          BEncoding.Write(b, ms);
-          return ms.ToArray();
-        }
-      } catch (IOException ex) {
-        throw new CBORException(String.Empty, ex);
+    private static byte[] EncodingToBytes(CBORObject b)
+    {
+      try
+      {
+        using var ms = new Test.DelayingStream();
+        BEncoding.Write(b, ms);
+        return ms.ToArray();
+      }
+      catch (IOException ex)
+      {
+        throw new CBORException(string.Empty, ex);
       }
     }
 
-    public static void DoTestLong(long value) {
-      String b = "i" + TestCommon.LongToString(value) + "e";
+    public static void DoTestLong(long value)
+    {
+      string b = "i" + TestCommon.LongToString(value) + "e";
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
             false));
       Assert.AreEqual(value, beo.AsNumber().ToInt64Checked());
-      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
+      string newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
     }
 
-    public static void DoTestString(String value) {
-      String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
+    public static void DoTestString(string value)
+    {
+      string b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
             false));
       Assert.AreEqual(value, beo.AsString());
-      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
+      string newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
     }
 
     [Test]
-    public void TestLong() {
+    public void TestLong()
+    {
       DoTestLong(0);
       DoTestLong(-1);
-      DoTestLong(Int32.MinValue);
-      DoTestLong(Int32.MaxValue);
-      DoTestLong(Int64.MinValue);
-      DoTestLong(Int64.MaxValue);
+      DoTestLong(int.MinValue);
+      DoTestLong(int.MaxValue);
+      DoTestLong(long.MinValue);
+      DoTestLong(long.MaxValue);
     }
 
     [Test]
-    public void TestList() {
-      CBORObject beo = CBORObject.NewArray();
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip("two"));
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
-      beo.Add(ToObjectTest.TestToFromObjectRoundTrip("four"));
+    public void TestList()
+    {
+      var beo = CBORObject.NewArray();
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip("two"));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip(3));
+      _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip("four"));
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsNumber().ToInt64Checked());
       {
@@ -99,8 +109,9 @@ namespace Test {
     }
 
     [Test]
-    public void TestDictionary() {
-      CBORObject beo = CBORObject.NewMap();
+    public void TestDictionary()
+    {
+      var beo = CBORObject.NewMap();
       beo["zero"] = ToObjectTest.TestToFromObjectRoundTrip(1);
       beo["one"] = ToObjectTest.TestToFromObjectRoundTrip("two");
       beo["two"] = ToObjectTest.TestToFromObjectRoundTrip(3);
@@ -140,8 +151,9 @@ namespace Test {
     }
 
     [Test]
-    public void TestString() {
-      DoTestString(String.Empty);
+    public void TestString()
+    {
+      DoTestString(string.Empty);
       DoTestString(" ");
       DoTestString("test");
 

@@ -1,9 +1,11 @@
 using System;
 
-namespace PeterO.Cbor {
+namespace PeterO.Cbor
+{
   /// <summary>An interface for reading Unicode characters from a data
   /// source.</summary>
-  internal interface ICharacterInput {
+  internal interface ICharacterInput
+  {
     /// <summary>Reads a Unicode character from a data source.</summary>
     /// <returns>Either a Unicode code point (from 0-0xd7ff or from 0xe000
     /// to 0x10ffff), or the value -1 indicating the end of the
