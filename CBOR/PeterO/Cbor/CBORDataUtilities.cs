@@ -550,20 +550,10 @@ namespace PeterO.Cbor
     /// <param name='bytes'>A byte sequence to parse as a JSON
     /// number.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
-<<<<<<< HEAD
     /// null if the parsing fails, including if the byte sequence is null
     /// or empty.</returns>
     public static CBORObject ParseJSONNumber(byte[] bytes) {
       return ParseJSONNumber(bytes, JSONOptions.Default);
-=======
-    /// positive zero if the number is a zero that starts with a minus sign
-    /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
-    /// including if the byte sequence is null or empty.</returns>
-    public static CBORObject ParseJSONNumber(byte[] bytes)
-    {
-      // TODO: Preserve negative zeros in next major version
-      return ParseJSONNumber(bytes, PreserveNegZeroNo);
->>>>>>> 422c1139bc62b66263ca52261223727cf27cd4cd
     }
 
     /// <summary>Parses a number from a sequence of <c>char</c> s whose
