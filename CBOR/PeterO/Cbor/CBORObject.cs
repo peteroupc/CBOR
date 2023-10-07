@@ -4077,9 +4077,11 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
           int right = byteCount - 1;
           for (int i = 0; i < half; ++i, --right)
           {
-            byte value = bytes[i];
+            // NOTE: Swapping syntax can't be used in netstandard1.0
+            // because it relies on System.ValueTuple
+            byte tmp = bytes[i];
             bytes[i] = bytes[right];
-            bytes[right] = value;
+            bytes[right] = tmp;
           }
         }
         switch (byteCount)
@@ -4620,11 +4622,6 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     public bool AsBoolean()
     {
       return !this.IsFalse && !this.IsNull && !this.IsUndefined;
-    }
-
-    internal byte AsByteLegacy()
-    {
-      return (byte)this.AsInt32(0, 255);
     }
 
     /// <summary>Converts this object to a 64-bit floating point

@@ -79,67 +79,6 @@ namespace PeterO.Cbor
       return a == null ? b == null : a.CompareTo(b) >= 0;
     }
 
-    /// <summary>Converts this object to a 16-bit unsigned integer after
-    /// discarding any fractional part, if any, from its value.</summary>
-    /// <returns>A 16-bit unsigned integer.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value, if
-    /// converted to an integer by discarding its fractional part, is
-    /// outside the range of a 16-bit unsigned integer.</exception>
-    [CLSCompliant(false)]
-    [Obsolete("Instead, use the following:" +
-        "\u0020(cbor.AsNumber().ToUInt16Checked()), or .ToObject<ushort>().")]
-    public ushort AsUInt16()
-    {
-      return this.AsUInt16Legacy();
-    }
-    internal ushort AsUInt16Legacy()
-    {
-      int v = this.AsInt32();
-      return v > ushort.MaxValue || v < 0 ? throw new OverflowException("This object's value is out of range") : (ushort)v;
-    }
-
-    /// <summary>Converts this object to a 32-bit unsigned integer after
-    /// discarding any fractional part, if any, from its value.</summary>
-    /// <returns>A 32-bit unsigned integer.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value, if
-    /// converted to an integer by discarding its fractional part, is
-    /// outside the range of a 32-bit unsigned integer.</exception>
-    [CLSCompliant(false)]
-    [Obsolete("Instead, use the following:" +
-        "\u0020(cbor.AsNumber().ToUInt32Checked()), or .ToObject<uint>().")]
-    public uint AsUInt32()
-    {
-      return this.AsUInt32Legacy();
-    }
-    internal uint AsUInt32Legacy()
-    {
-      ulong v = this.AsUInt64Legacy();
-      return v > uint.MaxValue ? throw new OverflowException("This object's value is out of range") : (uint)v;
-    }
-
-    /// <summary>Converts this object to an 8-bit signed integer.</summary>
-    /// <returns>An 8-bit signed integer.</returns>
-    [CLSCompliant(false)]
-    [Obsolete("Instead, use the following:" +
-        "\u0020(cbor.AsNumber().ToSByteChecked()), or .ToObject<sbyte>().")]
-    public sbyte AsSByte()
-    {
-      return this.AsSByteLegacy();
-    }
-    internal sbyte AsSByteLegacy()
-    {
-      int v = this.AsInt32();
-      return v > sbyte.MaxValue || v < sbyte.MinValue ? throw new OverflowException("This object's value is out of range") : (sbyte)v;
-    }
-
     /// <summary>Writes a CBOR major type number and an integer 0 or
     /// greater associated with it to a data stream, where that integer is
     /// passed to this method as a 32-bit unsigned integer. This is a
@@ -248,54 +187,6 @@ namespace PeterO.Cbor
     private static EInteger DecimalToEInteger(decimal dec)
     {
       return ((EDecimal)dec).ToEInteger();
-    }
-
-    /// <summary>Converts this object to a DotNet decimal.</summary>
-    /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value exceeds the
-    /// range of a DotNet decimal.</exception>
-    [Obsolete("Instead, use " + ".ToObject<decimal>\u0028).")]
-    public decimal AsDecimal()
-    {
-      return this.AsDecimalLegacy();
-    }
-    internal decimal AsDecimalLegacy()
-    {
-      return (this.ItemType == CBORObjectTypeInteger) ?
-(long)this.ThisItem : ((this.HasOneTag(30) ||
-
-            this.HasOneTag(270)) ? (decimal)this.ToObject<ERational>() :
-          (decimal)this.ToObject<EDecimal>());
-    }
-
-    /// <summary>Converts this object to a 64-bit unsigned integer after
-    /// discarding any fractional part, if any, from its value.</summary>
-    /// <returns>A 64-bit unsigned integer.</returns>
-    /// <exception cref='InvalidOperationException'>This object does not
-    /// represent a number (for this purpose, infinities and not-a-number
-    /// or NaN values, but not CBORObject.Null, are considered
-    /// numbers).</exception>
-    /// <exception cref='OverflowException'>This object's value, if
-    /// converted to an integer by discarding its fractional part, is
-    /// outside the range of a 64-bit unsigned integer.</exception>
-    [CLSCompliant(false)]
-    [Obsolete("Instead, use the following:" +
-        "\u0020(cbor.AsNumber().ToUInt64Checked()), or .ToObject<ulong>().")]
-    public ulong AsUInt64()
-    {
-      return this.AsUInt64Legacy();
-    }
-    internal ulong AsUInt64Legacy()
-    {
-      EInteger bigint = this.ToObject<EInteger>();
-      return bigint.Sign < 0 ||
-        bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0
-        ? throw new OverflowException("This object's value is out of range")
-        : (ulong)bigint;
     }
 
     /// <summary>Writes an 8-bit signed integer in CBOR format to a data

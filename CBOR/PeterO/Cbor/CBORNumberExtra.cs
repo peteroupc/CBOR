@@ -80,6 +80,13 @@ namespace PeterO.Cbor
       return !this.IsFinite() ? throw new OverflowException("Value is infinity or NaN") : this.ToEInteger().ToSByteChecked();
     }
 
+    public decimal ToDecimal() {
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      return (decimal)this.ToEDecimal();
+    }
+
     /// <summary>Converts this number's value to an integer by discarding
     /// its fractional part, and returns the least-significant bits of its
     /// two's-complement form as an 8-bit signed integer.</summary>

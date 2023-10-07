@@ -247,17 +247,13 @@ namespace PeterO.Cbor
 
     /// <summary>Parses a number whose format follows the JSON
     /// specification. The method uses a JSONOptions with all default
-    /// properties except for a PreserveNegativeZero property of
-    /// false.</summary>
+    /// properties.</summary>
     /// <param name='str'>A text string to parse as a JSON number.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
-    /// positive zero if the number is a zero that starts with a minus sign
-    /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
-    /// including if the string is null or empty.</returns>
-    public static CBORObject ParseJSONNumber(string str)
-    {
-      // TODO: Preserve negative zeros in next major version
-      return ParseJSONNumber(str, PreserveNegZeroNo);
+    /// null if the parsing fails, including if the string is null or
+    /// empty.</returns>
+    public static CBORObject ParseJSONNumber(string str) {
+      return ParseJSONNumber(str, JSONOptions.Default);
     }
 
     /// <summary>Parses a number whose format follows the JSON
@@ -550,18 +546,14 @@ namespace PeterO.Cbor
 
     /// <summary>Parses a number from a byte sequence whose format follows
     /// the JSON specification. The method uses a JSONOptions with all
-    /// default properties except for a PreserveNegativeZero property of
-    /// false.</summary>
+    /// default properties.</summary>
     /// <param name='bytes'>A byte sequence to parse as a JSON
     /// number.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
-    /// positive zero if the number is a zero that starts with a minus sign
-    /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
-    /// including if the byte sequence is null or empty.</returns>
-    public static CBORObject ParseJSONNumber(byte[] bytes)
-    {
-      // TODO: Preserve negative zeros in next major version
-      return ParseJSONNumber(bytes, PreserveNegZeroNo);
+    /// null if the parsing fails, including if the byte sequence is null
+    /// or empty.</returns>
+    public static CBORObject ParseJSONNumber(byte[] bytes) {
+      return ParseJSONNumber(bytes, JSONOptions.Default);
     }
 
     /// <summary>Parses a number from a sequence of <c>char</c> s whose
@@ -681,19 +673,14 @@ namespace PeterO.Cbor
 
     /// <summary>Parses a number from a sequence of <c>char</c> s whose
     /// format follows the JSON specification. The method uses a
-    /// JSONOptions with all default properties except for a
-    /// PreserveNegativeZero property of false.</summary>
+    /// JSONOptions with all default properties.</summary>
     /// <param name='chars'>A sequence of <c>char</c> s to parse as a JSON
     /// number.</param>
     /// <returns>A CBOR object that represents the parsed number. Returns
-    /// positive zero if the number is a zero that starts with a minus sign
-    /// (such as "-0" or "-0.0"). Returns null if the parsing fails,
-    /// including if the sequence of <c>char</c> s is null or
-    /// empty.</returns>
-    public static CBORObject ParseJSONNumber(char[] chars)
-    {
-      // TODO: Preserve negative zeros in next major version
-      return ParseJSONNumber(chars, PreserveNegZeroNo);
+    /// null if the parsing fails, including if the sequence of <c>char</c>
+    /// s is null or empty.</returns>
+    public static CBORObject ParseJSONNumber(char[] chars) {
+      return ParseJSONNumber(chars, JSONOptions.Default);
     }
   }
 }

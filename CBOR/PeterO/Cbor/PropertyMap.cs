@@ -1071,33 +1071,33 @@ namespace PeterO.Cbor
         str.Substring(0, pfx.Length).Equals(pfx, StringComparison.Ordinal);
     }
 
-    // TODO: Replace* Legacy with AsNumber methods
-    // in next major version
-    private static object TypeToIntegerObject(CBORObject objThis, Type t)
-    {
-      if (t.Equals(typeof(int)))
-      {
+    private static object TypeToIntegerObject(CBORObject objThis, Type t) {
+      if (t.Equals(typeof(int))) {
         return objThis.AsInt32();
       }
       if (t.Equals(typeof(short)))
       {
         return objThis.AsNumber().ToInt16Checked();
       }
-      if (t.Equals(typeof(ushort)))
-      {
-        return objThis.AsUInt16Legacy();
+      if (t.Equals(typeof(ushort))) {
+        return objThis.AsNumber().ToUInt16Checked();
       }
-      if (t.Equals(typeof(byte)))
-      {
-        return objThis.AsByteLegacy();
+      if (t.Equals(typeof(byte))) {
+        return objThis.AsNumber().ToByteChecked();
       }
-      return t.Equals(typeof(sbyte))
-        ? objThis.AsSByteLegacy()
-        : t.Equals(typeof(long))
-        ? objThis.AsNumber().ToInt64Checked()
-        : t.Equals(typeof(uint))
-        ? objThis.AsUInt32Legacy()
-        : t.Equals(typeof(ulong)) ? (object)objThis.AsUInt64Legacy() : throw new CBORException("Type not supported");
+      if (t.Equals(typeof(sbyte))) {
+        return objThis.AsNumber().ToSByteChecked();
+      }
+      if (t.Equals(typeof(long))) {
+        return objThis.AsNumber().ToInt64Checked();
+      }
+      if (t.Equals(typeof(uint))) {
+        return objThis.AsNumber().ToUInt32Checked();
+      }
+      if (t.Equals(typeof(ulong))) {
+        return objThis.AsNumber().ToUInt64Checked();
+      }
+      throw new CBORException("Type not supported");
     }
 
     public static object TypeToObject(
@@ -1115,37 +1115,31 @@ namespace PeterO.Cbor
       {
         return objThis.AsNumber().ToInt16Checked();
       }
-      if (t.Equals(typeof(ushort)))
-      {
-        return objThis.AsUInt16Legacy();
+      if (t.Equals(typeof(ushort))) {
+        return objThis.AsNumber().ToUInt16Checked();
       }
-      if (t.Equals(typeof(byte)))
-      {
-        return objThis.AsByteLegacy();
+      if (t.Equals(typeof(byte))) {
+        return objThis.AsNumber().ToByteChecked();
       }
-      if (t.Equals(typeof(sbyte)))
-      {
-        return objThis.AsSByteLegacy();
+      if (t.Equals(typeof(sbyte))) {
+        return objThis.AsNumber().ToSByteChecked();
       }
       if (t.Equals(typeof(long)))
       {
         return objThis.AsNumber().ToInt64Checked();
       }
-      if (t.Equals(typeof(uint)))
-      {
-        return objThis.AsUInt32Legacy();
+      if (t.Equals(typeof(uint))) {
+        return objThis.AsNumber().ToUInt32Checked();
       }
-      if (t.Equals(typeof(ulong)))
-      {
-        return objThis.AsUInt64Legacy();
+      if (t.Equals(typeof(ulong))) {
+        return objThis.AsNumber().ToUInt64Checked();
       }
       if (t.Equals(typeof(double)))
       {
         return objThis.AsDouble();
       }
-      if (t.Equals(typeof(decimal)))
-      {
-        return objThis.AsDecimalLegacy();
+      if (t.Equals(typeof(decimal))) {
+        return objThis.AsNumber().ToDecimal();
       }
       if (t.Equals(typeof(float)))
       {

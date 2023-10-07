@@ -269,14 +269,13 @@ namespace PeterO.Cbor
             : kind == JSONOptions.ConversionMode.Decimal128 ? CBORObject.FromObject(EDecimal.FromInt64(v)) : CBORObject.FromObject(v);
         }
       }
-      if (kind == JSONOptions.ConversionMode.Full)
-      {
-        if (!haveDecimalPoint && !haveExponent)
-        {
-          var ei = EInteger.FromSubstring(chars, initialOffset, endPos);
-          return (preserveNegativeZero && ei.IsZero && negative) ?
-CBORObject.FromObject(EDecimal.NegativeZero) :
-CBORObject.FromObject(ei);
+      if (kind == JSONOptions.ConversionMode.Full) {
+        if (!haveDecimalPoint && !haveExponent) {
+          EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
+          if (preserveNegativeZero && ei.IsZero && negative) {
+            return CBORObject.FromObject(EDecimal.NegativeZero);
+          }
+          return CBORObject.FromObject(ei);
         }
         if (!haveExponent && haveDecimalPoint)
         {

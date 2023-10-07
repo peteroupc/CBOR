@@ -269,15 +269,11 @@ namespace PeterO.Cbor
             : kind == JSONOptions.ConversionMode.Decimal128 ? CBORObject.FromObject(EDecimal.FromInt64(v)) : CBORObject.FromObject(v);
         }
       }
-      if (kind == JSONOptions.ConversionMode.Full)
-      {
-        if (!haveDecimalPoint && !haveExponent)
-        {
-          var ei = EInteger.FromSubstring(chars, initialOffset, endPos);
-          if (preserveNegativeZero && ei.IsZero && negative)
-          {
-            // TODO: In next major version, change to EDecimal.NegativeZero
-            return CBORObject.FromFloatingPointBits(0x8000, 2);
+      if (kind == JSONOptions.ConversionMode.Full) {
+        if (!haveDecimalPoint && !haveExponent) {
+          EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
+          if (preserveNegativeZero && ei.IsZero && negative) {
+            return CBORObject.FromObject(EDecimal.NegativeZero);
           }
           return CBORObject.FromObject(ei);
         }
@@ -342,14 +338,10 @@ namespace PeterO.Cbor
             chars,
             initialOffset,
             endPos - initialOffset);
-        if (ed.IsZero && negative)
-        {
-          if (ed.Exponent.IsZero)
-          {
-            // TODO: In next major version, use EDecimal
-            // for preserveNegativeZero
+        if (ed.IsZero && negative) {
+          if (ed.Exponent.IsZero) {
             return preserveNegativeZero ?
-              CBORObject.FromFloatingPointBits(0x8000, 2) :
+              CBORObject.FromObject(EDecimal.NegativeZero) :
               CBORObject.FromObject(0);
           }
           else
