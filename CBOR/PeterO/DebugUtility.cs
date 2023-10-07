@@ -8,6 +8,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 // Use directives rather than the Conditional attribute,
 // to avoid the chance of logging statements leaking in release builds
 #if DEBUG
@@ -28,15 +29,15 @@ namespace PeterO
     }
 
     private static MethodInfo GetTypeMethod(
-      Type t,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
       string name,
-      Type[] parameters)
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type parameter)
     {
 #if NET40 || NET20
-        return t.GetMethod(name, parameters);
+        return t.GetMethod(name, parameter);
 #else
       {
-        return t?.GetRuntimeMethod(name, parameters);
+        return t?.GetRuntimeMethod(name, new[] { parameter });
       }
 #endif
     }
@@ -71,8 +72,7 @@ namespace PeterO
 #endif
         }
       }
-      Type[] types = new[] { typeof(string) };
-      MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", types);
+      MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", typeof(string));
       if (typeMethod != null)
       {
         typeMethod.Invoke(

@@ -14,7 +14,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 namespace PeterO.Cbor
 {
@@ -540,28 +539,27 @@ namespace PeterO.Cbor
       return superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     }
 
-    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t)
+    private static IEnumerable<PropertyInfo> GetTypeProperties([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t)
     {
       return t.GetRuntimeProperties();
     }
 
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-    private static IEnumerable<FieldInfo> GetTypeFields(Type t)
+    private static IEnumerable<FieldInfo> GetTypeFields([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t)
     {
       return t.GetRuntimeFields();
     }
 
-    private static IEnumerable<Type> GetTypeInterfaces(Type t)
+    private static IEnumerable<Type> GetTypeInterfaces([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t)
     {
       return t.GetTypeInfo().ImplementedInterfaces;
     }
 
     private static MethodInfo GetTypeMethod(
-      Type t,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
       string name,
-      Type[] parameters)
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type parameter)
     {
-      return t.GetRuntimeMethod(name, parameters);
+      return t.GetRuntimeMethod(name, new[] { parameter });
     }
 
     private static bool HasCustomAttribute(
@@ -1037,9 +1035,9 @@ namespace PeterO.Cbor
     public static object FindOneArgumentMethod(
       object obj,
       string name,
-      Type argtype)
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type argtype)
     {
-      return GetTypeMethod(obj.GetType(), name, new[] { argtype });
+      return GetTypeMethod(obj.GetType(), name, argtype );
     }
 
     public static object InvokeOneArgumentMethod(
@@ -1105,7 +1103,7 @@ namespace PeterO.Cbor
 
     public static object TypeToObject(
       CBORObject objThis,
-      Type t,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
       CBORTypeMapper mapper,
       PODOptions options,
       int depth)
@@ -1550,7 +1548,7 @@ typeof(
     }
 
     public static object ObjectWithProperties(
-      Type t,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
       IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
       CBORTypeMapper mapper,
       PODOptions options,

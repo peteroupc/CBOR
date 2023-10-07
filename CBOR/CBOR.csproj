@@ -33,6 +33,7 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 
   <IsTrimmable>true</IsTrimmable>
   <LangVersion>11.0</LangVersion>
+      <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
