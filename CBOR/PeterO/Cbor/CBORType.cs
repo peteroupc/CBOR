@@ -8,8 +8,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType
   {

@@ -1,5 +1,4 @@
-namespace PeterO
-{
+namespace PeterO {
   public interface IRandomGenExtended : IRandomGen
   {
     int GetInt32(int maxExclusive);

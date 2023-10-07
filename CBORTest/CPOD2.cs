@@ -1,7 +1,5 @@
-﻿namespace Test
-{
-  public sealed class CPOD2
-  {
+namespace Test {
+  public sealed class CPOD2 {
     public string Aa
     {
       get;

@@ -6,11 +6,10 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using PeterO.Numbers;
 using System;
+using PeterO.Numbers;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
@@ -32,15 +31,12 @@ ICBORToFromConverter<DateTime>
     /// <returns>Either <c>true</c> if the method is successful, or
     /// <c>false</c> otherwise.</returns>
     public bool TryGetDateTimeFields(CBORObject obj, out EInteger year, int[]
-      lesserFields)
-    {
-      if (lesserFields == null)
-      {
+      lesserFields) {
+      if (lesserFields == null) {
         year = null;
         return false;
       }
-      if (lesserFields.Length < 7)
-      {
+      if (lesserFields.Length < 7) {
         year = null;
         return false;
       }

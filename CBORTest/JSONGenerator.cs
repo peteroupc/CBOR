@@ -1,25 +1,18 @@
-using PeterO;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PeterO;
 
-namespace Test
-{
-  public sealed class JSONGenerator
-  {
-    private sealed class ByteWriter
-    {
+namespace Test {
+  public sealed class JSONGenerator {
+    private sealed class ByteWriter {
       private byte[] bytes = new byte[64];
 
-      public ByteWriter Write(int b)
-      {
-        if (this.ByteLength < this.bytes.Length)
-        {
+      public ByteWriter Write(int b) {
+        if (this.ByteLength < this.bytes.Length) {
           this.bytes[this.ByteLength++] = (byte)b;
-        }
-        else
-        {
-          byte[] newbytes = new byte[this.bytes.Length * 2];
+        } else {
+          var newbytes = new byte[this.bytes.Length * 2];
           Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
           this.bytes = newbytes;
           this.bytes[this.ByteLength++] = (byte)b;
@@ -29,9 +22,8 @@ namespace Test
 
       public int ByteLength { get; private set; }
 
-      public byte[] ToBytes()
-      {
-        byte[] newbytes = new byte[this.ByteLength];
+      public byte[] ToBytes() {
+        var newbytes = new byte[this.ByteLength];
         Array.Copy(this.bytes, 0, newbytes, 0, this.ByteLength);
         return newbytes;
       }
@@ -59,14 +51,13 @@ namespace Test
     private static void GenerateCodeUnit(
       IRandomGenExtended ra,
       ByteWriter bs,
-      int cu)
-    {
+      int cu) {
       int c;
-      int shift = 12;
-      for (int i = 0; i < 4; ++i)
-      {
+      var shift = 12;
+      for (int i = 0; i < 4; ++i) {
         c = (cu >> shift) & 0xf;
-        _ = c < 10 ? bs.Write(0x30 + c) : bs.Write(0x41 + (c - 10) + (ra.GetInt32(2) * 0x20));
+        _ = c < 10 ? bs.Write(0x30 + c) : bs.Write(0x41 + (c - 10) +
+(ra.GetInt32(2) * 0x20));
         shift -= 4;
       }
     }
@@ -74,35 +65,27 @@ namespace Test
     private static void GenerateUtf16(
       IRandomGenExtended ra,
       ByteWriter bs,
-      StringBuilder sb)
-    {
+      StringBuilder sb) {
       int r = ra.GetInt32(0x110000 - 0x800);
-      if (r >= 0xd800)
-      {
+      if (r >= 0xd800) {
         r += 0x800;
       }
-      if (r >= 0x10000)
-      {
+      if (r >= 0x10000) {
         int rc = (((r - 0x10000) >> 10) & 0x3ff) | 0xd800;
         GenerateCodeUnit(ra, bs, rc);
-        if (sb != null)
-        {
+        if (sb != null) {
           _ = sb.Append((char)rc);
         }
         _ = bs.Write('\\');
         _ = bs.Write('u');
         rc = ((r - 0x10000) & 0x3ff) | 0xdc00;
         GenerateCodeUnit(ra, bs, rc);
-        if (sb != null)
-        {
+        if (sb != null) {
           _ = sb.Append((char)rc);
         }
-      }
-      else
-      {
+      } else {
         GenerateCodeUnit(ra, bs, r);
-        if (sb != null)
-        {
+        if (sb != null) {
           _ = sb.Append((char)r);
         }
       }
@@ -110,18 +93,14 @@ namespace Test
 
     private static void GenerateWhitespace(
       IRandomGenExtended ra,
-      ByteWriter bs)
-    {
-      if (ra.GetInt32(10) == 0)
-      {
+      ByteWriter bs) {
+      if (ra.GetInt32(10) == 0) {
         int len = ra.GetInt32(20);
         int[] ws = { 0x09, 0x0d, 0x0a, 0x20 };
-        if (ra.GetInt32(100) == 0)
-        {
+        if (ra.GetInt32(100) == 0) {
           len = ra.GetInt32(100);
         }
-        for (int i = 0; i < len; ++i)
-        {
+        for (int i = 0; i < len; ++i) {
           _ = bs.Write(ws[ra.GetInt32(ws.Length)]);
         }
       }
@@ -129,63 +108,47 @@ namespace Test
 
     private static void GenerateJsonNumber(
         IRandomGenExtended ra,
-        ByteWriter bs)
-    {
-      if (ra.GetInt32(2) == 0)
-      {
+        ByteWriter bs) {
+      if (ra.GetInt32(2) == 0) {
         _ = bs.Write('-');
       }
       bool shortLen = ra.GetInt32(100) < 75;
       int len;
-      if (ra.GetInt32(100) < 2)
-      {
+      if (ra.GetInt32(100) < 2) {
         // Integer part is zero
         _ = bs.Write(0x30);
-      }
-      else
-      {
+      } else {
         // Integer part
         len = shortLen ? ra.GetInt32(10) + 1 :
            (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
         _ = bs.Write(0x31 + ra.GetInt32(9));
-        for (int i = 0; i < len; ++i)
-        {
+        for (int i = 0; i < len; ++i) {
           _ = bs.Write(0x30 + ra.GetInt32(10));
         }
       }
       // Fractional part
-      if (ra.GetInt32(2) == 0)
-      {
+      if (ra.GetInt32(2) == 0) {
         _ = bs.Write(0x2e);
         len = shortLen ? ra.GetInt32(10) + 1 :
          (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
-        for (int i = 0; i < len; ++i)
-        {
+        for (int i = 0; i < len; ++i) {
           _ = bs.Write(0x30 + ra.GetInt32(10));
         }
       }
-      if (ra.GetInt32(2) == 0)
-      {
+      if (ra.GetInt32(2) == 0) {
         int rr = ra.GetInt32(3);
-        if (rr == 0)
-        {
+        if (rr == 0) {
           _ = bs.Write('E');
-        }
-        else if (rr == 1)
-        {
+        } else if (rr == 1) {
           _ = bs.Write('E').Write('+');
-        }
-        else if (rr == 2)
-        {
+        } else if (rr == 2) {
           _ = bs.Write('E').Write('-');
         }
         len = 1 + ra.GetInt32(5);
-        if (ra.GetInt32(10) == 0)
-        {
+        if (ra.GetInt32(10) == 0) {
           len = 1 + (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000);
         }
-        for (int i = 0; i < len; ++i)
-        {
+        for (int i = 0; i < len; ++i) {
           _ = bs.Write(0x30 + ra.GetInt32(10));
         }
       }
@@ -195,24 +158,19 @@ namespace Test
       IRandomGenExtended ra,
       ByteWriter bs,
       StringBuilder sb,
-      int len)
-    {
+      int len) {
       int r = ra.GetInt32(3);
       int r2, r3, r4;
-      if (r == 0 && len >= 2)
-      {
+      if (r == 0 && len >= 2) {
         r = 0xc2 + ra.GetInt32(0xdf - 0xc2 + 1);
         _ = bs.Write(r);
         r2 = 0x80 + ra.GetInt32(0x40);
         _ = bs.Write(r2);
-        if (sb != null)
-        {
+        if (sb != null) {
           _ = sb.Append((char)(((r - 0x80) << 6) | r2));
         }
         return 2;
-      }
-      else if (r == 1 && len >= 3)
-      {
+      } else if (r == 1 && len >= 3) {
         r = 0xe0 + ra.GetInt32(16);
         _ = bs.Write(r);
         int lower = (r == 0xe0) ? 0xa0 : 0x80;
@@ -221,14 +179,11 @@ namespace Test
         _ = bs.Write(r2);
         r3 = 0x80 + ra.GetInt32(0x40);
         _ = bs.Write(r3);
-        if (sb != null)
-        {
+        if (sb != null) {
           _ = sb.Append((char)(((r - 0x80) << 12) | ((r2 - 0x80) << 6) | r3));
         }
         return 3;
-      }
-      else if (r == 2 && len >= 4)
-      {
+      } else if (r == 2 && len >= 4) {
         r = 0xf0 + ra.GetInt32(5);
         _ = bs.Write(r);
         int lower = (r == 0xf0) ? 0x90 : 0x80;
@@ -240,8 +195,7 @@ namespace Test
         r4 = 0x80 + ra.GetInt32(0x40);
         _ = bs.Write(r4);
         r = ((r - 0x80) << 18) | ((r2 - 0x80) << 12) | ((r3 - 0x80) << 6) | r4;
-        if (sb != null)
-        {
+        if (sb != null) {
           _ = sb.Append((char)(((r - 0x10000) >> 10) | 0xd800));
           _ = sb.Append((char)(((r - 0x10000) & 0x3ff) | 0xdc00));
         }
@@ -254,72 +208,53 @@ namespace Test
       IRandomGenExtended ra,
       ByteWriter bskey,
       int depth,
-      IDictionary<string, string> keys)
-    {
-      while (true)
-      {
+      IDictionary<string, string> keys) {
+      while (true) {
         var sb = new StringBuilder();
         var bs = new ByteWriter();
         int len = ra.GetInt32(1000) * ra.GetInt32(1000);
         len /= 1000;
-        if (ra.GetInt32(50) == 0 && depth < 2)
-        {
+        if (ra.GetInt32(50) == 0 && depth < 2) {
           // Exponential curve that strongly favors small numbers
-          long v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
+          var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
           len = (int)(v / 1000000);
         }
         _ = bs.Write(0x22);
-        for (int i = 0; i < len;)
-        {
+        for (int i = 0; i < len;) {
           int r = ra.GetInt32(10);
-          if (r > 2)
-          {
+          if (r > 2) {
             int x = 0x20 + ra.GetInt32(60);
-            if (x == '\"')
-            {
+            if (x == '\"') {
               _ = bs.Write('\\').Write(x);
               _ = sb.Append('\"');
-            }
-            else if (x == '\\')
-            {
+            } else if (x == '\\') {
               _ = bs.Write('\\').Write(x);
               _ = sb.Append('\\');
-            }
-            else
-            {
+            } else {
               _ = bs.Write(x);
               _ = sb.Append((char)x);
             }
             ++i;
-          }
-          else if (r == 1)
-          {
+          } else if (r == 1) {
             _ = bs.Write('\\');
             int escindex = ra.GetInt32(ValueEscapes.Length);
             int esc = ValueEscapes[escindex];
             _ = bs.Write(esc);
-            if (esc == 'u')
-            {
+            if (esc == 'u') {
               GenerateUtf16(ra, bs, sb);
-            }
-            else
-            {
+            } else {
               _ = sb.Append(ValueEscapeChars[escindex]);
             }
-          }
-          else
-          {
+          } else {
             _ = GenerateUtf8(ra, bs, sb, len - i);
           }
         }
         _ = bs.Write(0x22);
         string key = sb.ToString();
-        if (!keys.ContainsKey(key))
-        {
-          keys[key] = string.Empty;
+        if (!keys.ContainsKey(key)) {
+          keys[key] = String.Empty;
           byte[] bytes = bs.ToBytes();
-          for (int i = 0; i < bytes.Length; ++i)
-          {
+          for (int i = 0; i < bytes.Length; ++i) {
             _ = bskey.Write(bytes[i] & 0xff);
           }
           return;
@@ -330,65 +265,50 @@ namespace Test
     private static void GenerateJsonString(
       IRandomGenExtended ra,
       ByteWriter bs,
-      int depth)
-    {
+      int depth) {
       int len = ra.GetInt32(1000) * ra.GetInt32(1000);
       len /= 1000;
-      if (ra.GetInt32(50) == 0 && depth < 2)
-      {
+      if (ra.GetInt32(50) == 0 && depth < 2) {
         // Exponential curve that strongly favors small numbers
-        long v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
+        var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
         len = (int)(v / 1000000);
       }
       _ = bs.Write(0x22);
-      for (int i = 0; i < len;)
-      {
+      for (int i = 0; i < len;) {
         int r = ra.GetInt32(10);
-        if (r > 2)
-        {
+        if (r > 2) {
           int x = 0x20 + ra.GetInt32(60);
-          _ = x == '\"' ? bs.Write('\\').Write(x) : x == '\\' ? bs.Write('\\').Write(x) : bs.Write(x);
+          _ = x == '\"' ? bs.Write('\\').Write(x) : x == '\\' ?
+bs.Write('\\').Write(x) : bs.Write(x);
           ++i;
-        }
-        else if (r == 1)
-        {
+        } else if (r == 1) {
           _ = bs.Write('\\');
           int esc = ValueEscapes[ra.GetInt32(ValueEscapes.Length)];
           _ = bs.Write(esc);
-          if (esc == 'u')
-          {
+          if (esc == 'u') {
             GenerateUtf16(ra, bs, null);
           }
-        }
-        else
-        {
+        } else {
           _ = GenerateUtf8(ra, bs, null, len - i);
         }
       }
       _ = bs.Write(0x22);
     }
 
-    private void Generate(IRandomGenExtended r, int depth, ByteWriter bs)
-    {
+    private void Generate(IRandomGenExtended r, int depth, ByteWriter bs) {
       int majorType;
       majorType = ValueMajorTypes[r.GetInt32(ValueMajorTypes.Length)];
-      if (depth == 0)
-      {
+      if (depth == 0) {
         majorType = ValueMajorTypesTop[r.GetInt32(ValueMajorTypes.Length)];
       }
       GenerateWhitespace(r, bs);
-      if (bs.ByteLength > 2000000)
-      {
+      if (bs.ByteLength > 2000000) {
         majorType = r.GetInt32(2); // either 0 or 1
       }
-      if (majorType == 0)
-      {
+      if (majorType == 0) {
         GenerateJsonNumber(r, bs);
-      }
-      else if (majorType == 1)
-      {
-        switch (r.GetInt32(3))
-        {
+      } else if (majorType == 1) {
+        switch (r.GetInt32(3)) {
           case 0:
             _ = bs.Write('t').Write('r').Write('u').Write(
               'e');
@@ -404,44 +324,32 @@ namespace Test
                     'e');
             break;
         }
-      }
-      else if (majorType == 3)
-      {
+      } else if (majorType == 3) {
         GenerateJsonString(r, bs, depth);
-      }
-      else if (majorType is 4 or 5)
-      {
+      } else if (majorType is 4 or 5) {
         int len = r.GetInt32(8);
-        if (r.GetInt32(50) == 0 && depth < 2)
-        {
-          long v = (long)r.GetInt32(1000) * r.GetInt32(1000);
+        if (r.GetInt32(50) == 0 && depth < 2) {
+          var v = (long)r.GetInt32(1000) * r.GetInt32(1000);
           len = (int)(v / 1000);
         }
-        if (depth > 6)
-        {
+        if (depth > 6) {
           len = r.GetInt32(100) == 0 ? 1 : 0;
         }
-        if (majorType == 4)
-        {
+        if (majorType == 4) {
           _ = bs.Write('[');
-          for (int i = 0; i < len; ++i)
-          {
-            if (i > 0)
-            {
+          for (int i = 0; i < len; ++i) {
+            if (i > 0) {
               _ = bs.Write(',');
             }
             this.Generate(r, depth + 1, bs);
           }
           _ = bs.Write(']');
         }
-        if (majorType == 5)
-        {
+        if (majorType == 5) {
           _ = bs.Write('{');
           var keys = new Dictionary<string, string>();
-          for (int i = 0; i < len; ++i)
-          {
-            if (i > 0)
-            {
+          for (int i = 0; i < len; ++i) {
+            if (i > 0) {
               _ = bs.Write(',');
             }
             GenerateWhitespace(r, bs);
@@ -457,11 +365,9 @@ namespace Test
       GenerateWhitespace(r, bs);
     }
 
-    public byte[] Generate(IRandomGenExtended random)
-    {
+    public byte[] Generate(IRandomGenExtended random) {
       var bs = new ByteWriter();
-      if (random == null)
-      {
+      if (random == null) {
         throw new ArgumentNullException(nameof(random));
       }
       this.Generate(random, 0, bs);

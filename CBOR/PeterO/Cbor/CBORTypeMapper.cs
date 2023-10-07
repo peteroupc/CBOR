@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>Holds converters to customize the serialization and
   /// deserialization behavior of <c>CBORObject.FromObject</c> and
   /// <c>CBORObject#ToObject</c>, as well as type filters for
   /// <c>ToObject</c>.</summary>
-  public sealed class CBORTypeMapper
-  {
+  public sealed class CBORTypeMapper {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
     private readonly IDictionary<object, ConverterInfo>
@@ -16,8 +14,7 @@ namespace PeterO.Cbor
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORTypeMapper'/> class.</summary>
-    public CBORTypeMapper()
-    {
+    public CBORTypeMapper() {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
       this.converters = new Dictionary<object, ConverterInfo>();
@@ -44,26 +41,22 @@ namespace PeterO.Cbor
     /// proper ToCBORObject method".</exception>
     public CBORTypeMapper AddConverter<T>(
       Type type,
-      ICBORConverter<T> converter)
-    {
-      if (type == null)
-      {
+      ICBORConverter<T> converter) {
+      if (type == null) {
         throw new ArgumentNullException(nameof(type));
       }
-      if (converter == null)
-      {
+      if (converter == null) {
         throw new ArgumentNullException(nameof(converter));
       }
       var ci = new ConverterInfo
       {
         Converter = converter,
         ToObject = PropertyMap.FindOneArgumentMethod(
-        converter,
-        "ToCBORObject",
-        type),
+          converter,
+          "ToCBORObject",
+          type),
       };
-      if (ci.ToObject == null)
-      {
+      if (ci.ToObject == null) {
         throw new ArgumentException(
           "Converter doesn't contain a proper ToCBORObject method");
       }
@@ -77,22 +70,16 @@ namespace PeterO.Cbor
 
     internal object ConvertBackWithConverter(
       CBORObject cbor,
-      Type type)
-    {
-      return !this.converters.TryGetValue(type, out ConverterInfo convinfo)
-        ? null
-        : convinfo == null
-        ? null
-        : (convinfo.FromObject == null) ? null :
+      Type type) {
+      return !this.converters.TryGetValue(type, out ConverterInfo convinfo) ?
+        null : convinfo == null ? null : (convinfo.FromObject == null) ? null :
         PropertyMap.CallFromObject(convinfo, cbor);
     }
 
-    internal CBORObject ConvertWithConverter(object obj)
-    {
+    internal CBORObject ConvertWithConverter(object obj) {
       object type = obj.GetType();
-      return !this.converters.TryGetValue(type, out ConverterInfo convinfo)
-        ? null
-        : (convinfo == null) ? null :
+      return !this.converters.TryGetValue(type, out ConverterInfo convinfo) ?
+        null : (convinfo == null) ? null :
         PropertyMap.CallToObject(convinfo, obj);
     }
 
@@ -104,25 +91,19 @@ namespace PeterO.Cbor
     /// <returns>Either <c>true</c> if the given Java or.NET type name fits
     /// the filters given in this mapper, or <c>false</c>
     /// otherwise.</returns>
-    public bool FilterTypeName(string typeName)
-    {
-      if (string.IsNullOrEmpty(typeName))
-      {
+    public bool FilterTypeName(string typeName) {
+      if (String.IsNullOrEmpty(typeName)) {
         return false;
       }
-      foreach (string prefix in this.typePrefixes)
-      {
+      foreach (string prefix in this.typePrefixes) {
         if (typeName.Length >= prefix.Length &&
           typeName.Substring(0, prefix.Length).Equals(prefix,
-            StringComparison.Ordinal))
-        {
+            StringComparison.Ordinal)) {
           return true;
         }
       }
-      foreach (string name in this.typeNames)
-      {
-        if (typeName.Equals(name, StringComparison.Ordinal))
-        {
+      foreach (string name in this.typeNames) {
+        if (typeName.Equals(name, StringComparison.Ordinal)) {
           return true;
         }
       }
@@ -140,14 +121,11 @@ namespace PeterO.Cbor
     /// name='prefix'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='prefix'/> is empty.</exception>
-    public CBORTypeMapper AddTypePrefix(string prefix)
-    {
-      if (prefix == null)
-      {
+    public CBORTypeMapper AddTypePrefix(string prefix) {
+      if (prefix == null) {
         throw new ArgumentNullException(nameof(prefix));
       }
-      if (prefix.Length == 0)
-      {
+      if (prefix.Length == 0) {
         throw new ArgumentException("prefix" + " is empty.");
       }
       this.typePrefixes.Add(prefix);
@@ -164,36 +142,30 @@ namespace PeterO.Cbor
     /// name='name'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='name'/> is empty.</exception>
-    public CBORTypeMapper AddTypeName(string name)
-    {
-      if (name == null)
-      {
+    public CBORTypeMapper AddTypeName(string name) {
+      if (name == null) {
         throw new ArgumentNullException(nameof(name));
       }
-      if (name.Length == 0)
-      {
+      if (name.Length == 0) {
         throw new ArgumentException("name" + " is empty.");
       }
       this.typeNames.Add(name);
       return this;
     }
 
-    internal sealed class ConverterInfo
-    {
+    internal sealed class ConverterInfo {
       public object ToObject
       {
         get;
         set;
       }
 
-      public object FromObject
-      {
+      public object FromObject {
         get;
         set;
       }
 
-      public object Converter
-      {
+      public object Converter {
         get;
         set;
       }

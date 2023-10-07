@@ -13,7 +13,7 @@ tab_width = 2
 
 # New line preferences
 end_of_line = crlf
-insert_final_newline = false
+insert_final_newline = true
 
 #### .NET Coding Conventions ####
 
@@ -145,7 +145,7 @@ csharp_new_line_before_else = false
 csharp_new_line_before_finally = false
 csharp_new_line_before_members_in_anonymous_types = true
 csharp_new_line_before_members_in_object_initializers = false
-csharp_new_line_before_open_brace = all
+csharp_new_line_before_open_brace = none
 csharp_new_line_between_query_expression_clauses = false
 
 # Indentation preferences

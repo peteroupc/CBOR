@@ -8,8 +8,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using PeterO.Numbers;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>This is an internal API.</summary>
   internal interface ICBORNumber
   {

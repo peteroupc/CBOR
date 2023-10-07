@@ -1,11 +1,9 @@
 using System;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>Specifies options for encoding and decoding CBOR
   /// objects.</summary>
-  public sealed class CBOREncodeOptions
-  {
+  public sealed class CBOREncodeOptions {
     /// <summary>Default options for CBOR objects. Disallow duplicate keys,
     /// and always encode strings using definite-length encoding.</summary>
     public static readonly CBOREncodeOptions Default =
@@ -21,8 +19,7 @@ namespace PeterO.Cbor
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class with all the
     /// default options.</summary>
-    public CBOREncodeOptions() : this(string.Empty)
-    {
+    public CBOREncodeOptions() : this(String.Empty) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -36,8 +33,7 @@ namespace PeterO.Cbor
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys)
-      : this(useIndefLengthStrings, allowDuplicateKeys, false)
-    {
+      : this(useIndefLengthStrings, allowDuplicateKeys, false) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -55,8 +51,7 @@ namespace PeterO.Cbor
     public CBOREncodeOptions(
       bool useIndefLengthStrings,
       bool allowDuplicateKeys,
-      bool ctap2Canonical)
-    {
+      bool ctap2Canonical) {
       this.ResolveReferences = false;
       this.AllowEmpty = false;
       this.Float64 = false;
@@ -100,10 +95,8 @@ namespace PeterO.Cbor
     /// just true or false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
-    public CBOREncodeOptions(string paramString)
-    {
-      if (paramString == null)
-      {
+    public CBOREncodeOptions(string paramString) {
+      if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
@@ -128,8 +121,7 @@ namespace PeterO.Cbor
     /// <returns>A text string containing the values of this options
     /// object's properties. The format of the string is the same as the
     /// one described in the String constructor for this class.</returns>
-    public override string ToString()
-    {
+    public override string ToString() {
       return new System.Text.StringBuilder()
         .Append("allowduplicatekeys=")
         .Append(this.AllowDuplicateKeys ? "true" : "false")

@@ -6,53 +6,47 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using PeterO.Numbers;
 using System.Collections.Generic;
+using PeterO.Numbers;
 
-namespace PeterO.Cbor
-{
-  internal class SharedRefs
-  {
+namespace PeterO.Cbor {
+  internal class SharedRefs {
     private readonly IList<CBORObject> sharedObjects;
 
-    public SharedRefs()
-    {
+    public SharedRefs() {
       this.sharedObjects = new List<CBORObject>();
     }
 
-    public void AddObject(CBORObject obj)
-    {
+    public void AddObject(CBORObject obj) {
       this.sharedObjects.Add(obj);
     }
 
-    public CBORObject GetObject(long smallIndex)
-    {
-      if (smallIndex < 0)
-      {
+    public CBORObject GetObject(long smallIndex) {
+      if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
       }
-      if (smallIndex > int.MaxValue)
-      {
+      if (smallIndex > int.MaxValue) {
         throw new CBORException("Index " + smallIndex +
           " is bigger than supported ");
       }
-      int index = (int)smallIndex;
-      return index >= this.sharedObjects.Count ? throw new CBORException("Index " + index + " is not valid") : this.sharedObjects[index];
+      var index = (int)smallIndex;
+      return index >= this.sharedObjects.Count ? throw new
+CBORException("Index " + index + " is not valid") :
+this.sharedObjects[index];
     }
 
-    public CBORObject GetObject(EInteger bigIndex)
-    {
-      if (bigIndex.Sign < 0)
-      {
+    public CBORObject GetObject(EInteger bigIndex) {
+      if (bigIndex.Sign < 0) {
         throw new CBORException("Unexpected index");
       }
-      if (!bigIndex.CanFitInInt32())
-      {
+      if (!bigIndex.CanFitInInt32()) {
         throw new CBORException("Index " + bigIndex +
           " is bigger than supported ");
       }
-      int index = (int)bigIndex;
-      return index >= this.sharedObjects.Count ? throw new CBORException("Index " + index + " is not valid") : this.sharedObjects[index];
+      var index = (int)bigIndex;
+      return index >= this.sharedObjects.Count ? throw new
+CBORException("Index " + index + " is not valid") :
+this.sharedObjects[index];
     }
   }
 }

@@ -8,15 +8,11 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 
-namespace CBORDocs
-{
-  internal class Program
-  {
-    public static void Main(string[] args)
-    {
-      if (args.Length < 2 || string.IsNullOrEmpty(args[0]) ||
-        string.IsNullOrEmpty(args[1]))
-      {
+namespace CBORDocs {
+  internal class Program {
+    public static void Main(string[] args) {
+      if (args.Length < 2 || String.IsNullOrEmpty(args[0]) ||
+        String.IsNullOrEmpty(args[1])) {
         Console.WriteLine("Usage: CBORDocs2 <dllfile> <docpath>");
         return;
       }
