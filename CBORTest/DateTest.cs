@@ -1,8 +1,8 @@
-using System;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 using PeterO.Numbers;
+using System;
 
 namespace Test
 {
@@ -46,10 +46,10 @@ lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6];
         CBORObject obj = dtc.DateTimeFieldsToCBORObject(year, lesserFields);
         fieldsString += "\n" + obj.ToString();
         var newYear = new EInteger[1];
-        var newLesserFields = new int[7];
+        int[] newLesserFields = new int[7];
         if (dtc.TryGetDateTimeFields(obj, newYear, newLesserFields))
         {
-          for (var i = 0; i < lesserFields.Length; ++i)
+          for (int i = 0; i < lesserFields.Length; ++i)
           {
             Assert.AreEqual(
               lesserFields[i],
@@ -131,11 +131,11 @@ ValueNormalDays[month];
        };
       int[] lesserFields;
       var rg = new RandomGenerator();
-      for (var i = 0; i < 10000; ++i)
+      for (int i = 0; i < 10000; ++i)
       {
         EInteger year = RandomYear(rg);
         lesserFields = RandomLesserFields(rg, year);
-        for (var j = 0; j < dtcs.Length; ++j)
+        for (int j = 0; j < dtcs.Length; ++j)
         {
           DateConverterRoundTripOne(dtcs[j], year, lesserFields);
         }
@@ -144,13 +144,13 @@ ValueNormalDays[month];
          CBORDateConverter.TaggedNumber,
          CBORDateConverter.UntaggedNumber,
        };
-      for (var i = 0; i < 30000; ++i)
+      for (int i = 0; i < 30000; ++i)
       {
         EInteger year = RandomExpandedYear(rg);
         lesserFields = RandomLesserFields(rg, year);
         // Don't check fractional seconds because conversion is lossy
         lesserFields[5] = 0;
-        for (var j = 0; j < dtcs.Length; ++j)
+        for (int j = 0; j < dtcs.Length; ++j)
         {
           DateConverterRoundTripOne(dtcs[j], year, lesserFields);
         }

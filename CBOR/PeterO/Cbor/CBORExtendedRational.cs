@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -74,7 +74,7 @@ namespace PeterO.Cbor
       var ef = (ERational)obj;
       if (ef.IsFinite)
       {
-        EInteger bi = ef.ToEInteger();
+        var bi = ef.ToEInteger();
         if (bi.CanFitInInt64())
         {
           return (long)bi;
@@ -119,7 +119,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.CanFitInInt64();
     }
 
@@ -130,7 +130,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.CanFitInInt32();
     }
 
@@ -141,7 +141,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.Sign >= 0 && bi.GetUnsignedBitLengthAsInt64() <= 64;
     }
 
@@ -180,10 +180,10 @@ namespace PeterO.Cbor
       var ef = (ERational)obj;
       if (ef.IsFinite)
       {
-        EInteger bi = ef.ToEInteger();
+        var bi = ef.ToEInteger();
         if (bi.CanFitInInt32())
         {
-          var ret = (int)bi;
+          int ret = (int)bi;
           if (ret >= minValue && ret <= maxValue)
           {
             return ret;

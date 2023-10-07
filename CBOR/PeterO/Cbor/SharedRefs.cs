@@ -6,9 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
-using System.Collections.Generic;
 using PeterO.Numbers;
+using System.Collections.Generic;
 
 namespace PeterO.Cbor
 {
@@ -32,17 +31,13 @@ namespace PeterO.Cbor
       {
         throw new CBORException("Unexpected index");
       }
-      if (smallIndex > Int32.MaxValue)
+      if (smallIndex > int.MaxValue)
       {
         throw new CBORException("Index " + smallIndex +
           " is bigger than supported ");
       }
-      var index = (int)smallIndex;
-      if (index >= this.sharedObjects.Count)
-      {
-        throw new CBORException("Index " + index + " is not valid");
-      }
-      return this.sharedObjects[index];
+      int index = (int)smallIndex;
+      return index >= this.sharedObjects.Count ? throw new CBORException("Index " + index + " is not valid") : this.sharedObjects[index];
     }
 
     public CBORObject GetObject(EInteger bigIndex)
@@ -56,12 +51,8 @@ namespace PeterO.Cbor
         throw new CBORException("Index " + bigIndex +
           " is bigger than supported ");
       }
-      var index = (int)bigIndex;
-      if (index >= this.sharedObjects.Count)
-      {
-        throw new CBORException("Index " + index + " is not valid");
-      }
-      return this.sharedObjects[index];
+      int index = (int)bigIndex;
+      return index >= this.sharedObjects.Count ? throw new CBORException("Index " + index + " is not valid") : this.sharedObjects[index];
     }
   }
 }

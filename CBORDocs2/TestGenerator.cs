@@ -14,7 +14,7 @@ namespace PeterO.DocGen
       {
         throw new ArgumentNullException(nameof(type));
       }
-      var name = TypeNameUtil.UndecorateTypeName(type.Name);
+      string name = TypeNameUtil.UndecorateTypeName(type.Name);
       var builder = new StringBuilder();
       _ = Directory.CreateDirectory(directory);
       _ = builder.Append("using System;\n");
@@ -26,8 +26,8 @@ namespace PeterO.DocGen
       _ = builder.Append(" [TestClass]\n");
       _ = builder.Append(" public partial class " + name + "Test {\n");
       var methods = new SortedSet<string>();
-      var hasPublicConstructor = false;
-      foreach (var method in type.GetConstructors())
+      bool hasPublicConstructor = false;
+      foreach (ConstructorInfo method in type.GetConstructors())
       {
         if (!method.IsPublic)
         {
@@ -40,7 +40,7 @@ namespace PeterO.DocGen
       {
         _ = methods.Add("Constructor");
       }
-      foreach (var method in type.GetMethods())
+      foreach (MethodInfo method in type.GetMethods())
       {
         if (!method.IsPublic)
         {
@@ -50,18 +50,18 @@ namespace PeterO.DocGen
         {
           continue;
         }
-        var methodName = method.Name;
+        string methodName = method.Name;
         if (methodName.StartsWith("get_", StringComparison.Ordinal))
         {
-          methodName = methodName.Substring(4);
+          methodName = methodName[4..];
         }
         else if (methodName.StartsWith("set_", StringComparison.Ordinal))
         {
-          methodName = methodName.Substring(4);
+          methodName = methodName[4..];
         }
         else if (methodName.StartsWith("op_", StringComparison.Ordinal))
         {
-          methodName = "Operator" + methodName.Substring(3);
+          methodName = "Operator" + methodName[3..];
         }
         if (methodName.StartsWith(".ctor", StringComparison.Ordinal))
         {
@@ -76,7 +76,7 @@ namespace PeterO.DocGen
           continue;
         }
         methodName = PeterO.DataUtilities.ToUpperCaseAscii(
-          methodName.Substring(0, 1)) + methodName.Substring(1);
+          methodName[..1]) + methodName[1..];
         _ = methods.Add(methodName);
       }
       if (methods.Count == 0)
@@ -91,7 +91,7 @@ namespace PeterO.DocGen
         _ = builder.Append(" // not implemented yet\n");
         _ = builder.Append(" }\n");
       }
-      foreach (var methodName in methods)
+      foreach (string methodName in methods)
       {
         if (methodName.Equals("Constructor", StringComparison.Ordinal))
         {
@@ -104,7 +104,7 @@ namespace PeterO.DocGen
       }
       _ = builder.Append(" }\n");
       _ = builder.Append('}');
-      var filename = Path.Combine(directory, name + "Test.cs");
+      string filename = Path.Combine(directory, name + "Test.cs");
       if (!File.Exists(filename))
       {
         File.WriteAllText(filename, builder.ToString());
@@ -117,7 +117,7 @@ namespace PeterO.DocGen
       {
         throw new ArgumentNullException(nameof(assembly));
       }
-      foreach (var type in assembly.GetTypes())
+      foreach (Type type in assembly.GetTypes())
       {
         if (!type.IsPublic || type.IsInterface)
         {

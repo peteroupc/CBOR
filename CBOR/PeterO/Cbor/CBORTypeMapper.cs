@@ -11,7 +11,7 @@ namespace PeterO.Cbor
   {
     private readonly IList<string> typePrefixes;
     private readonly IList<string> typeNames;
-    private readonly IDictionary<Object, ConverterInfo>
+    private readonly IDictionary<object, ConverterInfo>
     converters;
 
     /// <summary>Initializes a new instance of the
@@ -20,7 +20,7 @@ namespace PeterO.Cbor
     {
       this.typePrefixes = new List<string>();
       this.typeNames = new List<string>();
-      this.converters = new Dictionary<Object, ConverterInfo>();
+      this.converters = new Dictionary<object, ConverterInfo>();
     }
 
     /// <summary>Registers an object that converts objects of a given type
@@ -54,12 +54,14 @@ namespace PeterO.Cbor
       {
         throw new ArgumentNullException(nameof(converter));
       }
-      var ci = new ConverterInfo();
-      ci.Converter = converter;
-      ci.ToObject = PropertyMap.FindOneArgumentMethod(
+      var ci = new ConverterInfo
+      {
+        Converter = converter,
+        ToObject = PropertyMap.FindOneArgumentMethod(
         converter,
         "ToCBORObject",
-        type);
+        type),
+      };
       if (ci.ToObject == null)
       {
         throw new ArgumentException(
@@ -77,26 +79,20 @@ namespace PeterO.Cbor
       CBORObject cbor,
       Type type)
     {
-      if (!this.converters.TryGetValue(type, out ConverterInfo convinfo))
-      {
-        return null;
-      }
-      if (convinfo == null)
-      {
-        return null;
-      }
-      return (convinfo.FromObject == null) ? null :
+      return !this.converters.TryGetValue(type, out ConverterInfo convinfo)
+        ? null
+        : convinfo == null
+        ? null
+        : (convinfo.FromObject == null) ? null :
         PropertyMap.CallFromObject(convinfo, cbor);
     }
 
     internal CBORObject ConvertWithConverter(object obj)
     {
-      Object type = obj.GetType();
-      if (!this.converters.TryGetValue(type, out ConverterInfo convinfo))
-      {
-        return null;
-      }
-      return (convinfo == null) ? null :
+      object type = obj.GetType();
+      return !this.converters.TryGetValue(type, out ConverterInfo convinfo)
+        ? null
+        : (convinfo == null) ? null :
         PropertyMap.CallToObject(convinfo, obj);
     }
 
@@ -110,7 +106,7 @@ namespace PeterO.Cbor
     /// otherwise.</returns>
     public bool FilterTypeName(string typeName)
     {
-      if (String.IsNullOrEmpty(typeName))
+      if (string.IsNullOrEmpty(typeName))
       {
         return false;
       }

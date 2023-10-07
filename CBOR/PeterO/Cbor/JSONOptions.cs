@@ -100,7 +100,7 @@ namespace PeterO.Cbor
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
     /// options.</summary>
-    public JSONOptions() : this(String.Empty)
+    public JSONOptions() : this(string.Empty)
     {
     }
 
@@ -251,23 +251,15 @@ namespace PeterO.Cbor
     private string FromNumberConversion()
     {
       ConversionMode kind = this.NumberConversion;
-      if (kind == ConversionMode.Full)
-      {
-        return "full";
-      }
-      if (kind == ConversionMode.Double)
-      {
-        return "double";
-      }
-      if (kind == ConversionMode.Decimal128)
-      {
-        return "decimal128";
-      }
-      if (kind == ConversionMode.IntOrFloat)
-      {
-        return "intorfloat";
-      }
-      return (kind == ConversionMode.IntOrFloatFromDouble) ?
+      return kind == ConversionMode.Full
+        ? "full"
+        : kind == ConversionMode.Double
+        ? "double"
+        : kind == ConversionMode.Decimal128
+        ? "decimal128"
+        : kind == ConversionMode.IntOrFloat
+        ? "intorfloat"
+        : (kind == ConversionMode.IntOrFloatFromDouble) ?
 "intorfloatfromdouble" : "full";
     }
 

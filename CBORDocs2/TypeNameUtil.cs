@@ -16,15 +16,17 @@ namespace PeterO.DocGen
       else
       {
         Type nt = t;
-        var types = new List<Type>();
-        types.Add(t);
-        var sb = new StringBuilder().Append(t.Namespace);
+        var types = new List<Type>
+        {
+          t,
+        };
+        StringBuilder sb = new StringBuilder().Append(t.Namespace);
         while (nt != null && nt.IsNested)
         {
           types.Add(nt.DeclaringType);
           nt = nt.DeclaringType;
         }
-        for (var i = types.Count - 1; i >= 0; --i)
+        for (int i = types.Count - 1; i >= 0; --i)
         {
           _ = sb.Append('.').Append(UndecorateTypeName(types[i].Name));
         }
@@ -60,7 +62,7 @@ namespace PeterO.DocGen
       }
       else if (t.IsGenericParameter)
       {
-        var ggastr = Convert.ToString(
+        string ggastr = Convert.ToString(
           t.GenericParameterPosition,
           System.Globalization.CultureInfo.InvariantCulture);
         _ = sb.Append(genericMethod ? "``" : "`").Append(ggastr);
@@ -69,14 +71,16 @@ namespace PeterO.DocGen
       {
         _ = sb.Append(t.Namespace);
         Type nt = t;
-        var types = new List<Type>();
-        types.Add(t);
+        var types = new List<Type>
+        {
+          t,
+        };
         while (nt != null && nt.IsNested)
         {
           types.Add(nt.DeclaringType);
           nt = nt.DeclaringType;
         }
-        for (var i = types.Count - 1; i >= 0; --i)
+        for (int i = types.Count - 1; i >= 0; --i)
         {
           _ = sb.Append('.').Append(UndecorateTypeName(types[i].Name));
           if (types[i].GetGenericArguments().Length > 0)
@@ -84,8 +88,8 @@ namespace PeterO.DocGen
             if (param)
             {
               _ = sb.Append('{');
-              var first = true;
-              foreach (var ga in types[i].GetGenericArguments())
+              bool first = true;
+              foreach (Type ga in types[i].GetGenericArguments())
               {
                 if (!first)
                 {
@@ -98,7 +102,7 @@ namespace PeterO.DocGen
             }
             else
             {
-              var ggastr = Convert.ToString(
+              string ggastr = Convert.ToString(
                 types[i].GetGenericArguments().Length,
                 System.Globalization.CultureInfo.InvariantCulture);
               _ = sb.Append('`').Append(ggastr);
@@ -118,14 +122,14 @@ namespace PeterO.DocGen
       if (obj is ConstructorInfo)
       {
         var cons = obj as ConstructorInfo;
-        var msb = new StringBuilder()
+        StringBuilder msb = new StringBuilder()
           .Append("M:").Append(XmlDocTypeName(cons.DeclaringType))
           .Append(cons.IsStatic ? ".#cctor" : ".#ctor");
         if (cons.GetParameters().Length > 0)
         {
           _ = msb.Append('(');
-          var first = true;
-          foreach (var p in cons.GetParameters())
+          bool first = true;
+          foreach (ParameterInfo p in cons.GetParameters())
           {
             if (!first)
             {
@@ -141,15 +145,15 @@ namespace PeterO.DocGen
       if (obj is MethodInfo)
       {
         var mi = obj as MethodInfo;
-        var msb = new StringBuilder()
+        StringBuilder msb = new StringBuilder()
           .Append("M:").Append(XmlDocTypeName(mi.DeclaringType))
           .Append('.').Append(mi.Name);
-        var gga = mi.GetGenericArguments().Length;
+        int gga = mi.GetGenericArguments().Length;
         bool genericMethod = gga > 0;
         if (genericMethod)
         {
           _ = msb.Append("``");
-          var ggastr = Convert.ToString(
+          string ggastr = Convert.ToString(
             gga,
             System.Globalization.CultureInfo.InvariantCulture);
           _ = msb.Append(ggastr);
@@ -157,8 +161,8 @@ namespace PeterO.DocGen
         if (mi.GetParameters().Length > 0)
         {
           _ = msb.Append('(');
-          var first = true;
-          foreach (var p in mi.GetParameters())
+          bool first = true;
+          foreach (ParameterInfo p in mi.GetParameters())
           {
             if (!first)
             {
@@ -172,7 +176,7 @@ namespace PeterO.DocGen
         if (mi.Name.Equals("op_Explicit", StringComparison.Ordinal) ||
 mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
         {
-          var rt = mi.ReturnType;
+          Type rt = mi.ReturnType;
           if (rt != null)
           {
             _ = msb.Append('~').Append(XmlDocTypeName(rt, true, genericMethod));
@@ -183,14 +187,14 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
       if (obj is PropertyInfo)
       {
         var pi = obj as PropertyInfo;
-        var msb = new StringBuilder().Append("P:")
+        StringBuilder msb = new StringBuilder().Append("P:")
           .Append(XmlDocTypeName(pi.DeclaringType)).Append('.')
           .Append(pi.Name);
         if (pi.GetIndexParameters().Length > 0)
         {
           _ = msb.Append('(');
-          var first = true;
-          foreach (var p in pi.GetIndexParameters())
+          bool first = true;
+          foreach (ParameterInfo p in pi.GetIndexParameters())
           {
             if (!first)
             {
@@ -214,25 +218,25 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal))
 
     public static string UndecorateTypeName(string name)
     {
-      var idx = name.IndexOf('`');
+      int idx = name.IndexOf('`');
       if (idx >= 0)
       {
-        name = name.Substring(0, idx);
+        name = name[..idx];
       }
       idx = name.IndexOf('[');
       if (idx >= 0)
       {
-        name = name.Substring(0, idx);
+        name = name[..idx];
       }
       idx = name.IndexOf('*');
       if (idx >= 0)
       {
-        name = name.Substring(0, idx);
+        name = name[..idx];
       }
       idx = name.IndexOf('@');
       if (idx >= 0)
       {
-        name = name.Substring(0, idx);
+        name = name[..idx];
       }
       return name;
     }

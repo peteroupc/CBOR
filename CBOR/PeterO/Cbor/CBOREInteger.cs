@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -61,26 +61,22 @@ namespace PeterO.Cbor
     public long AsInt64(object obj)
     {
       var bi = (EInteger)obj;
-      if (!bi.CanFitInInt64())
-      {
-        throw new OverflowException("This object's value is out of range");
-      }
-      return (long)bi;
+      return !bi.CanFitInInt64() ? throw new OverflowException("This object's value is out of range") : (long)bi;
     }
 
     public bool CanFitInSingle(object obj)
     {
       var bigintItem = (EInteger)obj;
-      EFloat ef = EFloat.FromEInteger(bigintItem);
-      EFloat ef2 = EFloat.FromSingle(ef.ToSingle());
+      var ef = EFloat.FromEInteger(bigintItem);
+      var ef2 = EFloat.FromSingle(ef.ToSingle());
       return ef.CompareTo(ef2) == 0;
     }
 
     public bool CanFitInDouble(object obj)
     {
       var bigintItem = (EInteger)obj;
-      EFloat ef = EFloat.FromEInteger(bigintItem);
-      EFloat ef2 = EFloat.FromDouble(ef.ToDouble());
+      var ef = EFloat.FromEInteger(bigintItem);
+      var ef2 = EFloat.FromDouble(ef.ToDouble());
       return ef.CompareTo(ef2) == 0;
     }
 
@@ -137,7 +133,7 @@ namespace PeterO.Cbor
       var bi = (EInteger)obj;
       if (bi.CanFitInInt32())
       {
-        var ret = (int)bi;
+        int ret = (int)bi;
         if (ret >= minValue && ret <= maxValue)
         {
           return ret;

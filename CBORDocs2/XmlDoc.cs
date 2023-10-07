@@ -22,7 +22,7 @@ namespace PeterO.DocGen
       {
         if (this.children != null)
         {
-          foreach (var c in this.children)
+          foreach (Node c in this.children)
           {
             yield return c;
           }
@@ -33,7 +33,7 @@ namespace PeterO.DocGen
       {
         if (this.attributes != null)
         {
-          foreach (var c in this.attributes.Keys)
+          foreach (string c in this.attributes.Keys)
           {
             yield return c;
           }
@@ -46,10 +46,7 @@ namespace PeterO.DocGen
         {
           throw new ArgumentNullException(nameof(child));
         }
-        if (this.children != null)
-        {
-          this.children.Add(child);
-        }
+        this.children?.Add(child);
       }
 
       internal void SetAttribute(string name, string value)
@@ -73,7 +70,7 @@ namespace PeterO.DocGen
           return this.content;
         }
         var sb = new StringBuilder();
-        foreach (var c in this.children)
+        foreach (Node c in this.children)
         {
           _ = sb.Append(c.GetContent());
         }
@@ -92,7 +89,7 @@ namespace PeterO.DocGen
         }
         else
         {
-          this.LocalName = String.Empty;
+          this.LocalName = string.Empty;
           this.children = null;
           this.attributes = null;
         }
@@ -105,7 +102,7 @@ namespace PeterO.DocGen
       {
         throw new ArgumentNullException(nameof(node));
       }
-      foreach (var child in node.GetChildren())
+      foreach (INode child in node.GetChildren())
       {
         if (vis == null)
         {
@@ -117,8 +114,8 @@ namespace PeterO.DocGen
 
     private static INode ReadNode(XmlReader reader)
     {
-      var node = new Node(reader.LocalName, true, String.Empty);
-      var emptyElement = reader.IsEmptyElement;
+      var node = new Node(reader.LocalName, true, string.Empty);
+      bool emptyElement = reader.IsEmptyElement;
       if (reader.HasAttributes)
       {
         while (reader.MoveToNextAttribute())
@@ -131,9 +128,9 @@ namespace PeterO.DocGen
         _ = reader.Read();
         return node;
       }
-      var depth = 0;
+      int depth = 0;
       var nodeStack = new List<Node>();
-      var doread = true;
+      bool doread = true;
       nodeStack.Add(node);
       while (true)
       {
@@ -155,7 +152,7 @@ namespace PeterO.DocGen
         else if (reader.NodeType == XmlNodeType.Element)
         {
           emptyElement = reader.IsEmptyElement;
-          var childNode = new Node(reader.LocalName, true, String.Empty);
+          var childNode = new Node(reader.LocalName, true, string.Empty);
           if (reader.HasAttributes)
           {
             while (reader.MoveToNextAttribute())
@@ -163,7 +160,7 @@ namespace PeterO.DocGen
               childNode.SetAttribute(reader.Name, reader.Value);
             }
           }
-          nodeStack[nodeStack.Count - 1].AppendChild(childNode);
+          nodeStack[^1].AppendChild(childNode);
           if (!emptyElement)
           {
             nodeStack.Add(childNode);
@@ -174,22 +171,22 @@ namespace PeterO.DocGen
         {
           throw new XmlException();
         }
-        else if (reader.NodeType == XmlNodeType.SignificantWhitespace ||
-          reader.NodeType == XmlNodeType.Whitespace ||
-          reader.NodeType == XmlNodeType.Text)
+        else if (reader.NodeType is XmlNodeType.SignificantWhitespace or
+          XmlNodeType.Whitespace or
+          XmlNodeType.Text)
         {
-          var sb = new StringBuilder().Append(reader.Value);
+          StringBuilder sb = new StringBuilder().Append(reader.Value);
           _ = reader.Read();
-          while (reader.NodeType == XmlNodeType.SignificantWhitespace ||
-            reader.NodeType == XmlNodeType.Whitespace ||
-            reader.NodeType == XmlNodeType.Text)
+          while (reader.NodeType is XmlNodeType.SignificantWhitespace or
+            XmlNodeType.Whitespace or
+            XmlNodeType.Text)
           {
             _ = sb.Append(reader.Value);
             _ = reader.Read();
           }
           doread = false;
-          nodeStack[nodeStack.Count - 1].AppendChild(
-           new Node(String.Empty, false, sb.ToString()));
+          nodeStack[^1].AppendChild(
+           new Node(string.Empty, false, sb.ToString()));
         }
       }
       return node;
@@ -206,14 +203,14 @@ namespace PeterO.DocGen
 
       public void VisitNode(INode node)
       {
-        if (String.IsNullOrEmpty(node.LocalName))
+        if (string.IsNullOrEmpty(node.LocalName))
         {
           _ = this.sb.Append(node.GetContent());
         }
         else
         {
-          var c = node.GetAttribute("cref");
-          var n = node.GetAttribute("name");
+          string c = node.GetAttribute("cref");
+          string n = node.GetAttribute("name");
           if (c != null)
           {
             _ = this.sb.Append(c);
@@ -228,8 +225,8 @@ namespace PeterO.DocGen
 
       public override string ToString()
       {
-        var summary = this.sb.ToString();
-        summary = Regex.Replace(summary, @"^\s+|\s+$", String.Empty);
+        string summary = this.sb.ToString();
+        summary = Regex.Replace(summary, @"^\s+|\s+$", string.Empty);
         summary = Regex.Replace(summary, @"\s+", " ");
         return summary;
       }
@@ -239,14 +236,7 @@ namespace PeterO.DocGen
 
     public INode GetMemberNode(string memberID)
     {
-      if (!this.memberNodes.TryGetValue(memberID, out INode node))
-      {
-        return null;
-      }
-      else
-      {
-        return node;
-      }
+      return !this.memberNodes.TryGetValue(memberID, out INode node) ? null : node;
     }
 
     public string GetSummary(string memberID)
@@ -258,7 +248,7 @@ namespace PeterO.DocGen
       else
       {
         var sb = new StringBuilder();
-        foreach (var c in mn.GetChildren())
+        foreach (INode c in mn.GetChildren())
         {
           if (c.LocalName.Equals("summary", StringComparison.Ordinal))
           {
@@ -267,8 +257,8 @@ namespace PeterO.DocGen
             _ = sb.Append(sv.ToString()).Append("\r\n\r\n");
           }
         }
-        var summary = sb.ToString();
-        summary = Regex.Replace(summary, @"^\s+$", String.Empty);
+        string summary = sb.ToString();
+        summary = Regex.Replace(summary, @"^\s+$", string.Empty);
         return summary;
       }
     }
@@ -276,39 +266,35 @@ namespace PeterO.DocGen
     public XmlDoc(string xmlFilename)
     {
       this.memberNodes = new Dictionary<string, INode>();
-      using (var stream = new FileStream(xmlFilename, FileMode.Open))
+      using var stream = new FileStream(xmlFilename, FileMode.Open);
+      using var reader = XmlReader.Create(stream);
+      _ = reader.Read();
+      reader.ReadStartElement("doc");
+      while (reader.IsStartElement())
       {
-        using (var reader = XmlReader.Create(stream))
+        // Console.WriteLine(reader.LocalName);
+        if (reader.LocalName.Equals("members", StringComparison.Ordinal))
         {
           _ = reader.Read();
-          reader.ReadStartElement("doc");
           while (reader.IsStartElement())
           {
-            // Console.WriteLine(reader.LocalName);
-            if (reader.LocalName.Equals("members", StringComparison.Ordinal))
+            if (reader.LocalName.Equals("member",
+                 StringComparison.Ordinal))
             {
-              _ = reader.Read();
-              while (reader.IsStartElement())
-              {
-                if (reader.LocalName.Equals("member",
-                     StringComparison.Ordinal))
-                {
-                  string memberName = reader.GetAttribute("name");
-                  var node = ReadNode(reader);
-                  this.memberNodes[memberName] = node;
-                }
-                else
-                {
-                  reader.Skip();
-                }
-              }
-              reader.Skip();
+              string memberName = reader.GetAttribute("name");
+              INode node = ReadNode(reader);
+              this.memberNodes[memberName] = node;
             }
             else
             {
               reader.Skip();
             }
           }
+          reader.Skip();
+        }
+        else
+        {
+          reader.Skip();
         }
       }
     }

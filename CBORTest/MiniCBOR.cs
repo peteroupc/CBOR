@@ -89,11 +89,11 @@ count);
       value &= 0x7fff;
       if (value >= 0x7c00)
       {
-        return ToSingle((0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
+        return ToSingle(((0x3fc00 | (value & 0x3ff)) << 13) | negvalue);
       }
       if (value > 0x400)
       {
-        return ToSingle((value + 0x1c000) << 13 | negvalue);
+        return ToSingle(((value + 0x1c000) << 13) | negvalue);
       }
       if ((value & 0x400) == value)
       {
@@ -154,15 +154,7 @@ count);
         }
         b = stream.ReadByte();
       }
-      if (b == 0xf4)
-      {
-        return false;
-      }
-      if (b == 0xf5)
-      {
-        return true;
-      }
-      throw new IOException("Not a boolean");
+      return b != 0xf4 && (b == 0xf5 ? true : throw new IOException("Not a boolean"));
     }
 
     public static void WriteBoolean(bool value, Stream stream)
@@ -180,7 +172,7 @@ count);
       {
         throw new ArgumentNullException(nameof(stream));
       }
-      var type = 0;
+      int type = 0;
       byte[] bytes;
       if (value < 0)
       {
@@ -225,24 +217,20 @@ count);
       if (kind == 0x18)
       {
         int b = stream.ReadByte();
-        if (b < 0)
-        {
-          throw new IOException("Premature end of stream");
-        }
-        return (headByte != 0x38) ? b : -1 - b;
+        return b < 0 ? throw new IOException("Premature end of stream") : (headByte != 0x38) ? b : -1 - b;
       }
       if (kind == 0x19)
       {
-        var bytes = new byte[2];
+        byte[] bytes = new byte[2];
         ReadHelper(stream, bytes, 0, bytes.Length);
         int b = bytes[0] & 0xff;
         b <<= 8;
         b |= bytes[1] & 0xff;
         return (headByte != 0x39) ? b : -1 - b;
       }
-      if (kind == 0x1a || kind == 0x3a)
+      if (kind is 0x1a or 0x3a)
       {
-        var bytes = new byte[4];
+        byte[] bytes = new byte[4];
         ReadHelper(stream, bytes, 0, bytes.Length);
         long b = ((long)bytes[0]) & 0xff;
         b <<= 8;
@@ -251,15 +239,11 @@ count);
         b |= ((long)bytes[2]) & 0xff;
         b <<= 8;
         b |= ((long)bytes[3]) & 0xff;
-        if (check32bit && (b >> 31) != 0)
-        {
-          throw new IOException("Not a 32-bit integer");
-        }
-        return (headByte != 0x3a) ? b : -1 - b;
+        return check32bit && (b >> 31) != 0 ? throw new IOException("Not a 32-bit integer") : (headByte != 0x3a) ? b : -1 - b;
       }
-      if (headByte == 0x1b || headByte == 0x3b)
+      if (headByte is 0x1b or 0x3b)
       {
-        var bytes = new byte[8];
+        byte[] bytes = new byte[8];
         ReadHelper(stream, bytes, 0, bytes.Length);
         long b;
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 ||
@@ -269,10 +253,8 @@ count);
         }
         if (!check32bit)
         {
-          b = ((long)bytes[0]) & 0xff;
-          b <<= 8;
-          b |= ((long)bytes[1]) & 0xff;
-          b <<= 8;
+          _ = ((long)bytes[0]) & 0xff;
+          _ = ((long)bytes[1]) & 0xff;
           _ = ((long)bytes[2]) & 0xff;
           _ = ((long)bytes[3]) & 0xff;
         }
@@ -283,11 +265,7 @@ count);
         b |= ((long)bytes[6]) & 0xff;
         b <<= 8;
         b |= ((long)bytes[7]) & 0xff;
-        if (check32bit && (b >> 31) != 0)
-        {
-          throw new IOException("Not a 32-bit integer");
-        }
-        return (headByte != 0x3b) ? b : -1 - b;
+        return check32bit && (b >> 31) != 0 ? throw new IOException("Not a 32-bit integer") : (headByte != 0x3b) ? b : -1 - b;
       }
       throw new IOException("Not a 32-bit integer");
     }
@@ -298,7 +276,7 @@ count);
       if (headByte == 0xf9)
       {
         // Half-precision
-        var bytes = new byte[2];
+        byte[] bytes = new byte[2];
         ReadHelper(stream, bytes, 0, bytes.Length);
         b = bytes[0] & 0xff;
         b <<= 8;
@@ -307,7 +285,7 @@ count);
       }
       if (headByte == 0xfa)
       {
-        var bytes = new byte[4];
+        byte[] bytes = new byte[4];
         ReadHelper(stream, bytes, 0, bytes.Length);
         b = bytes[0] & 0xff;
         b <<= 8;
@@ -320,7 +298,7 @@ count);
       }
       if (headByte == 0xfb)
       {
-        var bytes = new byte[8];
+        byte[] bytes = new byte[8];
         ReadHelper(stream, bytes, 0, bytes.Length);
         long lb;
         lb = ((long)bytes[0]) & 0xff;
@@ -358,11 +336,11 @@ count);
         throw new ArgumentNullException(nameof(stream));
       }
       int b = stream.ReadByte();
-      if (b >= 0x00 && b < 0x18)
+      if (b is >= 0x00 and < 0x18)
       {
         return b;
       }
-      if (b >= 0x20 && b < 0x38)
+      if (b is >= 0x20 and < 0x38)
       {
         return -1 - (b & 0x1f);
       }
@@ -391,25 +369,23 @@ count);
         }
         b = stream.ReadByte();
       }
-      if (b >= 0x00 && b < 0x18)
+      if (b is >= 0x00 and < 0x18)
       {
         return b;
       }
-      if (b >= 0x20 && b < 0x38)
+      if (b is >= 0x20 and < 0x38)
       {
         return -1 - (b & 0x1f);
       }
-      if (b == 0xf9 || b == 0xfa || b == 0xfb)
+      if (b is 0xf9 or 0xfa or 0xfb)
       {
         // Read a floating-point number
         return ReadFP(stream, b);
       }
-      if (b == 0x18 || b == 0x19 || b == 0x1a || b == 0x38 ||
-        b == 0x39 || b == 0x3a)
-      { // covers headbytes 0x18-0x1a and 0x38-0x3A
-        return ReadInteger(stream, b, false);
-      }
-      throw new IOException("Not a double");
+      return b is 0x18 or 0x19 or 0x1a or 0x38 or
+        0x39 or 0x3a
+        ? ReadInteger(stream, b, false)
+        : throw new IOException("Not a double");
     }
 
     /// <summary>Reads a 32-bit integer in CBOR format from a data stream.
@@ -430,11 +406,11 @@ count);
         throw new ArgumentNullException(nameof(stream));
       }
       int b = stream.ReadByte();
-      if (b >= 0x00 && b < 0x18)
+      if (b is >= 0x00 and < 0x18)
       {
         return b;
       }
-      if (b >= 0x20 && b < 0x38)
+      if (b is >= 0x20 and < 0x38)
       {
         return -1 - (b & 0x1f);
       }
@@ -463,35 +439,27 @@ count);
         }
         b = stream.ReadByte();
       }
-      if (b >= 0x00 && b < 0x18)
+      if (b is >= 0x00 and < 0x18)
       {
         return b;
       }
-      if (b >= 0x20 && b < 0x38)
+      if (b is >= 0x20 and < 0x38)
       {
         return -1 - (b & 0x1f);
       }
-      if (b == 0xf9 || b == 0xfa || b == 0xfb)
+      if (b is 0xf9 or 0xfa or 0xfb)
       {
         // Read a floating-point number
         double dbl = ReadFP(stream, b);
         // Truncate to a 32-bit integer
-        if (Double.IsInfinity(dbl) || Double.IsNaN(dbl))
+        if (double.IsInfinity(dbl) || double.IsNaN(dbl))
         {
           throw new IOException("Not a 32-bit integer");
         }
         dbl = (dbl < 0) ? Math.Ceiling(dbl) : Math.Floor(dbl);
-        if (dbl < Int32.MinValue || dbl > Int32.MaxValue)
-        {
-          throw new IOException("Not a 32-bit integer");
-        }
-        return (int)dbl;
+        return dbl is < int.MinValue or > int.MaxValue ? throw new IOException("Not a 32-bit integer") : (int)dbl;
       }
-      if ((b & 0xdc) == 0x18)
-      { // covers headbytes 0x18-0x1b and 0x38-0x3B
-        return (int)ReadInteger(stream, b, true);
-      }
-      throw new IOException("Not a 32-bit integer");
+      return (b & 0xdc) == 0x18 ? (int)ReadInteger(stream, b, true) : throw new IOException("Not a 32-bit integer");
     }
 
     public static int ReadInt32MajorType1Or2(Stream stream)
@@ -501,15 +469,15 @@ count);
         throw new ArgumentNullException(nameof(stream));
       }
       int b = stream.ReadByte();
-      if (b >= 0x00 && b < 0x18)
+      if (b is >= 0x00 and < 0x18)
       {
         return b;
       }
-      if (b >= 0x20 && b < 0x38)
+      if (b is >= 0x20 and < 0x38)
       {
         return -1 - (b & 0x1f);
       }
-      if (b == 0x18 || b == 0x38)
+      if (b is 0x18 or 0x38)
       {
         int b1 = stream.ReadByte();
         int b2 = stream.ReadByte();
@@ -520,7 +488,7 @@ count);
         int c = (b1 << 8) | b2;
         return (b == 0x18) ? c : -1 - c;
       }
-      if (b == 0x19 || b == 0x39 || b == 0x1a || b == 0x3a)
+      if (b is 0x19 or 0x39 or 0x1a or 0x3a)
       {
         if ((b & 0x1f) == 0x1a && (stream.ReadByte() != 0 ||
             stream.ReadByte() != 0 || stream.ReadByte() != 0 ||

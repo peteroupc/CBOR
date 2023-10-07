@@ -1,5 +1,5 @@
-using System.IO;
 using PeterO.Cbor;
+using System.IO;
 
 namespace Test
 {
@@ -8,7 +8,7 @@ namespace Test
   /// "sbernard31".</summary>
   public sealed class CBORWriterHelper
   {
-    private Stream outputStream;
+    private readonly Stream outputStream;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CBORWriterHelper"/> class.

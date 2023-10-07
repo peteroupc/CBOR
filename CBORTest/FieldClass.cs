@@ -12,6 +12,6 @@ namespace Test
     public readonly int ReadonlyFieldA = 33;
     private readonly int privateFieldB = 44;
     public int publicFieldA = 66;
-    private int privateFieldA = 67;
+    private readonly int privateFieldA = 67;
   }
 }

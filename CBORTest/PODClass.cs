@@ -1,10 +1,11 @@
-using System;
-
 // One property returns an array for testing purposes
 namespace Test
 {
   public sealed class PODClass
   {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PODClass"/> class.
+    /// </summary>
     public PODClass()
     {
       this.PropA = 0;
@@ -13,7 +14,7 @@ namespace Test
       this.PrivatePropA = 2;
       this.FloatProp = 0;
       this.DoubleProp = 0;
-      this.StringProp = String.Empty;
+      this.StringProp = string.Empty;
       this.StringArray = null;
     }
 

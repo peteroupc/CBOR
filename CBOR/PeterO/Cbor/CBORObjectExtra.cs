@@ -6,9 +6,9 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.IO;
-using PeterO.Numbers;
 
 namespace PeterO.Cbor
 {
@@ -99,11 +99,7 @@ namespace PeterO.Cbor
     internal ushort AsUInt16Legacy()
     {
       int v = this.AsInt32();
-      if (v > UInt16.MaxValue || v < 0)
-      {
-        throw new OverflowException("This object's value is out of range");
-      }
-      return (ushort)v;
+      return v > ushort.MaxValue || v < 0 ? throw new OverflowException("This object's value is out of range") : (ushort)v;
     }
 
     /// <summary>Converts this object to a 32-bit unsigned integer after
@@ -126,11 +122,7 @@ namespace PeterO.Cbor
     internal uint AsUInt32Legacy()
     {
       ulong v = this.AsUInt64Legacy();
-      if (v > UInt32.MaxValue)
-      {
-        throw new OverflowException("This object's value is out of range");
-      }
-      return (uint)v;
+      return v > uint.MaxValue ? throw new OverflowException("This object's value is out of range") : (uint)v;
     }
 
     /// <summary>Converts this object to an 8-bit signed integer.</summary>
@@ -145,11 +137,7 @@ namespace PeterO.Cbor
     internal sbyte AsSByteLegacy()
     {
       int v = this.AsInt32();
-      if (v > SByte.MaxValue || v < SByte.MinValue)
-      {
-        throw new OverflowException("This object's value is out of range");
-      }
-      return (sbyte)v;
+      return v > sbyte.MaxValue || v < sbyte.MinValue ? throw new OverflowException("This object's value is out of range") : (sbyte)v;
     }
 
     /// <summary>Writes a CBOR major type number and an integer 0 or
@@ -182,11 +170,9 @@ namespace PeterO.Cbor
       int majorType,
       uint value)
     {
-      if (outputStream == null)
-      {
-        throw new ArgumentNullException(nameof(outputStream));
-      }
-      return WriteValue(outputStream, majorType, (long)value);
+      return outputStream == null
+        ? throw new ArgumentNullException(nameof(outputStream))
+        : WriteValue(outputStream, majorType, (long)value);
     }
 
     /// <summary>Writes a CBOR major type number and an integer 0 or
@@ -225,7 +211,7 @@ namespace PeterO.Cbor
       {
         throw new ArgumentNullException(nameof(outputStream));
       }
-      if (value <= Int64.MaxValue)
+      if (value <= long.MaxValue)
       {
         return WriteValue(outputStream, majorType, (long)value);
       }
@@ -306,12 +292,10 @@ namespace PeterO.Cbor
     internal ulong AsUInt64Legacy()
     {
       EInteger bigint = this.ToObject<EInteger>();
-      if (bigint.Sign < 0 ||
-        bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0)
-      {
-        throw new OverflowException("This object's value is out of range");
-      }
-      return (ulong)bigint;
+      return bigint.Sign < 0 ||
+        bigint.GetUnsignedBitLengthAsEInteger().CompareTo(64) > 0
+        ? throw new OverflowException("This object's value is out of range")
+        : (ulong)bigint;
     }
 
     /// <summary>Writes an 8-bit signed integer in CBOR format to a data
@@ -338,7 +322,7 @@ namespace PeterO.Cbor
       {
         throw new ArgumentNullException(nameof(stream));
       }
-      if (value <= Int64.MaxValue)
+      if (value <= long.MaxValue)
       {
         Write((long)value, stream);
       }
@@ -399,7 +383,7 @@ namespace PeterO.Cbor
 
     private static EInteger UInt64ToEInteger(ulong value)
     {
-      var data = new byte[9];
+      byte[] data = new byte[9];
       ulong uvalue = value;
       data[0] = (byte)(uvalue & 0xff);
       data[1] = (byte)((uvalue >> 8) & 0xff);
@@ -430,7 +414,7 @@ namespace PeterO.Cbor
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value)
     {
-      return FromObject((Int64)value);
+      return FromObject((long)value);
     }
 
     /// <summary>Converts a 16-bit unsigned integer to a CBOR
@@ -440,7 +424,7 @@ namespace PeterO.Cbor
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value)
     {
-      return FromObject((Int64)value);
+      return FromObject((long)value);
     }
 
     /// <summary>Generates a CBOR object from this one, but gives the
@@ -485,7 +469,7 @@ namespace PeterO.Cbor
     /// . If "valueOb" is null, returns a version of CBORObject.Null with
     /// the given tag.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObjectAndTag(Object o, ulong tag)
+    public static CBORObject FromObjectAndTag(object o, ulong tag)
     {
       return FromObjectAndTag(o, UInt64ToEInteger(tag));
     }

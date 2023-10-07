@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -15,8 +15,8 @@ namespace PeterO.Cbor
   {
     public object Abs(object obj)
     {
-      var val = (long)obj;
-      return (val == Int32.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
+      long val = (long)obj;
+      return (val == int.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
           -val : obj);
     }
 
@@ -47,12 +47,8 @@ namespace PeterO.Cbor
 
     public int AsInt32(object obj, int minValue, int maxValue)
     {
-      var val = (long)obj;
-      if (val >= minValue && val <= maxValue)
-      {
-        return (int)val;
-      }
-      throw new OverflowException("This object's value is out of range");
+      long val = (long)obj;
+      return val >= minValue && val <= maxValue ? (int)val : throw new OverflowException("This object's value is out of range");
     }
 
     public long AsInt64(object obj)
@@ -67,8 +63,8 @@ namespace PeterO.Cbor
 
     public bool CanFitInDouble(object obj)
     {
-      var intItem = (long)obj;
-      if (intItem == Int64.MinValue)
+      long intItem = (long)obj;
+      if (intItem == long.MinValue)
       {
         return true;
       }
@@ -82,8 +78,8 @@ namespace PeterO.Cbor
 
     public bool CanFitInInt32(object obj)
     {
-      var val = (long)obj;
-      return val >= Int32.MinValue && val <= Int32.MaxValue;
+      long val = (long)obj;
+      return val >= int.MinValue && val <= int.MaxValue;
     }
 
     public bool CanFitInInt64(object obj)
@@ -93,8 +89,8 @@ namespace PeterO.Cbor
 
     public bool CanFitInSingle(object obj)
     {
-      var intItem = (long)obj;
-      if (intItem == Int64.MinValue)
+      long intItem = (long)obj;
+      if (intItem == long.MinValue)
       {
         return true;
       }
@@ -108,19 +104,19 @@ namespace PeterO.Cbor
 
     public bool CanTruncatedIntFitInInt32(object obj)
     {
-      var val = (long)obj;
-      return val >= Int32.MinValue && val <= Int32.MaxValue;
+      long val = (long)obj;
+      return val >= int.MinValue && val <= int.MaxValue;
     }
 
     public bool CanTruncatedIntFitInUInt64(object obj)
     {
-      var val = (long)obj;
+      long val = (long)obj;
       return val >= 0;
     }
 
     public bool CanFitInUInt64(object obj)
     {
-      var val = (long)obj;
+      long val = (long)obj;
       return val >= 0;
     }
 
@@ -166,13 +162,13 @@ namespace PeterO.Cbor
 
     public object Negate(object obj)
     {
-      return (((long)obj) == Int64.MinValue) ? (EInteger.One << 63) :
-(-((long)obj));
+      return (((long)obj) == long.MinValue) ? (EInteger.One << 63) :
+(-(long)obj);
     }
 
     public int Sign(object obj)
     {
-      var val = (long)obj;
+      long val = (long)obj;
       return (val == 0) ? 0 : ((val < 0) ? -1 : 1);
     }
   }

@@ -273,7 +273,7 @@ namespace PeterO.Cbor
       this.mode = mode;
       this.errorThrow = errorThrow;
       this.dontSkipUtf8Bom = dontSkipUtf8Bom;
-      this.str = String.Empty;
+      this.str = string.Empty;
       this.strLength = -1;
     }
 
@@ -332,7 +332,7 @@ namespace PeterO.Cbor
         throw new ArgumentException("chars's length minus " + index + "(" +
           (chars.Length - index) + ") is less than " + length);
       }
-      var count = 0;
+      int count = 0;
       for (int i = 0; i < length; ++i)
       {
         int c = this.ReadChar();
@@ -375,15 +375,10 @@ namespace PeterO.Cbor
         else if ((c & 0xf800) == 0xd800)
         {
           // unpaired surrogate
-          if (this.errorThrow)
-          {
-            throw new InvalidOperationException("Unpaired surrogate code" +
-              "\u0020point");
-          }
-          else
-          {
-            c = 0xfffd;
-          }
+          c = this.errorThrow
+            ? throw new InvalidOperationException("Unpaired surrogate code" +
+              "\u0020point")
+            : 0xfffd;
         }
         ++this.offset;
         return c;
@@ -706,7 +701,7 @@ namespace PeterO.Cbor
         this.saved = this.saved ?? (new int[this.savedLength + size]);
         if (this.savedLength + size < this.saved.Length)
         {
-          var newsaved = new int[this.savedLength + size + 4];
+          int[] newsaved = new int[this.savedLength + size + 4];
           Array.Copy(this.saved, 0, newsaved, 0, this.savedLength);
           this.saved = newsaved;
         }
@@ -777,14 +772,7 @@ namespace PeterO.Cbor
         if (c2 < 0)
         {
           this.state.AddOne(-1);
-          if (this.errorThrow)
-          {
-            throw new InvalidOperationException("Invalid UTF-16");
-          }
-          else
-          {
-            return 0xfffd;
-          }
+          return this.errorThrow ? throw new InvalidOperationException("Invalid UTF-16") : 0xfffd;
         }
         c1 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
         int surr = c1 & 0xfc00;
@@ -796,14 +784,7 @@ namespace PeterO.Cbor
           if (c1 < 0 || c2 < 0)
           {
             this.state.AddOne(-1);
-            if (this.errorThrow)
-            {
-              throw new InvalidOperationException("Invalid UTF-16");
-            }
-            else
-            {
-              return 0xfffd;
-            }
+            return this.errorThrow ? throw new InvalidOperationException("Invalid UTF-16") : 0xfffd;
           }
           int unit2 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
           if ((unit2 & 0xfc00) == 0xdc00)
@@ -811,32 +792,14 @@ namespace PeterO.Cbor
             return 0x10000 + ((surr & 0x3ff) << 10) + (unit2 & 0x3ff);
           }
           this.Unget(c1, c2);
-          if (this.errorThrow)
-          {
-            throw new InvalidOperationException("Invalid UTF-16");
-          }
-          else
-          {
-            return 0xfffd;
-          }
+          return this.errorThrow ? throw new InvalidOperationException("Invalid UTF-16") : 0xfffd;
         }
-        if (surr == 0xdc00)
-        {
-          if (this.errorThrow)
-          {
-            throw new InvalidOperationException("Invalid UTF-16");
-          }
-          else
-          {
-            return 0xfffd;
-          }
-        }
-        return c1;
+        return surr == 0xdc00 ? this.errorThrow ? throw new InvalidOperationException("Invalid UTF-16") : 0xfffd : c1;
       }
 
       public int Read(int[] chars, int index, int length)
       {
-        var count = 0;
+        int count = 0;
         for (int i = 0; i < length; ++i)
         {
           int c = this.ReadChar();
@@ -879,34 +842,18 @@ namespace PeterO.Cbor
         if (c2 < 0 || c3 < 0 || c4 < 0)
         {
           this.state.AddOne(-1);
-          if (this.errorThrow)
-          {
-            throw new InvalidOperationException("Invalid UTF-32");
-          }
-          else
-          {
-            return 0xfffd;
-          }
+          return this.errorThrow ? throw new InvalidOperationException("Invalid UTF-32") : 0xfffd;
         }
         c1 = this.bigEndian ? ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4) :
           ((c4 << 24) | (c3 << 16) | (c2 << 8) | c1);
-        if (c1 < 0 || c1 >= 0x110000 || (c1 & 0xfff800) == 0xd800)
-        {
-          if (this.errorThrow)
-          {
-            throw new InvalidOperationException("Invalid UTF-32");
-          }
-          else
-          {
-            return 0xfffd;
-          }
-        }
-        return c1;
+        return c1 < 0 || c1 >= 0x110000 || (c1 & 0xfff800) == 0xd800
+          ? this.errorThrow ? throw new InvalidOperationException("Invalid UTF-32") : 0xfffd
+          : c1;
       }
 
       public int Read(int[] chars, int index, int length)
       {
-        var count = 0;
+        int count = 0;
         for (int i = 0; i < length; ++i)
         {
           int c = this.ReadChar();
@@ -948,11 +895,11 @@ namespace PeterO.Cbor
 
       public int ReadChar()
       {
-        var cp = 0;
-        var bytesSeen = 0;
-        var bytesNeeded = 0;
-        var lower = 0;
-        var upper = 0;
+        int cp = 0;
+        int bytesSeen = 0;
+        int bytesNeeded = 0;
+        int lower = 0;
+        int upper = 0;
         while (true)
         {
           int b;
@@ -967,18 +914,7 @@ namespace PeterO.Cbor
           }
           if (b < 0)
           {
-            if (bytesNeeded != 0)
-            {
-              if (this.errorThrow)
-              {
-                throw new InvalidOperationException("Invalid UTF-8");
-              }
-              else
-              {
-                return 0xfffd;
-              }
-            }
-            return -1;
+            return bytesNeeded != 0 ? this.errorThrow ? throw new InvalidOperationException("Invalid UTF-8") : 0xfffd : -1;
           }
           if (bytesNeeded == 0)
           {
@@ -1009,14 +945,7 @@ namespace PeterO.Cbor
             }
             else
             {
-              if (this.errorThrow)
-              {
-                throw new InvalidOperationException("Invalid UTF-8");
-              }
-              else
-              {
-                return 0xfffd;
-              }
+              return this.errorThrow ? throw new InvalidOperationException("Invalid UTF-8") : 0xfffd;
             }
             continue;
           }
@@ -1024,14 +953,7 @@ namespace PeterO.Cbor
           {
             _ = 0;
             this.state.AddOne(b);
-            if (this.errorThrow)
-            {
-              throw new InvalidOperationException("Invalid UTF-8");
-            }
-            else
-            {
-              return 0xfffd;
-            }
+            return this.errorThrow ? throw new InvalidOperationException("Invalid UTF-8") : 0xfffd;
           }
           lower = 0x80;
           upper = 0xbf;
@@ -1048,7 +970,7 @@ namespace PeterO.Cbor
 
       public int Read(int[] chars, int index, int length)
       {
-        var count = 0;
+        int count = 0;
         for (int i = 0; i < length; ++i)
         {
           int c = this.ReadChar();

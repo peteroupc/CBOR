@@ -25,9 +25,9 @@ namespace PeterO.DocGen
       {
         throw new ArgumentException("docdir is empty.");
       }
-      var directory = Path.GetFullPath(docdir);
+      string directory = Path.GetFullPath(docdir);
       assemblyFile = Path.GetFullPath(assemblyFile);
-      var assemblyXml = Path.ChangeExtension(assemblyFile, ".xml");
+      string assemblyXml = Path.ChangeExtension(assemblyFile, ".xml");
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
       if (!File.Exists(assemblyFile))
       {
@@ -45,16 +45,16 @@ namespace PeterO.DocGen
       try
       {
         var xmldoc = new XmlDoc(assemblyXml);
-        var oldWriter = Console.Out;
+        TextWriter oldWriter = Console.Out;
         var visitor = new TypeVisitor(directory);
-        foreach (var t in asm.GetTypes())
+        foreach (Type t in asm.GetTypes())
         {
           visitor.HandleTypeAndMembers(t, xmldoc);
         }
         visitor.Finish();
         var visitor2 = new SummaryVisitor(
             Path.Combine(directory, "APIDocs.md"));
-        foreach (var t in asm.GetTypes())
+        foreach (Type t in asm.GetTypes())
         {
           visitor2.HandleType(t, xmldoc);
         }

@@ -127,7 +127,7 @@ length);
       }
       else
       {
-        for (var i = 0; i < length; ++i)
+        for (int i = 0; i < length; ++i)
         {
           byte b = bytes[i + index];
           if ((b & 0x7f) != b)

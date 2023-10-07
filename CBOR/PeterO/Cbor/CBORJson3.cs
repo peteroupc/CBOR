@@ -40,7 +40,7 @@ namespace PeterO.Cbor
     private readonly JSONOptions options;
     private StringBuilder sb;
     private int index;
-    private int endPos;
+    private readonly int endPos;
 
     private string NextJSONString()
     {
@@ -117,7 +117,7 @@ namespace PeterO.Cbor
                 { // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
-                  for (var i = 0; i < 4; ++i)
+                  for (int i = 0; i < 4; ++i)
                   {
                     int ch = this.index < ep ?
                       js[this.index++] : -1;
@@ -155,8 +155,8 @@ namespace PeterO.Cbor
                     {
                       this.RaiseError("Invalid escaped character");
                     }
-                    var c2 = 0;
-                    for (var i = 0; i < 4; ++i)
+                    int c2 = 0;
+                    for (int i = 0; i < 4; ++i)
                     {
                       ch = this.index < ep ?
                         js[this.index++] : -1;
@@ -271,7 +271,7 @@ namespace PeterO.Cbor
       // NOTE: Differs from CBORJson2, notably because the whole
       // rest of the string is checked whether the beginning of the rest
       // is a JSON number
-      var endIndex = new int[1];
+      int[] endIndex = new int[1];
       endIndex[0] = numberStartIndex;
       obj = CBORDataUtilitiesTextString.ParseJSONNumber(
           this.jstring,
@@ -310,14 +310,7 @@ namespace PeterO.Cbor
       // DebugUtility.Log("endIndex="+endIndex[0]+", "+
       // this.jstring.Substring(endIndex[0],
       // Math.Min(20, this.endPos-endIndex[0])));
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09))
-      {
-        nextChar[0] = c;
-      }
-      else
-      {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
@@ -328,7 +321,7 @@ namespace PeterO.Cbor
       int cval = c - '0';
       int cstart = c;
       int startIndex = this.index - 1;
-      var needObj = true;
+      bool needObj = true;
       int numberStartIndex = this.index - 1;
       // DebugUtility.Log("js=" + (jstring));
       c = this.index < this.endPos ? this.jstring[this.index++] &
@@ -353,8 +346,8 @@ namespace PeterO.Cbor
         c = this.index < this.endPos ? this.jstring[this.index++] : -1;
         if (c >= '0' && c <= '9')
         {
-          var digits = 2;
-          while (digits < 9 && (c >= '0' && c <= '9'))
+          int digits = 2;
+          while (digits < 9 && c >= '0' && c <= '9')
           {
             cval = (cval * 10) + (c - '0');
             c = this.index < this.endPos ?
@@ -383,7 +376,7 @@ namespace PeterO.Cbor
         // NOTE: Differs from CBORJson2, notably because the whole
         // rest of the string is checked whether the beginning of the rest
         // is a JSON number
-        var endIndex = new int[1];
+        int[] endIndex = new int[1];
         endIndex[0] = numberStartIndex;
         obj = CBORDataUtilitiesTextString.ParseJSONNumber(
             this.jstring,
@@ -432,14 +425,7 @@ namespace PeterO.Cbor
           this.RaiseError("Invalid character after JSON number");
         }
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09))
-      {
-        nextChar[0] = c;
-      }
-      else
-      {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
@@ -616,7 +602,7 @@ namespace PeterO.Cbor
       int endPos,
       JSONOptions options)
     {
-      var nextchar = new int[1];
+      int[] nextchar = new int[1];
       var cj = new CBORJson3(jstring, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
       if (nextchar[0] != -1)
@@ -679,8 +665,8 @@ namespace PeterO.Cbor
       int c;
       CBORObject key = null;
       CBORObject obj;
-      var nextchar = new int[1];
-      var seenComma = false;
+      int[] nextchar = new int[1];
+      bool seenComma = false;
       IDictionary<CBORObject, CBORObject> myHashMap =
 this.options.KeepKeyOrder ? PropertyMap.NewOrderedDict() : new
 SortedDictionary<CBORObject, CBORObject>();
@@ -761,8 +747,8 @@ SortedDictionary<CBORObject, CBORObject>();
         this.RaiseError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();
-      var seenComma = false;
-      var nextchar = new int[1];
+      bool seenComma = false;
+      int[] nextchar = new int[1];
       while (true)
       {
         int c = this.SkipWhitespaceJSON();

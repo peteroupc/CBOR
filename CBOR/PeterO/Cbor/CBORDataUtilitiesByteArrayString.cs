@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -41,20 +41,20 @@ namespace PeterO.Cbor
       JSONOptions.ConversionMode kind = options.NumberConversion;
       int endPos = offset + count;
       int initialOffset = offset;
-      var negative = false;
+      bool negative = false;
       if (chars[initialOffset] == '-')
       {
         ++offset;
         negative = true;
       }
       int numOffset = offset;
-      var haveDecimalPoint = false;
-      var haveDigits = false;
-      var haveDigitsAfterDecimal = false;
-      var haveNonzeroDigits = false;
-      var haveExponent = false;
+      bool haveDecimalPoint = false;
+      bool haveDigits = false;
+      bool haveDigitsAfterDecimal = false;
+      bool haveNonzeroDigits = false;
+      bool haveExponent = false;
       int i = offset;
-      var decimalPointPos = -1;
+      int decimalPointPos = -1;
       // Check syntax
       int k = i;
       if (endPos - 1 > k && chars[k] == '0' && chars[k + 1] >= '0' &&
@@ -129,8 +129,8 @@ namespace PeterO.Cbor
         }
         return null;
       }
-      var exponentPos = -1;
-      var negativeExp = false;
+      int exponentPos = -1;
+      bool negativeExp = false;
       if (haveExponent)
       {
         haveDigits = false;
@@ -206,14 +206,7 @@ namespace PeterO.Cbor
           // zero
           if (kind == JSONOptions.ConversionMode.Double)
           {
-            if (!negative)
-            {
-              return CBORObject.FromFloatingPointBits(0, 2);
-            }
-            else
-            {
-              return CBORObject.FromFloatingPointBits(0x8000, 2);
-            }
+            return !negative ? CBORObject.FromFloatingPointBits(0, 2) : CBORObject.FromFloatingPointBits(0x8000, 2);
           }
           else if (kind ==
             JSONOptions.ConversionMode.IntOrFloatFromDouble ||
@@ -228,14 +221,7 @@ namespace PeterO.Cbor
           if (kind == JSONOptions.ConversionMode.Double ||
             kind == JSONOptions.ConversionMode.IntOrFloat)
           {
-            if (!negative)
-            {
-              return CBORObject.FromFloatingPointBits(0, 2);
-            }
-            else
-            {
-              return CBORObject.FromFloatingPointBits(0x8000, 2);
-            }
+            return !negative ? CBORObject.FromFloatingPointBits(0, 2) : CBORObject.FromFloatingPointBits(0x8000, 2);
           }
           else if (kind ==
             JSONOptions.ConversionMode.IntOrFloatFromDouble)
@@ -278,26 +264,16 @@ namespace PeterO.Cbor
           {
             v = -v;
           }
-          if (kind == JSONOptions.ConversionMode.Double)
-          {
-            return
-CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
-          }
-          else if (kind == JSONOptions.ConversionMode.Decimal128)
-          {
-            return CBORObject.FromObject(EDecimal.FromInt64(v));
-          }
-          else
-          {
-            return CBORObject.FromObject(v);
-          }
+          return kind == JSONOptions.ConversionMode.Double
+            ? CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8)
+            : kind == JSONOptions.ConversionMode.Decimal128 ? CBORObject.FromObject(EDecimal.FromInt64(v)) : CBORObject.FromObject(v);
         }
       }
       if (kind == JSONOptions.ConversionMode.Full)
       {
         if (!haveDecimalPoint && !haveExponent)
         {
-          EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
+          var ei = EInteger.FromSubstring(chars, initialOffset, endPos);
           if (preserveNegativeZero && ei.IsZero && negative)
           {
             // TODO: In next major version, change to EDecimal.NegativeZero
@@ -312,7 +288,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
           long lv = 0L;
           int expo = -(endPos - (decimalPointPos + 1));
           int vi = numOffset;
-          var digitCount = 0;
+          int digitCount = 0;
           for (; vi < decimalPointPos; ++vi)
           {
             if (digitCount < 0 || digitCount >= 18)
@@ -351,7 +327,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
             }
             else
             {
-              CBORObject cbor = CBORObject.FromArrayBackedObject(
+              var cbor = CBORObject.FromArrayBackedObject(
               new CBORObject[] {
                 CBORObject.FromObject(expo),
                 CBORObject.FromObject(lv),
@@ -362,7 +338,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
         }
         // DebugUtility.Log("convfull " + chars.Substring(initialOffset, endPos -
         // initialOffset));
-        EDecimal ed = EDecimal.FromString(
+        var ed = EDecimal.FromString(
             chars,
             initialOffset,
             endPos - initialOffset);
@@ -376,13 +352,9 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
               CBORObject.FromFloatingPointBits(0x8000, 2) :
               CBORObject.FromObject(0);
           }
-          else if (!preserveNegativeZero)
-          {
-            return CBORObject.FromObject(ed.Negate());
-          }
           else
           {
-            return CBORObject.FromObject(ed);
+            return !preserveNegativeZero ? CBORObject.FromObject(ed.Negate()) : CBORObject.FromObject(ed);
           }
         }
         else
@@ -393,7 +365,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
       }
       else if (kind == JSONOptions.ConversionMode.Double)
       {
-        EFloat ef = EFloat.FromString(
+        var ef = EFloat.FromString(
             chars,
             initialOffset,
             endPos - initialOffset,
@@ -407,7 +379,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
       }
       else if (kind == JSONOptions.ConversionMode.Decimal128)
       {
-        EDecimal ed = EDecimal.FromString(
+        var ed = EDecimal.FromString(
             chars,
             initialOffset,
             endPos - initialOffset,
@@ -420,7 +392,7 @@ CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8);
       }
       else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble)
       {
-        EFloat ef = EFloat.FromString(
+        var ef = EFloat.FromString(
             chars,
             initialOffset,
             endPos - initialOffset,
@@ -434,7 +406,7 @@ CBORUtilities.IsIntegerValue(lb)) ?
       else if (kind == JSONOptions.ConversionMode.IntOrFloat)
       {
         EContext ctx = EContext.Binary64.WithBlankFlags();
-        EFloat ef = EFloat.FromString(
+        var ef = EFloat.FromString(
             chars,
             initialOffset,
             endPos - initialOffset,

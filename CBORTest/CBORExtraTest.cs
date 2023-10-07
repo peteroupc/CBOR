@@ -24,7 +24,7 @@ namespace Test
   {
     private static decimal RandomDecimal(RandomGenerator rand, int exponent)
     {
-      var x = new int[4];
+      int[] x = new int[4];
       int r = rand.UniformInt(0x10000);
       r |= rand.UniformInt(0x10000) << 16;
       x[0] = r;
@@ -45,14 +45,14 @@ namespace Test
       {
         x[3] |= 1 << 31;
       }
-      return new Decimal(x);
+      return new decimal(x);
     }
 
     [Test]
     public void TestCBORObjectDecimal()
     {
       var rand = new RandomGenerator();
-      for (var i = 0; i <= 28; ++i)
+      for (int i = 0; i <= 28; ++i)
       {
         // Try a random decimal with a given
         // exponent
@@ -70,7 +70,7 @@ namespace Test
           {
             Assert.Fail(ex.ToString() + "\r\n" +
               CBORTest.ObjectMessage(obj));
-            throw new InvalidOperationException(String.Empty, ex);
+            throw new InvalidOperationException(string.Empty, ex);
           }
           Assert.AreEqual(d, decimalOther);
         }
@@ -87,7 +87,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -102,7 +102,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -117,7 +117,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -132,7 +132,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -146,7 +146,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -160,7 +160,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -175,7 +175,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -190,14 +190,14 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
     }
 
     [Test]
     public void TestSByte()
     {
-      for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i)
+      for (int i = sbyte.MinValue; i <= sbyte.MaxValue; ++i)
       {
         CBORTestCommon.AssertJSONSer(
           ToObjectTest.TestToFromObjectRoundTrip((sbyte)i),
@@ -251,39 +251,21 @@ namespace Test
       Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomCollection : IList<CustomEnum>
     {
-      private List<CustomEnum> w = new List<CustomEnum>();
+      private readonly List<CustomEnum> w = new();
 
       /// <inheritdoc/>
       public CustomEnum this[int index]
       {
-        get
-        {
-          return ((IList<CustomEnum>)this.w)[index];
-        }
+        get => ((IList<CustomEnum>)this.w)[index];
 
-        set
-        {
-          ((IList<CustomEnum>)this.w)[index] = value;
-        }
+        set => ((IList<CustomEnum>)this.w)[index] = value;
       }
 
       /// <inheritdoc/>
-      public int Count
-      {
-        get
-        {
-          return ((IList<CustomEnum>)this.w).Count;
-        }
-      }
+      public int Count => ((IList<CustomEnum>)this.w).Count;
 
       /// <inheritdoc/>
-      public bool IsReadOnly
-      {
-        get
-        {
-          return ((IList<CustomEnum>)this.w).IsReadOnly;
-        }
-      }
+      public bool IsReadOnly => ((IList<CustomEnum>)this.w).IsReadOnly;
 
       /// <inheritdoc/>
       public void Add(CustomEnum item)
@@ -354,39 +336,21 @@ System.Collections.IEnumerable.GetEnumerator()
       Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomByteCollection : IList<byte>
     {
-      private List<byte> w = new List<byte>();
+      private readonly List<byte> w = new();
 
       /// <inheritdoc/>
       public byte this[int index]
       {
-        get
-        {
-          return ((IList<byte>)this.w)[index];
-        }
+        get => ((IList<byte>)this.w)[index];
 
-        set
-        {
-          ((IList<byte>)this.w)[index] = value;
-        }
+        set => ((IList<byte>)this.w)[index] = value;
       }
 
       /// <inheritdoc/>
-      public int Count
-      {
-        get
-        {
-          return ((IList<byte>)this.w).Count;
-        }
-      }
+      public int Count => ((IList<byte>)this.w).Count;
 
       /// <inheritdoc/>
-      public bool IsReadOnly
-      {
-        get
-        {
-          return ((IList<byte>)this.w).IsReadOnly;
-        }
-      }
+      public bool IsReadOnly => ((IList<byte>)this.w).IsReadOnly;
 
       /// <inheritdoc/>
       public void Add(byte item)
@@ -456,7 +420,7 @@ System.Collections.IEnumerable.GetEnumerator()
     {
       var cbor = CBORObject.FromObject(CustomBits.A | CustomBits.B);
       Assert.AreEqual(CBORObject.FromObject(3), cbor);
-      var cfe = cbor.ToObject<CustomBits>();
+      CustomBits cfe = cbor.ToObject<CustomBits>();
       Assert.AreEqual(CustomBits.A | CustomBits.B, cfe);
       cbor = CBORObject.FromObject(CustomBits.A);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
@@ -467,17 +431,19 @@ System.Collections.IEnumerable.GetEnumerator()
     [Test]
     public void TestCustomCollection()
     {
-      var clist = new CustomCollection();
-      clist.Add(CustomEnum.A);
-      clist.Add(CustomEnum.B);
-      clist.Add(CustomEnum.C);
+      var clist = new CustomCollection
+      {
+        CustomEnum.A,
+        CustomEnum.B,
+        CustomEnum.C,
+      };
       var cbor = CBORObject.FromObject(clist);
       Console.WriteLine(cbor);
       if (cbor == null)
       {
         Assert.Fail();
       }
-      var clist2 = cbor.ToObject<CustomCollection>();
+      CustomCollection clist2 = cbor.ToObject<CustomCollection>();
       Assert.AreEqual(3, clist2.Count);
       Assert.AreEqual(CustomEnum.A, clist2[0]);
       Assert.AreEqual(CustomEnum.B, clist2[1]);
@@ -486,15 +452,17 @@ System.Collections.IEnumerable.GetEnumerator()
       {
         Assert.Fail();
       }
-      var clc = new CustomCollectionContainer();
-      clc.CList = clist2;
+      var clc = new CustomCollectionContainer
+      {
+        CList = clist2,
+      };
       cbor = CBORObject.FromObject(clc);
       Console.WriteLine(cbor);
       if (cbor == null)
       {
         Assert.Fail();
       }
-      var clistc = cbor.ToObject<CustomCollectionContainer>();
+      CustomCollectionContainer clistc = cbor.ToObject<CustomCollectionContainer>();
       Assert.AreEqual(3, clistc.CList.Count);
       Assert.AreEqual(CustomEnum.A, clistc.CList[0]);
       Assert.AreEqual(CustomEnum.B, clistc.CList[1]);
@@ -535,10 +503,12 @@ System.Collections.IEnumerable.GetEnumerator()
     [Test]
     public void TestCPOD2()
     {
-      var m = new CPOD2();
-      m.Aa = "Test";
-      m.IsAa = false;
-      CBORObject cbor = CBORObject.FromObject(m);
+      var m = new CPOD2
+      {
+        Aa = "Test",
+        IsAa = false,
+      };
+      var cbor = CBORObject.FromObject(m);
       // ambiguous properties
       Assert.IsFalse(cbor.ContainsKey("aa"), cbor.ToString());
       Assert.IsFalse(cbor.ContainsKey("Aa"), cbor.ToString());
@@ -669,7 +639,7 @@ select x;
     [Test]
     public void TestArbitraryTypes()
     {
-      CBORObject obj = CBORObject.FromObject(new
+      var obj = CBORObject.FromObject(new
       {
         AByte.A,
         B = AInt.A,
@@ -734,7 +704,7 @@ select x;
       CBORTestCommon.AssertRoundTrip(obj);
 #if !NET20
       // Select all even numbers
-      var query =
+      IEnumerable<int> query =
 from i in RangeExclusive(0, 10)
 where i % 2 == 0
 select i;
@@ -810,7 +780,7 @@ select new
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -824,7 +794,7 @@ select new
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       // TODO: In next major version, change to CBORException rather than
       // InvalidOperationException (due to AsString)
@@ -840,7 +810,7 @@ select new
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -854,7 +824,7 @@ select new
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -868,17 +838,19 @@ select new
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
     }
 
     [Test]
     public void TestReadOnlyDictionary()
     {
-      var dict = new Dictionary<string, int>();
-      dict["a"] = 1;
-      dict["b"] = 2;
-      dict["c"] = 3;
+      var dict = new Dictionary<string, int>
+      {
+        ["a"] = 1,
+        ["b"] = 2,
+        ["c"] = 3,
+      };
       IReadOnlyDictionary<string, int> roc = new
 ReadOnlyDictionary<string, int>(dict);
       CBORObject cbor;
@@ -910,7 +882,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -924,7 +896,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
     }
 #endif
@@ -940,7 +912,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       Assert.AreEqual(2, cbor[1][0].AsInt32());
       Assert.AreEqual(3, cbor[1][1].AsInt32());
       Assert.AreEqual(299, cbor[1][2].AsInt32());
-      var arr2 = cbor.ToObject(typeof(int[,]));
+      object arr2 = cbor.ToObject(typeof(int[,]));
       Assert.AreEqual(arr, arr2);
       int[,,] arr3 = new int[2, 2, 2];
       arr3[0, 0, 0] = 0;
@@ -958,7 +930,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       Assert.AreEqual(100, cbor[0][1][1].AsInt32());
       Assert.AreEqual(2, cbor[1][0][0].AsInt32());
       Assert.AreEqual(299, cbor[1][1][0].AsInt32());
-      var arr4 = cbor.ToObject(typeof(int[,,]));
+      object arr4 = cbor.ToObject(typeof(int[,,]));
       Assert.AreEqual(arr3, arr4);
     }
 
@@ -9277,9 +9249,9 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       ulong[] ranges = {
         0, 65539, 0xfffff000UL, 0x100000400UL,
         0x7ffffffffffff000UL, 0x8000000000000400UL,
-        UInt64.MaxValue - 1000, UInt64.MaxValue,
+        ulong.MaxValue - 1000, ulong.MaxValue,
       };
-      for (var i = 0; i < ranges.Length; i += 2)
+      for (int i = 0; i < ranges.Length; i += 2)
       {
         ulong j = ranges[i];
         while (true)
@@ -9302,14 +9274,14 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       bool returnRemainder)
     {
       int t;
-      var dividendHigh = 0;
+      int dividendHigh = 0;
       int intDivisor = divisor & 0xffff;
-      for (var i = 0; i < 32; ++i)
+      for (int i = 0; i < 32; ++i)
       {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
-        dividendHigh = unchecked(dividendHigh | (dividendLow >>
-                    31) & 1);
+        dividendHigh = unchecked(dividendHigh | ((dividendLow >>
+                    31) & 1));
         dividendLow <<= 1;
         t |= dividendHigh;
         // unsigned greater-than-or-equal check
@@ -9344,7 +9316,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     public void TestOther()
     {
       int[,,] arr3 = new int[2, 3, 2];
-      CBORObject cbor = CBORObject.FromObject(arr3);
+      var cbor = CBORObject.FromObject(arr3);
       string stringTemp = cbor.ToJSONString();
       string str145009 = "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]";
       Assert.AreEqual(
@@ -9359,18 +9331,18 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
       var fr = new RandomGenerator();
       unchecked
       {
-        for (var i = 0; i < 1000; ++i)
+        for (int i = 0; i < 1000; ++i)
         {
-          var x = (uint)fr.UniformInt(0x10000);
+          uint x = (uint)fr.UniformInt(0x10000);
           x |= ((uint)fr.UniformInt(0x10000)) << 16;
-          var y = (ushort)fr.UniformInt(0x10000);
-          var dx = (int)x;
-          var dy = (short)y;
+          ushort y = (ushort)fr.UniformInt(0x10000);
+          int dx = (int)x;
+          short dy = (short)y;
           if (dy == 0)
           {
             continue;
           }
-          var expected = (short)(x / y);
+          short expected = (short)(x / y);
           short actual = DivideUnsigned(dx, dy);
           if (expected != actual)
           {
@@ -9385,9 +9357,9 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     {
       uint[] ranges = {
         0, 65539,
-        0x7ffff000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue,
+        0x7ffff000U, 0x80000400U, uint.MaxValue - 1000, uint.MaxValue,
       };
-      for (var i = 0; i < ranges.Length; i += 2)
+      for (int i = 0; i < ranges.Length; i += 2)
       {
         uint j = ranges[i];
         while (true)
@@ -9408,14 +9380,14 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     public void TestDecimal()
     {
       CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(
-          Decimal.MinValue);
+          decimal.MinValue);
       Assert.IsTrue(cbor.IsNumber, cbor.ToString());
       CBORTestCommon.AssertJSONSer(
-        ToObjectTest.TestToFromObjectRoundTrip(Decimal.MinValue),
-        ((EDecimal)Decimal.MinValue).ToString());
+        ToObjectTest.TestToFromObjectRoundTrip(decimal.MinValue),
+        ((EDecimal)decimal.MinValue).ToString());
       CBORTestCommon.AssertJSONSer(
-        ToObjectTest.TestToFromObjectRoundTrip(Decimal.MaxValue),
-        ((EDecimal)Decimal.MaxValue).ToString());
+        ToObjectTest.TestToFromObjectRoundTrip(decimal.MaxValue),
+        ((EDecimal)decimal.MaxValue).ToString());
       for (int i = -100; i <= 100; ++i)
       {
         CBORTestCommon.AssertJSONSer(
@@ -9437,15 +9409,15 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     [Test]
     public void TestUShort()
     {
-      for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i)
+      for (int i = ushort.MinValue; i <= ushort.MaxValue; ++i)
       {
         CBORTestCommon.AssertJSONSer(
-          ToObjectTest.TestToFromObjectRoundTrip((UInt16)i),
+          ToObjectTest.TestToFromObjectRoundTrip((ushort)i),
           TestCommon.LongToString(i));
       }
     }
 
-    private struct ExoticStruct
+    private readonly struct ExoticStruct
     {
       public readonly int Pvalue;
 
@@ -9467,7 +9439,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     public void TestNullable()
     {
       int? nvalue = 1;
-      CBORObject cbor = CBORObject.FromObject(nvalue);
+      var cbor = CBORObject.FromObject(nvalue);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
       nvalue = null;
       _ = CBORObject.FromObject(nvalue);
@@ -9495,9 +9467,9 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     public void TestDoubleToOther()
     {
       CBORObject dbl1 =
-        ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MinValue);
+        ToObjectTest.TestToFromObjectRoundTrip((double)int.MinValue);
       CBORObject dbl2 =
-        ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MaxValue);
+        ToObjectTest.TestToFromObjectRoundTrip((double)int.MaxValue);
       try
       {
         _ = dbl1.ToObject<ushort>();

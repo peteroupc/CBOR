@@ -10,8 +10,8 @@ namespace PeterO
   /// concurrent use among multiple threads.</summary>
   public class XorShift128Plus : IRandomGen
   {
-    private long[] s = new long[2];
-    private object syncRoot = new Object();
+    private readonly long[] s = new long[2];
+    private readonly object syncRoot = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XorShift128Plus"/> class.

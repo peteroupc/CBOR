@@ -6,10 +6,10 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO;
 using System;
 using System.IO;
 using System.Text;
-using PeterO;
 
 namespace Test
 {
@@ -128,7 +128,7 @@ length);
       }
       else
       {
-        for (var i = 0; i < length; ++i)
+        for (int i = 0; i < length; ++i)
         {
           byte b = bytes[i + index];
           if ((b & 0x7f) != b)

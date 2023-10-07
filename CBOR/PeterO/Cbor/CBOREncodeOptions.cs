@@ -21,7 +21,7 @@ namespace PeterO.Cbor
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> class with all the
     /// default options.</summary>
-    public CBOREncodeOptions() : this(String.Empty)
+    public CBOREncodeOptions() : this(string.Empty)
     {
     }
 

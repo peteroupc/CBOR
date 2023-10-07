@@ -32,12 +32,12 @@ namespace PeterO.DocGen
 
     public void Finish()
     {
-      foreach (var key in this.docs.Keys)
+      foreach (string key in this.docs.Keys)
       {
-        var finalString = this.docs[key].ToString();
+        string finalString = this.docs[key].ToString();
         this.memSummaries[key].Finish();
-        var memSummaryString = this.memSummaries[key].ToString();
-        var filename = Path.Combine(
+        string memSummaryString = this.memSummaries[key].ToString();
+        string filename = Path.Combine(
           this.directory,
           this.typeIDs[key] + ".md");
         finalString = DocGenUtil.NormalizeLines(finalString);
@@ -52,7 +52,7 @@ namespace PeterO.DocGen
     public void HandleTypeAndMembers(Type currentType, XmlDoc xmldoc)
     {
       this.HandleMember(currentType, xmldoc);
-      foreach (var m in currentType.GetFields())
+      foreach (FieldInfo m in currentType.GetFields())
       {
         if (m.IsSpecialName)
         {
@@ -60,7 +60,7 @@ namespace PeterO.DocGen
         }
         this.HandleMember(m, xmldoc);
       }
-      foreach (var m in currentType.GetConstructors())
+      foreach (ConstructorInfo m in currentType.GetConstructors())
       {
         if (!m.DeclaringType.Equals(currentType))
         {
@@ -68,11 +68,11 @@ namespace PeterO.DocGen
         }
         this.HandleMember(m, xmldoc);
       }
-      foreach (var m in currentType.GetMethods())
+      foreach (MethodInfo m in currentType.GetMethods())
       {
         if (!m.DeclaringType.Equals(currentType))
         {
-          var dtfn = m.DeclaringType.FullName;
+          string dtfn = m.DeclaringType.FullName;
           if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0)
           {
             // Console.WriteLine("not declared: " + m);
@@ -87,11 +87,11 @@ namespace PeterO.DocGen
         }
         this.HandleMember(m, xmldoc);
       }
-      foreach (var m in currentType.GetProperties())
+      foreach (PropertyInfo m in currentType.GetProperties())
       {
         if (!m.DeclaringType.Equals(currentType))
         {
-          var dtfn = m.DeclaringType.FullName;
+          string dtfn = m.DeclaringType.FullName;
           if (dtfn.IndexOf("System.", StringComparison.Ordinal) != 0)
           {
             Console.WriteLine("not declared: " + m);
@@ -123,7 +123,7 @@ currentType.IsPublic))
       {
         return;
       }
-      var typeFullName = currentType.FullName;
+      string typeFullName = currentType.FullName;
       if (!this.docs.ContainsKey(typeFullName))
       {
         var docVisitor = new DocVisitor();

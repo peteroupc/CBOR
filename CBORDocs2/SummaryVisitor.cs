@@ -20,7 +20,7 @@ namespace PeterO.DocGen
     {
       public TypeLinkAndBuilder(Type type)
       {
-        var typeName = DocVisitor.FormatType(type);
+        string typeName = DocVisitor.FormatType(type);
         typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](" +
 DocVisitor.GetTypeID(type) + ".md)";
         this.TypeLink = typeName;
@@ -46,7 +46,7 @@ DocVisitor.GetTypeID(type) + ".md)";
       var sb = new StringBuilder();
       string finalString;
       _ = sb.Append("## API Documentation\r\n\r\n");
-      foreach (var key in this.docs.Keys)
+      foreach (string key in this.docs.Keys)
       {
         finalString = this.docs[key].Builder.ToString();
         _ = sb.Append(" * " + this.docs[key].TypeLink + " - ");
@@ -69,9 +69,8 @@ memberName)
       if (summary != null && attr == null &&
         summary.IndexOf(".", StringComparison.Ordinal) >= 0)
       {
-        summary = summary.Substring(
-              0,
-              summary.IndexOf(".", StringComparison.Ordinal) + 1);
+        summary = summary[
+..(summary.IndexOf(".", StringComparison.Ordinal) + 1)];
       }
       return summary;
     }
@@ -83,13 +82,13 @@ currentType.IsPublic))
       {
         return;
       }
-      var typeFullName = currentType.FullName;
+      string typeFullName = currentType.FullName;
       if (!this.docs.ContainsKey(typeFullName))
       {
         var docVisitor = new TypeLinkAndBuilder(currentType);
         this.docs[typeFullName] = docVisitor;
       }
-      var summary = GetSummary(
+      string summary = GetSummary(
         currentType,
         xdoc,
         TypeNameUtil.XmlDocMemberName(currentType));

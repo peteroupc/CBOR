@@ -1,7 +1,7 @@
+using PeterO;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO;
 
 namespace Test
 {
@@ -10,55 +10,48 @@ namespace Test
     private sealed class ByteWriter
     {
       private byte[] bytes = new byte[64];
-      private int pos;
 
       public ByteWriter Write(int b)
       {
-        if (this.pos < this.bytes.Length)
+        if (this.ByteLength < this.bytes.Length)
         {
-          this.bytes[this.pos++] = (byte)b;
+          this.bytes[this.ByteLength++] = (byte)b;
         }
         else
         {
-          var newbytes = new byte[this.bytes.Length * 2];
+          byte[] newbytes = new byte[this.bytes.Length * 2];
           Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
           this.bytes = newbytes;
-          this.bytes[this.pos++] = (byte)b;
+          this.bytes[this.ByteLength++] = (byte)b;
         }
         return this;
       }
 
-      public int ByteLength
-      {
-        get
-        {
-          return this.pos;
-        }
-      }
+      public int ByteLength { get; private set; }
 
       public byte[] ToBytes()
       {
-        var newbytes = new byte[this.pos];
-        Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
+        byte[] newbytes = new byte[this.ByteLength];
+        Array.Copy(this.bytes, 0, newbytes, 0, this.ByteLength);
         return newbytes;
       }
     }
 
-    private static int[] valueMajorTypes = {
+    private static readonly int[] ValueMajorTypes = {
       0, 1, 3, 4, 5,
     };
 
-    private static int[] valueMajorTypesTop = {
+    private static readonly int[] ValueMajorTypesTop = {
       0, 1, 3, 4, 4, 4, 4, 4, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 5, 5, 5,
     };
 
-    private static int[] valueEscapes = {
+    private static readonly int[] ValueEscapes = {
       '\\', '/', '\"',
       'b', 'f', 'n', 'r', 't', 'u',
     };
 
-    private static char[] valueEscapeChars = {
+    private static readonly char[] ValueEscapeChars = {
       '\\', '/', '\"',
       (char)8, (char)12, '\n', '\r', '\t', (char)0,
     };
@@ -69,18 +62,11 @@ namespace Test
       int cu)
     {
       int c;
-      var shift = 12;
+      int shift = 12;
       for (int i = 0; i < 4; ++i)
       {
         c = (cu >> shift) & 0xf;
-        if (c < 10)
-        {
-          _ = bs.Write(0x30 + c);
-        }
-        else
-        {
-          _ = bs.Write(0x41 + (c - 10) + (ra.GetInt32(2) * 0x20));
-        }
+        _ = c < 10 ? bs.Write(0x30 + c) : bs.Write(0x41 + (c - 10) + (ra.GetInt32(2) * 0x20));
         shift -= 4;
       }
     }
@@ -160,7 +146,7 @@ namespace Test
       {
         // Integer part
         len = shortLen ? ra.GetInt32(10) + 1 :
-           ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+           (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
         _ = bs.Write(0x31 + ra.GetInt32(9));
         for (int i = 0; i < len; ++i)
         {
@@ -172,7 +158,7 @@ namespace Test
       {
         _ = bs.Write(0x2e);
         len = shortLen ? ra.GetInt32(10) + 1 :
-         ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000) + 1;
+         (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
         for (int i = 0; i < len; ++i)
         {
           _ = bs.Write(0x30 + ra.GetInt32(10));
@@ -196,7 +182,7 @@ namespace Test
         len = 1 + ra.GetInt32(5);
         if (ra.GetInt32(10) == 0)
         {
-          len = 1 + ((ra.GetInt32(2000) * ra.GetInt32(2000)) / 2000);
+          len = 1 + (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000);
         }
         for (int i = 0; i < len; ++i)
         {
@@ -215,7 +201,7 @@ namespace Test
       int r2, r3, r4;
       if (r == 0 && len >= 2)
       {
-        r = 0xc2 + ra.GetInt32((0xdf - 0xc2) + 1);
+        r = 0xc2 + ra.GetInt32(0xdf - 0xc2 + 1);
         _ = bs.Write(r);
         r2 = 0x80 + ra.GetInt32(0x40);
         _ = bs.Write(r2);
@@ -231,7 +217,7 @@ namespace Test
         _ = bs.Write(r);
         int lower = (r == 0xe0) ? 0xa0 : 0x80;
         int upper = (r == 0xed) ? 0x9f : 0xbf;
-        r2 = lower + ra.GetInt32((upper - lower) + 1);
+        r2 = lower + ra.GetInt32(upper - lower + 1);
         _ = bs.Write(r2);
         r3 = 0x80 + ra.GetInt32(0x40);
         _ = bs.Write(r3);
@@ -247,7 +233,7 @@ namespace Test
         _ = bs.Write(r);
         int lower = (r == 0xf0) ? 0x90 : 0x80;
         int upper = (r == 0xf4) ? 0x8f : 0xbf;
-        r2 = lower + ra.GetInt32((upper - lower) + 1);
+        r2 = lower + ra.GetInt32(upper - lower + 1);
         _ = bs.Write(r2);
         r3 = 0x80 + ra.GetInt32(0x40);
         _ = bs.Write(r3);
@@ -279,7 +265,7 @@ namespace Test
         if (ra.GetInt32(50) == 0 && depth < 2)
         {
           // Exponential curve that strongly favors small numbers
-          var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
+          long v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
           len = (int)(v / 1000000);
         }
         _ = bs.Write(0x22);
@@ -309,8 +295,8 @@ namespace Test
           else if (r == 1)
           {
             _ = bs.Write('\\');
-            int escindex = ra.GetInt32(valueEscapes.Length);
-            int esc = valueEscapes[escindex];
+            int escindex = ra.GetInt32(ValueEscapes.Length);
+            int esc = ValueEscapes[escindex];
             _ = bs.Write(esc);
             if (esc == 'u')
             {
@@ -318,7 +304,7 @@ namespace Test
             }
             else
             {
-              _ = sb.Append(valueEscapeChars[escindex]);
+              _ = sb.Append(ValueEscapeChars[escindex]);
             }
           }
           else
@@ -330,7 +316,7 @@ namespace Test
         string key = sb.ToString();
         if (!keys.ContainsKey(key))
         {
-          keys[key] = String.Empty;
+          keys[key] = string.Empty;
           byte[] bytes = bs.ToBytes();
           for (int i = 0; i < bytes.Length; ++i)
           {
@@ -351,7 +337,7 @@ namespace Test
       if (ra.GetInt32(50) == 0 && depth < 2)
       {
         // Exponential curve that strongly favors small numbers
-        var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
+        long v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
         len = (int)(v / 1000000);
       }
       _ = bs.Write(0x22);
@@ -361,24 +347,13 @@ namespace Test
         if (r > 2)
         {
           int x = 0x20 + ra.GetInt32(60);
-          if (x == '\"')
-          {
-            _ = bs.Write('\\').Write(x);
-          }
-          else if (x == '\\')
-          {
-            _ = bs.Write('\\').Write(x);
-          }
-          else
-          {
-            _ = bs.Write(x);
-          }
+          _ = x == '\"' ? bs.Write('\\').Write(x) : x == '\\' ? bs.Write('\\').Write(x) : bs.Write(x);
           ++i;
         }
         else if (r == 1)
         {
           _ = bs.Write('\\');
-          int esc = valueEscapes[ra.GetInt32(valueEscapes.Length)];
+          int esc = ValueEscapes[ra.GetInt32(ValueEscapes.Length)];
           _ = bs.Write(esc);
           if (esc == 'u')
           {
@@ -396,10 +371,10 @@ namespace Test
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs)
     {
       int majorType;
-      majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
+      majorType = ValueMajorTypes[r.GetInt32(ValueMajorTypes.Length)];
       if (depth == 0)
       {
-        majorType = valueMajorTypesTop[r.GetInt32(valueMajorTypes.Length)];
+        majorType = ValueMajorTypesTop[r.GetInt32(ValueMajorTypes.Length)];
       }
       GenerateWhitespace(r, bs);
       if (bs.ByteLength > 2000000)
@@ -434,12 +409,12 @@ namespace Test
       {
         GenerateJsonString(r, bs, depth);
       }
-      else if (majorType == 4 || majorType == 5)
+      else if (majorType is 4 or 5)
       {
         int len = r.GetInt32(8);
         if (r.GetInt32(50) == 0 && depth < 2)
         {
-          var v = (long)r.GetInt32(1000) * r.GetInt32(1000);
+          long v = (long)r.GetInt32(1000) * r.GetInt32(1000);
           len = (int)(v / 1000);
         }
         if (depth > 6)

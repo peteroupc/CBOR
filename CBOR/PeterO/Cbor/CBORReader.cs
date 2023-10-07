@@ -6,11 +6,11 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using PeterO.Numbers;
 
 namespace PeterO.Cbor
 {
@@ -71,22 +71,16 @@ namespace PeterO.Cbor
 
     private CBORObject ObjectFromByteArray(byte[] data, int lengthHint)
     {
-      CBORObject cbor = CBORObject.FromRaw(data);
-      if (this.stringRefs != null)
-      {
-        this.stringRefs.AddStringIfNeeded(cbor, lengthHint);
-      }
+      var cbor = CBORObject.FromRaw(data);
+      this.stringRefs?.AddStringIfNeeded(cbor, lengthHint);
       return cbor;
     }
 
     private CBORObject ObjectFromUtf8Array(byte[] data, int lengthHint)
     {
-      CBORObject cbor = data.Length == 0 ? CBORObject.FromObject(String.Empty) :
+      CBORObject cbor = data.Length == 0 ? CBORObject.FromObject(string.Empty) :
          CBORObject.FromRawUtf8(data);
-      if (this.stringRefs != null)
-      {
-        this.stringRefs.AddStringIfNeeded(cbor, lengthHint);
-      }
+      this.stringRefs?.AddStringIfNeeded(cbor, lengthHint);
       return cbor;
     }
 
@@ -103,14 +97,12 @@ namespace PeterO.Cbor
       if (hasTag)
       {
         CBORObject untagged = obj.UntagOne();
-        if (untagged.IsTagged ||
+        return untagged.IsTagged ||
           untagged.Type != CBORType.Integer ||
-untagged.AsNumber().IsNegative())
-        {
-          throw new CBORException(
-            "Shared ref index must be an untagged integer 0 or greater");
-        }
-        return sharedRefs.GetObject(untagged.AsEIntegerValue());
+untagged.AsNumber().IsNegative()
+          ? throw new CBORException(
+            "Shared ref index must be an untagged integer 0 or greater")
+          : sharedRefs.GetObject(untagged.AsEIntegerValue());
       }
       hasTag = obj.HasMostOuterTag(28);
       if (hasTag)
@@ -132,7 +124,7 @@ untagged.AsNumber().IsNegative())
       }
       else if (type == CBORType.Array)
       {
-        for (var i = 0; i < obj.Count; ++i)
+        for (int i = 0; i < obj.Count; ++i)
         {
           obj[i] = ResolveSharedRefs(obj[i], sharedRefs);
         }
@@ -174,11 +166,7 @@ untagged.AsNumber().IsNegative())
         throw new CBORException("Too deeply nested");
       }
       int firstbyte = this.stream.ReadByte();
-      if (firstbyte < 0)
-      {
-        throw new CBORException("Premature end of data");
-      }
-      return this.ReadForFirstByte(firstbyte);
+      return firstbyte < 0 ? throw new CBORException("Premature end of data") : this.ReadForFirstByte(firstbyte);
     }
 
     private CBORObject ReadStringArrayMap(int type, long uadditional)
@@ -192,21 +180,12 @@ untagged.AsNumber().IsNegative())
             ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
             "\u0020than supported");
         }
-        int hint = (uadditional > Int32.MaxValue ||
-            (uadditional >> 63) != 0) ? Int32.MaxValue : (int)uadditional;
+        int hint = (uadditional > int.MaxValue ||
+            (uadditional >> 63) != 0) ? int.MaxValue : (int)uadditional;
         byte[] data = ReadByteData(this.stream, uadditional, null);
-        if (type == 3)
-        {
-          if (!CBORUtilities.CheckUtf8(data))
-          {
-            throw new CBORException("Invalid UTF-8");
-          }
-          return this.ObjectFromUtf8Array(data, hint);
-        }
-        else
-        {
-          return this.ObjectFromByteArray(data, hint);
-        }
+        return type == 3
+          ? !CBORUtilities.CheckUtf8(data) ? throw new CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint)
+          : this.ObjectFromByteArray(data, hint);
       }
       if (type == 4)
       { // Array
@@ -214,7 +193,7 @@ untagged.AsNumber().IsNegative())
         {
           throw new CBORException("Depth too high in canonical CBOR");
         }
-        CBORObject cbor = CBORObject.NewArray();
+        var cbor = CBORObject.NewArray();
         if ((uadditional >> 31) != 0)
         {
           throw new CBORException("Length of " +
@@ -458,7 +437,7 @@ count);
         {
           ReadHelper(this.stream, data, 1, expectedLength - 1);
         }
-        CBORObject cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
+        var cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
         if (this.stringRefs != null && (type == 2 || type == 3))
         {
           this.stringRefs.AddStringIfNeeded(cbor, expectedLength - 1);
@@ -487,7 +466,7 @@ count);
                     break;
                   }
                   long len = ReadDataLength(this.stream, nextByte, 2);
-                  if ((len >> 63) != 0 || len > Int32.MaxValue)
+                  if ((len >> 63) != 0 || len > int.MaxValue)
                   {
                     throw new CBORException("Length" + ToUnsignedEInteger(len) +
                         " is bigger than supported ");
@@ -498,7 +477,7 @@ count);
                     _ = ReadByteData(this.stream, len, ms);
                   }
                 }
-                if (ms.Position > Int32.MaxValue)
+                if (ms.Position > int.MaxValue)
                 {
                   throw new
                   CBORException("Length of bytes to be streamed is bigger" +
@@ -521,7 +500,7 @@ count);
                   break;
                 }
                 long len = ReadDataLength(this.stream, nextByte, 3);
-                if ((len >> 63) != 0 || len > Int32.MaxValue)
+                if ((len >> 63) != 0 || len > int.MaxValue)
                 {
                   throw new CBORException("Length" + ToUnsignedEInteger(len) +
                     " is bigger than supported");
@@ -551,8 +530,8 @@ count);
             }
           case 4:
             {
-              CBORObject cbor = CBORObject.NewArray();
-              var vtindex = 0;
+              var cbor = CBORObject.NewArray();
+              int vtindex = 0;
               // Indefinite-length array
               while (true)
               {
@@ -621,8 +600,8 @@ count);
       }
       if (type == 6)
       { // Tagged item
-        var haveFirstByte = false;
-        var newFirstByte = -1;
+        bool haveFirstByte = false;
+        int newFirstByte = -1;
         if (this.options.ResolveReferences && (uadditional >> 32) == 0)
         {
           // NOTE: HandleItemTag treats only certain tags up to 256 specially
@@ -681,7 +660,7 @@ count);
       {
         return EmptyByteArray;
       }
-      if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue)
+      if ((uadditional >> 63) != 0 || uadditional > int.MaxValue)
       {
         throw new CBORException("Length" + ToUnsignedEInteger(uadditional) +
           " is bigger than supported ");
@@ -693,7 +672,7 @@ count);
       if (uadditional <= 0x10000)
       {
         // Simple case: small size
-        var data = new byte[(int)uadditional];
+        byte[] data = new byte[(int)uadditional];
         ReadHelper(stream, data, 0, data.Length);
         if (outputStream != null)
         {
@@ -704,8 +683,8 @@ count);
       }
       else
       {
-        var tmpdata = new byte[0x10000];
-        var total = (int)uadditional;
+        byte[] tmpdata = new byte[0x10000];
+        int total = (int)uadditional;
         if (outputStream != null)
         {
           while (total > 0)
@@ -758,32 +737,22 @@ count);
       {
         return headByte;
       }
-      var data = new byte[8];
+      byte[] data = new byte[8];
       switch (headByte)
       {
         case 24:
           {
             int tmp = stream.ReadByte();
-            if (tmp < 0)
-            {
-              throw new CBORException("Premature end of data");
-            }
-            if (!allowNonShortest && tmp < 24)
-            {
-              throw new CBORException("Non-shortest CBOR form");
-            }
-            return tmp;
+            return tmp < 0
+              ? throw new CBORException("Premature end of data")
+              : !allowNonShortest && tmp < 24 ? throw new CBORException("Non-shortest CBOR form") : tmp;
           }
         case 25:
           {
             ReadHelper(stream, data, 0, 2);
             int lowAdditional = (data[0] & 0xff) << 8;
             lowAdditional |= data[1] & 0xff;
-            if (!allowNonShortest && lowAdditional < 256)
-            {
-              throw new CBORException("Non-shortest CBOR form");
-            }
-            return lowAdditional;
+            return !allowNonShortest && lowAdditional < 256 ? throw new CBORException("Non-shortest CBOR form") : lowAdditional;
           }
         case 26:
           {
@@ -792,11 +761,7 @@ count);
             uadditional |= (data[1] & 0xffL) << 16;
             uadditional |= (data[2] & 0xffL) << 8;
             uadditional |= data[3] & 0xffL;
-            if (!allowNonShortest && (uadditional >> 16) == 0)
-            {
-              throw new CBORException("Non-shortest CBOR form");
-            }
-            return uadditional;
+            return !allowNonShortest && (uadditional >> 16) == 0 ? throw new CBORException("Non-shortest CBOR form") : uadditional;
           }
         case 27:
           {
@@ -810,11 +775,7 @@ count);
             uadditional |= (data[5] & 0xffL) << 16;
             uadditional |= (data[6] & 0xffL) << 8;
             uadditional |= data[7] & 0xffL;
-            if (!allowNonShortest && (uadditional >> 32) == 0)
-            {
-              throw new CBORException("Non-shortest CBOR form");
-            }
-            return uadditional;
+            return !allowNonShortest && (uadditional >> 32) == 0 ? throw new CBORException("Non-shortest CBOR form") : uadditional;
           }
         case 28:
         case 29:

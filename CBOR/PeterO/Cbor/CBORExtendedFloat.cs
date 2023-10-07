@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -72,7 +72,7 @@ namespace PeterO.Cbor
       var ef = (EFloat)obj;
       if (this.CanTruncatedIntFitInInt64(obj))
       {
-        EInteger bi = ef.ToEInteger();
+        var bi = ef.ToEInteger();
         return (long)bi;
       }
       throw new OverflowException("This object's value is out of range");
@@ -122,7 +122,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.CanFitInInt64();
     }
 
@@ -141,7 +141,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.Sign >= 0 && bi.GetUnsignedBitLengthAsInt64() <= 64;
     }
 
@@ -160,7 +160,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      EInteger bi = ef.ToEInteger();
+      var bi = ef.ToEInteger();
       return bi.CanFitInInt32();
     }
 
@@ -187,7 +187,7 @@ namespace PeterO.Cbor
       {
         return true;
       }
-      EFloat ef2 = EFloat.FromEInteger(ef.ToEInteger());
+      var ef2 = EFloat.FromEInteger(ef.ToEInteger());
       return ef2.CompareTo(ef) == 0;
     }
 
@@ -196,8 +196,8 @@ namespace PeterO.Cbor
       var ef = (EFloat)obj;
       if (this.CanTruncatedIntFitInInt32(obj))
       {
-        EInteger bi = ef.ToEInteger();
-        var ret = (int)bi;
+        var bi = ef.ToEInteger();
+        int ret = (int)bi;
         if (ret >= minValue && ret <= maxValue)
         {
           return ret;

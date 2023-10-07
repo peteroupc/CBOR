@@ -1,6 +1,6 @@
-using System;
 using NUnit.Framework;
 using PeterO.Cbor;
+using System;
 
 namespace Test
 {
@@ -21,7 +21,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
     }
   }

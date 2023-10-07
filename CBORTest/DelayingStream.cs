@@ -15,11 +15,7 @@ namespace Test
     /// <param name="ms"></param>
     public DelayingStream(Stream ms)
     {
-      if (ms == null)
-      {
-        throw new ArgumentNullException(nameof(ms));
-      }
-      this.ms = ms;
+      this.ms = ms ?? throw new ArgumentNullException(nameof(ms));
     }
 
     /// <summary>
@@ -51,13 +47,7 @@ namespace Test
     }
 
     /// <inheritdoc/>
-    public override long Length
-    {
-      get
-      {
-        return this.ms.Length;
-      }
-    }
+    public override long Length => this.ms.Length;
 
     /// <inheritdoc/>
     public override long Seek(long pos, SeekOrigin origin)
@@ -74,53 +64,25 @@ namespace Test
     /// <inheritdoc/>
     public override long Position
     {
-      get
-      {
-        return this.ms.Position;
-      }
+      get => this.ms.Position;
 
-      set
-      {
-        this.ms.Position = value;
-      }
+      set => this.ms.Position = value;
     }
 
     public byte[] ToArray()
     {
       var ms = this.ms as MemoryStream;
-      if (ms != null)
-      {
-        return ms.ToArray();
-      }
-      throw new NotSupportedException();
+      return ms != null ? ms.ToArray() : throw new NotSupportedException();
     }
 
     /// <inheritdoc/>
-    public override bool CanRead
-    {
-      get
-      {
-        return this.ms.CanRead;
-      }
-    }
+    public override bool CanRead => this.ms.CanRead;
 
     /// <inheritdoc/>
-    public override bool CanSeek
-    {
-      get
-      {
-        return this.ms.CanSeek;
-      }
-    }
+    public override bool CanSeek => this.ms.CanSeek;
 
     /// <inheritdoc/>
-    public override bool CanWrite
-    {
-      get
-      {
-        return this.ms.CanWrite;
-      }
-    }
+    public override bool CanWrite => this.ms.CanWrite;
 
     /// <inheritdoc/>
     public override int Read(byte[] bytes, int offset, int count)

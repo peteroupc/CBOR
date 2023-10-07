@@ -29,7 +29,7 @@ namespace PeterO.Cbor
       else
       {
         // DebugUtility.Log("pointer--->"+path);
-        JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        var pointer = JSONPointer.FromPointer(o, path);
         CBORObject parent = pointer.GetParent();
         // DebugUtility.Log("addop pointer "+path+" ["+parent+"]");
         if (pointer.GetParent().Type == CBORType.Array)
@@ -83,15 +83,9 @@ namespace PeterO.Cbor
 #endif
 
       CBORObject co = o.GetOrDefault(str, null);
-      if (co == null)
-      {
-        throw new CBORException(str + " not found");
-      }
-      if (co.Type != CBORType.TextString)
-      {
-        throw new CBORException("Not a text string type");
-      }
-      return co.AsString();
+      return co == null
+        ? throw new CBORException(str + " not found")
+        : co.Type != CBORType.TextString ? throw new CBORException("Not a text string type") : co.AsString();
     }
 
     public static CBORObject Patch(CBORObject o, CBORObject ptch)
@@ -191,7 +185,7 @@ namespace PeterO.Cbor
           }
           if (path.Equals(fromPath))
           {
-            JSONPointer pointer = JSONPointer.FromPointer(o, path);
+            var pointer = JSONPointer.FromPointer(o, path);
             if (pointer.Exists())
             {
               // Moving to the same path, so return
@@ -217,7 +211,7 @@ namespace PeterO.Cbor
           {
             throw new CBORException("Patch " + valueOpStr + " from");
           }
-          JSONPointer pointer = JSONPointer.FromPointer(o, fromPath);
+          var pointer = JSONPointer.FromPointer(o, fromPath);
           if (!pointer.Exists())
           {
             throw new CBORException("Patch " +
@@ -243,13 +237,13 @@ namespace PeterO.Cbor
             throw new CBORException("Patch " + valueOpStr + " value");
           }
           value = patchOp["value"];
-          JSONPointer pointer = JSONPointer.FromPointer(o, path);
+          var pointer = JSONPointer.FromPointer(o, path);
           if (!pointer.Exists())
           {
             throw new CBORException("Patch " +
               valueOpStr + " " + path);
           }
-          Object testedObj = pointer.GetValue();
+          object testedObj = pointer.GetValue();
           if ((testedObj == null) ? (value != null) :
             !testedObj.Equals(value))
           {
@@ -261,7 +255,7 @@ namespace PeterO.Cbor
           throw new CBORException("Unrecognized op");
         }
       }
-      return (o == null) ? CBORObject.Null : o;
+      return o ?? CBORObject.Null;
     }
 
     private static CBORObject RemoveOperation(
@@ -279,7 +273,7 @@ namespace PeterO.Cbor
       }
       else
       {
-        JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        var pointer = JSONPointer.FromPointer(o, path);
         if (!pointer.Exists())
         {
           throw new CBORException("Patch " +
@@ -322,7 +316,7 @@ namespace PeterO.Cbor
       }
       else
       {
-        JSONPointer pointer = JSONPointer.FromPointer(o, path);
+        var pointer = JSONPointer.FromPointer(o, path);
         if (!pointer.Exists())
         {
           throw new CBORException("Patch " +

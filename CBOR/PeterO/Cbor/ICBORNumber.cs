@@ -6,7 +6,6 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor
@@ -18,150 +17,150 @@ namespace PeterO.Cbor
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsPositiveInfinity(Object obj);
+    bool IsPositiveInfinity(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsInfinity(Object obj);
+    bool IsInfinity(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsNegativeInfinity(Object obj);
+    bool IsNegativeInfinity(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsNaN(Object obj);
+    bool IsNaN(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsNegative(Object obj);
+    bool IsNegative(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    double AsDouble(Object obj);
+    double AsDouble(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    object Negate(Object obj);
+    object Negate(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    object Abs(Object obj);
+    object Abs(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    EDecimal AsEDecimal(Object obj);
+    EDecimal AsEDecimal(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    EFloat AsEFloat(Object obj);
+    EFloat AsEFloat(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    ERational AsERational(Object obj);
+    ERational AsERational(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    float AsSingle(Object obj);
+    float AsSingle(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    EInteger AsEInteger(Object obj);
+    EInteger AsEInteger(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    long AsInt64(Object obj);
+    long AsInt64(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool CanFitInSingle(Object obj);
+    bool CanFitInSingle(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool CanFitInDouble(Object obj);
+    bool CanFitInDouble(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool CanFitInInt32(Object obj);
+    bool CanFitInInt32(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool CanFitInInt64(Object obj);
+    bool CanFitInInt64(object obj);
 
-    bool CanFitInUInt64(Object obj);
-
-    /// <summary>This is an internal API.</summary>
-    /// <param name='obj'>The parameter <paramref name='obj'/> is an
-    /// arbitrary object.</param>
-    /// <returns>The return value is an internal value.</returns>
-    bool CanTruncatedIntFitInInt64(Object obj);
+    bool CanFitInUInt64(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool CanTruncatedIntFitInUInt64(Object obj);
+    bool CanTruncatedIntFitInInt64(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool CanTruncatedIntFitInInt32(Object obj);
-
-    /// <summary>This is an internal API.</summary>
-    /// <returns>The return value is an internal value.</returns>
-    int AsInt32(Object obj, int minValue, int maxValue);
+    bool CanTruncatedIntFitInUInt64(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsNumberZero(Object obj);
+    bool CanTruncatedIntFitInInt32(object obj);
+
+    /// <summary>This is an internal API.</summary>
+    /// <returns>The return value is an internal value.</returns>
+    int AsInt32(object obj, int minValue, int maxValue);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    int Sign(Object obj);
+    bool IsNumberZero(object obj);
 
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>
     /// <returns>The return value is an internal value.</returns>
-    bool IsIntegral(Object obj);
+    int Sign(object obj);
+
+    /// <summary>This is an internal API.</summary>
+    /// <param name='obj'>The parameter <paramref name='obj'/> is an
+    /// arbitrary object.</param>
+    /// <returns>The return value is an internal value.</returns>
+    bool IsIntegral(object obj);
   }
 }

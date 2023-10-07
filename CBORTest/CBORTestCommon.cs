@@ -1,8 +1,8 @@
-using System;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 using PeterO.Numbers;
+using System;
 
 namespace Test
 {
@@ -68,12 +68,12 @@ lowExponent)
         case 0:
           o = RandomObjects.RandomDouble(
             rand,
-            Int32.MaxValue);
+            int.MaxValue);
           return CBORObject.FromObject(o);
         case 1:
           o = RandomObjects.RandomSingle(
             rand,
-            Int32.MaxValue);
+            int.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
           return CBORObject.FromObject(
@@ -101,12 +101,12 @@ lowExponent)
         case 0:
           o = RandomObjects.RandomDouble(
             rand,
-            Int32.MaxValue);
+            int.MaxValue);
           return CBORObject.FromObject(o);
         case 1:
           o = RandomObjects.RandomSingle(
             rand,
-            Int32.MaxValue);
+            int.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
           return CBORObject.FromObject(
@@ -133,7 +133,7 @@ lowExponent)
       int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = rand.GetInt32(100) < 30 ?
          CBORObject.NewOrderedMap() : CBORObject.NewMap();
-      for (var i = 0; i < count; ++i)
+      for (int i = 0; i < count; ++i)
       {
         CBORObject key = RandomCBORObject(rand, depth + 1);
         CBORObject value = RandomCBORObject(rand, depth + 1);
@@ -145,7 +145,7 @@ lowExponent)
     public static EInteger RandomEIntegerMajorType0(IRandomGenExtended rand)
     {
       int v = rand.GetInt32(0x10000);
-      EInteger ei = EInteger.FromInt32(v);
+      var ei = EInteger.FromInt32(v);
       ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
       ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
       ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
@@ -156,7 +156,7 @@ lowExponent)
 rand)
     {
       int v = rand.GetInt32(0x10000);
-      EInteger ei = EInteger.FromInt32(v);
+      var ei = EInteger.FromInt32(v);
       ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
       ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
       ei = ei.ShiftLeft(16).Add(rand.GetInt32(0x10000));
@@ -180,17 +180,15 @@ rand)
         };
         tag = tagselection[rand.GetInt32(tagselection.Length)];
       }
-      else if (rand.GetInt32(100) < 90)
-      {
-        return CBORObject.FromObjectAndTag(
-            RandomCBORObject(rand, depth + 1),
-            rand.GetInt32(0x100000));
-      }
       else
       {
-        return CBORObject.FromObjectAndTag(
-            RandomCBORObject(rand, depth + 1),
-            RandomEIntegerMajorType0(rand));
+        return rand.GetInt32(100) < 90
+          ? CBORObject.FromObjectAndTag(
+                    RandomCBORObject(rand, depth + 1),
+                    rand.GetInt32(0x100000))
+          : CBORObject.FromObjectAndTag(
+                    RandomCBORObject(rand, depth + 1),
+                    RandomEIntegerMajorType0(rand));
       }
       if (tag == 25)
       {
@@ -204,16 +202,16 @@ rand)
       {
         CBORObject cbor;
         // Console.WriteLine("tag "+tag+" "+i);
-        if (tag == 0 || tag == 1 || tag == 28 || tag == 29)
+        if (tag is 0 or 1 or 28 or 29)
         {
           tag = 999;
         }
-        if (tag == 2 || tag == 3)
+        if (tag is 2 or 3)
         {
           object o = RandomObjects.RandomByteStringShort(rand);
           cbor = CBORObject.FromObject(o);
         }
-        else if (tag == 4 || tag == 5)
+        else if (tag is 4 or 5)
         {
           cbor = CBORObject.NewArray();
           object o = RandomObjects.RandomSmallIntegral(rand);
@@ -242,8 +240,8 @@ depth)
     {
       int x = rand.GetInt32(100);
       int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
-      CBORObject cborRet = CBORObject.NewArray();
-      for (var i = 0; i < count; ++i)
+      var cborRet = CBORObject.NewArray();
+      for (int i = 0; i < count; ++i)
       {
         _ = cborRet.Add(RandomCBORObject(rand, depth + 1));
       }
@@ -259,32 +257,21 @@ depth)
       depth)
     {
       int nextval = rand.GetInt32(11);
-      switch (nextval)
+      return nextval switch
       {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-          return RandomNumberOrRational(rand);
-        case 4:
-          return rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False;
-        case 5:
-          return rand.GetInt32(2) == 0 ? CBORObject.Null :
-            CBORObject.Undefined;
-        case 6:
-          return CBORObject.FromObject(
-              RandomObjects.RandomTextString(rand));
-        case 7:
-          return CBORObject.FromObject(
-              RandomObjects.RandomByteString(rand));
-        case 8:
-          return RandomCBORArray(rand, depth);
-        case 9:
-          return RandomCBORMap(rand, depth);
-        case 10:
-          return RandomCBORTaggedObject(rand, depth);
-        default: return RandomNumber(rand);
-      }
+        0 or 1 or 2 or 3 => RandomNumberOrRational(rand),
+        4 => rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False,
+        5 => rand.GetInt32(2) == 0 ? CBORObject.Null :
+                    CBORObject.Undefined,
+        6 => CBORObject.FromObject(
+                      RandomObjects.RandomTextString(rand)),
+        7 => CBORObject.FromObject(
+                      RandomObjects.RandomByteString(rand)),
+        8 => RandomCBORArray(rand, depth),
+        9 => RandomCBORMap(rand, depth),
+        10 => RandomCBORTaggedObject(rand, depth),
+        _ => RandomNumber(rand),
+      };
     }
 
     public static byte[] CheckEncodeToBytes(CBORObject o)
@@ -306,7 +293,7 @@ depth)
       TestCommon.AssertEqualsHashCode(o, o2);
     }
 
-    public static void AssertJSONSer(CBORObject o, String s)
+    public static void AssertJSONSer(CBORObject o, string s)
     {
       if (!s.Equals(o.ToJSONString(), StringComparison.Ordinal))
       {
@@ -346,15 +333,9 @@ options)
 
     private static CBORObject FromBytesB(byte[] b, CBOREncodeOptions options)
     {
-      using (var ms = new Test.DelayingStream(b))
-      {
-        CBORObject o = CBORObject.Read(ms, options);
-        if (ms.Position != ms.Length)
-        {
-          throw new CBORException("not at EOF");
-        }
-        return o;
-      }
+      using var ms = new Test.DelayingStream(b);
+      var o = CBORObject.Read(ms, options);
+      return ms.Position != ms.Length ? throw new CBORException("not at EOF") : o;
     }
 
     // Tests the equivalence of the DecodeFromBytes and Read methods.
@@ -376,15 +357,9 @@ options)
 
     private static CBORObject FromBytesB(byte[] b)
     {
-      using (var ms = new Test.DelayingStream(b))
-      {
-        CBORObject o = CBORObject.Read(ms);
-        if (ms.Position != ms.Length)
-        {
-          throw new CBORException("not at EOF");
-        }
-        return o;
-      }
+      using var ms = new Test.DelayingStream(b);
+      var o = CBORObject.Read(ms);
+      return ms.Position != ms.Length ? throw new CBORException("not at EOF") : o;
     }
   }
 }

@@ -53,7 +53,7 @@ namespace PeterO.Cbor
           return bytesA.Length < bytesB.Length ? -1 : 1;
         }
         // check bytes
-        for (var i = 0; i < bytesA.Length; ++i)
+        for (int i = 0; i < bytesA.Length; ++i)
         {
           if (bytesA[i] != bytesB[i])
           {
@@ -140,7 +140,7 @@ namespace PeterO.Cbor
           // different lengths
           return abs.Length < bbs.Length ? -1 : 1;
         }
-        for (var i = 0; i < abs.Length; ++i)
+        for (int i = 0; i < abs.Length; ++i)
         {
           if (abs[i] != bbs[i])
           {
@@ -175,7 +175,7 @@ namespace PeterO.Cbor
       }
       if (bytesA.Length == bytesB.Length)
       {
-        for (var j = 0; j < bytesA.Length; ++j)
+        for (int j = 0; j < bytesA.Length; ++j)
         {
           if (bytesA[j] != bytesB[j])
           {
@@ -191,7 +191,7 @@ namespace PeterO.Cbor
     {
       if (cbor.Type == CBORType.Array)
       {
-        for (var i = 0; i < cbor.Count; ++i)
+        for (int i = 0; i < cbor.Count; ++i)
         {
           if (depth >= 3 && IsArrayOrMap(cbor[i]))
           {
@@ -226,7 +226,7 @@ namespace PeterO.Cbor
           using (var ms = new MemoryStream())
           {
             _ = CBORObject.WriteValue(ms, 4, cbor.Count);
-            for (var i = 0; i < cbor.Count; ++i)
+            for (int i = 0; i < cbor.Count; ++i)
             {
               if (depth >= 3 && IsArrayOrMap(cbor[i]))
               {
@@ -264,7 +264,7 @@ namespace PeterO.Cbor
           {
             _ = CBORObject.WriteValue(ms, 5, cbor.Count);
             byte[] lastKey = null;
-            for (var i = 0; i < sortedKeys.Count; ++i)
+            for (int i = 0; i < sortedKeys.Count; ++i)
             {
               kv1 = sortedKeys[i];
               byte[] bytes = kv1.Key;
@@ -306,13 +306,11 @@ namespace PeterO.Cbor
           (byte)(bits & 0xffL),
         };
       }
-      else if (valueAType == CBORType.Integer)
-      {
-        return cbor.EncodeToBytes(CBOREncodeOptions.Default);
-      }
       else
       {
-        throw new ArgumentException("Invalid CBOR type.");
+        return valueAType == CBORType.Integer
+          ? cbor.EncodeToBytes(CBOREncodeOptions.Default)
+          : throw new ArgumentException("Invalid CBOR type.");
       }
     }
   }

@@ -24,25 +24,25 @@ namespace PeterO.DocGen
     private static readonly IDictionary<string, string> ValueOperators =
           OperatorList();
 
-    private readonly StringBuilder buffer = new StringBuilder();
-    private readonly StringBuilder exceptionStr = new StringBuilder();
+    private readonly StringBuilder buffer = new();
+    private readonly StringBuilder exceptionStr = new();
 
     private readonly IDictionary<string, StringBuilder> members = new
       SortedDictionary<string, StringBuilder>();
 
-    private readonly StringBuilder paramStr = new StringBuilder();
-    private readonly StringBuilder returnStr = new StringBuilder();
+    private readonly StringBuilder paramStr = new();
+    private readonly StringBuilder returnStr = new();
     private StringBuilder currentBuffer;
 
     public static void AppendConstraints(
       Type[] genericArguments,
       StringBuilder builder)
     {
-      foreach (var arg in genericArguments)
+      foreach (Type arg in genericArguments)
       {
         if (arg.IsGenericParameter)
         {
-          var constraints = arg.GetGenericParameterConstraints();
+          Type[] constraints = arg.GetGenericParameterConstraints();
           if (constraints.Length == 0 && (arg.GenericParameterAttributes &
   (GenericParameterAttributes.ReferenceTypeConstraint |
   GenericParameterAttributes.NotNullableValueTypeConstraint |
@@ -54,7 +54,7 @@ namespace PeterO.DocGen
           _ = builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
           _ = builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
           _ = builder.Append(" : ");
-          var first = true;
+          bool first = true;
           if ((arg.GenericParameterAttributes &
                GenericParameterAttributes.ReferenceTypeConstraint) !=
               GenericParameterAttributes.None)
@@ -88,7 +88,7 @@ namespace PeterO.DocGen
             _ = builder.Append("new()");
             first = false;
           }
-          foreach (var constr in constraints)
+          foreach (Type constr in constraints)
           {
             if (!first)
             {
@@ -133,19 +133,10 @@ namespace PeterO.DocGen
       {
         try
         {
-          var obj = field.GetRawConstantValue();
-          if (obj is int)
-          {
-            _ = builder.Append(" = " + (int)obj + ";");
-          }
-          else if (obj is long)
-          {
-            _ = builder.Append(" = " + (long)obj + "L;");
-          }
-          else
-          {
-            _ = builder.Append(';');
-          }
+          object obj = field.GetRawConstantValue();
+          _ = obj is int
+            ? builder.Append(" = " + (int)obj + ";")
+            : obj is long ? builder.Append(" = " + (long)obj + "L;") : builder.Append(';');
         }
         catch (InvalidOperationException)
         {
@@ -205,7 +196,7 @@ IsMethodOverride((MethodInfo)method))
         }
       }
       var methodInfo = method as MethodInfo;
-      var isExtension = false;
+      bool isExtension = false;
       Attribute attr;
       if (methodInfo != null)
       {
@@ -248,7 +239,7 @@ IsMethodOverride((MethodInfo)method))
       {
         _ = builder.Append('<');
         first = true;
-        foreach (var arg in method.GetGenericArguments())
+        foreach (Type arg in method.GetGenericArguments())
         {
           if (!first)
           {
@@ -261,7 +252,7 @@ IsMethodOverride((MethodInfo)method))
       }
       _ = builder.Append('(');
       first = true;
-      foreach (var param in method.GetParameters())
+      foreach (ParameterInfo param in method.GetParameters())
       {
         if (!first)
         {
@@ -312,8 +303,8 @@ IsMethodOverride((MethodInfo)method))
     public static string FormatProperty(PropertyInfo property, bool shortform)
     {
       var builder = new StringBuilder();
-      var getter = property.GetGetMethod();
-      var setter = property.GetSetMethod();
+      MethodInfo getter = property.GetGetMethod();
+      MethodInfo setter = property.GetSetMethod();
       if (!shortform)
       {
         _ = builder.Append(FourSpaces);
@@ -363,28 +354,16 @@ IsMethodOverride((MethodInfo)method))
         _ = builder.Append((char)0x20);
       }
       bool first;
-      var indexParams = property.GetIndexParameters();
-      if (indexParams.Length > 0)
-      {
-        _ = builder.Append("this[");
-      }
-      else
-      {
-        _ = builder.Append(property.Name);
-      }
+      ParameterInfo[] indexParams = property.GetIndexParameters();
+      _ = indexParams.Length > 0 ? builder.Append("this[") : builder.Append(property.Name);
       first = true;
-      foreach (var param in indexParams)
+      foreach (ParameterInfo param in indexParams)
       {
-        if (!first)
-        {
-          _ = builder.Append(",\r\n" + FourSpaces + FourSpaces);
-        }
-        else
-        {
-          _ = builder.Append(indexParams.Length == 1 ?
-                    String.Empty : "\r\n" + FourSpaces + FourSpaces);
-        }
-        var attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
+        _ = !first
+          ? builder.Append(",\r\n" + FourSpaces + FourSpaces)
+          : builder.Append(indexParams.Length == 1 ?
+                    string.Empty : "\r\n" + FourSpaces + FourSpaces);
+        Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null)
         {
           _ = builder.Append("params ");
@@ -419,7 +398,7 @@ IsMethodOverride((MethodInfo)method))
 
     public static string FormatType(Type type)
     {
-      var rawfmt = FormatTypeRaw(type);
+      string rawfmt = FormatTypeRaw(type);
       if (!type.IsArray && !type.IsGenericType)
       {
         return rawfmt;
@@ -429,8 +408,8 @@ IsMethodOverride((MethodInfo)method))
       if (type.ContainsGenericParameters)
       {
         _ = sb.Append('<');
-        var first = true;
-        foreach (var arg in type.GetGenericArguments())
+        bool first = true;
+        foreach (Type arg in type.GetGenericArguments())
         {
           if (!first)
           {
@@ -443,7 +422,7 @@ IsMethodOverride((MethodInfo)method))
       }
       if (type.IsArray)
       {
-        for (var i = 0; i < type.GetArrayRank(); ++i)
+        for (int i = 0; i < type.GetArrayRank(); ++i)
         {
           _ = sb.Append("[]");
         }
@@ -453,17 +432,15 @@ IsMethodOverride((MethodInfo)method))
 
     public static string FormatTypeRaw(Type type)
     {
-      var name = TypeNameUtil.UndecorateTypeName(type.Name);
+      string name = TypeNameUtil.UndecorateTypeName(type.Name);
       if (type.IsGenericParameter)
       {
         return name;
       }
       name = TypeNameUtil.SimpleTypeName(type);
-      if (name.Equals("System.Decimal", StringComparison.Ordinal))
-      {
-        return "decimal";
-      }
-      return name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
+      return name.Equals("System.Decimal", StringComparison.Ordinal)
+        ? "decimal"
+        : name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
         (name.Equals("System.Int64", StringComparison.Ordinal) ? "long" :
          (name.Equals("System.Int16", StringComparison.Ordinal) ? "short" :
           (name.Equals("System.UInt32", StringComparison.Ordinal) ? "uint" :
@@ -488,14 +465,7 @@ IsMethodOverride((MethodInfo)method))
     {
       var builder = new StringBuilder();
       _ = builder.Append(FourSpaces);
-      if (typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic)
-      {
-        _ = builder.Append("public ");
-      }
-      else
-      {
-        _ = builder.Append("internal ");
-      }
+      _ = typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic ? builder.Append("public ") : builder.Append("internal ");
       if (typeInfo.IsAbstract && typeInfo.IsSealed)
       {
         _ = builder.Append("static ");
@@ -508,25 +478,14 @@ IsMethodOverride((MethodInfo)method))
       {
         _ = builder.Append("sealed ");
       }
-      if (typeInfo.IsValueType)
-      {
-        _ = builder.Append("struct ");
-      }
-      else if (typeInfo.IsClass)
-      {
-        _ = builder.Append("class ");
-      }
-      else
-      {
-        _ = builder.Append("interface ");
-      }
+      _ = typeInfo.IsValueType ? builder.Append("struct ") : typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
       _ = builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
       bool first;
       if (typeInfo.GetGenericArguments().Length > 0)
       {
         _ = builder.Append('<');
         first = true;
-        foreach (var arg in typeInfo.GetGenericArguments())
+        foreach (Type arg in typeInfo.GetGenericArguments())
         {
           if (!first)
           {
@@ -538,8 +497,8 @@ IsMethodOverride((MethodInfo)method))
         _ = builder.Append('>');
       }
       first = true;
-      var ifaces = typeInfo.GetInterfaces();
-      var derived = typeInfo.BaseType;
+      Type[] ifaces = typeInfo.GetInterfaces();
+      Type derived = typeInfo.BaseType;
       if (typeInfo.BaseType != null &&
           typeInfo.BaseType.Equals(typeof(object)))
       {
@@ -559,12 +518,12 @@ IsMethodOverride((MethodInfo)method))
           // displayed in a consistent order. Apparently, GetInterfaces
           // can return such interfaces in an unspecified order.
           var ifacenames = new List<string>();
-          foreach (var iface in ifaces)
+          foreach (Type iface in ifaces)
           {
             ifacenames.Add(FormatType(iface));
           }
           ifacenames.Sort();
-          foreach (var ifacename in ifacenames)
+          foreach (string ifacename in ifacenames)
           {
             if (!first)
             {
@@ -581,37 +540,25 @@ IsMethodOverride((MethodInfo)method))
 
     public static string GetTypeID(Type type)
     {
-      var name = FormatType(type);
+      string name = FormatType(type);
       name = name.Replace(", ", ",");
       var builder = new StringBuilder();
-      for (var i = 0; i < name.Length; ++i)
+      for (int i = 0; i < name.Length; ++i)
       {
-        var cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
-        var cp = DataUtilities.CodePointAt(name, i);
+        UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
+        int cp = DataUtilities.CodePointAt(name, i);
         if (cp >= 0x10000)
         {
           ++i;
         }
-        if (cat == UnicodeCategory.UppercaseLetter ||
+        _ = cat == UnicodeCategory.UppercaseLetter ||
             cat == UnicodeCategory.LowercaseLetter ||
             cat == UnicodeCategory.TitlecaseLetter ||
             cat == UnicodeCategory.OtherLetter ||
             cat == UnicodeCategory.DecimalDigitNumber ||
-            cp == '_' || cp == '.')
-        {
-          if (cp >= 0x10000)
-          {
-            _ = builder.Append(name, i, 2);
-          }
-          else
-          {
-            _ = builder.Append(name[i]);
-          }
-        }
-        else
-        {
-          _ = builder.Append(' ');
-        }
+            cp == '_' || cp == '.'
+          ? cp >= 0x10000 ? builder.Append(name, i, 2) : builder.Append(name[i])
+          : builder.Append(' ');
       }
       name = builder.ToString();
       name = name.Trim();
@@ -622,21 +569,21 @@ IsMethodOverride((MethodInfo)method))
     public static bool IsMethodOverride(MethodInfo method)
     {
       _ = method.DeclaringType;
-      var baseMethod = method.GetBaseDefinition();
+      MethodInfo baseMethod = method.GetBaseDefinition();
       return (baseMethod != null) && (!method.Equals(baseMethod));
     }
 
     public void Debug(string ln)
     {
       this.WriteLine(ln);
-      this.WriteLine(String.Empty);
+      this.WriteLine(string.Empty);
     }
 
     public override string ToString()
     {
       var b = new StringBuilder();
       _ = b.Append(this.buffer.ToString());
-      foreach (var b2 in this.members.Keys)
+      foreach (string b2 in this.members.Keys)
       {
         _ = b.Append(this.members[b2].ToString());
       }
@@ -645,9 +592,9 @@ IsMethodOverride((MethodInfo)method))
 
     public void VisitNode(INode node)
     {
-      if (String.IsNullOrEmpty(node.LocalName))
+      if (string.IsNullOrEmpty(node.LocalName))
       {
-        var t = node.GetContent();
+        string t = node.GetContent();
         // Collapse multiple spaces into a single space
         t = Regex.Replace(t, @"\s+", " ");
         if (t.Length != 1 || t[0] != ' ')
@@ -659,7 +606,7 @@ IsMethodOverride((MethodInfo)method))
       }
       else
       {
-        var xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
+        string xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
         if (xmlName.Equals("c", StringComparison.Ordinal))
         {
           this.VisitC(node);
@@ -727,7 +674,7 @@ xmlName.Equals("em", StringComparison.Ordinal))
         {
           var sb = new StringBuilder();
           _ = sb.Append("<" + xmlName);
-          foreach (var attr in node.GetAttributes())
+          foreach (string attr in node.GetAttributes())
           {
             _ = sb.Append(" " + attr + "=");
             _ = sb.Append("\"" + DocGenUtil.HtmlEscape(
@@ -753,7 +700,7 @@ xmlName.Equals("em", StringComparison.Ordinal))
     public void VisitCode(INode node)
     {
       this.WriteLine("\r\n\r\n");
-      foreach (var line in node.GetContent().Split('\n'))
+      foreach (string line in node.GetContent().Split('\n'))
       {
         this.WriteLine(FourSpaces + line.TrimEnd());
       }
@@ -768,22 +715,20 @@ xmlName.Equals("em", StringComparison.Ordinal))
 
     public void VisitException(INode node)
     {
-      using (var ch = this.Change(this.exceptionStr))
+      using IDisposable ch = this.Change(this.exceptionStr);
+      string cref = node.GetAttribute("cref");
+      if (cref == null)
       {
-        var cref = node.GetAttribute("cref");
-        if (cref == null)
-        {
-          cref = String.Empty;
-          Console.WriteLine("Warning: cref attribute absent in <exception>");
-        }
-        if (cref.StartsWith("T:", StringComparison.Ordinal))
-        {
-          cref = cref.Substring(2);
-        }
-        this.WriteLine(" * " + cref + ": ");
-        XmlDoc.VisitInnerNode(node, this);
-        this.WriteLine("\r\n\r\n");
+        cref = string.Empty;
+        Console.WriteLine("Warning: cref attribute absent in <exception>");
       }
+      if (cref.StartsWith("T:", StringComparison.Ordinal))
+      {
+        cref = cref[2..];
+      }
+      this.WriteLine(" * " + cref + ": ");
+      XmlDoc.VisitInnerNode(node, this);
+      this.WriteLine("\r\n\r\n");
     }
 
     public void VisitSee(INode see)
@@ -791,14 +736,14 @@ xmlName.Equals("em", StringComparison.Ordinal))
       string cref = see.GetAttribute("cref");
       if (cref == null)
       {
-        cref = String.Empty;
+        cref = string.Empty;
         Console.WriteLine("Warning: cref attribute absent in <see>");
       }
-      if (cref.Substring(0, 2).Equals("T:", StringComparison.Ordinal))
+      if (cref[..2].Equals("T:", StringComparison.Ordinal))
       {
-        string typeName = TypeNameUtil.UndecorateTypeName(cref.Substring(2));
+        string typeName = TypeNameUtil.UndecorateTypeName(cref[2..]);
         string content = DocGenUtil.HtmlEscape(see.GetContent());
-        if (String.IsNullOrEmpty(content))
+        if (string.IsNullOrEmpty(content))
         {
           content = typeName;
         }
@@ -806,10 +751,10 @@ xmlName.Equals("em", StringComparison.Ordinal))
         this.Write("(" + typeName + ".md)");
         XmlDoc.VisitInnerNode(see, this);
       }
-      else if (cref.Substring(0, 2).Equals("M:", StringComparison.Ordinal))
+      else if (cref[..2].Equals("M:", StringComparison.Ordinal))
       {
         string content = DocGenUtil.HtmlEscape(see.GetContent());
-        if (String.IsNullOrEmpty(content))
+        if (string.IsNullOrEmpty(content))
         {
           content = cref;
         }
@@ -836,12 +781,11 @@ xmlName.Equals("em", StringComparison.Ordinal))
 
     public void HandleMember(MemberInfo info, XmlDoc xmldoc)
     {
-      var mnu = TypeNameUtil.XmlDocMemberName(info);
-      var mnm = xmldoc.GetMemberNode(mnu);
+      string mnu = TypeNameUtil.XmlDocMemberName(info);
+      INode mnm = xmldoc.GetMemberNode(mnu);
       string signature;
-      if (info is MethodBase)
+      if (info is MethodBase method)
       {
-        var method = (MethodBase)info;
         if (!method.IsPublic && !method.IsFamily)
         {
           // Ignore methods other than public and protected
@@ -853,50 +797,42 @@ xmlName.Equals("em", StringComparison.Ordinal))
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
-        using (var ch = this.AddMember(info))
+        using IDisposable ch = this.AddMember(info);
+        signature = FormatMethod(method, false);
+        this.WriteLine("<a id=\"" +
+                  MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+        this.WriteLine("### " + Heading(info) +
+                  "\r\n\r\n" + signature + "\r\n\r\n");
+        if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
         {
-          signature = FormatMethod(method, false);
-          this.WriteLine("<a id=\"" +
-                    MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
-          this.WriteLine("### " + Heading(info) +
-                    "\r\n\r\n" + signature + "\r\n\r\n");
-          var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-            ObsoleteAttribute;
-          if (attr != null)
-          {
-            this.WriteLine("<b>Deprecated.</b> " +
+          this.WriteLine("<b>Deprecated.</b> " +
 DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
-          }
-          var cattr =
-method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-            CLSCompliantAttribute;
-          if (cattr != null && !cattr.IsCompliant)
-          {
-            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-          }
-          _ = this.paramStr.Clear();
-          _ = this.returnStr.Clear();
-          _ = this.exceptionStr.Clear();
-          XmlDoc.VisitInnerNode(mnm, this);
-          if (this.paramStr.Length > 0)
-          {
-            this.Write("<b>Parameters:</b>\r\n\r\n");
-            var paramString = this.paramStr.ToString();
-            // Decrease spacing between list items
-            paramString = paramString.Replace("\r\n * ", " * ");
-            this.Write(paramString);
-          }
-          this.Write(this.returnStr.ToString());
-          if (this.exceptionStr.Length > 0)
-          {
-            this.Write("<b>Exceptions:</b>\r\n\r\n");
-            this.Write(this.exceptionStr.ToString());
-          }
+        }
+        if (method.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
+        {
+          this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+        }
+        _ = this.paramStr.Clear();
+        _ = this.returnStr.Clear();
+        _ = this.exceptionStr.Clear();
+        XmlDoc.VisitInnerNode(mnm, this);
+        if (this.paramStr.Length > 0)
+        {
+          this.Write("<b>Parameters:</b>\r\n\r\n");
+          string paramString = this.paramStr.ToString();
+          // Decrease spacing between list items
+          paramString = paramString.Replace("\r\n * ", " * ");
+          this.Write(paramString);
+        }
+        this.Write(this.returnStr.ToString());
+        if (this.exceptionStr.Length > 0)
+        {
+          this.Write("<b>Exceptions:</b>\r\n\r\n");
+          this.Write(this.exceptionStr.ToString());
         }
       }
-      else if (info is Type)
+      else if (info is Type type)
       {
-        var type = (Type)info;
         if (!(type.IsNested ? type.IsNestedPublic : type.IsPublic))
         {
           // Ignore nonpublic types
@@ -907,39 +843,32 @@ method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
-        using (var ch = this.AddMember(info))
+        using IDisposable ch = this.AddMember(info);
+        this.WriteLine("## " + Heading(type) + "\r\n\r\n");
+        this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
+        if (type.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
         {
-          this.WriteLine("## " + Heading(type) + "\r\n\r\n");
-          this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-          var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-            ObsoleteAttribute;
-          if (attr != null)
-          {
-            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-          }
-          var cattr = type.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-            CLSCompliantAttribute;
-          if (cattr != null && !cattr.IsCompliant)
-          {
-            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-          }
-          _ = this.paramStr.Clear();
-          XmlDoc.VisitInnerNode(mnm, this);
-          this.Write("\r\n\r\n");
-          this.WriteLine("<<<MEMBER_SUMMARY>>>");
-          if (this.paramStr.Length > 0)
-          {
-            this.Write("<b>Parameters:</b>\r\n\r\n");
-            var paramString = this.paramStr.ToString();
-            // Decrease spacing between list items
-            paramString = paramString.Replace("\r\n * ", " * ");
-            this.Write(paramString);
-          }
+          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+        }
+        if (type.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
+        {
+          this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+        }
+        _ = this.paramStr.Clear();
+        XmlDoc.VisitInnerNode(mnm, this);
+        this.Write("\r\n\r\n");
+        this.WriteLine("<<<MEMBER_SUMMARY>>>");
+        if (this.paramStr.Length > 0)
+        {
+          this.Write("<b>Parameters:</b>\r\n\r\n");
+          string paramString = this.paramStr.ToString();
+          // Decrease spacing between list items
+          paramString = paramString.Replace("\r\n * ", " * ");
+          this.Write(paramString);
         }
       }
-      else if (info is PropertyInfo)
+      else if (info is PropertyInfo property)
       {
-        var property = (PropertyInfo)info;
         if (!PropertyIsPublicOrFamily(property))
         {
           // Ignore methods other than public and protected
@@ -951,46 +880,38 @@ method.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
-        using (var ch = this.AddMember(info))
+        using IDisposable ch = this.AddMember(info);
+        signature = FormatProperty(property);
+        this.WriteLine("<a id=\"" +
+                  MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+        this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
+                  "\r\n\r\n");
+        if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
         {
-          signature = FormatProperty(property);
-          this.WriteLine("<a id=\"" +
-                    MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
-          this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
-                    "\r\n\r\n");
-          var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-            ObsoleteAttribute;
-          if (attr != null)
-          {
-            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-          }
-          var cattr =
-property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-            CLSCompliantAttribute;
-          if (cattr != null && !cattr.IsCompliant)
-          {
-            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-          }
-          _ = this.paramStr.Clear();
-          _ = this.returnStr.Clear();
-          _ = this.exceptionStr.Clear();
-          XmlDoc.VisitInnerNode(mnm, this);
-          if (this.paramStr.Length > 0)
-          {
-            this.Write("<b>Parameters:</b>\r\n\r\n");
-            this.Write(this.paramStr.ToString());
-          }
-          this.Write(this.returnStr.ToString());
-          if (this.exceptionStr.Length > 0)
-          {
-            this.Write("<b>Exceptions:</b>\r\n\r\n");
-            this.Write(this.exceptionStr.ToString());
-          }
+          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+        }
+        if (property.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
+        {
+          this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+        }
+        _ = this.paramStr.Clear();
+        _ = this.returnStr.Clear();
+        _ = this.exceptionStr.Clear();
+        XmlDoc.VisitInnerNode(mnm, this);
+        if (this.paramStr.Length > 0)
+        {
+          this.Write("<b>Parameters:</b>\r\n\r\n");
+          this.Write(this.paramStr.ToString());
+        }
+        this.Write(this.returnStr.ToString());
+        if (this.exceptionStr.Length > 0)
+        {
+          this.Write("<b>Exceptions:</b>\r\n\r\n");
+          this.Write(this.exceptionStr.ToString());
         }
       }
-      else if (info is FieldInfo)
+      else if (info is FieldInfo field)
       {
-        var field = (FieldInfo)info;
         if (!field.IsPublic && !field.IsFamily)
         {
           // Ignore nonpublic, nonprotected fields
@@ -1001,27 +922,21 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
-        using (var ch = this.AddMember(info))
+        using IDisposable ch = this.AddMember(info);
+        signature = FormatField(field);
+        this.WriteLine("<a id=\"" +
+                  MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+        this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
+                  "\r\n\r\n");
+        if (field.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
         {
-          signature = FormatField(field);
-          this.WriteLine("<a id=\"" +
-                    MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
-          this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
-                    "\r\n\r\n");
-          var attr = field.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-            ObsoleteAttribute;
-          if (attr != null)
-          {
-            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-          }
-          var cattr = field.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
-            CLSCompliantAttribute;
-          if (cattr != null && !cattr.IsCompliant)
-          {
-            this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
-          }
-          XmlDoc.VisitInnerNode(mnm, this);
+          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
+        if (field.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
+        {
+          this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
+        }
+        XmlDoc.VisitInnerNode(mnm, this);
       }
     }
 
@@ -1033,12 +948,10 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
 
     public void VisitParam(INode node)
     {
-      using (var ch = this.Change(this.paramStr))
-      {
-        this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
-        XmlDoc.VisitInnerNode(node, this);
-        this.WriteLine("\r\n\r\n");
-      }
+      using IDisposable ch = this.Change(this.paramStr);
+      this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
+      XmlDoc.VisitInnerNode(node, this);
+      this.WriteLine("\r\n\r\n");
     }
 
     public void VisitParamRef(INode node)
@@ -1049,60 +962,48 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
 
     public void VisitReturns(INode node)
     {
-      using (var ch = this.Change(this.returnStr))
-      {
-        this.WriteLine("<b>Return Value:</b>\r\n");
-        XmlDoc.VisitInnerNode(node, this);
-        this.WriteLine("\r\n\r\n");
-      }
+      using IDisposable ch = this.Change(this.returnStr);
+      this.WriteLine("<b>Return Value:</b>\r\n");
+      XmlDoc.VisitInnerNode(node, this);
+      this.WriteLine("\r\n\r\n");
     }
 
     public void VisitTypeParam(INode node)
     {
-      using (var ch = this.Change(this.paramStr))
-      {
-        this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
-        XmlDoc.VisitInnerNode(node, this);
-        this.WriteLine("\r\n\r\n");
-      }
+      using IDisposable ch = this.Change(this.paramStr);
+      this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
+      XmlDoc.VisitInnerNode(node, this);
+      this.WriteLine("\r\n\r\n");
     }
 
     public void VisitValue(INode node)
     {
-      using (var ch = this.Change(this.returnStr))
-      {
-        this.WriteLine("<b>Returns:</b>\r\n");
-        XmlDoc.VisitInnerNode(node, this);
-        this.WriteLine("\r\n\r\n");
-      }
+      using IDisposable ch = this.Change(this.returnStr);
+      this.WriteLine("<b>Returns:</b>\r\n");
+      XmlDoc.VisitInnerNode(node, this);
+      this.WriteLine("\r\n\r\n");
     }
 
     private static string Heading(MemberInfo info)
     {
-      var ret = String.Empty;
-      if (info is MethodBase)
+      string ret = string.Empty;
+      if (info is MethodBase method)
       {
-        var method = (MethodBase)info;
-        if (method is ConstructorInfo)
-        {
-          return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
-          " Constructor";
-        }
-        return MethodNameHeading(method.Name);
+        return method is ConstructorInfo
+          ? TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
+          " Constructor"
+          : MethodNameHeading(method.Name);
       }
-      if (info is Type)
+      if (info is Type type)
       {
-        var type = (Type)info;
         return FormatType(type);
       }
-      else if (info is PropertyInfo)
+      else if (info is PropertyInfo property)
       {
-        var property = (PropertyInfo)info;
         return property.Name;
       }
-      else if (info is FieldInfo)
+      else if (info is FieldInfo field)
       {
-        var field = (FieldInfo)info;
         return field.Name;
       }
       return ret;
@@ -1110,27 +1011,23 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
 
     private static string HeadingUnambiguous(MemberInfo info)
     {
-      var ret = String.Empty;
-      if (info is MethodBase)
+      string ret = string.Empty;
+      if (info is MethodBase method)
       {
-        var method = (MethodBase)info;
         return (method is ConstructorInfo) ? ("<1>" + " " +
           FormatMethod(method, false)) : ("<4>" + method.Name + " " +
           FormatMethod(method, false));
       }
-      if (info is Type)
+      if (info is Type type)
       {
-        var type = (Type)info;
         return "<0>" + FormatType(type);
       }
-      else if (info is PropertyInfo)
+      else if (info is PropertyInfo property)
       {
-        var property = (PropertyInfo)info;
         return "<3>" + property.Name;
       }
-      else if (info is FieldInfo)
+      else if (info is FieldInfo field)
       {
-        var field = (FieldInfo)info;
         return "<2>" + field.Name;
       }
       return ret;
@@ -1147,48 +1044,50 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
 
     private static IDictionary<string, string> OperatorList()
     {
-      var ops = new Dictionary<string, string>();
-      ops["op_Addition"] = "+";
-      ops["op_UnaryPlus"] = "+";
-      ops["op_Subtraction"] = "-";
-      ops["op_UnaryNegation"] = "-";
-      ops["op_Multiply"] = "*";
-      ops["op_Division"] = "/";
-      ops["op_LeftShift"] = "<<";
-      ops["op_RightShift"] = ">>";
-      ops["op_BitwiseAnd"] = "&";
-      ops["op_BitwiseOr"] = "|";
-      ops["op_ExclusiveOr"] = "^";
-      ops["op_LogicalNot"] = "!";
-      ops["op_OnesComplement"] = "~";
-      ops["op_True"] = "true";
-      ops["op_False"] = "false";
-      ops["op_Modulus"] = "%";
-      ops["op_Decrement"] = "--";
-      ops["op_Increment"] = "++";
-      ops["op_Equality"] = "==";
-      ops["op_Inequality"] = "!=";
-      ops["op_GreaterThan"] = ">";
-      ops["op_GreaterThanOrEqual"] = ">=";
-      ops["op_LessThan"] = "<";
-      ops["op_LessThanOrEqual"] = "<=";
+      var ops = new Dictionary<string, string>
+      {
+        ["op_Addition"] = "+",
+        ["op_UnaryPlus"] = "+",
+        ["op_Subtraction"] = "-",
+        ["op_UnaryNegation"] = "-",
+        ["op_Multiply"] = "*",
+        ["op_Division"] = "/",
+        ["op_LeftShift"] = "<<",
+        ["op_RightShift"] = ">>",
+        ["op_BitwiseAnd"] = "&",
+        ["op_BitwiseOr"] = "|",
+        ["op_ExclusiveOr"] = "^",
+        ["op_LogicalNot"] = "!",
+        ["op_OnesComplement"] = "~",
+        ["op_True"] = "true",
+        ["op_False"] = "false",
+        ["op_Modulus"] = "%",
+        ["op_Decrement"] = "--",
+        ["op_Increment"] = "++",
+        ["op_Equality"] = "==",
+        ["op_Inequality"] = "!=",
+        ["op_GreaterThan"] = ">",
+        ["op_GreaterThanOrEqual"] = ">=",
+        ["op_LessThan"] = "<",
+        ["op_LessThanOrEqual"] = "<=",
+      };
       return ops;
     }
 
     private static bool PropertyIsPublicOrFamily(PropertyInfo property)
     {
-      var getter = property.GetGetMethod();
-      var setter = property.GetSetMethod();
-      return ((getter != null && getter.IsPublic) || (setter != null &&
-        setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter !=
+      MethodInfo getter = property.GetGetMethod();
+      MethodInfo setter = property.GetSetMethod();
+      return (getter != null && getter.IsPublic) || (setter != null &&
+        setter.IsPublic) || (getter != null && getter.IsFamily) || (setter !=
                 null &&
-  setter.IsFamily));
+  setter.IsFamily);
     }
 
     private IDisposable AddMember(MemberInfo member)
     {
       var builder = new StringBuilder();
-      var heading = HeadingUnambiguous(member);
+      string heading = HeadingUnambiguous(member);
       this.members[heading] = builder;
       return new BufferChanger(this, builder);
     }
@@ -1200,14 +1099,7 @@ property.GetCustomAttribute(typeof(CLSCompliantAttribute)) as
 
     private void Write(string ln)
     {
-      if (this.currentBuffer != null)
-      {
-        _ = this.currentBuffer.Append(ln);
-      }
-      else
-      {
-        _ = this.buffer.Append(ln);
-      }
+      _ = this.currentBuffer != null ? this.currentBuffer.Append(ln) : this.buffer.Append(ln);
     }
 
     private void WriteLine(string ln)

@@ -6,9 +6,9 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.Text;
-using PeterO.Numbers;
 
 namespace PeterO.Cbor
 {
@@ -60,7 +60,7 @@ namespace PeterO.Cbor
         cmp = 0;
         if (alen == blen)
         {
-          var equalStrings = true;
+          bool equalStrings = true;
           for (int i = 0; i < alen; ++i)
           {
             char sai = strA[i];
@@ -77,7 +77,7 @@ namespace PeterO.Cbor
             return 0;
           }
         }
-        var nonAscii = false;
+        bool nonAscii = false;
         for (int i = 0; i < alen; ++i)
         {
           if (strA[i] >= 0x80)
@@ -120,12 +120,12 @@ namespace PeterO.Cbor
         }
       }
       // DebugUtility.Log("slow path "+alen+","+blen);
-      var sapos = 0;
-      var sbpos = 0;
+      int sapos = 0;
+      int sbpos = 0;
       long sautf8 = 0L;
       long sbutf8 = 0L;
       cmp = 0;
-      var haveboth = true;
+      bool haveboth = true;
       while (true)
       {
         int sa = 0, sb = 0;
@@ -253,11 +253,11 @@ namespace PeterO.Cbor
       {
         return 1;
       }
-      var u16pos = 0;
-      var u8pos = 0;
+      int u16pos = 0;
+      int u8pos = 0;
       long u16u8length = 0L;
-      var cmp = 0;
-      var haveboth = true;
+      int cmp = 0;
+      bool haveboth = true;
       while (true)
       {
         int u16 = 0, u8 = 0;
@@ -392,12 +392,10 @@ namespace PeterO.Cbor
         int c3 = offset < endPos ? utf8[offset] & 0xff : -1;
         int lower = (c == 0xf0) ? 0x90 : 0x80;
         int upper = (c == 0xf4) ? 0x8f : 0xbf;
-        if (c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
-          c3 < 0x80 || c3 > 0xbf)
-        {
-          return -2;
-        }
-        return ((c - 0xf0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
+        return c1 < lower || c1 > upper || c2 < 0x80 || c2 > 0xbf ||
+          c3 < 0x80 || c3 > 0xbf
+          ? -2
+          : ((c - 0xf0) << 18) | ((c1 - 0x80) << 12) | ((c2 - 0x80) <<
             6) | (c3 - 0x80);
       }
       else
@@ -413,8 +411,8 @@ namespace PeterO.Cbor
     // this purpose.
     public static int StringHashCode(string str)
     {
-      var upos = 0;
-      var code = 0x7edede19;
+      int upos = 0;
+      int code = 0x7edede19;
       while (true)
       {
         if (upos == str.Length)
@@ -440,8 +438,8 @@ namespace PeterO.Cbor
 
     public static int Utf8HashCode(byte[] utf8)
     {
-      var upos = 0;
-      var code = 0x7edede19;
+      int upos = 0;
+      int code = 0x7edede19;
       while (true)
       {
         int sc = Utf8CodePointAt(utf8, upos);
@@ -475,7 +473,7 @@ namespace PeterO.Cbor
 
     public static bool CheckUtf16(string str)
     {
-      var upos = 0;
+      int upos = 0;
       while (true)
       {
         if (upos == str.Length)
@@ -500,7 +498,7 @@ namespace PeterO.Cbor
 
     public static bool CheckUtf8(byte[] utf8)
     {
-      var upos = 0;
+      int upos = 0;
       while (true)
       {
         int sc = Utf8CodePointAt(utf8, upos);
@@ -551,8 +549,8 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      var spos = 0;
-      var upos = 0;
+      int spos = 0;
+      int upos = 0;
       while (true)
       {
         int sc = DataUtilities.CodePointAt(str, spos, 1);
@@ -605,7 +603,7 @@ namespace PeterO.Cbor
       {
         return false;
       }
-      for (var i = 0; i < a.Length; ++i)
+      for (int i = 0; i < a.Length; ++i)
       {
         if (a[i] != b[i])
         {
@@ -621,11 +619,11 @@ namespace PeterO.Cbor
       {
         return 0;
       }
-      var ret = 19;
+      int ret = 19;
       unchecked
       {
         ret = (ret * 31) + a.Length;
-        for (var i = 0; i < a.Length; ++i)
+        for (int i = 0; i < a.Length; ++i)
         {
           ret = (ret * 31) + a[i];
         }
@@ -644,7 +642,7 @@ namespace PeterO.Cbor
         return 1;
       }
       int c = Math.Min(a.Length, b.Length);
-      for (var i = 0; i < c; ++i)
+      for (int i = 0; i < c; ++i)
       {
         byte ai = a[i];
         byte bi = b[i];
@@ -670,7 +668,7 @@ namespace PeterO.Cbor
       {
         return a.Length < b.Length ? -1 : 1;
       }
-      for (var i = 0; i < a.Length; ++i)
+      for (int i = 0; i < a.Length; ++i)
       {
         byte ai = a[i];
         byte bi = b[i];
@@ -732,7 +730,7 @@ namespace PeterO.Cbor
 
     public static string LongToString(long longValue)
     {
-      if (longValue == Int64.MinValue)
+      if (longValue == long.MinValue)
       {
         return "-9223372036854775808";
       }
@@ -784,7 +782,7 @@ namespace PeterO.Cbor
         {
           ++count;
         }
-        return new String(chars, count, 12 - count);
+        return new string(chars, count, 12 - count);
       }
       else
       {
@@ -820,7 +818,7 @@ namespace PeterO.Cbor
         {
           ++count;
         }
-        return new String(chars, count, 24 - count);
+        return new string(chars, count, 24 - count);
       }
     }
 
@@ -899,7 +897,7 @@ namespace PeterO.Cbor
         if (intDay < -101)
         {
           // Number of days in a 400-year block
-          int intCount = (intDay == Int32.MinValue) ? 14699 : Math.Abs(intDay)
+          int intCount = (intDay == int.MinValue) ? 14699 : Math.Abs(intDay)
             / 146097;
           intDay = checked(intDay + (intCount * 146097));
           longYear = checked(longYear - (intCount * 400));
@@ -998,7 +996,7 @@ ValueNormalDays :
               0)) ? ValueNormalDays : ValueLeapDays;
         while (true)
         {
-          EInteger days = EInteger.FromInt32(dayArray[month]);
+          var days = EInteger.FromInt32(dayArray[month]);
           if (day.Sign > 0 && day.CompareTo(days) <= 0)
           {
             break;
@@ -1067,10 +1065,10 @@ ValueNormalDays :
         throw new ArgumentOutOfRangeException(nameof(mday));
       }
       EInteger numDays = EInteger.Zero;
-      var startYear = 1970;
+      int startYear = 1970;
       if (year.CompareTo(startYear) < 0)
       {
-        EInteger currentYear = EInteger.FromInt32(startYear - 1);
+        var currentYear = EInteger.FromInt32(startYear - 1);
         EInteger diff = currentYear.Subtract(year);
 
         if (diff.CompareTo(401) > 0)
@@ -1082,7 +1080,7 @@ ValueNormalDays :
         }
 
         numDays = numDays.Subtract(diff.Multiply(365));
-        var decrement = 1;
+        int decrement = 1;
         for (;
           currentYear.CompareTo(year) > 0;
           currentYear = currentYear.Subtract(decrement))
@@ -1099,25 +1097,20 @@ ValueNormalDays :
             numDays = numDays.Subtract(1);
           }
         }
-        if (year.Remainder(4).Sign != 0 || (
-            year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0))
-        {
-          numDays = numDays.Subtract(365 - ValueNormalToMonth[month])
-            .Subtract(ValueNormalDays[month] - mday + 1);
-        }
-        else
-        {
-          numDays = numDays
+        numDays = year.Remainder(4).Sign != 0 || (
+            year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0)
+          ? numDays.Subtract(365 - ValueNormalToMonth[month])
+            .Subtract(ValueNormalDays[month] - mday + 1)
+          : numDays
             .Subtract(366 - ValueLeapToMonth[month])
             .Subtract(ValueLeapDays[month] - mday + 1);
-        }
       }
       else
       {
         bool isNormalYear = year.Remainder(4).Sign != 0 ||
           (year.Remainder(100).Sign == 0 && year.Remainder(400).Sign != 0);
 
-        EInteger currentYear = EInteger.FromInt32(startYear);
+        var currentYear = EInteger.FromInt32(startYear);
         if (currentYear.Add(401).CompareTo(year) < 0)
         {
           EInteger y2 = year.Subtract(2);
@@ -1209,7 +1202,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       EInteger[] year,
       int[] lesserFields)
     {
-      EInteger integerPart = edec.Quantize(0, ERounding.Floor)
+      var integerPart = edec.Quantize(0, ERounding.Floor)
         .ToEInteger();
       EDecimal fractionalPart = edec.Subtract(
           EDecimal.FromEInteger(integerPart)).Abs();
@@ -1247,7 +1240,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       lesserFields[6] = 0;
     }
 
-    public static bool NameStartsWithWord(String name, String word)
+    public static bool NameStartsWithWord(string name, string word)
     {
       int wl = word.Length;
       return name.Length > wl && name.Substring(0, wl).Equals(word,
@@ -1255,7 +1248,7 @@ longSecondsInDay + ") is not less or equal to 86399");
           'z') && !(name[wl] >= '0' && name[wl] <= '9');
     }
 
-    public static String FirstCharLower(String name)
+    public static string FirstCharLower(string name)
     {
       if (name.Length > 0 && name[0] >= 'A' && name[0] <= 'Z')
       {
@@ -1267,7 +1260,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       return name;
     }
 
-    public static String FirstCharUpper(String name)
+    public static string FirstCharUpper(string name)
     {
       if (name.Length > 0 && name[0] >= 'a' && name[0] <= 'z')
       {
@@ -1341,12 +1334,12 @@ longSecondsInDay + ") is not less or equal to 86399");
 
     private static int[] ParseAtomDateTimeString(string str)
     {
-      var bad = false;
+      bool bad = false;
       if (str.Length < 19)
       {
         throw new ArgumentException("Invalid date/time");
       }
-      for (var i = 0; i < 19 && !bad; ++i)
+      for (int i = 0; i < 19 && !bad; ++i)
       {
         if (i == 4 || i == 7)
         {
@@ -1379,11 +1372,11 @@ longSecondsInDay + ") is not less or equal to 86399");
       int hour = ((str[11] - '0') * 10) + (str[12] - '0');
       int minute = ((str[14] - '0') * 10) + (str[15] - '0');
       int second = ((str[17] - '0') * 10) + (str[18] - '0');
-      var index = 19;
-      var nanoSeconds = 0;
+      int index = 19;
+      int nanoSeconds = 0;
       if (index <= str.Length && str[index] == '.')
       {
-        var icount = 0;
+        int icount = 0;
         ++index;
         while (index < str.Length)
         {
@@ -1414,7 +1407,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       else if (index + 6 == str.Length)
       {
         bad = false;
-        for (var i = 0; i < 6 && !bad; ++i)
+        for (int i = 0; i < 6 && !bad; ++i)
         {
           if (i == 0)
           {
@@ -1440,7 +1433,7 @@ longSecondsInDay + ") is not less or equal to 86399");
         {
           throw new ArgumentException("Invalid date/time");
         }
-        utcToLocal = ((neg ? -1 : 1) * (tzhour * 60)) + tzminute;
+        utcToLocal = ((neg ? -1 : 1) * tzhour * 60) + tzminute;
       }
       else
       {
@@ -1450,11 +1443,7 @@ longSecondsInDay + ") is not less or equal to 86399");
         year, month, day, hour, minute, second,
         nanoSeconds, utcToLocal,
       };
-      if (!IsValidDateTime(dt))
-      {
-        throw new ArgumentException("Invalid date/time");
-      }
-      return dt;
+      return !IsValidDateTime(dt) ? throw new ArgumentException("Invalid date/time") : dt;
     }
 
     public static EFloat DateTimeToIntegerOrDouble(
@@ -1516,9 +1505,9 @@ longSecondsInDay + ") is not less or equal to 86399");
       EDecimal d = EDecimal.FromInt32(lesserFields[5]).Divide(FractionalSeconds)
         .Add(EDecimal.FromEInteger(seconds));
       double dbl = d.ToDouble();
-      if (Double.IsPositiveInfinity(dbl) ||
-             Double.IsNegativeInfinity(dbl) ||
-             Double.IsNaN(dbl))
+      if (double.IsPositiveInfinity(dbl) ||
+             double.IsNegativeInfinity(dbl) ||
+             double.IsNaN(dbl))
       {
         status[0] = 2;
         return null;
@@ -1684,7 +1673,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       int minute = lesserFields[3];
       int second = lesserFields[4];
       int fracSeconds = lesserFields[5];
-      var charbuf = new char[32];
+      char[] charbuf = new char[32];
       charbuf[0] = (char)('0' + ((smallYear / 1000) % 10));
       charbuf[1] = (char)('0' + ((smallYear / 100) % 10));
       charbuf[2] = (char)('0' + ((smallYear / 10) % 10));
@@ -1704,14 +1693,14 @@ longSecondsInDay + ") is not less or equal to 86399");
       charbuf[16] = ':';
       charbuf[17] = (char)('0' + ((second / 10) % 10));
       charbuf[18] = (char)('0' + (second % 10));
-      var charbufLength = 19;
+      int charbufLength = 19;
       if (fracSeconds > 0)
       {
         charbuf[19] = '.';
         ++charbufLength;
-        var digitdiv = FractionalSeconds;
+        int digitdiv = FractionalSeconds;
         digitdiv /= 10;
-        var index = 20;
+        int index = 20;
         while (digitdiv > 0 && fracSeconds != 0)
         {
           int digit = (fracSeconds / digitdiv) % 10;
@@ -1728,12 +1717,12 @@ longSecondsInDay + ") is not less or equal to 86399");
         charbuf[19] = 'Z';
         ++charbufLength;
       }
-      return new String(charbuf, 0, charbufLength);
+      return new string(charbuf, 0, charbufLength);
     }
 
     public static long IntegerToDoubleBits(int i)
     {
-      if (i == Int32.MinValue)
+      if (i == int.MinValue)
       {
         return unchecked((long)0xc1e0000000000000L);
       }
@@ -1742,7 +1731,7 @@ longSecondsInDay + ") is not less or equal to 86399");
         return 0L;
       }
       long longmant = Math.Abs(i);
-      var expo = 0;
+      int expo = 0;
       while (longmant < (1L << 10))
       {
         longmant <<= 42;
@@ -1796,7 +1785,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       {
         return false;
       }
-      var exp = (int)(bits >> 52);
+      int exp = (int)(bits >> 52);
       long mant = bits & ((1L << 52) - 1);
       int shift = 52 - (exp - 0x3ff);
       return ((mant >> shift) << shift) == mant;
@@ -1826,7 +1815,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       {
         throw new NotSupportedException();
       }
-      var exp = (int)(bits >> 52);
+      int exp = (int)(bits >> 52);
       long mant = bits & ((1L << 52) - 1);
       mant |= 1L << 52;
       int shift = 52 - (exp - 0x3ff);
@@ -1845,7 +1834,7 @@ longSecondsInDay + ") is not less or equal to 86399");
     {
       int value0 = unchecked((int)(lvalue & 0xffffffffL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xffffffffL));
-      var floatExponent = (value1 >> 20) & 0x7ff;
+      int floatExponent = (value1 >> 20) & 0x7ff;
       bool neg = (value1 >> 31) != 0;
       if (floatExponent == 2047)
       {
@@ -1872,7 +1861,7 @@ longSecondsInDay + ") is not less or equal to 86399");
         }
       }
       floatExponent -= 1075;
-      var bytes = new byte[9];
+      byte[] bytes = new byte[9];
       EInteger bigmantissa;
       bytes[0] = (byte)(value0 & 0xff);
       bytes[1] = (byte)((value0 >> 8) & 0xff);
@@ -1979,11 +1968,9 @@ longSecondsInDay + ") is not less or equal to 86399");
       { // subnormal and zero
         int rs = RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
         // DebugUtility.Log("mant=" + mant + " rs=" + (rs));
-        if (sexp == -10 && rs == 0)
-        {
-          return -1;
-        }
-        return ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs) :
+        return sexp == -10 && rs == 0
+          ? -1
+          : ((mant & ((1L << (42 - (sexp - 1))) - 1)) == 0) ? (sign | rs) :
           -1;
       }
     }
@@ -1998,27 +1985,15 @@ longSecondsInDay + ") is not less or equal to 86399");
       long mant = bits & 0xfffffffffffffL;
       int sexp = exp - 896;
       // DebugUtility.Log("sng mant={0:X8}, exp=" + exp + " sexp=" + (sexp));
-      if (exp == 2047)
-      { // Infinity and NaN
-        return (mant & ((1L << 29) - 1)) == 0;
-      }
-      else if (sexp < -23 || sexp >= 255)
-      { // underflow or overflow
-        return false;
-      }
-      else if (sexp > 0)
-      { // normal
-        return (mant & ((1L << 29) - 1)) == 0;
-      }
-      else if (sexp == -23)
-      {
-        return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0 &&
-          RoundedShift(mant | (1L << 52), 29 - (sexp - 1)) != 0;
-      }
-      else
-      { // subnormal and zero
-        return (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0;
-      }
+      return exp == 2047
+        ? (mant & ((1L << 29) - 1)) == 0
+        : sexp >= -23 && sexp < 255
+&& (sexp > 0
+                  ? (mant & ((1L << 29) - 1)) == 0
+                  : sexp == -23
+                          ? (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0 &&
+                                  RoundedShift(mant | (1L << 52), 29 - (sexp - 1)) != 0
+                          : (mant & ((1L << (29 - (sexp - 1))) - 1)) == 0);
     }
 
     // NOTE: Rounds to nearest, ties to even
@@ -2035,21 +2010,13 @@ longSecondsInDay + ") is not less or equal to 86399");
           // signaling NaN truncated to have mantissa 0
           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
       }
-      else if (sexp >= 31)
-      { // overflow
-        return sign | 0x7c00;
-      }
-      else if (sexp < -10)
-      { // underflow
-        return sign;
-      }
-      else if (sexp > 0)
-      { // normal
-        return sign | (sexp << 10) | RoundedShift(mant, 13);
-      }
       else
-      { // subnormal and zero
-        return sign | RoundedShift(mant | (1 << 23), 13 - (sexp - 1));
+      { // overflow
+        return sexp >= 31
+          ? sign | 0x7c00
+          : sexp < -10
+                  ? sign
+                  : sexp > 0 ? sign | (sexp << 10) | RoundedShift(mant, 13) : sign | RoundedShift(mant | (1 << 23), 13 - (sexp - 1));
       }
     }
 
@@ -2067,21 +2034,13 @@ longSecondsInDay + ") is not less or equal to 86399");
           // signaling NaN truncated to have mantissa 0
           (sign | 0x7c01) : (sign | 0x7c00 | newmant);
       }
-      else if (sexp >= 31)
-      { // overflow
-        return sign | 0x7c00;
-      }
-      else if (sexp < -10)
-      { // underflow
-        return sign;
-      }
-      else if (sexp > 0)
-      { // normal
-        return sign | (sexp << 10) | RoundedShift(mant, 42);
-      }
       else
-      { // subnormal and zero
-        return sign | RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
+      { // overflow
+        return sexp >= 31
+          ? sign | 0x7c00
+          : sexp < -10
+                  ? sign
+                  : sexp > 0 ? sign | (sexp << 10) | RoundedShift(mant, 42) : sign | RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
       }
     }
 
@@ -2099,21 +2058,13 @@ longSecondsInDay + ") is not less or equal to 86399");
           // signaling NaN truncated to have mantissa 0
           (sign | 0x7f800001) : (sign | 0x7f800000 | newmant);
       }
-      else if (sexp >= 255)
-      { // overflow
-        return sign | 0x7f800000;
-      }
-      else if (sexp < -23)
-      { // underflow
-        return sign;
-      }
-      else if (sexp > 0)
-      { // normal
-        return sign | (sexp << 23) | RoundedShift(mant, 29);
-      }
       else
-      { // subnormal and zero
-        return sign | RoundedShift(mant | (1L << 52), 29 - (sexp - 1));
+      { // overflow
+        return sexp >= 255
+          ? sign | 0x7f800000
+          : sexp < -23
+                  ? sign
+                  : sexp > 0 ? sign | (sexp << 23) | RoundedShift(mant, 29) : sign | RoundedShift(mant | (1L << 52), 29 - (sexp - 1));
       }
     }
 
@@ -2151,7 +2102,7 @@ longSecondsInDay + ") is not less or equal to 86399");
 
     public static long SingleToDoublePrecision(int bits)
     {
-      var negvalue = (long)((bits >> 31) & 1) << 63;
+      long negvalue = (long)((bits >> 31) & 1) << 63;
       int exp = (bits >> 23) & 0xff;
       int mant = bits & 0x7fffff;
       long value;
@@ -2186,7 +2137,7 @@ longSecondsInDay + ") is not less or equal to 86399");
 
     public static long HalfToDoublePrecision(int bits)
     {
-      var negvalue = (long)(bits & 0x8000) << 48;
+      long negvalue = (long)(bits & 0x8000) << 48;
       int exp = (bits >> 10) & 31;
       int mant = bits & 0x3ff;
       long value;

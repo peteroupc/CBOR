@@ -79,7 +79,7 @@ namespace PeterO.Cbor
 
     public int ReadChar()
     {
-      var c = -1;
+      int c = -1;
       try
       {
         c = this.ci.ReadChar();

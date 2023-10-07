@@ -6,11 +6,11 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO;
+using PeterO.Cbor;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO;
-using PeterO.Cbor;
 
 // A JSON-like parser that supports nonstandard
 // comments before JSON keys, but otherwise supports
@@ -23,9 +23,8 @@ namespace Test
     private readonly IList<CBORObject> currPointer;
     private readonly JSONOptions options;
     private int currPointerStackSize;
-    private IList<string[]> pointers;
     private int index;
-    private int endPos;
+    private readonly int endPos;
 
     // JSON parsing method
     private int SkipWhitespaceJSON()
@@ -33,7 +32,7 @@ namespace Test
       while (this.index < this.endPos)
       {
         char c = this.jstring[this.index++];
-        if (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+        if (c is not (char)0x20 and not (char)0x0a and not (char)0x0d and not (char)0x09)
         {
           return c;
         }
@@ -54,11 +53,11 @@ namespace Test
       int ep = this.endPos;
       string js = this.jstring;
       int idx = this.index;
-      var escaped = false;
+      bool escaped = false;
       while (true)
       {
         c = idx < ep ? js[idx++] & 0xffff : -1;
-        if (c == -1 || c < 0x20)
+        if (c is -1 or < 0x20)
         {
           this.index = idx;
           this.RaiseError("Unterminated string");
@@ -67,15 +66,10 @@ namespace Test
         {
           int endIndex = idx;
           this.index = idx;
-          if (escaped)
-          {
-            return CBORObject.FromJSONString(js.Substring(
-                  startIndex - 1,
-                  endIndex - (startIndex - 1)));
-          }
-          return
-            CBORObject.FromObject(js.Substring(startIndex,
-                (endIndex - 1) - startIndex));
+          return escaped
+            ? CBORObject.FromJSONString(js[
+                  (startIndex - 1)..endIndex])
+            : CBORObject.FromObject(js[startIndex..(endIndex - 1)]);
         }
         else if (c == '\\')
         {
@@ -96,14 +90,13 @@ namespace Test
       {
         c = this.index < this.endPos ? this.jstring[this.index++] &
           0xffff : -1;
-        if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-            c == 'e' || c == 'E'))
+        if (c is not ('-' or '+' or '.' or (>= '0' and <= '9') or
+            'e' or 'E'))
         {
           numberEndIndex = c < 0 ? this.index : this.index - 1;
           obj = CBORDataUtilities.ParseJSONNumber(
-              this.jstring.Substring(
-                numberStartIndex,
-                numberEndIndex - numberStartIndex),
+              this.jstring[
+                numberStartIndex..numberEndIndex],
               this.options);
           if (obj == null)
           {
@@ -114,19 +107,12 @@ namespace Test
       }
       c = numberEndIndex >= this.endPos ? -1 : this.jstring[numberEndIndex];
       // check if character can validly appear after a JSON number
-      if (c != ',' && c != ']' && c != '}' && c != -1 &&
-        c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)
+      if (c is not ',' and not ']' and not '}' and not -1 and
+        not 0x20 and not 0x0a and not 0x0d and not 0x09)
       {
         this.RaiseError("Invalid character after JSON number");
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09))
-      {
-        nextChar[0] = c;
-      }
-      else
-      {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c is -1 or (not 0x20 and not 0x0a and not 0x0d and not 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
@@ -271,7 +257,7 @@ namespace Test
       this.currPointerStackSize = 0;
       this.currPointer = new List<CBORObject>();
       this.index = index;
-      this.pointers = new List<string[]>();
+      this.Pointers = new List<string[]>();
       this.endPos = endPos;
       this.options = options;
     }
@@ -299,33 +285,23 @@ namespace Test
     public static CBORObject FromJSONString(
       string jstring)
     {
-      if (jstring == null)
-      {
-        throw new ArgumentNullException(nameof(jstring));
-      }
-      return FromJSONString(jstring, JSONOptions.Default);
+      return jstring == null ? throw new ArgumentNullException(nameof(jstring)) : FromJSONString(jstring, JSONOptions.Default);
     }
 
     public static CBORObject FromJSONString(
       string jstring,
       JSONOptions options)
     {
-      if (jstring == null)
-      {
-        throw new ArgumentNullException(nameof(jstring));
-      }
-      return ParseJSONValue(jstring, 0, jstring.Length, options);
+      return jstring == null ? throw new ArgumentNullException(nameof(jstring)) : ParseJSONValue(jstring, 0, jstring.Length, options);
     }
 
     public static CBORObject FromJSONStringWithPointers(
       string jstring,
       IDictionary<string, string> valpointers)
     {
-      if (jstring == null)
-      {
-        throw new ArgumentNullException(nameof(jstring));
-      }
-      return FromJSONStringWithPointers(
+      return jstring == null
+        ? throw new ArgumentNullException(nameof(jstring))
+        : FromJSONStringWithPointers(
           jstring,
           JSONOptions.Default,
           valpointers);
@@ -336,11 +312,9 @@ namespace Test
       JSONOptions options,
       IDictionary<string, string> valpointers)
     {
-      if (jstring == null)
-      {
-        throw new ArgumentNullException(nameof(jstring));
-      }
-      return ParseJSONValueWithPointers(
+      return jstring == null
+        ? throw new ArgumentNullException(nameof(jstring))
+        : ParseJSONValueWithPointers(
           jstring,
           0,
           jstring.Length,
@@ -348,13 +322,7 @@ namespace Test
           valpointers);
     }
 
-    internal IList<string[]> Pointers
-    {
-      get
-      {
-        return this.pointers;
-      }
-    }
+    internal IList<string[]> Pointers { get; }
 
     internal static CBORObject ParseJSONValueWithPointers(
       string jstring,
@@ -364,7 +332,7 @@ namespace Test
       IDictionary<string, string> valpointers)
     {
       // Parse nonstandard comments before JSON keys
-      var hasHash = false;
+      bool hasHash = false;
       int i;
       for (i = index; i < endPos; ++i)
       {
@@ -381,7 +349,7 @@ namespace Test
       {
         return CBORObject.FromJSONString(jstring, index, endPos, options);
       }
-      var nextchar = new int[1];
+      int[] nextchar = new int[1];
       var cj = new JSONWithComments(jstring, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
       if (nextchar[0] != -1)
@@ -408,7 +376,7 @@ namespace Test
       JSONOptions options)
     {
       // Parse nonstandard comments before JSON keys
-      var hasHash = false;
+      bool hasHash = false;
       int i;
       for (i = index; i < endPos; ++i)
       {
@@ -425,7 +393,7 @@ namespace Test
       {
         return CBORObject.FromJSONString(jstring, index, endPos, options);
       }
-      var nextchar = new int[1];
+      int[] nextchar = new int[1];
       var cj = new JSONWithComments(jstring, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
       if (nextchar[0] != -1)
@@ -446,7 +414,7 @@ namespace Test
       while (this.index < this.endPos)
       {
         int c = this.jstring[this.index++];
-        if (c != 0x0d && c != 0x09 && c != 0x20)
+        if (c is not 0x0d and not 0x09 and not 0x20)
         {
           --this.index;
           break;
@@ -467,12 +435,12 @@ namespace Test
         {
           this.index += 2;
         }
-        if (c == 0x0d || c == 0x09 || c == 0x20)
+        if (c is 0x0d or 0x09 or 0x20)
         {
           while (this.index < this.endPos)
           {
             c = this.jstring[this.index++];
-            if (c != 0x0d && c != 0x09 && c != 0x20)
+            if (c is not 0x0d and not 0x09 and not 0x20)
             {
               --this.index;
               break;
@@ -510,7 +478,7 @@ namespace Test
     private string GetJSONPointer()
     {
       var sb = new StringBuilder();
-      for (var i = 0; i < this.currPointerStackSize; ++i)
+      for (int i = 0; i < this.currPointerStackSize; ++i)
       {
         CBORObject obj = this.currPointer[i];
         if (obj.Type == CBORType.Integer)
@@ -522,20 +490,9 @@ namespace Test
         {
           _ = sb.Append("/");
           string str = obj.AsString();
-          for (var j = 0; j < str.Length; ++j)
+          for (int j = 0; j < str.Length; ++j)
           {
-            if (str[j] == '/')
-            {
-              _ = sb.Append("~1");
-            }
-            else if (str[j] == '~')
-            {
-              _ = sb.Append("~0");
-            }
-            else
-            {
-              _ = sb.Append(str[j]);
-            }
+            _ = str[j] == '/' ? sb.Append("~1") : str[j] == '~' ? sb.Append("~0") : sb.Append(str[j]);
           }
         }
         else
@@ -556,8 +513,8 @@ namespace Test
       int c;
       CBORObject key = null;
       CBORObject obj;
-      var nextchar = new int[1];
-      var seenComma = false;
+      int[] nextchar = new int[1];
+      bool seenComma = false;
       var myHashMap = new SortedDictionary<CBORObject, CBORObject>();
       this.PushPointer();
       string commentKey = null;
@@ -593,7 +550,7 @@ namespace Test
             if (commentKey != null)
             {
               string[] keyptr = { commentKey, this.GetJSONPointer() };
-              this.pointers.Add(keyptr);
+              this.Pointers.Add(keyptr);
             }
             this.PopPointer();
             return CBORObject.FromObject(myHashMap);
@@ -644,7 +601,7 @@ namespace Test
             if (commentKey != null)
             {
               string[] keyptr = { commentKey, this.GetJSONPointer() };
-              this.pointers.Add(keyptr);
+              this.Pointers.Add(keyptr);
             }
             return CBORObject.FromObject(myHashMap);
           default:
@@ -692,9 +649,9 @@ namespace Test
         this.RaiseError("Too deeply nested");
       }
       long arrayIndex = 0;
-      CBORObject myArrayList = CBORObject.NewArray();
-      var seenComma = false;
-      var nextchar = new int[1];
+      var myArrayList = CBORObject.NewArray();
+      bool seenComma = false;
+      int[] nextchar = new int[1];
       this.PushPointer();
       while (true)
       {

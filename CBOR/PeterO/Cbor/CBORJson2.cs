@@ -6,10 +6,10 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using PeterO.Numbers;
 
 namespace PeterO.Cbor
 {
@@ -38,8 +38,8 @@ namespace PeterO.Cbor
     private readonly byte[] bytes;
     private readonly JSONOptions options;
     private int index;
-    private int endPos;
-    private static byte[] valueEmptyBytes = new byte[0];
+    private readonly int endPos;
+    private static readonly byte[] ValueEmptyBytes = new byte[0];
 
     private byte[] NextJSONString()
     {
@@ -66,12 +66,12 @@ namespace PeterO.Cbor
         }
         else if (c == 0x22)
         {
-          int isize = (this.index - startIndex) - 1;
+          int isize = this.index - startIndex - 1;
           if (isize == 0)
           {
-            return valueEmptyBytes;
+            return ValueEmptyBytes;
           }
-          var buf = new byte[isize];
+          byte[] buf = new byte[isize];
           Array.Copy(jbytes, startIndex, buf, 0, isize);
           return buf;
         }
@@ -210,7 +210,7 @@ namespace PeterO.Cbor
                   { // Unicode escape
                     c = 0;
                     // Consists of 4 hex digits
-                    for (var i = 0; i < 4; ++i)
+                    for (int i = 0; i < 4; ++i)
                     {
                       int ch = this.index < this.endPos ?
                         jbytes[this.index++] : -1;
@@ -270,8 +270,8 @@ namespace PeterO.Cbor
                         this.RaiseError("Invalid escaped character");
                       }
                       this.index += 2;
-                      var c2 = 0;
-                      for (var i = 0; i < 4; ++i)
+                      int c2 = 0;
+                      for (int i = 0; i < 4; ++i)
                       {
                         ch = this.index < this.endPos ?
                           jbytes[this.index++] & 0xff : -1;
@@ -438,25 +438,18 @@ namespace PeterO.Cbor
            numberStartIndex,
            numberEndIndex - numberStartIndex)) != 0)
         {
-          this.RaiseError(String.Empty + obj);
+          this.RaiseError(string.Empty + obj);
         }
 #endif
         if (obj == null)
         {
-          string errstr = String.Empty;
+          string errstr = string.Empty;
           // errstr = (str.Length <= 100) ? str : (str.Substring(0,
           // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
         }
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09))
-      {
-        nextChar[0] = c;
-      }
-      else
-      {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
@@ -467,7 +460,7 @@ namespace PeterO.Cbor
       int cval = c - '0';
       int cstart = c;
       int startIndex = this.index - 1;
-      var needObj = true;
+      bool needObj = true;
       int numberStartIndex = this.index - 1;
       c = this.index < this.endPos ? this.bytes[this.index++] &
         0xff : -1;
@@ -492,8 +485,8 @@ namespace PeterO.Cbor
           0xff : -1;
         if (c >= '0' && c <= '9')
         {
-          var digits = 2;
-          while (digits < 9 && (c >= '0' && c <= '9'))
+          int digits = 2;
+          while (digits < 9 && c >= '0' && c <= '9')
           {
             cval = (cval * 10) + (c - '0');
             c = this.index < this.endPos ?
@@ -511,7 +504,7 @@ namespace PeterO.Cbor
   typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
 0)
             {
-              this.RaiseError(String.Empty + obj);
+              this.RaiseError(string.Empty + obj);
             }
 #endif
             needObj = false;
@@ -529,7 +522,7 @@ namespace PeterO.Cbor
   typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
 0)
           {
-            this.RaiseError(String.Empty + obj);
+            this.RaiseError(string.Empty + obj);
           }
 #endif
           needObj = false;
@@ -563,12 +556,12 @@ namespace PeterO.Cbor
            numberStartIndex,
            numberEndIndex - numberStartIndex)) != 0)
         {
-          this.RaiseError(String.Empty + obj);
+          this.RaiseError(string.Empty + obj);
         }
 #endif
         if (obj == null)
         {
-          string errstr = String.Empty;
+          string errstr = string.Empty;
           // errstr = (str.Length <= 100) ? str : (str.Substring(0,
           // 100) + "...");
           this.RaiseError("JSON number can't be parsed. " + errstr);
@@ -583,14 +576,7 @@ namespace PeterO.Cbor
           this.RaiseError("Invalid character after JSON number");
         }
       }
-      if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09))
-      {
-        nextChar[0] = c;
-      }
-      else
-      {
-        nextChar[0] = this.SkipWhitespaceJSON();
-      }
+      nextChar[0] = c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09) ? c : this.SkipWhitespaceJSON();
       return obj;
     }
 
@@ -767,7 +753,7 @@ namespace PeterO.Cbor
       int endPos,
       JSONOptions options)
     {
-      var nextchar = new int[1];
+      int[] nextchar = new int[1];
       var cj = new CBORJson2(bytes, index, endPos, options);
       CBORObject obj = cj.ParseJSON(nextchar);
       if (nextchar[0] != -1)
@@ -830,8 +816,8 @@ namespace PeterO.Cbor
       int c;
       CBORObject key = null;
       CBORObject obj;
-      var nextchar = new int[1];
-      var seenComma = false;
+      int[] nextchar = new int[1];
+      bool seenComma = false;
       IDictionary<CBORObject, CBORObject> myHashMap =
 this.options.KeepKeyOrder ? PropertyMap.NewOrderedDict() : new
 SortedDictionary<CBORObject, CBORObject>();
@@ -912,8 +898,8 @@ SortedDictionary<CBORObject, CBORObject>();
         this.RaiseError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();
-      var seenComma = false;
-      var nextchar = new int[1];
+      bool seenComma = false;
+      int[] nextchar = new int[1];
       while (true)
       {
         int c = this.SkipWhitespaceJSON();

@@ -76,7 +76,7 @@ namespace PeterO.Cbor
     }
 
     private readonly JSONOptions options;
-    private CharacterInputWithCount reader;
+    private readonly CharacterInputWithCount reader;
     private StringBuilder sb;
     private bool jsonSequenceMode;
     private bool recordSeparatorSeen;
@@ -124,7 +124,7 @@ namespace PeterO.Cbor
                 { // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
-                  for (var i = 0; i < 4; ++i)
+                  for (int i = 0; i < 4; ++i)
                   {
                     int ch = this.ReadChar();
                     if (ch >= '0' && ch <= '9')
@@ -160,8 +160,8 @@ namespace PeterO.Cbor
                     {
                       this.RaiseError("Invalid escaped character");
                     }
-                    var c2 = 0;
-                    for (var i = 0; i < 4; ++i)
+                    int c2 = 0;
+                    for (int i = 0; i < 4; ++i)
                     {
                       ch = this.ReadChar();
                       if (ch >= '0' && ch <= '9')
@@ -251,8 +251,8 @@ namespace PeterO.Cbor
       _ = this.sb.Remove(0, this.sb.Length);
       _ = this.sb.Append('-');
       _ = this.sb.Append((char)cstart);
-      var charbuf = new char[32];
-      var charbufptr = 0;
+      char[] charbuf = new char[32];
+      int charbufptr = 0;
       while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
         c == 'e' || c == 'E')
       {
@@ -435,7 +435,7 @@ namespace PeterO.Cbor
             // Parse a nonnegative number
             int cval = c - '0';
             int cstart = c;
-            var needObj = true;
+            bool needObj = true;
             c = this.ReadChar();
             if (!(c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
                 c == 'e' || c == 'E'))
@@ -457,11 +457,11 @@ namespace PeterO.Cbor
               c = this.ReadChar();
               if (c >= '0' && c <= '9')
               {
-                var digits = 2;
-                var ctmp = new int[10];
+                int digits = 2;
+                int[] ctmp = new int[10];
                 ctmp[0] = cstart;
                 ctmp[1] = csecond;
-                while (digits < 9 && (c >= '0' && c <= '9'))
+                while (digits < 9 && c >= '0' && c <= '9')
                 {
                   cval = (cval * 10) + (c - '0');
                   ctmp[digits++] = c;
@@ -472,7 +472,7 @@ namespace PeterO.Cbor
                   // Not an all-digit number, or too long
                   this.sb = this.sb ?? new StringBuilder();
                   _ = this.sb.Remove(0, this.sb.Length);
-                  for (var vi = 0; vi < digits; ++vi)
+                  for (int vi = 0; vi < digits; ++vi)
                   {
                     _ = this.sb.Append((char)ctmp[vi]);
                   }
@@ -507,8 +507,8 @@ namespace PeterO.Cbor
             }
             if (needObj)
             {
-              var charbuf = new char[32];
-              var charbufptr = 0;
+              char[] charbuf = new char[32];
+              int charbufptr = 0;
               while (
                 c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
                 c == 'e' || c == 'E')
@@ -728,8 +728,8 @@ namespace PeterO.Cbor
       int c;
       CBORObject key = null;
       CBORObject obj;
-      var nextChar = new int[1];
-      var seenComma = false;
+      int[] nextChar = new int[1];
+      bool seenComma = false;
       IDictionary<CBORObject, CBORObject> myHashMap =
 this.options.KeepKeyOrder ? PropertyMap.NewOrderedDict() : new
 SortedDictionary<CBORObject, CBORObject>();
@@ -810,8 +810,8 @@ SortedDictionary<CBORObject, CBORObject>();
         this.RaiseError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();
-      var seenComma = false;
-      var nextChar = new int[1];
+      bool seenComma = false;
+      int[] nextChar = new int[1];
       while (true)
       {
         int c = this.SkipWhitespaceJSON();

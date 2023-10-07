@@ -1,5 +1,5 @@
-using System;
 using PeterO;
+using System;
 
 namespace Test
 {
@@ -8,36 +8,29 @@ namespace Test
     private sealed class ByteWriter
     {
       private byte[] bytes = new byte[64];
-      private int pos;
 
       public ByteWriter Write(int b)
       {
-        if (this.pos < this.bytes.Length)
+        if (this.ByteLength < this.bytes.Length)
         {
-          this.bytes[this.pos++] = (byte)b;
+          this.bytes[this.ByteLength++] = (byte)b;
         }
         else
         {
-          var newbytes = new byte[this.bytes.Length * 2];
+          byte[] newbytes = new byte[this.bytes.Length * 2];
           Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
           this.bytes = newbytes;
-          this.bytes[this.pos++] = (byte)b;
+          this.bytes[this.ByteLength++] = (byte)b;
         }
         return this;
       }
 
-      public int ByteLength
-      {
-        get
-        {
-          return this.pos;
-        }
-      }
+      public int ByteLength { get; private set; }
 
       public byte[] ToBytes()
       {
-        var newbytes = new byte[this.pos];
-        Array.Copy(this.bytes, 0, newbytes, 0, this.pos);
+        byte[] newbytes = new byte[this.ByteLength];
+        Array.Copy(this.bytes, 0, newbytes, 0, this.ByteLength);
         return newbytes;
       }
     }
@@ -48,7 +41,7 @@ namespace Test
       int len,
       ByteWriter bs)
     {
-      var maxArg = 4;
+      int maxArg = 4;
       int minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 :
           ((len <= 0xffff) ? 2 : 3));
       int arg = minArg + r.GetInt32(maxArg - minArg + 1);
@@ -96,19 +89,19 @@ namespace Test
       }
     }
 
-    private static int[]
-    valueMajorTypes = {
+    private static readonly int[]
+    ValueMajorTypes = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4,
       4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7,
     };
 
-    private static int[]
-    valueMajorTypesHighDepth = {
+    private static readonly int[]
+    ValueMajorTypesHighDepth = {
       0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
       5, 5, 5, 5, 5, 5, 6, 7,
     };
 
-    private static int[] valueMajorTypesHighLength = {
+    private static readonly int[] ValueMajorTypesHighLength = {
       0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 6,
       6, 7, 7, 7, 7, 7, 7,
     };
@@ -129,7 +122,7 @@ namespace Test
           r = ra.GetInt32(3);
           if (r == 0 && length - i >= 2)
           {
-            r = 0xc2 + ra.GetInt32((0xdf - 0xc2) + 1);
+            r = 0xc2 + ra.GetInt32(0xdf - 0xc2 + 1);
             _ = bs.Write(r);
             _ = bs.Write(0x80 + ra.GetInt32(0x40));
             i += 2;
@@ -140,7 +133,7 @@ namespace Test
             _ = bs.Write(r);
             int lower = (r == 0xe0) ? 0xa0 : 0x80;
             int upper = (r == 0xed) ? 0x9f : 0xbf;
-            r = lower + ra.GetInt32((upper - lower) + 1);
+            r = lower + ra.GetInt32(upper - lower + 1);
             _ = bs.Write(r);
             _ = bs.Write(0x80 + ra.GetInt32(0x40));
             i += 3;
@@ -151,7 +144,7 @@ namespace Test
             _ = bs.Write(r);
             int lower = (r == 0xf0) ? 0x90 : 0x80;
             int upper = (r == 0xf4) ? 0x8f : 0xbf;
-            r = lower + ra.GetInt32((upper - lower) + 1);
+            r = lower + ra.GetInt32(upper - lower + 1);
             _ = bs.Write(r);
             _ = bs.Write(0x80 + ra.GetInt32(0x40));
             _ = bs.Write(0x80 + ra.GetInt32(0x40));
@@ -202,23 +195,23 @@ namespace Test
     }
     private void Generate(IRandomGenExtended r, int depth, ByteWriter bs)
     {
-      int majorType = valueMajorTypes[r.GetInt32(valueMajorTypes.Length)];
+      int majorType = ValueMajorTypes[r.GetInt32(ValueMajorTypes.Length)];
       if (depth > 6)
       {
-        majorType = valueMajorTypesHighDepth[r.GetInt32(
-              valueMajorTypesHighDepth.Length)];
+        majorType = ValueMajorTypesHighDepth[r.GetInt32(
+              ValueMajorTypesHighDepth.Length)];
       }
       if (bs.ByteLength > 2000000)
       {
-        majorType = valueMajorTypesHighLength[r.GetInt32(
-              valueMajorTypesHighLength.Length)];
+        majorType = ValueMajorTypesHighLength[r.GetInt32(
+              ValueMajorTypesHighLength.Length)];
       }
-      if (majorType == 3 || majorType == 2)
+      if (majorType is 3 or 2)
       { // Byte and text strings
         int len = r.GetInt32(1000);
         if (r.GetInt32(50) == 0 && depth < 2)
         {
-          var v = (long)r.GetInt32(100000) * r.GetInt32(100000);
+          long v = (long)r.GetInt32(100000) * r.GetInt32(100000);
           len = (int)(v / 100000);
         }
         else if (depth > 6)
@@ -271,12 +264,12 @@ namespace Test
         }
         return;
       }
-      else if (majorType == 4 || majorType == 5)
+      else if (majorType is 4 or 5)
       { // Arrays and maps
         int len = r.GetInt32(8);
         if (r.GetInt32(50) == 0 && depth < 2)
         {
-          var v = (long)r.GetInt32(1000) * r.GetInt32(1000);
+          long v = (long)r.GetInt32(1000) * r.GetInt32(1000);
           len = (int)(v / 1000);
         }
         else if (depth > 6)
@@ -329,14 +322,7 @@ namespace Test
           break;
         case 1:
           _ = bs.Write((majorType * 0x20) + 0x18);
-          if (majorType == 7)
-          {
-            _ = bs.Write(32 + r.GetInt32(224));
-          }
-          else
-          {
-            _ = bs.Write(r.GetInt32(256));
-          }
+          _ = majorType == 7 ? bs.Write(32 + r.GetInt32(224)) : bs.Write(r.GetInt32(256));
           break;
         case 2:
           _ = bs.Write((majorType * 0x20) + 0x19);

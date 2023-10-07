@@ -6,9 +6,9 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
-using PeterO.Numbers;
 
 namespace PeterO.Cbor
 {
@@ -63,7 +63,7 @@ namespace PeterO.Cbor
           ") is less than " + "0 ");
       }
 #endif
-      var addStr = false;
+      bool addStr = false;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (lastList.Count < 24)
       {
@@ -96,12 +96,12 @@ namespace PeterO.Cbor
       {
         throw new CBORException("Unexpected index");
       }
-      if (smallIndex > Int32.MaxValue)
+      if (smallIndex > int.MaxValue)
       {
         throw new CBORException("Index " + smallIndex +
           " is bigger than supported ");
       }
-      var index = (int)smallIndex;
+      int index = (int)smallIndex;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (index >= lastList.Count)
       {
@@ -124,7 +124,7 @@ namespace PeterO.Cbor
         throw new CBORException("Index " + bigIndex +
           " is bigger than supported ");
       }
-      var index = (int)bigIndex;
+      int index = (int)bigIndex;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (index >= lastList.Count)
       {

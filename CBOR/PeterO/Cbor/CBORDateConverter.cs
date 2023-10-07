@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -26,8 +26,6 @@ namespace PeterO.Cbor
   public sealed partial class CBORDateConverter :
 ICBORToFromConverter<DateTime>
   {
-    private readonly ConversionType convType;
-
     /// <summary>A converter object where FromCBORObject accepts CBOR
     /// objects with tag 0 (date/time strings) and tag 1 (number of seconds
     /// since the start of 1970), and ToCBORObject converts date/time
@@ -108,13 +106,7 @@ ICBORToFromConverter<DateTime>
     /// <summary>Gets the conversion type for this date
     /// converter.</summary>
     /// <value>The conversion type for this date converter.</value>
-    public ConversionType Type
-    {
-      get
-      {
-        return this.convType;
-      }
-    }
+    public ConversionType Type { get; }
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
@@ -122,14 +114,14 @@ ICBORToFromConverter<DateTime>
     /// converting dates and times to and from CBOR objects.</param>
     public CBORDateConverter(ConversionType convType)
     {
-      this.convType = convType;
+      this.Type = convType;
     }
 
     private static string DateTimeToString(DateTime bi)
     {
       try
       {
-        var lesserFields = new int[7];
+        int[] lesserFields = new int[7];
         var outYear = new EInteger[1];
         PropertyMap.BreakDownDateTime(bi, outYear, lesserFields);
         return CBORUtilities.ToAtomDateTimeString(outYear[0], lesserFields);
@@ -158,17 +150,13 @@ ICBORToFromConverter<DateTime>
       {
         throw new ArgumentNullException(nameof(obj));
       }
-      var lesserFields = new int[7];
+      int[] lesserFields = new int[7];
       var outYear = new EInteger[1];
       string str = this.TryGetDateTimeFieldsInternal(
           obj,
           outYear,
           lesserFields);
-      if (str == null)
-      {
-        return PropertyMap.BuildUpDateTime(outYear[0], lesserFields);
-      }
-      throw new CBORException(str);
+      return str == null ? PropertyMap.BuildUpDateTime(outYear[0], lesserFields) : throw new CBORException(str);
     }
 
     /// <summary>Tries to extract the fields of a date and time in the form
@@ -240,7 +228,7 @@ ICBORToFromConverter<DateTime>
       {
         // An error string was returned
         outYear[0] = null;
-        for (var i = 0; i < 7; ++i)
+        for (int i = 0; i < 7; ++i)
         {
           lesserFields[i] = 0;
         }
@@ -276,7 +264,7 @@ ICBORToFromConverter<DateTime>
         throw new ArgumentException("\"lesserFields\" + \"'s length\" (" +
           lesserFields.Length + ") is not greater or equal to 7");
       }
-      if (this.convType == ConversionType.UntaggedNumber)
+      if (this.Type == ConversionType.UntaggedNumber)
       {
         if (obj.IsTagged)
         {
@@ -292,8 +280,8 @@ ICBORToFromConverter<DateTime>
         {
           return "Not a finite number";
         }
-        if (num.CompareTo(Int64.MinValue) < 0 ||
-          num.CompareTo(Int64.MaxValue) > 0)
+        if (num.CompareTo(long.MinValue) < 0 ||
+          num.CompareTo(long.MaxValue) > 0)
         {
           return "Too big or small to fit a DateTime";
         }
@@ -471,7 +459,7 @@ ICBORToFromConverter<DateTime>
       try
       {
         CBORUtilities.CheckYearAndLesserFields(bigYear, lesserFields);
-        switch (this.convType)
+        switch (this.Type)
         {
           case ConversionType.TaggedString:
             {
@@ -483,29 +471,22 @@ ICBORToFromConverter<DateTime>
           case ConversionType.UntaggedNumber:
             try
             {
-              var status = new int[1];
+              int[] status = new int[1];
               EFloat ef = CBORUtilities.DateTimeToIntegerOrDouble(
                   bigYear,
                   lesserFields,
                   status);
-              if (status[0] == 0)
-              {
-                return this.convType == ConversionType.TaggedNumber ?
+              return status[0] == 0
+                ? this.Type == ConversionType.TaggedNumber ?
                   CBORObject.FromObjectAndTag(ef.ToEInteger(), 1) :
-                  CBORObject.FromObject(ef.ToEInteger());
-              }
-              else if (status[0] == 1)
-              {
-                return this.convType == ConversionType.TaggedNumber ?
-                  CBORObject.FromFloatingPointBits(ef.ToDoubleBits(),
-  8).WithTag(1) : CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8);
-              }
-              else
-              {
-                throw new CBORException("Too big or small to fit an integer" +
-"\u0020or" +
-                  "\u0020floating-point number");
-              }
+                  CBORObject.FromObject(ef.ToEInteger())
+                : status[0] == 1
+                  ? this.Type == ConversionType.TaggedNumber ?
+                                  CBORObject.FromFloatingPointBits(ef.ToDoubleBits(),
+                  8).WithTag(1) : CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)
+                  : throw new CBORException("Too big or small to fit an integer" +
+                "\u0020or" +
+                                  "\u0020floating-point number");
             }
             catch (ArgumentException ex)
             {
@@ -535,7 +516,7 @@ ICBORToFromConverter<DateTime>
     {
       try
       {
-        var lesserFields = new int[7];
+        int[] lesserFields = new int[7];
         var outYear = new EInteger[1];
         PropertyMap.BreakDownDateTime(obj, outYear, lesserFields);
         return this.DateTimeFieldsToCBORObject(outYear[0], lesserFields);

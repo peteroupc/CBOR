@@ -77,11 +77,7 @@ namespace PeterO.Cbor
     [CLSCompliant(false)]
     public sbyte ToSByteChecked()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      return this.ToEInteger().ToSByteChecked();
+      return !this.IsFinite() ? throw new OverflowException("Value is infinity or NaN") : this.ToEInteger().ToSByteChecked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -105,11 +101,9 @@ namespace PeterO.Cbor
     [CLSCompliant(false)]
     public sbyte ToSByteIfExact()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      return this.IsZero() ? ((sbyte)0) :
+      return !this.IsFinite()
+        ? throw new OverflowException("Value is infinity or NaN")
+        : this.IsZero() ? ((sbyte)0) :
 this.ToEIntegerIfExact().ToSByteChecked();
     }
 
@@ -125,11 +119,7 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public ushort ToUInt16Checked()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      return this.ToEInteger().ToUInt16Checked();
+      return !this.IsFinite() ? throw new OverflowException("Value is infinity or NaN") : this.ToEInteger().ToUInt16Checked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -155,19 +145,9 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public ushort ToUInt16IfExact()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      if (this.IsZero())
-      {
-        return 0;
-      }
-      if (this.IsNegative())
-      {
-        throw new OverflowException("Value out of range");
-      }
-      return this.ToEIntegerIfExact().ToUInt16Checked();
+      return !this.IsFinite()
+        ? throw new OverflowException("Value is infinity or NaN")
+        : this.IsZero() ? (ushort)0 : this.IsNegative() ? throw new OverflowException("Value out of range") : this.ToEIntegerIfExact().ToUInt16Checked();
     }
 
     /// <summary>Converts this number's value to a 32-bit signed integer if
@@ -182,11 +162,7 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public uint ToUInt32Checked()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      return this.ToEInteger().ToUInt32Checked();
+      return !this.IsFinite() ? throw new OverflowException("Value is infinity or NaN") : this.ToEInteger().ToUInt32Checked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -210,19 +186,9 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public uint ToUInt32IfExact()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      if (this.IsZero())
-      {
-        return 0U;
-      }
-      if (this.IsNegative())
-      {
-        throw new OverflowException("Value out of range");
-      }
-      return this.ToEIntegerIfExact().ToUInt32Checked();
+      return !this.IsFinite()
+        ? throw new OverflowException("Value is infinity or NaN")
+        : this.IsZero() ? 0U : this.IsNegative() ? throw new OverflowException("Value out of range") : this.ToEIntegerIfExact().ToUInt32Checked();
     }
 
     /// <summary>Converts this number's value to a 64-bit unsigned integer
@@ -237,11 +203,7 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public ulong ToUInt64Checked()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      return this.ToEInteger().ToUInt64Checked();
+      return !this.IsFinite() ? throw new OverflowException("Value is infinity or NaN") : this.ToEInteger().ToUInt64Checked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -266,19 +228,9 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public ulong ToUInt64IfExact()
     {
-      if (!this.IsFinite())
-      {
-        throw new OverflowException("Value is infinity or NaN");
-      }
-      if (this.IsZero())
-      {
-        return 0UL;
-      }
-      if (this.IsNegative())
-      {
-        throw new OverflowException("Value out of range");
-      }
-      return this.ToEIntegerIfExact().ToUInt64Checked();
+      return !this.IsFinite()
+        ? throw new OverflowException("Value is infinity or NaN")
+        : this.IsZero() ? 0UL : this.IsNegative() ? throw new OverflowException("Value out of range") : this.ToEIntegerIfExact().ToUInt64Checked();
     }
   }
 }

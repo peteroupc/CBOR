@@ -31,13 +31,7 @@ namespace Test
     }
 
     /// <inheritdoc/>
-    public override long Length
-    {
-      get
-      {
-        return this.ms.Length;
-      }
-    }
+    public override long Length => this.ms.Length;
 
     /// <inheritdoc/>
     public override long Seek(long pos, SeekOrigin origin)
@@ -58,43 +52,19 @@ namespace Test
     /// <inheritdoc/>
     public override long Position
     {
-      get
-      {
-        return this.ms.Position;
-      }
+      get => this.ms.Position;
 
-      set
-      {
-        throw new NotSupportedException();
-      }
+      set => throw new NotSupportedException();
     }
 
     /// <inheritdoc/>
-    public override bool CanRead
-    {
-      get
-      {
-        return false;
-      }
-    }
+    public override bool CanRead => false;
 
     /// <inheritdoc/>
-    public override bool CanSeek
-    {
-      get
-      {
-        return false;
-      }
-    }
+    public override bool CanSeek => false;
 
     /// <inheritdoc/>
-    public override bool CanWrite
-    {
-      get
-      {
-        return this.ms.CanWrite;
-      }
-    }
+    public override bool CanWrite => this.ms.CanWrite;
 
     /// <inheritdoc/>
     public override int Read(byte[] bytes, int offset, int count)

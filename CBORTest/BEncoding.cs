@@ -6,12 +6,12 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Cbor;
+using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using PeterO.Cbor;
-using PeterO.Numbers;
 
 namespace PeterO
 {
@@ -34,7 +34,7 @@ namespace PeterO
 
     private static CBORObject ReadDictionary(Stream stream)
     {
-      CBORObject obj = CBORObject.NewMap();
+      var obj = CBORObject.NewMap();
       while (true)
       {
         int c = stream.ReadByte();
@@ -52,7 +52,7 @@ namespace PeterO
     private static CBORObject ReadInteger(Stream stream)
     {
       var builder = new StringBuilder();
-      var start = true;
+      bool start = true;
       while (true)
       {
         int c = stream.ReadByte();
@@ -60,7 +60,7 @@ namespace PeterO
         {
           throw new CBORException("Premature end of data");
         }
-        if (c >= '0' && c <= '9')
+        if (c is >= '0' and <= '9')
         {
           _ = builder.Append((char)c);
           start = false;
@@ -80,21 +80,17 @@ namespace PeterO
         }
       }
       string s = builder.ToString();
-      if (s.Length >= 2 && s[0] == '0' && s[1] == '0')
-      {
-        throw new CBORException("Invalid integer encoding");
-      }
-      if (s.Length >= 3 && s[0] == '-' && s[1] == '0' && s[2] == '0')
-      {
-        throw new CBORException("Invalid integer encoding");
-      }
-      return CBORObject.FromObject(
+      return s.Length >= 2 && s[0] == '0' && s[1] == '0'
+        ? throw new CBORException("Invalid integer encoding")
+        : s.Length >= 3 && s[0] == '-' && s[1] == '0' && s[2] == '0'
+        ? throw new CBORException("Invalid integer encoding")
+        : CBORObject.FromObject(
           EInteger.FromString(s));
     }
 
     private static CBORObject ReadList(Stream stream)
     {
-      CBORObject obj = CBORObject.NewArray();
+      var obj = CBORObject.NewArray();
       while (true)
       {
         CBORObject o = ReadObject(stream, true);
@@ -109,11 +105,7 @@ namespace PeterO
 
     public static CBORObject Read(Stream stream)
     {
-      if (stream == null)
-      {
-        throw new ArgumentNullException(nameof(stream));
-      }
-      return ReadObject(stream, false);
+      return stream == null ? throw new ArgumentNullException(nameof(stream)) : ReadObject(stream, false);
     }
 
     private static CBORObject ReadObject(Stream stream, bool allowEnd)
@@ -123,45 +115,31 @@ namespace PeterO
       {
         return ReadDictionary(stream);
       }
-      if (c == 'l')
-      {
-        return ReadList(stream);
-      }
-      if (allowEnd && c == 'e')
-      {
-        return null;
-      }
-      if (c == 'i')
-      {
-        return ReadInteger(stream);
-      }
-      if (c >= '0' && c <= '9')
-      {
-        return ReadString(stream, (char)c);
-      }
-      throw new CBORException("Object expected");
+      return c == 'l'
+        ? ReadList(stream)
+        : allowEnd && c == 'e'
+        ? null
+        : c == 'i'
+        ? ReadInteger(stream)
+        : c is >= '0' and <= '9' ? ReadString(stream, (char)c) : throw new CBORException("Object expected");
     }
 
     private const string ValueDigits = "0123456789";
 
     public static string LongToString(long longValue)
     {
-      if (longValue == Int64.MinValue)
-      {
-        return "-9223372036854775808";
-      }
-      if (longValue == 0L)
-      {
-        return "0";
-      }
-      return (longValue == int.MinValue) ? "-2147483648" :
+      return longValue == long.MinValue
+        ? "-9223372036854775808"
+        : longValue == 0L
+        ? "0"
+        : (longValue == int.MinValue) ? "-2147483648" :
 EInteger.FromInt64(longValue).ToString();
     }
 
     private static CBORObject ReadString(Stream stream, char firstChar)
     {
       var builder = new StringBuilder();
-      if (firstChar < '0' && firstChar > '9')
+      if (firstChar is < '0' and > '9')
       {
         throw new CBORException("Invalid integer encoding");
       }
@@ -173,7 +151,7 @@ EInteger.FromInt64(longValue).ToString();
         {
           throw new CBORException("Premature end of data");
         }
-        if (c >= '0' && c <= '9')
+        if (c is >= '0' and <= '9')
         {
           _ = builder.Append((char)c);
         }
@@ -191,24 +169,22 @@ EInteger.FromInt64(longValue).ToString();
       {
         throw new CBORException("Invalid integer encoding");
       }
-      EInteger numlength = EInteger.FromString(s);
+      var numlength = EInteger.FromString(s);
       if (!numlength.CanFitInInt32())
       {
         throw new CBORException("Length too long");
       }
       builder = new StringBuilder();
-      switch (DataUtilities.ReadUtf8(
+      return DataUtilities.ReadUtf8(
         stream,
         numlength.ToInt32Checked(),
         builder,
-        false))
+        false) switch
       {
-        case -2:
-          throw new CBORException("Premature end of data");
-        case -1:
-          throw new CBORException("Invalid UTF-8");
-      }
-      return CBORObject.FromObject(builder.ToString());
+        -2 => throw new CBORException("Premature end of data"),
+        -1 => throw new CBORException("Invalid UTF-8"),
+        _ => CBORObject.FromObject(builder.ToString()),
+      };
     }
 
     public static void Write(CBORObject obj, Stream stream)
@@ -245,7 +221,7 @@ EInteger.FromInt64(longValue).ToString();
       }
       else if (obj.Type == CBORType.Map)
       {
-        var hasNonStringKeys = false;
+        bool hasNonStringKeys = false;
         foreach (CBORObject key in obj.Keys)
         {
           if (key.Type != CBORType.TextString)
@@ -256,7 +232,7 @@ EInteger.FromInt64(longValue).ToString();
         }
         if (hasNonStringKeys)
         {
-          var valueSMap = new Dictionary<String, CBORObject>();
+          var valueSMap = new Dictionary<string, CBORObject>();
           // Copy to a map with String keys, since
           // some keys could be duplicates
           // when serialized to strings
@@ -320,7 +296,7 @@ EInteger.FromInt64(longValue).ToString();
           throw new ArgumentNullException(nameof(stream));
         }
         stream.WriteByte(unchecked(0x6c));
-        for (var i = 0; i < obj.Count; ++i)
+        for (int i = 0; i < obj.Count; ++i)
         {
           Write(obj[i], stream);
         }

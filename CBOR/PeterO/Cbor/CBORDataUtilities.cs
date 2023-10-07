@@ -6,10 +6,10 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO.Numbers;
 
 namespace PeterO.Cbor
 {
@@ -121,7 +121,7 @@ namespace PeterO.Cbor
             _ = sb.Append("h'");
             byte[] data = obj.GetByteString();
             int length = data.Length;
-            for (var i = 0; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
               _ = sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
               _ = sb.Append(HexAlphabet[data[i] & 15]);
@@ -131,11 +131,11 @@ namespace PeterO.Cbor
           }
         case CBORType.TextString:
           {
-            sb = sb == null ? new StringBuilder() : sb;
+            sb = sb ?? new StringBuilder();
             _ = sb.Append('\"');
             string ostring = obj.AsString();
             int length = ostring.Length;
-            for (var i = 0; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
               int cp = DataUtilities.CodePointAt(ostring, i, 0);
               if (cp >= 0x10000)
@@ -169,7 +169,7 @@ namespace PeterO.Cbor
         case CBORType.Array:
           {
             sb = sb ?? new StringBuilder();
-            var first = true;
+            bool first = true;
             _ = sb.Append('[');
             if (depth >= 50)
             {
@@ -177,7 +177,7 @@ namespace PeterO.Cbor
             }
             else
             {
-              for (var i = 0; i < obj.Count; ++i)
+              for (int i = 0; i < obj.Count; ++i)
               {
                 if (!first)
                 {
@@ -193,7 +193,7 @@ namespace PeterO.Cbor
         case CBORType.Map:
           {
             sb = sb ?? new StringBuilder();
-            var first = true;
+            bool first = true;
             _ = sb.Append('{');
             if (depth >= 50)
             {
@@ -239,7 +239,7 @@ namespace PeterO.Cbor
     }
 
     internal static readonly JSONOptions DefaultOptions =
-      new JSONOptions(String.Empty);
+      new JSONOptions(string.Empty);
     private static readonly JSONOptions PreserveNegZeroNo =
       new JSONOptions("preservenegativezero=0");
     private static readonly JSONOptions PreserveNegZeroYes =
@@ -283,7 +283,7 @@ namespace PeterO.Cbor
       string str,
       JSONOptions options)
     {
-      return String.IsNullOrEmpty(str) ? null :
+      return string.IsNullOrEmpty(str) ? null :
         ParseJSONNumber(str,
           0,
           str.Length,
@@ -323,7 +323,7 @@ namespace PeterO.Cbor
       int offset,
       int count)
     {
-      return String.IsNullOrEmpty(str) ? null :
+      return string.IsNullOrEmpty(str) ? null :
         ParseJSONNumber(str,
           offset,
           count,

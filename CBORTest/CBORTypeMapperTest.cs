@@ -1,6 +1,6 @@
-using System;
 using NUnit.Framework;
 using PeterO.Cbor;
+using System;
 
 namespace Test
 {
@@ -23,11 +23,11 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
-        _ = tm.AddTypeName(String.Empty);
+        _ = tm.AddTypeName(string.Empty);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -37,7 +37,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -46,7 +46,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
     }
 
@@ -66,11 +66,11 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
-        _ = tm.AddTypePrefix(String.Empty);
+        _ = tm.AddTypePrefix(string.Empty);
         Assert.Fail("Should have failed");
       }
       catch (ArgumentException)
@@ -80,7 +80,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
       try
       {
@@ -89,7 +89,7 @@ namespace Test
       catch (Exception ex)
       {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
+        throw new InvalidOperationException(string.Empty, ex);
       }
     }
   }

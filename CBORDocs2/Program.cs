@@ -14,8 +14,8 @@ namespace CBORDocs
   {
     public static void Main(string[] args)
     {
-      if (args.Length < 2 || String.IsNullOrEmpty(args[0]) ||
-        String.IsNullOrEmpty(args[1]))
+      if (args.Length < 2 || string.IsNullOrEmpty(args[0]) ||
+        string.IsNullOrEmpty(args[1]))
       {
         Console.WriteLine("Usage: CBORDocs2 <dllfile> <docpath>");
         return;

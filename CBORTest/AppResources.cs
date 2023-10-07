@@ -1,6 +1,6 @@
+using PeterO.Cbor;
 using System.Reflection;
 using System.Resources;
-using PeterO.Cbor;
 
 namespace Test
 {

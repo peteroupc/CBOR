@@ -6,8 +6,8 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using System;
 using PeterO.Numbers;
+using System;
 
 namespace PeterO.Cbor
 {
@@ -74,13 +74,13 @@ namespace PeterO.Cbor
       }
       if (neg && b == (0x43eL << 52))
       {
-        return Int64.MinValue;
+        return long.MinValue;
       }
       if ((b >> 52) >= 0x43e)
       {
         throw new OverflowException("This object's value is out of range");
       }
-      var exp = (int)(b >> 52);
+      int exp = (int)(b >> 52);
       long mant = b & ((1L << 52) - 1);
       mant |= 1L << 52;
       int shift = 52 - (exp - 0x3ff);
@@ -148,7 +148,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
       {
         return (origbits >> 63) != 0 ? (1L << 63) : 0;
       }
-      var exp = (int)(bits >> 52);
+      int exp = (int)(bits >> 52);
       long mant = bits & ((1L << 52) - 1);
       int shift = 52 - (exp - 0x3ff);
       return ((mant >> shift) << shift) | (origbits & (0xfffL << 52));
@@ -208,7 +208,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
       {
         throw new OverflowException("This object's value is out of range");
       }
-      var exp = (int)(b >> 52);
+      int exp = (int)(b >> 52);
       long mant = b & ((1L << 52) - 1);
       mant |= 1L << 52;
       int shift = 52 - (exp - 0x3ff);
@@ -217,11 +217,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
       {
         mant = -mant;
       }
-      if (mant < minValue || mant > maxValue)
-      {
-        throw new OverflowException("This object's value is out of range");
-      }
-      return (int)mant;
+      return mant < minValue || mant > maxValue ? throw new OverflowException("This object's value is out of range") : (int)mant;
     }
 
     public bool IsNumberZero(object obj)
