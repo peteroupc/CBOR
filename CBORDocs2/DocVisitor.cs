@@ -369,10 +369,10 @@ builder.Append(property.Name);
     }
 
     public static string FormatTypeSig(Type typeInfo) {
+      bool isPublic = typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic;
       var builder = new StringBuilder();
       _ = builder.Append(FourSpaces);
-      _ = typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic ?
-builder.Append("public ") : builder.Append("internal ");
+      _ = isPublic ? builder.Append("public ") : builder.Append("internal ");
       if (typeInfo.IsAbstract && typeInfo.IsSealed) {
         _ = builder.Append("static ");
       } else if (typeInfo.IsAbstract && !typeInfo.IsInterface) {
