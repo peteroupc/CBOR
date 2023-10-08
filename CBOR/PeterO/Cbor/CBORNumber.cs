@@ -92,7 +92,7 @@ namespace PeterO.Cbor
 
     /// <summary>Converts this object's value to a CBOR object.</summary>
     /// <returns>A CBOR object that stores this object's value.</returns>
-    public CBORObject ToCBORObject()
+    public CBORObject ToCBORObject() // TODO: use a safe method to get this
     {
       return CBORObject.FromObject(this.value);
     }

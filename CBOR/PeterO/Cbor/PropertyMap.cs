@@ -587,7 +587,7 @@ namespace PeterO.Cbor
       return CBORUtilities.NameStartsWithWord(pn, "Is") ? pn.Substring(2) :
         pn;
     }
-
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static IList<PropertyData> GetPropertyList(Type t)
     {
       {
@@ -764,6 +764,7 @@ namespace PeterO.Cbor
       return ret;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromArray(
       object arrObj,
       PODOptions options,
@@ -846,6 +847,7 @@ namespace PeterO.Cbor
       ret[ilen] = obj;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static Array FillArray(
       Array arr,
       Type elementType,
@@ -1033,11 +1035,11 @@ namespace PeterO.Cbor
     }
 
     public static object FindOneArgumentMethod(
-      object obj,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type objType,
       string name,
       [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type argtype)
     {
-      return GetTypeMethod(obj.GetType(), name, argtype );
+      return GetTypeMethod(objType, name, argtype );
     }
 
     public static object InvokeOneArgumentMethod(
@@ -1100,7 +1102,7 @@ namespace PeterO.Cbor
       }
       throw new CBORException("Type not supported");
     }
-
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object TypeToObject(
       CBORObject objThis,
       [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
@@ -1358,7 +1360,7 @@ System.Collections.ObjectModel.ReadOnlyCollection<byte>(byteret);
         if (objThis.Type == CBORType.Array && genericListObject != null)
         {
           object addMethod = FindOneArgumentMethod(
-              genericListObject,
+              genericListObject.GetType(),
               "Add",
               objectType);
           if (addMethod == null)
@@ -1547,6 +1549,7 @@ typeof(
       return null;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object ObjectWithProperties(
       [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
       IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
@@ -1612,12 +1615,14 @@ typeof(
           obj);
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(
       object o)
     {
       return GetProperties(o, true);
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static IEnumerable<string> GetPropertyNames(Type t, bool
       useCamelCase)
     {
@@ -1627,6 +1632,7 @@ typeof(
       }
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(
       object o,
       bool useCamelCase)

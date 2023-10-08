@@ -8,6 +8,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using PeterO.Numbers;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor
 {
@@ -144,6 +145,7 @@ ICBORToFromConverter<DateTime>
     /// <exception cref='PeterO.Cbor.CBORException'>The format of the CBOR
     /// object is not supported, or another error occurred in
     /// conversion.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // TODO: fix this method and remove this annotation
     public DateTime FromCBORObject(CBORObject obj)
     {
       if (obj == null)
@@ -225,6 +227,7 @@ ICBORToFromConverter<DateTime>
       }
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private string TryGetDateTimeFieldsInternal(
       CBORObject obj,
       EInteger[] year,
