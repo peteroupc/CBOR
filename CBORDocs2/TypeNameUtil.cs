@@ -130,8 +130,8 @@ namespace PeterO.DocGen {
             }
             _ = msb.Append(XmlDocTypeName(
               p.ParameterType,
- true,
- genericMethod));
+              true,
+              genericMethod));
             first = false;
           }
           _ = msb.Append(')');

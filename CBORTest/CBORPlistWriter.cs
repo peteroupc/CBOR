@@ -329,8 +329,8 @@ namespace Test {
                       str = sb.ToString();
                       break;
                     }
-                    default: str = key.ToJSONString(options);
-                    break;
+                  default: str = key.ToJSONString(options);
+                  break;
                 }
                 if (stringMap.ContainsKey(str)) {
                   throw new CBORException(

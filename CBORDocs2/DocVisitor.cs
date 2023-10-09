@@ -800,7 +800,7 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
       } else if (info is PropertyInfo property) {
         return property.Name;
       } else {
- return (info is FieldInfo field) ? field.Name : (ret);
+ return (info is FieldInfo field) ? field.Name : ret;
 }
     }
 

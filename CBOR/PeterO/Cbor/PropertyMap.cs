@@ -451,7 +451,6 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       return type.GenericTypeArguments[0];
     }
 
-    
     private static bool IsAssignableFrom(Type superType, Type subType) {
       return superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     }
@@ -466,7 +465,6 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       return t.GetRuntimeFields();
     }
 
-    
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static IEnumerable<Type> GetTypeInterfaces(Type t) {
       return t.GetTypeInfo().ImplementedInterfaces;
@@ -872,7 +870,7 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       Type objType,
       string name,
       Type argtype) {
-      return GetTypeMethod(obj.GetType(), name, new[] { argtype });
+      return GetTypeMethod(objType, name, argtype);
     }
 
     public static object InvokeOneArgumentMethod(

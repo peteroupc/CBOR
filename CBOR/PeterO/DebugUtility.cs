@@ -62,9 +62,8 @@ namespace PeterO {
 #endif
         }
       }
-      Type[] types = new[] { typeof(string) };
-      if (typeMethod != null)
-      {
+      MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", typeof(string));
+      if (typeMethod != null) {
         typeMethod.Invoke(
           type,
           new object[] { str });
