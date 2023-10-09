@@ -115,17 +115,6 @@ ICBORToFromConverter<DateTime>
       this.Type = convType;
     }
 
-    private static string DateTimeToString(DateTime bi) {
-      try {
-        var lesserFields = new int[7];
-        var outYear = new EInteger[1];
-        PropertyMap.BreakDownDateTime(bi, outYear, lesserFields);
-        return CBORUtilities.ToAtomDateTimeString(outYear[0], lesserFields);
-      } catch (ArgumentException ex) {
-        throw new CBORException(ex.Message, ex);
-      }
-    }
-
     /// <summary>Converts a CBOR object to a DateTime (in DotNet) or a Date
     /// (in Java).</summary>
     /// <param name='obj'>A CBOR object that specifies a date/time
