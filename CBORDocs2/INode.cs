@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace PeterO.DocGen
-{
+namespace PeterO.DocGen {
   public interface INode
   {
     string LocalName { get; }

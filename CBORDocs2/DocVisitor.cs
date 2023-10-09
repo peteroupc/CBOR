@@ -14,8 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace PeterO.DocGen
-{
+namespace PeterO.DocGen {
   /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : IVisitor
   {
@@ -36,31 +35,25 @@ namespace PeterO.DocGen
 
     public static void AppendConstraints(
       Type[] genericArguments,
-      StringBuilder builder)
-    {
-      foreach (Type arg in genericArguments)
-      {
-        if (arg.IsGenericParameter)
-        {
+      StringBuilder builder) {
+      foreach (Type arg in genericArguments) {
+        if (arg.IsGenericParameter) {
           Type[] constraints = arg.GetGenericParameterConstraints();
           if (constraints.Length == 0 && (arg.GenericParameterAttributes &
   (GenericParameterAttributes.ReferenceTypeConstraint |
   GenericParameterAttributes.NotNullableValueTypeConstraint |
                    GenericParameterAttributes.DefaultConstructorConstraint))
-                == GenericParameterAttributes.None)
-          {
+                == GenericParameterAttributes.None) {
             continue;
           }
           _ = builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
           _ = builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
           _ = builder.Append(" : ");
-          bool first = true;
+          var first = true;
           if ((arg.GenericParameterAttributes &
                GenericParameterAttributes.ReferenceTypeConstraint) !=
-              GenericParameterAttributes.None)
-          {
-            if (!first)
-            {
+              GenericParameterAttributes.None) {
+            if (!first) {
               _ = builder.Append(", ");
             }
             _ = builder.Append("class");
@@ -68,10 +61,8 @@ namespace PeterO.DocGen
           }
           if ((arg.GenericParameterAttributes &
                GenericParameterAttributes.NotNullableValueTypeConstraint) !=
-              GenericParameterAttributes.None)
-          {
-            if (!first)
-            {
+              GenericParameterAttributes.None) {
+            if (!first) {
               _ = builder.Append(", ");
             }
             _ = builder.Append("struct");
@@ -79,19 +70,15 @@ namespace PeterO.DocGen
           }
           if ((arg.GenericParameterAttributes &
                GenericParameterAttributes.DefaultConstructorConstraint) !=
-              GenericParameterAttributes.None)
-          {
-            if (!first)
-            {
+              GenericParameterAttributes.None) {
+            if (!first) {
               _ = builder.Append(", ");
             }
             _ = builder.Append("new()");
             first = false;
           }
-          foreach (Type constr in constraints)
-          {
-            if (!first)
-            {
+          foreach (Type constr in constraints) {
+            if (!first) {
               _ = builder.Append(", ");
             }
             _ = builder.Append(FormatType(constr));
@@ -102,49 +89,37 @@ namespace PeterO.DocGen
       }
     }
 
-    public static string FormatField(FieldInfo field)
-    {
+    public static string FormatField(FieldInfo field) {
       var builder = new StringBuilder();
       _ = builder.Append(FourSpaces);
-      if (field.IsPublic)
-      {
+      if (field.IsPublic) {
         _ = builder.Append("public ");
       }
-      if (field.IsAssembly)
-      {
+      if (field.IsAssembly) {
         _ = builder.Append("internal ");
       }
-      if (field.IsFamily)
-      {
+      if (field.IsFamily) {
         _ = builder.Append("protected ");
       }
-      if (field.IsStatic)
-      {
+      if (field.IsStatic) {
         _ = builder.Append("static ");
       }
-      if (field.IsInitOnly)
-      {
+      if (field.IsInitOnly) {
         _ = builder.Append("readonly ");
       }
       _ = builder.Append(FormatType(field.FieldType));
       _ = builder.Append((char)0x20); // space
       _ = builder.Append(field.Name);
-      if (field.IsLiteral)
-      {
-        try
-        {
+      if (field.IsLiteral) {
+        try {
           object obj = field.GetRawConstantValue();
-          _ = obj is int
-            ? builder.Append(" = " + (int)obj + ";")
-            : obj is long ? builder.Append(" = " + (long)obj + "L;") : builder.Append(';');
-        }
-        catch (InvalidOperationException)
-        {
+          _ = obj is int ? builder.Append(" = " + (int)obj + ";") :
+            obj is long ? builder.Append(" = " + (long)obj + "L;") :
+builder.Append(';');
+        } catch (InvalidOperationException) {
           _ = builder.Append(';');
         }
-      }
-      else
-      {
+      } else {
         _ = builder.Append(';');
       }
       return builder.ToString();
@@ -152,97 +127,71 @@ namespace PeterO.DocGen
 
     public static string FormatMethod(
       MethodBase method,
-      bool shortform)
-    {
+      bool shortform) {
       var builder = new StringBuilder();
-      if (!shortform)
-      {
+      if (!shortform) {
         _ = builder.Append(FourSpaces);
-        if (!method.ReflectedType.IsInterface)
-        {
-          if (method.IsPublic)
-          {
+        if (!method.ReflectedType.IsInterface) {
+          if (method.IsPublic) {
             _ = builder.Append("public ");
           }
-          if (method.IsAssembly)
-          {
+          if (method.IsAssembly) {
             _ = builder.Append("internal ");
           }
-          if (method.IsFamily)
-          {
+          if (method.IsFamily) {
             _ = builder.Append("protected ");
           }
-          if (method.IsStatic)
-          {
+          if (method.IsStatic) {
             _ = builder.Append("static ");
           }
-          if (method.IsAbstract)
-          {
+          if (method.IsAbstract) {
             _ = builder.Append("abstract ");
           }
-          if (method.IsFinal)
-          {
+          if (method.IsFinal) {
             _ = builder.Append("sealed ");
-          }
-          else if (method is MethodInfo &&
-IsMethodOverride((MethodInfo)method))
-          {
+          } else if (method is MethodInfo &&
+IsMethodOverride((MethodInfo)method)) {
             _ = builder.Append("override ");
-          }
-          else if (method.IsVirtual)
-          {
+          } else if (method.IsVirtual) {
             _ = builder.Append("virtual ");
           }
         }
       }
       var methodInfo = method as MethodInfo;
-      bool isExtension = false;
+      var isExtension = false;
       Attribute attr;
-      if (methodInfo != null)
-      {
+      if (methodInfo != null) {
         attr = methodInfo.GetCustomAttribute(
           typeof(System.Runtime.CompilerServices.ExtensionAttribute));
         isExtension = attr != null;
-        if (method.Name.Equals("op_Explicit", StringComparison.Ordinal))
-        {
+        if (method.Name.Equals("op_Explicit", StringComparison.Ordinal)) {
           _ = builder.Append("explicit operator ");
           _ = builder.Append(FormatType(methodInfo.ReturnType));
-        }
-        else if (method.Name.Equals("op_Implicit",
-  StringComparison.Ordinal))
-        {
+        } else if (method.Name.Equals("op_Implicit",
+  StringComparison.Ordinal)) {
           _ = builder.Append("implicit operator ");
           _ = builder.Append(FormatType(methodInfo.ReturnType));
-        }
-        else if (ValueOperators.TryGetValue(method.Name, out string op))
-        {
+        } else if (ValueOperators.TryGetValue(method.Name, out string op)) {
           _ = builder.Append(FormatType(methodInfo.ReturnType));
           _ = builder.Append(" operator ");
           _ = builder.Append(op);
-        }
-        else
-        {
-          if (!shortform)
-          {
+        } else {
+          if (!shortform) {
             _ = builder.Append(FormatType(methodInfo.ReturnType));
           }
           _ = builder.Append((char)0x20);
           _ = builder.Append(method.Name);
         }
-      }
-      else
-      {
-        _ = builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
+      } else {
+        _ =
+builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       }
       bool first;
-      if (method is MethodInfo && method.GetGenericArguments().Length > 0)
-      {
+      if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
         _ = builder.Append('<');
         first = true;
-        foreach (Type arg in method.GetGenericArguments())
-        {
-          if (!first)
-          {
+        foreach (Type arg in method.GetGenericArguments()) {
+          if (!first) {
             _ = builder.Append(", ");
           }
           _ = builder.Append(FormatType(arg));
@@ -252,101 +201,75 @@ IsMethodOverride((MethodInfo)method))
       }
       _ = builder.Append('(');
       first = true;
-      foreach (ParameterInfo param in method.GetParameters())
-      {
-        if (!first)
-        {
+      foreach (ParameterInfo param in method.GetParameters()) {
+        if (!first) {
           _ = builder.Append(',');
         }
-        if (!shortform)
-        {
+        if (!shortform) {
           _ = builder.Append("\r\n" + FourSpaces + FourSpaces);
-        }
-        else if (!first)
-        {
+        } else if (!first) {
           _ = builder.Append((char)0x20);
         }
-        if (first && isExtension)
-        {
+        if (first && isExtension) {
           _ = builder.Append("this ");
         }
         attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
-        if (attr != null)
-        {
+        if (attr != null) {
           _ = builder.Append("params ");
         }
         _ = builder.Append(FormatType(param.ParameterType));
-        if (!shortform)
-        {
+        if (!shortform) {
           _ = builder.Append((char)0x20);
           _ = builder.Append(param.Name);
         }
         first = false;
       }
       _ = builder.Append(')');
-      if (method is MethodInfo && method.GetGenericArguments().Length > 0)
-      {
+      if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
         AppendConstraints(method.GetGenericArguments(), builder);
       }
-      if (!shortform)
-      {
+      if (!shortform) {
         _ = builder.Append(';');
       }
       return builder.ToString();
     }
 
-    public static string FormatProperty(PropertyInfo property)
-    {
+    public static string FormatProperty(PropertyInfo property) {
       return FormatProperty(property, false);
     }
 
-    public static string FormatProperty(PropertyInfo property, bool shortform)
-    {
+    public static string FormatProperty(PropertyInfo property, bool shortform) {
       var builder = new StringBuilder();
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
-      if (!shortform)
-      {
+      if (!shortform) {
         _ = builder.Append(FourSpaces);
-        if (!property.ReflectedType.IsInterface)
-        {
+        if (!property.ReflectedType.IsInterface) {
           if ((getter != null && getter.IsPublic) ||
-              (setter != null && setter.IsPublic))
-          {
+              (setter != null && setter.IsPublic)) {
             _ = builder.Append("public ");
-          }
-          else if ((getter != null && getter.IsAssembly) ||
-                    (setter != null && setter.IsAssembly))
-          {
+          } else if ((getter != null && getter.IsAssembly) ||
+                (setter != null && setter.IsAssembly)) {
             _ = builder.Append("internal ");
-          }
-          else if ((getter != null && getter.IsFamily) ||
-                    (setter != null && setter.IsFamily))
-          {
+          } else if ((getter != null && getter.IsFamily) ||
+                (setter != null && setter.IsFamily)) {
             _ = builder.Append("protected ");
           }
           if ((getter != null && getter.IsStatic) ||
-              (setter != null && setter.IsStatic))
-          {
+              (setter != null && setter.IsStatic)) {
             _ = builder.Append("static ");
           }
           if ((getter != null && getter.IsAbstract) ||
-              (setter != null && setter.IsAbstract))
-          {
+              (setter != null && setter.IsAbstract)) {
             _ = builder.Append("abstract ");
           }
           if ((getter != null && getter.IsFinal) ||
-              (setter != null && setter.IsFinal))
-          {
+              (setter != null && setter.IsFinal)) {
             _ = builder.Append("sealed ");
-          }
-          else if (IsMethodOverride(getter))
-          {
+          } else if (IsMethodOverride(getter)) {
             _ = builder.Append("override ");
-          }
-          else if ((getter != null && getter.IsVirtual) ||
-                    (setter != null && setter.IsVirtual))
-          {
+          } else if ((getter != null && getter.IsVirtual) ||
+                (setter != null && setter.IsVirtual)) {
             _ = builder.Append("virtual ");
           }
         }
@@ -355,40 +278,33 @@ IsMethodOverride((MethodInfo)method))
       }
       bool first;
       ParameterInfo[] indexParams = property.GetIndexParameters();
-      _ = indexParams.Length > 0 ? builder.Append("this[") : builder.Append(property.Name);
+      _ = indexParams.Length > 0 ? builder.Append("this[") :
+builder.Append(property.Name);
       first = true;
-      foreach (ParameterInfo param in indexParams)
-      {
-        _ = !first
-          ? builder.Append(",\r\n" + FourSpaces + FourSpaces)
-          : builder.Append(indexParams.Length == 1 ?
-                    string.Empty : "\r\n" + FourSpaces + FourSpaces);
+      foreach (ParameterInfo param in indexParams) {
+        _ = !first ? builder.Append(",\r\n" + FourSpaces + FourSpaces) :
+          builder.Append(indexParams.Length == 1 ?
+                    String.Empty : "\r\n" + FourSpaces + FourSpaces);
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
-        if (attr != null)
-        {
+        if (attr != null) {
           _ = builder.Append("params ");
         }
         _ = builder.Append(FormatType(param.ParameterType));
-        if (!shortform)
-        {
+        if (!shortform) {
           _ = builder.Append((char)0x20);
           _ = builder.Append(param.Name);
         }
         first = false;
       }
-      if (indexParams.Length > 0)
-      {
+      if (indexParams.Length > 0) {
         _ = builder.Append(']');
       }
-      if (!shortform)
-      {
+      if (!shortform) {
         _ = builder.Append(" { ");
-        if (getter != null && !getter.IsPrivate)
-        {
+        if (getter != null && !getter.IsPrivate) {
           _ = builder.Append("get; ");
         }
-        if (setter != null && !setter.IsPrivate)
-        {
+        if (setter != null && !setter.IsPrivate) {
           _ = builder.Append("set; ");
         }
         _ = builder.Append('}');
@@ -396,23 +312,18 @@ IsMethodOverride((MethodInfo)method))
       return builder.ToString();
     }
 
-    public static string FormatType(Type type)
-    {
+    public static string FormatType(Type type) {
       string rawfmt = FormatTypeRaw(type);
-      if (!type.IsArray && !type.IsGenericType)
-      {
+      if (!type.IsArray && !type.IsGenericType) {
         return rawfmt;
       }
       var sb = new StringBuilder();
       _ = sb.Append(rawfmt);
-      if (type.ContainsGenericParameters)
-      {
+      if (type.ContainsGenericParameters) {
         _ = sb.Append('<');
-        bool first = true;
-        foreach (Type arg in type.GetGenericArguments())
-        {
-          if (!first)
-          {
+        var first = true;
+        foreach (Type arg in type.GetGenericArguments()) {
+          if (!first) {
             _ = sb.Append(", ");
           }
           _ = sb.Append(FormatType(arg));
@@ -420,27 +331,23 @@ IsMethodOverride((MethodInfo)method))
         }
         _ = sb.Append('>');
       }
-      if (type.IsArray)
-      {
-        for (int i = 0; i < type.GetArrayRank(); ++i)
-        {
+      if (type.IsArray) {
+        for (int i = 0; i < type.GetArrayRank(); ++i) {
           _ = sb.Append("[]");
         }
       }
       return sb.ToString();
     }
 
-    public static string FormatTypeRaw(Type type)
-    {
+    public static string FormatTypeRaw(Type type) {
       string name = TypeNameUtil.UndecorateTypeName(type.Name);
-      if (type.IsGenericParameter)
-      {
+      if (type.IsGenericParameter) {
         return name;
       }
       name = TypeNameUtil.SimpleTypeName(type);
-      return name.Equals("System.Decimal", StringComparison.Ordinal)
-        ? "decimal"
-        : name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
+      return name.Equals("System.Decimal", StringComparison.Ordinal) ?
+        "decimal" :
+        name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
         (name.Equals("System.Int64", StringComparison.Ordinal) ? "long" :
          (name.Equals("System.Int16", StringComparison.Ordinal) ? "short" :
           (name.Equals("System.UInt32", StringComparison.Ordinal) ? "uint" :
@@ -461,34 +368,27 @@ IsMethodOverride((MethodInfo)method))
   name))))))))))))));
     }
 
-    public static string FormatTypeSig(Type typeInfo)
-    {
+    public static string FormatTypeSig(Type typeInfo) {
+      bool isPublic = typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic;
       var builder = new StringBuilder();
       _ = builder.Append(FourSpaces);
-      _ = (typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic) ? builder.Append("public ") : builder.Append("internal ");
-      if (typeInfo.IsAbstract && typeInfo.IsSealed)
-      {
+      _ = isPublic ? builder.Append("public ") : builder.Append("internal ");
+      if (typeInfo.IsAbstract && typeInfo.IsSealed) {
         _ = builder.Append("static ");
-      }
-      else if (typeInfo.IsAbstract && !typeInfo.IsInterface)
-      {
+      } else if (typeInfo.IsAbstract && !typeInfo.IsInterface) {
         _ = builder.Append("abstract ");
-      }
-      else if (typeInfo.IsSealed)
-      {
+      } else if (typeInfo.IsSealed) {
         _ = builder.Append("sealed ");
       }
-      _ = typeInfo.IsValueType ? builder.Append("struct ") : typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
+      _ = typeInfo.IsValueType ? builder.Append("struct ") :
+typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
       _ = builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
       bool first;
-      if (typeInfo.GetGenericArguments().Length > 0)
-      {
+      if (typeInfo.GetGenericArguments().Length > 0) {
         _ = builder.Append('<');
         first = true;
-        foreach (Type arg in typeInfo.GetGenericArguments())
-        {
-          if (!first)
-          {
+        foreach (Type arg in typeInfo.GetGenericArguments()) {
+          if (!first) {
             _ = builder.Append(", ");
           }
           _ = builder.Append(FormatType(arg));
@@ -500,33 +400,26 @@ IsMethodOverride((MethodInfo)method))
       Type[] ifaces = typeInfo.GetInterfaces();
       Type derived = typeInfo.BaseType;
       if (typeInfo.BaseType != null &&
-          typeInfo.BaseType.Equals(typeof(object)))
-      {
+          typeInfo.BaseType.Equals(typeof(object))) {
         derived = null;
       }
-      if (derived != null || ifaces.Length > 0)
-      {
+      if (derived != null || ifaces.Length > 0) {
         _ = builder.Append(" :\r\n" + FourSpaces);
-        if (derived != null)
-        {
+        if (derived != null) {
           _ = builder.Append(FourSpaces + FormatType(derived));
           first = false;
         }
-        if (ifaces.Length > 0)
-        {
+        if (ifaces.Length > 0) {
           // Sort interface names to ensure they are
           // displayed in a consistent order. Apparently, GetInterfaces
           // can return such interfaces in an unspecified order.
           var ifacenames = new List<string>();
-          foreach (Type iface in ifaces)
-          {
+          foreach (Type iface in ifaces) {
             ifacenames.Add(FormatType(iface));
           }
           ifacenames.Sort();
-          foreach (string ifacename in ifacenames)
-          {
-            if (!first)
-            {
+          foreach (string ifacename in ifacenames) {
+            if (!first) {
               _ = builder.Append(",\r\n" + FourSpaces);
             }
             _ = builder.Append(FourSpaces + ifacename);
@@ -538,17 +431,14 @@ IsMethodOverride((MethodInfo)method))
       return builder.ToString();
     }
 
-    public static string GetTypeID(Type type)
-    {
+    public static string GetTypeID(Type type) {
       string name = FormatType(type);
       name = name.Replace(", ", ",");
       var builder = new StringBuilder();
-      for (int i = 0; i < name.Length; ++i)
-      {
+      for (int i = 0; i < name.Length; ++i) {
         UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
         int cp = DataUtilities.CodePointAt(name, i);
-        if (cp >= 0x10000)
-        {
+        if (cp >= 0x10000) {
           ++i;
         }
         _ = cat == UnicodeCategory.UppercaseLetter ||
@@ -556,9 +446,9 @@ IsMethodOverride((MethodInfo)method))
             cat == UnicodeCategory.TitlecaseLetter ||
             cat == UnicodeCategory.OtherLetter ||
             cat == UnicodeCategory.DecimalDigitNumber ||
-            cp == '_' || cp == '.'
-          ? cp >= 0x10000 ? builder.Append(name, i, 2) : builder.Append(name[i])
-          : builder.Append(' ');
+            cp == '_' || cp == '.' ?
+          cp >= 0x10000 ? builder.Append(name, i, 2) : builder.Append(name[i]) :
+          builder.Append(' ');
       }
       name = builder.ToString();
       name = name.Trim();
@@ -566,116 +456,77 @@ IsMethodOverride((MethodInfo)method))
       return name;
     }
 
-    public static bool IsMethodOverride(MethodInfo method)
-    {
+    public static bool IsMethodOverride(MethodInfo method) {
       _ = method.DeclaringType;
       MethodInfo baseMethod = method.GetBaseDefinition();
       return (baseMethod != null) && (!method.Equals(baseMethod));
     }
 
-    public void Debug(string ln)
-    {
+    public void Debug(string ln) {
       this.WriteLine(ln);
-      this.WriteLine(string.Empty);
+      this.WriteLine(String.Empty);
     }
 
-    public override string ToString()
-    {
+    public override string ToString() {
       var b = new StringBuilder();
       _ = b.Append(this.buffer.ToString());
-      foreach (string b2 in this.members.Keys)
-      {
+      foreach (string b2 in this.members.Keys) {
         _ = b.Append(this.members[b2].ToString());
       }
       return b.ToString();
     }
 
-    public void VisitNode(INode node)
-    {
-      if (string.IsNullOrEmpty(node.LocalName))
-      {
+    public void VisitNode(INode node) {
+      if (String.IsNullOrEmpty(node.LocalName)) {
         string t = node.GetContent();
         // Collapse multiple spaces into a single space
         t = Regex.Replace(t, @"\s+", " ");
-        if (t.Length != 1 || t[0] != ' ')
-        {
+        if (t.Length != 1 || t[0] != ' ') {
           // Don't write if result is a single space
           this.Write(t);
         }
         XmlDoc.VisitInnerNode(node, this);
-      }
-      else
-      {
+      } else {
         string xmlName = PeterO.DataUtilities.ToLowerCaseAscii(node.LocalName);
-        if (xmlName.Equals("c", StringComparison.Ordinal))
-        {
+        if (xmlName.Equals("c", StringComparison.Ordinal)) {
           this.VisitC(node);
-        }
-        else if (xmlName.Equals("code", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("code", StringComparison.Ordinal)) {
           this.VisitCode(node);
-        }
-        else if (xmlName.Equals("example", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("example", StringComparison.Ordinal)) {
           this.VisitExample(node);
-        }
-        else if (xmlName.Equals("exception", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("exception", StringComparison.Ordinal)) {
           this.VisitException(node);
-        }
-        else if (xmlName.Equals("see", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("see", StringComparison.Ordinal)) {
           this.VisitSee(node);
-        }
-        else if (xmlName.Equals("item", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("item", StringComparison.Ordinal)) {
           this.VisitItem(node);
-        }
-        else if (xmlName.Equals("list", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("list", StringComparison.Ordinal)) {
           this.VisitList(node);
-        }
-        else if (xmlName.Equals("para", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("para", StringComparison.Ordinal)) {
           this.VisitPara(node);
-        }
-        else if (xmlName.Equals("param", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("param", StringComparison.Ordinal)) {
           this.VisitParam(node);
-        }
-        else if (xmlName.Equals("paramref", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("paramref", StringComparison.Ordinal)) {
           this.VisitParamRef(node);
-        }
-        else if (xmlName.Equals("remarks", StringComparison.Ordinal) ||
-                  xmlName.Equals("summary", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("remarks", StringComparison.Ordinal) ||
+                  xmlName.Equals("summary", StringComparison.Ordinal)) {
           XmlDoc.VisitInnerNode(node, this);
           this.Write("\r\n\r\n");
-        }
-        else if (xmlName.Equals("returns", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("returns", StringComparison.Ordinal)) {
           this.VisitReturns(node);
-        }
-        else if (xmlName.Equals("typeparam", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("typeparam", StringComparison.Ordinal)) {
           this.VisitTypeParam(node);
-        }
-        else if (xmlName.Equals("value", StringComparison.Ordinal))
-        {
+        } else if (xmlName.Equals("value", StringComparison.Ordinal)) {
           this.VisitValue(node);
-        }
-        else if (xmlName.Equals("b", StringComparison.Ordinal) ||
+        } else if (xmlName.Equals("b", StringComparison.Ordinal) ||
 xmlName.Equals("strong", StringComparison.Ordinal) ||
 xmlName.Equals("i", StringComparison.Ordinal) ||
 xmlName.Equals("a", StringComparison.Ordinal) ||
 xmlName.Equals("sup", StringComparison.Ordinal) ||
-xmlName.Equals("em", StringComparison.Ordinal))
-        {
+xmlName.Equals("em", StringComparison.Ordinal)) {
           var sb = new StringBuilder();
           _ = sb.Append("<" + xmlName);
-          foreach (string attr in node.GetAttributes())
-          {
+          foreach (string attr in node.GetAttributes()) {
             _ = sb.Append(" " + attr + "=");
             _ = sb.Append("\"" + DocGenUtil.HtmlEscape(
               node.GetAttribute(attr)) + "\"");
@@ -684,46 +535,37 @@ xmlName.Equals("em", StringComparison.Ordinal))
           this.Write(sb.ToString());
           XmlDoc.VisitInnerNode(node, this);
           this.Write("</" + xmlName + ">");
-        }
-        else
-        {
+        } else {
           XmlDoc.VisitInnerNode(node, this);
         }
       }
     }
 
-    public void VisitC(INode node)
-    {
+    public void VisitC(INode node) {
       this.Write(" `" + node.GetContent() + "` ");
     }
 
-    public void VisitCode(INode node)
-    {
+    public void VisitCode(INode node) {
       this.WriteLine("\r\n\r\n");
-      foreach (string line in node.GetContent().Split('\n'))
-      {
+      foreach (string line in node.GetContent().Split('\n')) {
         this.WriteLine(FourSpaces + line.TrimEnd());
       }
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitExample(INode node)
-    {
+    public void VisitExample(INode node) {
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitException(INode node)
-    {
+    public void VisitException(INode node) {
       using IDisposable ch = this.Change(this.exceptionStr);
       string cref = node.GetAttribute("cref");
-      if (cref == null)
-      {
-        cref = string.Empty;
+      if (cref == null) {
+        cref = String.Empty;
         Console.WriteLine("Warning: cref attribute absent in <exception>");
       }
-      if (cref.StartsWith("T:", StringComparison.Ordinal))
-      {
+      if (cref.StartsWith("T:", StringComparison.Ordinal)) {
         cref = cref[2..];
       }
       this.WriteLine(" * " + cref + ": ");
@@ -731,69 +573,54 @@ xmlName.Equals("em", StringComparison.Ordinal))
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitSee(INode see)
-    {
+    public void VisitSee(INode see) {
       string cref = see.GetAttribute("cref");
-      if (cref == null)
-      {
-        cref = string.Empty;
+      if (cref == null) {
+        cref = String.Empty;
         Console.WriteLine("Warning: cref attribute absent in <see>");
       }
-      if (cref[..2].Equals("T:", StringComparison.Ordinal))
-      {
+      if (cref[..2].Equals("T:", StringComparison.Ordinal)) {
         string typeName = TypeNameUtil.UndecorateTypeName(cref[2..]);
         string content = DocGenUtil.HtmlEscape(see.GetContent());
-        if (string.IsNullOrEmpty(content))
-        {
+        if (String.IsNullOrEmpty(content)) {
           content = typeName;
         }
         this.Write("[" + content + "]");
         this.Write("(" + typeName + ".md)");
         XmlDoc.VisitInnerNode(see, this);
-      }
-      else if (cref[..2].Equals("M:", StringComparison.Ordinal))
-      {
+      } else if (cref[..2].Equals("M:", StringComparison.Ordinal)) {
         string content = DocGenUtil.HtmlEscape(see.GetContent());
-        if (string.IsNullOrEmpty(content))
-        {
+        if (String.IsNullOrEmpty(content)) {
           content = cref;
         }
         this.Write("**" + content + "**");
-      }
-      else
-      {
+      } else {
         XmlDoc.VisitInnerNode(see, this);
       }
     }
 
-    public void VisitItem(INode node)
-    {
+    public void VisitItem(INode node) {
       this.Write(" * ");
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitList(INode node)
-    {
+    public void VisitList(INode node) {
       this.WriteLine("\r\n\r\n");
       XmlDoc.VisitInnerNode(node, this);
     }
 
-    public void HandleMember(MemberInfo info, XmlDoc xmldoc)
-    {
+    public void HandleMember(MemberInfo info, XmlDoc xmldoc) {
       string mnu = TypeNameUtil.XmlDocMemberName(info);
       INode mnm = xmldoc.GetMemberNode(mnu);
       string signature;
-      if (info is MethodBase method)
-      {
-        if (!method.IsPublic && !method.IsFamily)
-        {
+      if (info is MethodBase method) {
+        if (!method.IsPublic && !method.IsFamily) {
           // Ignore methods other than public and protected
           // methods
           return;
         }
-        if (mnm == null)
-        {
+        if (mnm == null) {
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
@@ -803,21 +630,20 @@ xmlName.Equals("em", StringComparison.Ordinal))
                   MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
         this.WriteLine("### " + Heading(info) +
                   "\r\n\r\n" + signature + "\r\n\r\n");
-        if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
-        {
+        if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is
+ObsoleteAttribute attr) {
           this.WriteLine("<b>Deprecated.</b> " +
 DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
         }
-        if (method.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
-        {
+        if (method.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
+CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         _ = this.paramStr.Clear();
         _ = this.returnStr.Clear();
         _ = this.exceptionStr.Clear();
         XmlDoc.VisitInnerNode(mnm, this);
-        if (this.paramStr.Length > 0)
-        {
+        if (this.paramStr.Length > 0) {
           this.Write("<b>Parameters:</b>\r\n\r\n");
           string paramString = this.paramStr.ToString();
           // Decrease spacing between list items
@@ -825,58 +651,48 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
           this.Write(paramString);
         }
         this.Write(this.returnStr.ToString());
-        if (this.exceptionStr.Length > 0)
-        {
+        if (this.exceptionStr.Length > 0) {
           this.Write("<b>Exceptions:</b>\r\n\r\n");
           this.Write(this.exceptionStr.ToString());
         }
-      }
-      else if (info is Type type)
-      {
-        if (!(type.IsNested ? type.IsNestedPublic : type.IsPublic))
-        {
+      } else if (info is Type type) {
+        if (!(type.IsNested ? type.IsNestedPublic : type.IsPublic)) {
           // Ignore nonpublic types
           return;
         }
-        if (mnm == null)
-        {
+        if (mnm == null) {
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
         using IDisposable ch = this.AddMember(info);
         this.WriteLine("## " + Heading(type) + "\r\n\r\n");
         this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-        if (type.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
-        {
+        if (type.GetCustomAttribute(typeof(ObsoleteAttribute)) is
+ObsoleteAttribute attr) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
-        if (type.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
-        {
+        if (type.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
+CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         _ = this.paramStr.Clear();
         XmlDoc.VisitInnerNode(mnm, this);
         this.Write("\r\n\r\n");
         this.WriteLine("<<<MEMBER_SUMMARY>>>");
-        if (this.paramStr.Length > 0)
-        {
+        if (this.paramStr.Length > 0) {
           this.Write("<b>Parameters:</b>\r\n\r\n");
           string paramString = this.paramStr.ToString();
           // Decrease spacing between list items
           paramString = paramString.Replace("\r\n * ", " * ");
           this.Write(paramString);
         }
-      }
-      else if (info is PropertyInfo property)
-      {
-        if (!PropertyIsPublicOrFamily(property))
-        {
+      } else if (info is PropertyInfo property) {
+        if (!PropertyIsPublicOrFamily(property)) {
           // Ignore methods other than public and protected
           // methods
           return;
         }
-        if (mnm == null)
-        {
+        if (mnm == null) {
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
@@ -886,39 +702,33 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
                   MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
         this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
                   "\r\n\r\n");
-        if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
-        {
+        if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) is
+ObsoleteAttribute attr) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
-        if (property.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
-        {
+        if (property.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
+CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         _ = this.paramStr.Clear();
         _ = this.returnStr.Clear();
         _ = this.exceptionStr.Clear();
         XmlDoc.VisitInnerNode(mnm, this);
-        if (this.paramStr.Length > 0)
-        {
+        if (this.paramStr.Length > 0) {
           this.Write("<b>Parameters:</b>\r\n\r\n");
           this.Write(this.paramStr.ToString());
         }
         this.Write(this.returnStr.ToString());
-        if (this.exceptionStr.Length > 0)
-        {
+        if (this.exceptionStr.Length > 0) {
           this.Write("<b>Exceptions:</b>\r\n\r\n");
           this.Write(this.exceptionStr.ToString());
         }
-      }
-      else if (info is FieldInfo field)
-      {
-        if (!field.IsPublic && !field.IsFamily)
-        {
+      } else if (info is FieldInfo field) {
+        if (!field.IsPublic && !field.IsFamily) {
           // Ignore nonpublic, nonprotected fields
           return;
         }
-        if (mnm == null)
-        {
+        if (mnm == null) {
           Console.WriteLine("member info not found: " + mnu);
           return;
         }
@@ -928,113 +738,89 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
                   MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
         this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
                   "\r\n\r\n");
-        if (field.GetCustomAttribute(typeof(ObsoleteAttribute)) is ObsoleteAttribute attr)
-        {
+        if (field.GetCustomAttribute(typeof(ObsoleteAttribute)) is
+ObsoleteAttribute attr) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
-        if (field.GetCustomAttribute(typeof(CLSCompliantAttribute)) is CLSCompliantAttribute cattr && !cattr.IsCompliant)
-        {
+        if (field.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
+CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         XmlDoc.VisitInnerNode(mnm, this);
       }
     }
 
-    public void VisitPara(INode node)
-    {
+    public void VisitPara(INode node) {
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitParam(INode node)
-    {
+    public void VisitParam(INode node) {
       using IDisposable ch = this.Change(this.paramStr);
       this.Write(" * <i>" + node.GetAttribute("name") + "</i>: ");
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitParamRef(INode node)
-    {
+    public void VisitParamRef(INode node) {
       this.WriteLine(" <i>" + node.GetAttribute("name") + "</i>");
       XmlDoc.VisitInnerNode(node, this);
     }
 
-    public void VisitReturns(INode node)
-    {
+    public void VisitReturns(INode node) {
       using IDisposable ch = this.Change(this.returnStr);
       this.WriteLine("<b>Return Value:</b>\r\n");
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitTypeParam(INode node)
-    {
+    public void VisitTypeParam(INode node) {
       using IDisposable ch = this.Change(this.paramStr);
       this.Write(" * &lt;" + node.GetAttribute("name") + "&gt;: ");
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    public void VisitValue(INode node)
-    {
+    public void VisitValue(INode node) {
       using IDisposable ch = this.Change(this.returnStr);
       this.WriteLine("<b>Returns:</b>\r\n");
       XmlDoc.VisitInnerNode(node, this);
       this.WriteLine("\r\n\r\n");
     }
 
-    private static string Heading(MemberInfo info)
-    {
-      string ret = string.Empty;
-      if (info is MethodBase method)
-      {
-        return method is ConstructorInfo
-          ? TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
-          " Constructor"
-          : MethodNameHeading(method.Name);
+    private static string Heading(MemberInfo info) {
+      string ret = String.Empty;
+      if (info is MethodBase method) {
+        return method is ConstructorInfo ?
+          TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
+          " Constructor" : MethodNameHeading(method.Name);
       }
-      if (info is Type type)
-      {
+      if (info is Type type) {
         return FormatType(type);
-      }
-      else if (info is PropertyInfo property)
-      {
+      } else if (info is PropertyInfo property) {
         return property.Name;
-      }
-      else if (info is FieldInfo field)
-      {
-        return field.Name;
-      }
-      return ret;
+      } else {
+ return (info is FieldInfo field) ? field.Name : (ret);
+}
     }
 
-    private static string HeadingUnambiguous(MemberInfo info)
-    {
-      string ret = string.Empty;
-      if (info is MethodBase method)
-      {
+    private static string HeadingUnambiguous(MemberInfo info) {
+      string ret = String.Empty;
+      if (info is MethodBase method) {
         return (method is ConstructorInfo) ? ("<1>" + " " +
           FormatMethod(method, false)) : ("<4>" + method.Name + " " +
           FormatMethod(method, false));
       }
-      if (info is Type type)
-      {
+      if (info is Type type) {
         return "<0>" + FormatType(type);
-      }
-      else if (info is PropertyInfo property)
-      {
+      } else if (info is PropertyInfo property) {
         return "<3>" + property.Name;
-      }
-      else if (info is FieldInfo field)
-      {
-        return "<2>" + field.Name;
-      }
-      return ret;
+      } else {
+ return (info is FieldInfo field) ? ("<2>" + field.Name) : ret;
+}
     }
 
-    private static string MethodNameHeading(string p)
-    {
+    private static string MethodNameHeading(string p) {
       return ValueOperators.TryGetValue(p, out string op) ? ("Operator `" +
         op + "`") : (p.Equals("op_Explicit", StringComparison.Ordinal) ?
           "Explicit Operator" :
@@ -1042,10 +828,8 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
           "Implicit Operator" : p));
     }
 
-    private static IDictionary<string, string> OperatorList()
-    {
-      var ops = new Dictionary<string, string>
-      {
+    private static IDictionary<string, string> OperatorList() {
+      var ops = new Dictionary<string, string> {
         ["op_Addition"] = "+",
         ["op_UnaryPlus"] = "+",
         ["op_Subtraction"] = "-",
@@ -1074,8 +858,7 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
       return ops;
     }
 
-    private static bool PropertyIsPublicOrFamily(PropertyInfo property)
-    {
+    private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
       return (getter != null && getter.IsPublic) || (setter != null &&
@@ -1084,33 +867,27 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
   setter.IsFamily);
     }
 
-    private IDisposable AddMember(MemberInfo member)
-    {
+    private IDisposable AddMember(MemberInfo member) {
       var builder = new StringBuilder();
       string heading = HeadingUnambiguous(member);
       this.members[heading] = builder;
       return new BufferChanger(this, builder);
     }
 
-    private IDisposable Change(StringBuilder builder)
-    {
+    private IDisposable Change(StringBuilder builder) {
       return new BufferChanger(this, builder);
     }
 
-    private void Write(string ln)
-    {
-      _ = this.currentBuffer != null ? this.currentBuffer.Append(ln) : this.buffer.Append(ln);
+    private void Write(string ln) {
+      _ = this.currentBuffer != null ? this.currentBuffer.Append(ln) :
+this.buffer.Append(ln);
     }
 
-    private void WriteLine(string ln)
-    {
-      if (this.currentBuffer != null)
-      {
+    private void WriteLine(string ln) {
+      if (this.currentBuffer != null) {
         _ = this.currentBuffer.Append(ln);
         _ = this.currentBuffer.Append("\r\n");
-      }
-      else
-      {
+      } else {
         _ = this.buffer.Append(ln);
         _ = this.buffer.Append("\r\n");
       }
@@ -1121,15 +898,13 @@ DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
       private readonly StringBuilder oldBuffer;
       private readonly DocVisitor vis;
 
-      public BufferChanger(DocVisitor vis, StringBuilder buffer)
-      {
+      public BufferChanger(DocVisitor vis, StringBuilder buffer) {
         this.vis = vis;
         this.oldBuffer = vis.currentBuffer;
         vis.currentBuffer = buffer;
       }
 
-      public void Dispose()
-      {
+      public void Dispose() {
         this.vis.currentBuffer = this.oldBuffer;
       }
     }

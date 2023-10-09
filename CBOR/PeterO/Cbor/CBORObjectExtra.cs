@@ -6,18 +6,16 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
-using PeterO.Numbers;
 using System;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
+using PeterO.Numbers;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
-  public sealed partial class CBORObject
-  {
+  public sealed partial class CBORObject {
     /* The "==" and "!=" operators are not overridden in the .NET version to be
       consistent with Equals, for two reasons: (1) This type is mutable in
     certain cases, which can cause different results when comparing with another
@@ -36,8 +34,7 @@ namespace PeterO.Cbor
     /// otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='a'/> is null.</exception>
-    public static bool operator <(CBORObject a, CBORObject b)
-    {
+    public static bool operator <(CBORObject a, CBORObject b) {
       return a == null ? b != null : a.CompareTo(b) < 0;
     }
 
@@ -49,8 +46,7 @@ namespace PeterO.Cbor
     /// otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='a'/> is null.</exception>
-    public static bool operator <=(CBORObject a, CBORObject b)
-    {
+    public static bool operator <=(CBORObject a, CBORObject b) {
       return a == null || a.CompareTo(b) <= 0;
     }
 
@@ -62,8 +58,7 @@ namespace PeterO.Cbor
     /// another's; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='a'/> is null.</exception>
-    public static bool operator >(CBORObject a, CBORObject b)
-    {
+    public static bool operator >(CBORObject a, CBORObject b) {
       return a != null && a.CompareTo(b) > 0;
     }
 
@@ -75,8 +70,7 @@ namespace PeterO.Cbor
     /// otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='a'/> is null.</exception>
-    public static bool operator >=(CBORObject a, CBORObject b)
-    {
+    public static bool operator >=(CBORObject a, CBORObject b) {
       return a == null ? b == null : a.CompareTo(b) >= 0;
     }
 
@@ -108,11 +102,10 @@ namespace PeterO.Cbor
     public static int WriteValue(
       Stream outputStream,
       int majorType,
-      uint value)
-    {
-      return outputStream == null
-        ? throw new ArgumentNullException(nameof(outputStream))
-        : WriteValue(outputStream, majorType, (long)value);
+      uint value) {
+      return outputStream == null ?
+        throw new ArgumentNullException(nameof(outputStream)) :
+        WriteValue(outputStream, majorType, (long)value);
     }
 
     /// <summary>Writes a CBOR major type number and an integer 0 or
@@ -145,30 +138,22 @@ namespace PeterO.Cbor
     public static int WriteValue(
       Stream outputStream,
       int majorType,
-      ulong value)
-    {
-      if (outputStream == null)
-      {
+      ulong value) {
+      if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
-      if (value <= long.MaxValue)
-      {
+      if (value <= long.MaxValue) {
         return WriteValue(outputStream, majorType, (long)value);
-      }
-      else
-      {
-        if (majorType < 0)
-        {
+      } else {
+        if (majorType < 0) {
           throw new ArgumentException("majorType(" + majorType +
             ") is less than 0");
         }
-        if (majorType > 7)
-        {
+        if (majorType > 7) {
           throw new ArgumentException("majorType(" + majorType +
             ") is more than 7");
         }
-        if (majorType == 7)
-        {
+        if (majorType == 7) {
           throw new ArgumentException("majorType is 7 and value is greater" +
             "\u0020than 255");
         }
@@ -185,8 +170,7 @@ namespace PeterO.Cbor
       }
     }
 
-    private static EInteger DecimalToEInteger(decimal dec)
-    {
+    private static EInteger DecimalToEInteger(decimal dec) {
       return ((EDecimal)dec).ToEInteger();
     }
 
@@ -196,8 +180,7 @@ namespace PeterO.Cbor
     /// 8-bit signed integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
-    public static void Write(sbyte value, Stream stream)
-    {
+    public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
     }
 
@@ -208,18 +191,13 @@ namespace PeterO.Cbor
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     [CLSCompliant(false)]
-    public static void Write(ulong value, Stream stream)
-    {
-      if (stream == null)
-      {
+    public static void Write(ulong value, Stream stream) {
+      if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      if (value <= long.MaxValue)
-      {
+      if (value <= long.MaxValue) {
         Write((long)value, stream);
-      }
-      else
-      {
+      } else {
         stream.WriteByte(27);
         stream.WriteByte((byte)((value >> 56) & 0xff));
         stream.WriteByte((byte)((value >> 48) & 0xff));
@@ -237,8 +215,7 @@ namespace PeterO.Cbor
     /// Decimal object.</param>
     /// <returns>A CBORObject object with the same value as the.NET
     /// decimal.</returns>
-    public static CBORObject FromObject(decimal value)
-    {
+    public static CBORObject FromObject(decimal value) {
       return FromObject((EDecimal)value);
     }
 
@@ -247,8 +224,7 @@ namespace PeterO.Cbor
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
-    public static void Write(uint value, Stream stream)
-    {
+    public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
     }
 
@@ -257,8 +233,7 @@ namespace PeterO.Cbor
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
-    public static void Write(ushort value, Stream stream)
-    {
+    public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
     }
 
@@ -268,14 +243,12 @@ namespace PeterO.Cbor
     /// 8-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(sbyte value)
-    {
+    public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
     }
 
-    private static EInteger UInt64ToEInteger(ulong value)
-    {
-      byte[] data = new byte[9];
+    private static EInteger UInt64ToEInteger(ulong value) {
+      var data = new byte[9];
       ulong uvalue = value;
       data[0] = (byte)(uvalue & 0xff);
       data[1] = (byte)((uvalue >> 8) & 0xff);
@@ -294,8 +267,7 @@ namespace PeterO.Cbor
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(ulong value)
-    {
+    public static CBORObject FromObject(ulong value) {
       return CBORObject.FromObject(UInt64ToEInteger(value));
     }
 
@@ -304,8 +276,7 @@ namespace PeterO.Cbor
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(uint value)
-    {
+    public static CBORObject FromObject(uint value) {
       return FromObject((long)value);
     }
 
@@ -314,8 +285,7 @@ namespace PeterO.Cbor
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(ushort value)
-    {
+    public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }
 
@@ -332,8 +302,7 @@ namespace PeterO.Cbor
     /// the tag <paramref name='tag'/> in addition to its existing tags
     /// (the new tag is made the outermost tag).</returns>
     [CLSCompliant(false)]
-    public CBORObject WithTag(ulong tag)
-    {
+    public CBORObject WithTag(ulong tag) {
       return FromObjectAndTag(this, UInt64ToEInteger(tag));
     }
 
@@ -361,8 +330,7 @@ namespace PeterO.Cbor
     /// . If "valueOb" is null, returns a version of CBORObject.Null with
     /// the given tag.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObjectAndTag(object o, ulong tag)
-    {
+    public static CBORObject FromObjectAndTag(object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToEInteger(tag));
     }
 
@@ -384,8 +352,7 @@ namespace PeterO.Cbor
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public T ToObject<T>()
-    {
+    public T ToObject<T>() {
       return (T)this.ToObject(typeof(T));
     }
 
@@ -410,8 +377,7 @@ namespace PeterO.Cbor
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public T ToObject<T>(CBORTypeMapper mapper)
-    {
+    public T ToObject<T>(CBORTypeMapper mapper) {
       return (T)this.ToObject(typeof(T), mapper);
     }
 
@@ -435,8 +401,7 @@ namespace PeterO.Cbor
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public T ToObject<T>(PODOptions options)
-    {
+    public T ToObject<T>(PODOptions options) {
       return (T)this.ToObject(typeof(T), options);
     }
 
@@ -463,8 +428,7 @@ namespace PeterO.Cbor
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public T ToObject<T>(CBORTypeMapper mapper, PODOptions options)
-    {
+    public T ToObject<T>(CBORTypeMapper mapper, PODOptions options) {
       return (T)this.ToObject(typeof(T), mapper, options);
     }
 
@@ -516,8 +480,7 @@ namespace PeterO.Cbor
       byte[] data,
       CBOREncodeOptions enc,
       CBORTypeMapper mapper,
-      PODOptions pod)
-    {
+      PODOptions pod) {
       return (T)DecodeObjectFromBytes(data, enc, typeof(T), mapper, pod);
     }
 
@@ -558,8 +521,7 @@ namespace PeterO.Cbor
     /// null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(byte[] data, CBOREncodeOptions
-enc)
-    {
+enc) {
       return (T)DecodeObjectFromBytes(data, enc, typeof(T));
     }
 
@@ -604,8 +566,7 @@ enc)
     public static T DecodeObjectFromBytes<T>(
       byte[] data,
       CBORTypeMapper mapper,
-      PODOptions pod)
-    {
+      PODOptions pod) {
       return (T)DecodeObjectFromBytes(data, typeof(T), mapper, pod);
     }
 
@@ -640,8 +601,7 @@ enc)
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public static T DecodeObjectFromBytes<T>(byte[] data)
-    {
+    public static T DecodeObjectFromBytes<T>(byte[] data) {
       return (T)DecodeObjectFromBytes(data, typeof(T));
     }
   }

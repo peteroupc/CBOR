@@ -1,12 +1,10 @@
 using System;
 using System.Text;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>Includes options to control how CBOR objects are converted
   /// to and from JavaScript Object Notation (JSON).</summary>
-  public sealed class JSONOptions
-  {
+  public sealed class JSONOptions {
     /// <summary>Specifies how JSON numbers are converted to CBOR objects
     /// when decoding JSON (such as via <c>FromJSONString</c> or
     /// <c>ReadJSON</c> ). None of these conversion modes affects how CBOR
@@ -100,8 +98,7 @@ namespace PeterO.Cbor
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class with default
     /// options.</summary>
-    public JSONOptions() : this(string.Empty)
-    {
+    public JSONOptions() : this(String.Empty) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -112,8 +109,7 @@ namespace PeterO.Cbor
     /// JSON.</param>
     [Obsolete("Use the more readable string constructor instead.")]
     public JSONOptions(bool base64Padding)
-      : this("base64Padding=" + (base64Padding ? "1" : "0"))
-    {
+      : this("base64Padding=" + (base64Padding ? "1" : "0")) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -131,8 +127,7 @@ namespace PeterO.Cbor
     [Obsolete("Use the more readable string constructor instead.")]
     public JSONOptions(bool base64Padding, bool replaceSurrogates)
       : this("base64Padding=" + (base64Padding ? "1" : "0") +
-           ";replacesurrogates=" + (replaceSurrogates ? "1" : "0"))
-    {
+           ";replacesurrogates=" + (replaceSurrogates ? "1" : "0")) {
     }
 
     /// <summary>Initializes a new instance of the
@@ -179,10 +174,8 @@ namespace PeterO.Cbor
     /// false.</exception>
     /// <exception cref='ArgumentException'>An unrecognized value for
     /// <c>numberconversion</c> was given.</exception>
-    public JSONOptions(string paramString)
-    {
-      if (paramString == null)
-      {
+    public JSONOptions(string paramString) {
+      if (paramString == null) {
         throw new ArgumentNullException(nameof(paramString));
       }
       var parser = new OptionsParser(paramString);
@@ -212,8 +205,7 @@ namespace PeterO.Cbor
     /// <returns>A text string containing the values of this options
     /// object's properties. The format of the string is the same as the
     /// one described in the String constructor for this class.</returns>
-    public override string ToString()
-    {
+    public override string ToString() {
       return new StringBuilder()
         .Append("base64padding=").Append(this.Base64Padding ? "true" : "false")
         .Append(";replacesurrogates=")
@@ -248,48 +240,34 @@ namespace PeterO.Cbor
       private set;
     }
 
-    private string FromNumberConversion()
-    {
+    private string FromNumberConversion() {
       ConversionMode kind = this.NumberConversion;
-      return kind == ConversionMode.Full
-        ? "full"
-        : kind == ConversionMode.Double
-        ? "double"
-        : kind == ConversionMode.Decimal128
-        ? "decimal128"
-        : kind == ConversionMode.IntOrFloat
-        ? "intorfloat"
-        : (kind == ConversionMode.IntOrFloatFromDouble) ?
+      return kind == ConversionMode.Full ? "full" :
+        kind == ConversionMode.Double ? "double" :
+        kind == ConversionMode.Decimal128 ? "decimal128" :
+        kind == ConversionMode.IntOrFloat ? "intorfloat" :
+        (kind == ConversionMode.IntOrFloatFromDouble) ?
 "intorfloatfromdouble" : "full";
     }
 
-    private static ConversionMode ToNumberConversion(string str)
-    {
-      if (str != null)
-      {
-        if (str.Equals("full", StringComparison.Ordinal))
-        {
+    private static ConversionMode ToNumberConversion(string str) {
+      if (str != null) {
+        if (str.Equals("full", StringComparison.Ordinal)) {
           return ConversionMode.Full;
         }
-        if (str.Equals("double", StringComparison.Ordinal))
-        {
+        if (str.Equals("double", StringComparison.Ordinal)) {
           return ConversionMode.Double;
         }
-        if (str.Equals("decimal128", StringComparison.Ordinal))
-        {
+        if (str.Equals("decimal128", StringComparison.Ordinal)) {
           return ConversionMode.Decimal128;
         }
-        if (str.Equals("intorfloat", StringComparison.Ordinal))
-        {
+        if (str.Equals("intorfloat", StringComparison.Ordinal)) {
           return ConversionMode.IntOrFloat;
         }
-        if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal))
-        {
+        if (str.Equals("intorfloatfromdouble", StringComparison.Ordinal)) {
           return ConversionMode.IntOrFloatFromDouble;
         }
-      }
-      else
-      {
+      } else {
         return ConversionMode.IntOrFloat;
       }
       throw new ArgumentException("Unrecognized conversion mode");

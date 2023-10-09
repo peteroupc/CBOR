@@ -12,29 +12,25 @@ using System.Diagnostics.CodeAnalysis;
 // Use directives rather than the Conditional attribute,
 // to avoid the chance of logging statements leaking in release builds
 #if DEBUG
-namespace PeterO
-{
-  internal static class DebugUtility
-  {
+namespace PeterO {
+  internal static class DebugUtility {
     private static readonly object WriterLock = new object();
     private static Action<string> writer;
 
     [System.Diagnostics.Conditional("DEBUG")]
-    public static void SetWriter(Action<string> wr)
-    {
-      lock (WriterLock)
-      {
+    public static void SetWriter(Action<string> wr) {
+      lock (WriterLock) {
         writer = wr;
       }
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static MethodInfo GetTypeMethod(
-      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
+      Type t,
       string name,
-      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type parameter)
-    {
+      Type parameter) {
 #if NET40 || NET20
-        return t.GetMethod(name, parameter);
+        return t.GetMethod(name, new[] { parameter });
 #else
       {
         return t?.GetRuntimeMethod(name, new[] { parameter });
@@ -42,26 +38,20 @@ namespace PeterO
 #endif
     }
 
-    public static void Log(string str)
-    {
+    public static void Log(string str) {
       var type = Type.GetType("System.Console");
-      if (type == null)
-      {
+      if (type == null) {
         Action<string> wr = null;
-        lock (WriterLock)
-        {
+        lock (WriterLock) {
           wr = writer;
         }
-        if (wr != null)
-        {
+        if (wr != null) {
 #if !NET20 && !NET40
           System.Diagnostics.Debug.WriteLine(str);
 #endif
           wr(str);
           return;
-        }
-        else
-        {
+        } else {
 #if !NET20 && !NET40
           System.Diagnostics.Debug.WriteLine(str);
           return;
@@ -72,23 +62,20 @@ namespace PeterO
 #endif
         }
       }
-      MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", typeof(string));
+      Type[] types = new[] { typeof(string) };
       if (typeMethod != null)
       {
         typeMethod.Invoke(
           type,
           new object[] { str });
-      }
-      else
-      {
+      } else {
         throw new NotSupportedException("System.Console.WriteLine not found");
       }
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
-    public static void Log(string format, params object[] args)
-    {
-      Log(string.Format(
+    public static void Log(string format, params object[] args) {
+      Log(String.Format(
         System.Globalization.CultureInfo.CurrentCulture,
         format,
         args));

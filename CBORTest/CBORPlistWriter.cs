@@ -1,104 +1,80 @@
-using PeterO.Cbor;
-using PeterO.Numbers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using PeterO.Cbor;
+using PeterO.Numbers;
 
-namespace Test
-{
-  internal static class CBORPlistWriter
-  {
+namespace Test {
+  internal static class CBORPlistWriter {
     private const string Hex16 = "0123456789ABCDEF";
 
     internal static void WritePlistStringUnquoted(
       string str,
       StringOutput sb,
-      JSONOptions options)
-    {
-      int i = 0;
-      for (; i < str.Length; ++i)
-      {
+      JSONOptions options) {
+      var i = 0;
+      for (; i < str.Length; ++i) {
         char c = str[i];
         if (c is < (char)0x20 or >= (char)0x7f or '\\' or '"' or '&' or
-          '<' or '>')
-        {
+          '<' or '>') {
           sb.WriteString(str, 0, i);
           break;
         }
       }
-      if (i == str.Length)
-      {
+      if (i == str.Length) {
         sb.WriteString(str, 0, i);
         return;
       }
-      for (; i < str.Length; ++i)
-      {
+      for (; i < str.Length; ++i) {
         char c = str[i];
-        if (c is (< (char)0x20 and (not (char)0x09 or not (char)0x0a or not (char)0x0d)) or (char)0xfffe or (char)0xffff)
-        {
+        if (c is (< (char)0x20 and (not (char)0x09 or not (char)0x0a or not
+(char)0x0d)) or (char)0xfffe or (char)0xffff) {
           // XML doesn't support certain code points even if escaped.
           // Therefore, replace all unsupported code points with replacement
           // characters.
           sb.WriteCodePoint(0xfffd);
-        }
-        else if (c is '\\' or '"')
-        {
+        } else if (c is '\\' or '"') {
           sb.WriteCodePoint('\\');
           sb.WriteCodePoint(c);
-        }
-        else if (c is < (char)0x20 or '&' or '<' or '>' or (>= (char)0x7f and
+        } else if (c is < (char)0x20 or '&' or '<' or '>' or (>= (char)0x7f and
             ((char)0x2028 or (char)0x2029 or
-              (>= (char)0x7f and <= (char)0xa0) or (char)0xfeff or (char)0xfffe or
-              (char)0xffff)))
-        {
+              (>= (char)0x7f and <= (char)0xa0) or (char)0xfeff or
+(char)0xfffe or
+              (char)0xffff))) {
           sb.WriteString("&#x");
           sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
           sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
           sb.WriteCodePoint(Hex16[(c >> 4) & 15]);
           sb.WriteCodePoint(Hex16[c & 15]);
           sb.WriteString(";");
-        }
-        else if ((c & 0xfc00) == 0xd800)
-        {
-          if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00)
-          {
-            if (options.ReplaceSurrogates)
-            {
+        } else if ((c & 0xfc00) == 0xd800) {
+          if (i >= str.Length - 1 || (str[i + 1] & 0xfc00) != 0xdc00) {
+            if (options.ReplaceSurrogates) {
               // Replace unpaired surrogate with U+FFFD
               sb.WriteCodePoint(0xfffd);
-            }
-            else
-            {
+            } else {
               throw new CBORException("Unpaired surrogate in string");
             }
-          }
-          else
-          {
+          } else {
             sb.WriteString(str, i, 2);
             ++i;
           }
-        }
-        else
-        {
+        } else {
           sb.WriteCodePoint(c);
         }
       }
     }
 
-    internal static string ToPlistString(CBORObject obj)
-    {
+    internal static string ToPlistString(CBORObject obj) {
       var builder = new StringBuilder();
-      try
-      {
+      try {
         WritePlistToInternal(
           obj,
           new StringOutput(builder),
           JSONOptions.Default);
         return builder.ToString();
-      }
-      catch (IOException ex)
-      {
+      } catch (IOException ex) {
         throw new CBORException(ex.Message, ex);
       }
     }
@@ -106,8 +82,7 @@ namespace Test
     internal static void WritePlistToInternal(
       CBORObject obj,
       StringOutput writer,
-      JSONOptions options)
-    {
+      JSONOptions options) {
       writer.WriteString("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST");
       writer.WriteString(" 1.0//EN\" \"http://www.apple.com/DTDs/");
       writer.WriteString("PropertyList-1.0.dtd\"><plist version='1.0'>");
@@ -118,25 +93,19 @@ namespace Test
     internal static void WritePlistToInternalCore(
       CBORObject obj,
       StringOutput writer,
-      JSONOptions options)
-    {
-      if (obj.Type is CBORType.Array or CBORType.Map)
-      {
+      JSONOptions options) {
+      if (obj.Type is CBORType.Array or CBORType.Map) {
         var stack = new List<CBORObject>();
         WritePlistToInternalCore(obj, writer, options, stack);
-      }
-      else
-      {
+      } else {
         WritePlistToInternalCore(obj, writer, options, null);
       }
     }
 
     private static void PopRefIfNeeded(
       IList<CBORObject> stack,
-      bool pop)
-    {
-      if (pop && stack != null)
-      {
+      bool pop) {
+      if (pop && stack != null) {
         stack.RemoveAt(stack.Count - 1);
       }
     }
@@ -144,23 +113,17 @@ namespace Test
     private static bool CheckCircularRef(
       IList<CBORObject> stack,
       CBORObject parent,
-      CBORObject child)
-    {
-      if (child.Type is not CBORType.Array and not CBORType.Map)
-      {
+      CBORObject child) {
+      if (child.Type is not CBORType.Array and not CBORType.Map) {
         return false;
       }
       CBORObject childUntag = child.Untag();
-      if (parent.Untag() == childUntag)
-      {
+      if (parent.Untag() == childUntag) {
         throw new CBORException("Circular reference in CBOR object");
       }
-      if (stack != null)
-      {
-        foreach (CBORObject o in stack)
-        {
-          if (o.Untag() == childUntag)
-          {
+      if (stack != null) {
+        foreach (CBORObject o in stack) {
+          if (o.Untag() == childUntag) {
             throw new CBORException("Circular reference in CBOR object");
           }
         }
@@ -173,31 +136,24 @@ namespace Test
       CBORObject obj,
       StringOutput writer,
       JSONOptions options,
-      IList<CBORObject> stack)
-    {
-      if (obj.IsNumber)
-      {
-        if (obj.AsNumber().IsInteger())
-        {
+      IList<CBORObject> stack) {
+      if (obj.IsNumber) {
+        if (obj.AsNumber().IsInteger()) {
           writer.WriteString("<integer>");
           writer.WriteString(obj.ToJSONString());
           writer.WriteString("</integer>");
-        }
-        else
-        {
+        } else {
           writer.WriteString("<real>");
           writer.WriteString(obj.ToJSONString());
           writer.WriteString("</real>");
         }
         return;
       }
-      if (obj.HasMostOuterTag(0) || obj.HasMostOuterTag(1))
-      {
+      if (obj.HasMostOuterTag(0) || obj.HasMostOuterTag(1)) {
         CBORDateConverter conv = CBORDateConverter.TaggedString;
         var year = new EInteger[1];
-        int[] lesserFields = new int[7];
-        if (!conv.TryGetDateTimeFields(obj, year, lesserFields))
-        {
+        var lesserFields = new int[7];
+        if (!conv.TryGetDateTimeFields(obj, year, lesserFields)) {
           throw new InvalidOperationException("Unsupported date/time");
         }
         // Set fractional seconds and offset to 0, since
@@ -211,8 +167,7 @@ namespace Test
         writer.WriteString("</date>");
         return;
       }
-      switch (obj.Type)
-      {
+      switch (obj.Type) {
         case CBORType.Integer:
           {
             CBORObject untaggedObj = obj.Untag();
@@ -231,13 +186,11 @@ namespace Test
           }
         case CBORType.Boolean:
           {
-            if (obj.IsTrue)
-            {
+            if (obj.IsTrue) {
               writer.WriteString("<true/>");
               return;
             }
-            if (obj.IsFalse)
-            {
+            if (obj.IsFalse) {
               writer.WriteString("<false/>");
               return;
             }
@@ -257,13 +210,11 @@ namespace Test
         case CBORType.ByteString:
           {
             byte[] byteArray = obj.GetByteString();
-            if (byteArray.Length == 0)
-            {
+            if (byteArray.Length == 0) {
               writer.WriteString("<data></data>");
               return;
             }
-            if (obj.HasTag(22))
-            {
+            if (obj.HasTag(22)) {
               writer.WriteString("<data>");
               // Base64 with padding
               Base64.WriteBase64(
@@ -273,22 +224,17 @@ namespace Test
                 byteArray.Length,
                 true);
               writer.WriteString("</data>");
-            }
-            else if (obj.HasTag(23))
-            {
+            } else if (obj.HasTag(23)) {
               writer.WriteString("<str");
               writer.WriteString("ing>");
               // Write as base16
-              for (int i = 0; i < byteArray.Length; ++i)
-              {
+              for (int i = 0; i < byteArray.Length; ++i) {
                 writer.WriteCodePoint(Hex16[(byteArray[i] >> 4) & 15]);
                 writer.WriteCodePoint(Hex16[byteArray[i] & 15]);
               }
               writer.WriteString("</str");
               writer.WriteString("ing>");
-            }
-            else
-            {
+            } else {
               writer.WriteString("<data>");
               // Base64 with padding
               Base64.WriteBase64(
@@ -304,8 +250,7 @@ namespace Test
         case CBORType.TextString:
           {
             string thisString = obj.AsString();
-            if (thisString.Length == 0)
-            {
+            if (thisString.Length == 0) {
               writer.WriteString("<str");
               writer.WriteString("ing>");
               writer.WriteString("</str");
@@ -322,8 +267,7 @@ namespace Test
         case CBORType.Array:
           {
             writer.WriteString("<array>");
-            for (int i = 0; i < obj.Count; ++i)
-            {
+            for (int i = 0; i < obj.Count; ++i) {
               bool pop = CheckCircularRef(stack, obj, obj[i]);
               WritePlistToInternalCore(obj[i], writer, options, stack);
               PopRefIfNeeded(stack, pop);
@@ -333,26 +277,21 @@ namespace Test
           }
         case CBORType.Map:
           {
-            bool hasNonStringKeys = false;
+            var hasNonStringKeys = false;
             ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
               obj.Entries;
-            foreach (KeyValuePair<CBORObject, CBORObject> entry in entries)
-            {
+            foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
               CBORObject key = entry.Key;
-              if (key.Type != CBORType.TextString ||
-                key.IsTagged)
-              {
+              if (key.Type != CBORType.TextString || key.IsTagged) {
                 // treat a non-text-string item or a tagged item
                 // as having non-string keys
                 hasNonStringKeys = true;
                 break;
               }
             }
-            if (!hasNonStringKeys)
-            {
+            if (!hasNonStringKeys) {
               writer.WriteString("<dict>");
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in entries)
-              {
+              foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 writer.WriteString("<key>");
@@ -363,9 +302,7 @@ namespace Test
                 PopRefIfNeeded(stack, pop);
               }
               writer.WriteString("</dict>");
-            }
-            else
-            {
+            } else {
               // This map has non-string keys
               IDictionary<string, CBORObject> stringMap = new
               Dictionary<string, CBORObject>();
@@ -373,13 +310,11 @@ namespace Test
               // some keys could be duplicates
               // when serialized to strings
               foreach (KeyValuePair<CBORObject, CBORObject> entry
-                in entries)
-              {
+                in entries) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
                 string str = null;
-                switch (key.Type)
-                {
+                switch (key.Type) {
                   case CBORType.TextString:
                     str = key.AsString();
                     break;
@@ -394,12 +329,10 @@ namespace Test
                       str = sb.ToString();
                       break;
                     }
-                  default:
-                    str = key.ToJSONString(options);
+                    default: str = key.ToJSONString(options);
                     break;
                 }
-                if (stringMap.ContainsKey(str))
-                {
+                if (stringMap.ContainsKey(str)) {
                   throw new CBORException(
                     "Duplicate Plist string equivalents of map" +
                     "\u0020keys");
@@ -407,8 +340,7 @@ namespace Test
                 stringMap[str] = value;
               }
               writer.WriteString("<dict>");
-              foreach (KeyValuePair<string, CBORObject> entry in stringMap)
-              {
+              foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
                 string key = entry.Key;
                 CBORObject value = entry.Value;
                 writer.WriteString("<key>");
@@ -422,8 +354,7 @@ namespace Test
             }
             break;
           }
-        default:
-          throw new InvalidOperationException("Unexpected item" +
+        default: throw new InvalidOperationException("Unexpected item" +
             "\u0020type");
       }
     }

@@ -7,8 +7,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
  */
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>Classes that implement this interface can support
   /// conversions from CBOR objects to a custom type and back.</summary>
   /// <typeparam name='T'>Type of objects to convert to and from CBOR

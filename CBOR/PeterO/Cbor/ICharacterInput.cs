@@ -1,7 +1,6 @@
 using System;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   /// <summary>An interface for reading Unicode characters from a data
   /// source.</summary>
   internal interface ICharacterInput

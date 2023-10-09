@@ -8,10 +8,8 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 
-namespace Test
-{
-  internal static class Base64
-  {
+namespace Test {
+  internal static class Base64 {
     private const string Base64URL =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
@@ -23,8 +21,7 @@ namespace Test
       byte[] data,
       int offset,
       int count,
-      bool padding)
-    {
+      bool padding) {
       WriteBase64(writer, data, offset, count, true, padding);
     }
 
@@ -33,8 +30,7 @@ namespace Test
       byte[] data,
       int offset,
       int count,
-      bool padding)
-    {
+      bool padding) {
       WriteBase64(writer, data, offset, count, false, padding);
     }
 
@@ -44,46 +40,37 @@ namespace Test
       int offset,
       int count,
       bool classic,
-      bool padding)
-    {
-      if (writer == null)
-      {
+      bool padding) {
+      if (writer == null) {
         throw new ArgumentNullException(nameof(writer));
       }
-      if (offset < 0)
-      {
+      if (offset < 0) {
         throw new ArgumentException("offset(" + offset + ") is less than " +
           "0 ");
       }
-      if (offset > data.Length)
-      {
+      if (offset > data.Length) {
         throw new ArgumentException("offset(" + offset + ") is more than " +
           data.Length);
       }
-      if (count < 0)
-      {
+      if (count < 0) {
         throw new ArgumentException("count(" + count + ") is less than " +
           "0 ");
       }
-      if (count > data.Length)
-      {
+      if (count > data.Length) {
         throw new ArgumentException("count(" + count + ") is more than " +
           data.Length);
       }
-      if (data.Length - offset < count)
-      {
+      if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + "(" +
           (data.Length - offset) + ") is less than " + count);
       }
       string alphabet = classic ? Base64Classic : Base64URL;
       int length = offset + count;
-      byte[] buffer = new byte[32];
-      int bufferOffset = 0;
+      var buffer = new byte[32];
+      var bufferOffset = 0;
       int i;
-      for (i = offset; i < (length - 2); i += 3)
-      {
-        if (bufferOffset >= buffer.Length)
-        {
+      for (i = offset; i < (length - 2); i += 3) {
+        if (bufferOffset >= buffer.Length) {
           writer.WriteAscii(buffer, 0, bufferOffset);
           bufferOffset = 0;
         }
@@ -96,38 +83,30 @@ namespace Test
         buffer[bufferOffset++] = (byte)alphabet[data[i + 2] & 63];
       }
       int lenmod3 = count % 3;
-      if (lenmod3 != 0)
-      {
-        if (bufferOffset >= buffer.Length)
-        {
+      if (lenmod3 != 0) {
+        if (bufferOffset >= buffer.Length) {
           writer.WriteAscii(buffer, 0, bufferOffset);
           bufferOffset = 0;
         }
         i = length - lenmod3;
         buffer[bufferOffset++] = (byte)alphabet[(data[i] >> 2) & 63];
-        if (lenmod3 == 2)
-        {
+        if (lenmod3 == 2) {
           buffer[bufferOffset++] = (byte)alphabet[((data[i] & 3) << 4) +
 ((data[i + 1] >>
                   4) & 15)];
           buffer[bufferOffset++] = (byte)alphabet[(data[i + 1] & 15) << 2];
-          if (padding)
-          {
+          if (padding) {
             buffer[bufferOffset++] = (byte)'=';
           }
-        }
-        else
-        {
+        } else {
           buffer[bufferOffset++] = (byte)alphabet[(data[i] & 3) << 4];
-          if (padding)
-          {
+          if (padding) {
             buffer[bufferOffset++] = (byte)'=';
             buffer[bufferOffset++] = (byte)'=';
           }
         }
       }
-      if (bufferOffset >= 0)
-      {
+      if (bufferOffset >= 0) {
         writer.WriteAscii(buffer, 0, bufferOffset);
       }
     }

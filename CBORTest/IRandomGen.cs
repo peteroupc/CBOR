@@ -1,5 +1,4 @@
-namespace PeterO
-{
+namespace PeterO {
   /// <summary>Interface for random-number generators.</summary>
   public interface IRandomGen
   {

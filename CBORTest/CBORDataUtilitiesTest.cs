@@ -1,22 +1,18 @@
+using System;
 using NUnit.Framework;
 using PeterO.Cbor;
 using PeterO.Numbers;
-using System;
 
-namespace Test
-{
+namespace Test {
   [TestFixture]
-  public class CBORDataUtilitiesTest
-  {
-    private static void AssertNegative(CBORObject obj)
-    {
+  public class CBORDataUtilitiesTest {
+    private static void AssertNegative(CBORObject obj) {
       Assert.IsTrue(obj.AsNumber().IsNegative());
       CBORTestCommon.AssertRoundTrip(obj);
     }
 
     [Test]
-    public void TestPreserveNegativeZero()
-    {
+    public void TestPreserveNegativeZero() {
       CBORObject cbor;
       var pnz = new
 JSONOptions("numberconversion=full;preservenegativezero=true");
@@ -55,7 +51,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
           "-0.0",
           stringTemp);
       }
-      string[] assertNegatives = new string[] {
+      var assertNegatives = new string[] {
         "-0",
         "-0.0",
         "-0.0000",
@@ -78,8 +74,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
         "-0.000e+999999999999",
         "-0.000e-999999999999",
       };
-      foreach (string str in assertNegatives)
-      {
+      foreach (string str in assertNegatives) {
         cbor = CBORDataUtilities.ParseJSONNumber(str, pnz);
         AssertNegative(cbor);
       }
@@ -87,36 +82,30 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
 
     // testing obsolete method
     [Test]
-    public void TestParseJSONNumberSubstring()
-    {
+    public void TestParseJSONNumberSubstring() {
       string tstr =
 
   "-3.00931381333368754713014659613049757554804012787921371662913692598770508705049030832574634419795955864174175076186656951904296875000E-49";
-      try
-      {
+      try {
         _ = CBORDataUtilities.ParseJSONNumber(
           "xyzxyz" + tstr,
           6,
           tstr.Length,
           new JSONOptions("numberconversion=full"));
-      }
-      catch (Exception ex)
-      {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(string.Empty, ex);
+        throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
     [Test]
-    public void TestParseJSONNumberNegativeZero()
-    {
-      string[] strings = new string[] {
+    public void TestParseJSONNumberNegativeZero() {
+      var strings = new string[] {
         "-0", "0", "-0E+0", "0", "-0E-0", "0", "-0E-1", "0.0",
         "-0.00", "0.00", "-0.00E+0", "0.00", "-0.00E-0", "0.00",
         "-0.00E-1", "0.000",
       };
-      for (int i = 0; i < strings.Length; i += 2)
-      {
+      for (int i = 0; i < strings.Length; i += 2) {
         var jsonDecimal = (EDecimal)CBORDataUtilities
           .ParseJSONNumber(strings[i], new
 
@@ -139,7 +128,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
       null, "100.", "-100.", "100.e+20", "-100.e+20",
       "100.e20", "+0.1", "0.", "-0.", "+0",
       "=0g.1", "0g.1", "0.e+20", "-0.e20", "-0.e+20",
-      "0.e20", string.Empty, "xyz", "Infinity", "-Infinity",
+      "0.e20", String.Empty, "xyz", "Infinity", "-Infinity",
       "true", ".1", ".01", "-.1", "-.01", "-xyz", "-true",
       "0..1", "-0..1", "0xyz", "-0xyz",
       "0.1xyz", "0.xyz", "0.5exyz", "0.5q+88",
@@ -162,51 +151,41 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
     };
 
     [Test]
-    public void TestParseJSONNumber()
-    {
-      foreach (string str in BadJsonNumbers)
-      {
-        if (CBORDataUtilities.ParseJSONNumber(str) != null)
-        {
+    public void TestParseJSONNumber() {
+      foreach (string str in BadJsonNumbers) {
+        if (CBORDataUtilities.ParseJSONNumber(str) != null) {
           Assert.Fail(str);
         }
         if (CBORDataUtilities.ParseJSONNumber(str,
-              new JSONOptions("numberconversion=full")) != null)
-        {
+              new JSONOptions("numberconversion=full")) != null) {
           Assert.Fail(str);
         }
         if (CBORDataUtilities.ParseJSONNumber(str, new
 JSONOptions("numberconversion=full;preservenegativezero=true")) !=
-          null)
-        {
+          null) {
           Assert.Fail(str);
         }
         if (CBORDataUtilities.ParseJSONNumber(str, new
 JSONOptions("numberconversion=full;preservenegativezero=false")) !=
-          null)
-        {
+          null) {
           Assert.Fail(str);
         }
       }
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648",
   new JSONOptions("numberconversion=full"));
       CBORTestCommon.AssertJSONSer(cbor, "2E-2147483648");
-      foreach (string str in GoodJsonNumbers)
-      {
-        if (CBORDataUtilities.ParseJSONNumber(str) == null)
-        {
+      foreach (string str in GoodJsonNumbers) {
+        if (CBORDataUtilities.ParseJSONNumber(str) == null) {
           Assert.Fail(str);
         }
         if (CBORDataUtilities.ParseJSONNumber(str, new
 JSONOptions("numberconversion=full;preservenegativezero=true")) ==
-          null)
-        {
+          null) {
           Assert.Fail(str);
         }
         if (CBORDataUtilities.ParseJSONNumber(str, new
 JSONOptions("numberconversion=full;preservenegativezero=false")) ==
-          null)
-        {
+          null) {
           Assert.Fail(str);
         }
       }
@@ -220,7 +199,8 @@ ToObjectTest.TestToFromObjectRoundTrip(230).AsNumber();
       {
         CBORNumber objectTemp =
 ToObjectTest.TestToFromObjectRoundTrip(23).AsNumber();
-        CBORNumber objectTemp2 = CBORDataUtilities.ParseJSONNumber("23.0e00", new
+        CBORNumber objectTemp2 =
+CBORDataUtilities.ParseJSONNumber("23.0e00", new
         JSONOptions("numberconversion=full")).AsNumber();
         TestCommon.CompareTestEqual(objectTemp, objectTemp2);
       }
