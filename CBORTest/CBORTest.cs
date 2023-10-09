@@ -2454,7 +2454,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       Assert.AreEqual(
         expectedStr,
         DataUtilities.ToLowerCaseAscii(ei.ToRadixString(16)));
-      var cbor = CBORObject.FromObject(ei);
+      var cbor = CBORObject.FromEInteger(ei);
       Assert.IsTrue(cbor.AsNumber().Sign >= 0);
       TestCommon.AssertEqualsHashCode(
         ei,
@@ -4192,7 +4192,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       for (int i = 0; i < eints.Length; ++i) {
         CBORObject cbor;
         bool isNegative = eints[i].Sign < 0;
-        cbor = CBORObject.FromObject(eints[i]);
+        cbor = CBORObject.FromEInteger(eints[i]);
         Assert.IsTrue(cbor.IsNumber, cbor.ToString());
         if (isPastCbor[i]) {
           if (isNegative) {

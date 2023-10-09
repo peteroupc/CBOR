@@ -1631,39 +1631,39 @@ namespace Test {
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
       {
-        bool btemp = CBORObject.FromObject(ei)
+        bool btemp = CBORObject.FromEInteger(ei)
           .AsNumber().CanTruncatedIntFitInInt64();
         Assert.IsTrue(btemp, ei.ToString());
       }
       ei = EInteger.FromString("9223372036854775808");
 
       Assert.IsFalse(
-        CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64(),
+        CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64(),
         ei.ToString());
       ei = EInteger.FromString("-9223372036854775807");
 
       Assert.IsTrue(
-        CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64(),
+        CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64(),
         ei.ToString());
       ei = EInteger.FromString("-9223372036854775808");
 
       Assert.IsTrue(
-        CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64(),
+        CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64(),
         ei.ToString());
       ei = EInteger.FromString("-9223372036854775809");
 
       Assert.IsFalse(
-        CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64(),
+        CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64(),
         ei.ToString());
       ei = EInteger.FromString("-9223373136366403584");
 
       Assert.IsFalse(
-        CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64(),
+        CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64(),
         ei.ToString());
       ei = EInteger.FromString("9223373136366403584");
 
       Assert.IsFalse(
-        CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64(),
+        CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64(),
         ei.ToString());
       var strings = new string[] {
         "8000FFFFFFFF0000",
@@ -1683,11 +1683,11 @@ namespace Test {
         ei = EInteger.FromRadixString(str, 16);
 
         Assert.IsFalse(
-          CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64());
+          CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64());
         ei = ei.Negate();
 
         Assert.IsFalse(
-          CBORObject.FromObject(ei).AsNumber().CanTruncatedIntFitInInt64());
+          CBORObject.FromEInteger(ei).AsNumber().CanTruncatedIntFitInInt64());
       }
 
       CBORObject numbers = GetNumberData();
@@ -1880,7 +1880,7 @@ namespace Test {
     [Test]
     public void CompareLongDouble() {
       var cbor1 = CBORObject.FromObject(3.5E-15);
-      var cbor2 = CBORObject.FromObject(281479271677953L);
+      var cbor2 = CBORObject.FromInt64(281479271677953L);
       TestCommon.CompareTestLess(cbor1.AsDouble(), cbor2.AsDouble());
     }
 
@@ -2602,7 +2602,7 @@ namespace Test {
         CBORObject.FromObject(9), CBORObject.True,
         CBORObject.FromObject(bytes),
         CBORObject.False, CBORObject.Null, CBORObject.FromObject("test"),
-        CBORObject.FromObject(99999), CBORObject.FromObject(-1),
+        CBORObject.FromInt(99999), CBORObject.FromObject(-1),
       };
       foreach (CBORObject c2 in othercbor) {
         try {
@@ -3032,7 +3032,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromObject(CBORObject.NewArray().AsNumber().Sign);
+        _ = CBORObject.FromInt(CBORObject.NewArray().AsNumber().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3041,7 +3041,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromObject(CBORObject.NewMap().AsNumber().Sign);
+        _ = CBORObject.FromInt(CBORObject.NewMap().AsNumber().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -8044,7 +8044,7 @@ cborTemp1.AsNumber().IsZero()) {
 
     private static void TestDateTimeStringNumberOne(string str, long num) {
       CBORObject dtstring = CBORObject.FromObject(str).WithTag(0);
-      CBORObject dtnum = CBORObject.FromObject(num).WithTag(1);
+      CBORObject dtnum = CBORObject.FromInt64(num).WithTag(1);
       TestDateTimeStringNumberOne(dtstring, dtnum);
     }
     private static void TestDateTimeStringNumberOne(string str, double num) {

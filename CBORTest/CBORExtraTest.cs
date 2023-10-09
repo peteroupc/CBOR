@@ -6573,15 +6573,15 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     [Test]
     public void TestNullable() {
       int? nvalue = 1;
-      var cbor = CBORObject.FromObject(nvalue);
+      var cbor = CBORObject.FromObject((object)nvalue);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
       nvalue = null;
-      _ = CBORObject.FromObject(nvalue);
+      _ = CBORObject.FromObject((object)nvalue);
       uint? unvalue = 1u;
-      cbor = CBORObject.FromObject(unvalue);
+      cbor = CBORObject.FromObject((object)unvalue);
       Assert.AreEqual(CBORObject.FromObject(1), cbor);
       unvalue = null;
-      cbor = CBORObject.FromObject(unvalue);
+      cbor = CBORObject.FromObject((object)unvalue);
       Assert.AreEqual(CBORObject.Null, cbor);
       Assert.AreEqual(null, CBORObject.Null.ToObject<int?>());
       Assert.AreEqual(1, CBORObject.FromObject(1).ToObject<int?>());
