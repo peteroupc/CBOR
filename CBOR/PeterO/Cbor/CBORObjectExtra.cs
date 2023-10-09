@@ -9,6 +9,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 using PeterO.Numbers;
 using System;
 using System.IO;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor
 {
@@ -382,6 +383,7 @@ namespace PeterO.Cbor
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>()
     {
       return (T)this.ToObject(typeof(T));
@@ -407,6 +409,7 @@ namespace PeterO.Cbor
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>(CBORTypeMapper mapper)
     {
       return (T)this.ToObject(typeof(T), mapper);
@@ -431,6 +434,7 @@ namespace PeterO.Cbor
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>(PODOptions options)
     {
       return (T)this.ToObject(typeof(T), options);
@@ -458,6 +462,7 @@ namespace PeterO.Cbor
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>(CBORTypeMapper mapper, PODOptions options)
     {
       return (T)this.ToObject(typeof(T), mapper, options);
@@ -506,6 +511,7 @@ namespace PeterO.Cbor
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter "T" or <paramref name='pod'/> is
     /// null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(
       byte[] data,
       CBOREncodeOptions enc,
@@ -550,6 +556,7 @@ namespace PeterO.Cbor
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(byte[] data, CBOREncodeOptions
 enc)
     {
@@ -593,6 +600,7 @@ enc)
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter "T" or <paramref
     /// name='pod'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(
       byte[] data,
       CBORTypeMapper mapper,
@@ -631,6 +639,7 @@ enc)
     /// error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(byte[] data)
     {
       return (T)DecodeObjectFromBytes(data, typeof(T));

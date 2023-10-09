@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 // TODO: Add ReadObject that combines Read and ToObject; similarly
 // for ReadJSON, FromJSONString, FromJSONBytes
@@ -594,6 +595,7 @@ namespace PeterO.Cbor
     /// or map. If this is a CBOR map, returns <c>null</c> (not
     /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
     /// exist.</returns>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public CBORObject GetOrDefault(object key, CBORObject defaultValue)
     {
       if (this.Type == CBORType.Array)
@@ -1244,6 +1246,7 @@ namespace PeterO.Cbor
     /// typeof(List&lt;String&gt;));</code>
     ///  .
     /// </example>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t)
     {
       return this.ToObject(t, null, null, 0);
@@ -1273,6 +1276,7 @@ namespace PeterO.Cbor
     /// error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='t'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, CBORTypeMapper mapper)
     {
       return mapper == null ? throw new ArgumentNullException(nameof(mapper)) : this.ToObject(t, mapper, null, 0);
@@ -1305,6 +1309,7 @@ namespace PeterO.Cbor
     /// <exception cref='PeterO.Cbor.CBORException'>The given object's
     /// nesting is too deep, or another error occurred when serializing the
     /// object.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, PODOptions options)
     {
       return options == null ? throw new ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
@@ -1647,6 +1652,7 @@ namespace PeterO.Cbor
     /// typeof(List&lt;String&gt;));</code>
     ///  .
     /// </example>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, CBORTypeMapper mapper, PODOptions
       options)
     {
@@ -1696,6 +1702,7 @@ namespace PeterO.Cbor
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter <paramref name='t'/> or <paramref
     /// name='pod'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object DecodeObjectFromBytes(
       byte[] data,
       CBOREncodeOptions enc,
@@ -1744,6 +1751,7 @@ namespace PeterO.Cbor
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter <paramref name='t'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object DecodeObjectFromBytes(
       byte[] data,
       CBOREncodeOptions enc,
@@ -1789,6 +1797,7 @@ namespace PeterO.Cbor
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='t'/> or
     /// <paramref name='pod'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object DecodeObjectFromBytes(
       byte[] data,
       Type t,
@@ -1830,13 +1839,14 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='t'/> is
     /// null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object DecodeObjectFromBytes(byte[] data, Type t)
     {
       return DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t);
     }
-
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     internal object ToObject(
-      Type t,
+      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
       CBORTypeMapper mapper,
       PODOptions options,
       int depth)
@@ -2556,6 +2566,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// above.</para>.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObject(object obj)
     {
       return FromObject(obj, PODOptions.Default);
@@ -2581,6 +2592,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// CBORObject.Null if the object is null.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='options'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObject(
       object obj,
       PODOptions options)
@@ -2608,6 +2620,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// CBORObject.Null if the object is null.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='mapper'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObject(
       object obj,
       CBORTypeMapper mapper)
@@ -2837,6 +2850,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// v &lt; 0 ? BigInteger.valueOf(1).shiftLeft(64).add(BigInteger.valueOf(v)) :
     /// BigInteger.valueOf(v));</code>
     /// </example>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObject(
       object obj,
       CBORTypeMapper mapper,
@@ -2845,6 +2859,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       return mapper == null ? throw new ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // Annotation comes from use of GetProperties
     internal static CBORObject FromObject(
       object obj,
       PODOptions options,
@@ -3115,6 +3130,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// 2^64-1.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintTag'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(
       object valueOb,
       EInteger bigintTag)
@@ -3180,6 +3196,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// version of CBORObject.Null with the given tag.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='smallTag'/> is less than 0.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(
       object valueObValue,
       int smallTag)
