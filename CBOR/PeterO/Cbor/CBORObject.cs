@@ -1755,6 +1755,11 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     public static object DecodeObjectFromBytes(byte[] data, Type t) {
       return DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t);
     }
+    internal EDecimal ToEDecimal() {
+      CBORNumber cn = this.AsNumber();
+      return cn.GetNumberInterface().AsEDecimal(cn.GetValue());
+    }
+
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     internal object ToObject(
       [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
@@ -1793,8 +1798,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       // might throw InvalidOperationException rather than CBORException.
       // Make them throw CBORException in next major version.
       if (t.Equals(typeof(EDecimal))) {
-        CBORNumber cn = this.AsNumber();
-        return cn.GetNumberInterface().AsEDecimal(cn.GetValue());
+        this.ToEDecimal();
       }
       if (t.Equals(typeof(EFloat))) {
         var cn = CBORNumber.FromCBORObject(this);

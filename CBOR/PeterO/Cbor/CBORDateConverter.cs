@@ -203,7 +203,6 @@ ICBORToFromConverter<DateTime>
       }
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private string TryGetDateTimeFieldsInternal(
       CBORObject obj,
       EInteger[] year,
@@ -249,7 +248,7 @@ ICBORToFromConverter<DateTime>
             lesserFields);
         } else {
           EDecimal dec;
-          dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
+          dec = untagobj.ToEDecimal();
           CBORUtilities.BreakDownSecondsSinceEpoch(
             dec,
             outYear,
