@@ -284,7 +284,7 @@ ICBORToFromConverter<DateTime>
             lesserFields);
         } else {
           EDecimal dec;
-          dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
+          dec = untagobj.ToEDecimal();
           CBORUtilities.BreakDownSecondsSinceEpoch(
             dec,
             outYear,
@@ -394,7 +394,7 @@ ICBORToFromConverter<DateTime>
             {
               string str = CBORUtilities.ToAtomDateTimeString(bigYear,
                   lesserFields);
-              return CBORObject.FromObjectAndTag(str, 0);
+              return CBORObject.FromString(str).WithTag(0);
             }
           case ConversionType.TaggedNumber:
           case ConversionType.UntaggedNumber:
@@ -406,8 +406,8 @@ ICBORToFromConverter<DateTime>
                   status);
               return status[0] == 0 ?
                 this.Type == ConversionType.TaggedNumber ?
-                  CBORObject.FromObjectAndTag(ef.ToEInteger(), 1) :
-                CBORObject.FromObject(ef.ToEInteger()) : status[0] == 1 ?
+                  CBORObject.FromEInteger(ef.ToEInteger()).WithTag(1) :
+                CBORObject.FromEInteger(ef.ToEInteger()) : status[0] == 1 ?
                   this.Type == ConversionType.TaggedNumber ?
                   CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)
                   .WithTag(1) :

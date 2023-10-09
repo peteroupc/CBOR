@@ -67,7 +67,7 @@ namespace PeterO {
         throw new CBORException("Invalid integer encoding") :
         s.Length >= 3 && s[0] == '-' && s[1] == '0' && s[2] == '0' ?
         throw new CBORException("Invalid integer encoding") :
-        CBORObject.FromObject(
+        CBORObject.FromEInteger(
           EInteger.FromString(s));
     }
 

@@ -303,12 +303,12 @@ count);
           type == 7);
         if (type == 0) {
           return (uadditional >> 63) != 0 ?
-            CBORObject.FromObject(ToUnsignedEInteger(uadditional)) :
-            CBORObject.FromObject(uadditional);
+            CBORObject.FromEInteger(ToUnsignedEInteger(uadditional)) :
+            CBORObject.FromInt64(uadditional);
         } else if (type == 1) {
-          return (uadditional >> 63) != 0 ? CBORObject.FromObject(
+          return (uadditional >> 63) != 0 ? CBORObject.FromEInteger(
               ToUnsignedEInteger(uadditional).Add(1).Negate()) :
-            CBORObject.FromObject((-uadditional) - 1L);
+            CBORObject.FromInt64((-uadditional) - 1L);
         } else if (type == 7) {
           if (additional < 24) {
             return CBORObject.FromSimpleValue(additional);

@@ -1042,7 +1042,7 @@ namespace Test {
       cbor3 = CBORObject.FromJSONString(str, jsoptions);
       cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign
             == 0)) ?
-        CBORObject.FromObject(ed.Mantissa) : CBORObject.FromObject(ed);
+        CBORObject.FromEInteger(ed.Mantissa) : CBORObject.FromObject(ed);
       Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
       Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
       Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");

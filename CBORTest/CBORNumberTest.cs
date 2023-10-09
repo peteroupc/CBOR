@@ -86,7 +86,7 @@ namespace Test {
       Assert.IsTrue(CBORObject.FromObject(-0.0).AsNumber().CanFitInUInt64(),
         "-0.0");
       bool
-      b = CBORObject.FromObject(
+      b = CBORObject.FromEInteger(
           EInteger.FromInt32(1).ShiftLeft(65)).AsNumber().CanFitInUInt64();
       Assert.IsFalse(b);
 
@@ -127,7 +127,7 @@ namespace Test {
       Assert.IsFalse(
         CBORObject.FromObject(-99).AsNumber().CanTruncatedIntFitInUInt64());
       bool
-      b = CBORObject.FromObject(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
+      b = CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         .CanTruncatedIntFitInUInt64();
       Assert.IsFalse(b);
 

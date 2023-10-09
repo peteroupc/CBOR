@@ -65,7 +65,7 @@ lowExponent) {
             int.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
-          return CBORObject.FromObject(
+          return CBORObject.FromEInteger(
               RandomObjects.RandomEInteger(rand));
         case 3:
           o = lowExponent ? RandomEFloatLowExponent(rand) :
@@ -96,7 +96,7 @@ lowExponent) {
             int.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
-          return CBORObject.FromObject(
+          return CBORObject.FromEInteger(
               RandomObjects.RandomEInteger(rand));
         case 3:
           return CBORObject.FromObject(

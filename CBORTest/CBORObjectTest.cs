@@ -1234,19 +1234,19 @@ namespace Test {
 
       EInteger ei;
       ei = EInteger.FromString("9223372036854775807");
-      Assert.IsTrue(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsTrue(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       ei = EInteger.FromString("9223372036854775808");
-      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       ei = EInteger.FromString("-9223372036854775807");
-      Assert.IsTrue(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsTrue(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       ei = EInteger.FromString("-9223372036854775808");
-      Assert.IsTrue(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsTrue(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       ei = EInteger.FromString("-9223372036854775809");
-      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       ei = EInteger.FromString("-9223373136366403584");
-      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       ei = EInteger.FromString("9223373136366403584");
-      Assert.IsFalse(CInt64(CBORObject.FromObject(ei)), ei.ToString());
+      Assert.IsFalse(CInt64(CBORObject.FromEInteger(ei)), ei.ToString());
       var strings = new string[] {
         "8000FFFFFFFF0000",
         "8000AAAAAAAA0000",
@@ -1263,9 +1263,9 @@ namespace Test {
       };
       foreach (string str in strings) {
         ei = EInteger.FromRadixString(str, 16);
-        Assert.IsFalse(CInt64(CBORObject.FromObject(ei)));
+        Assert.IsFalse(CInt64(CBORObject.FromEInteger(ei)));
         ei = ei.Negate();
-        Assert.IsFalse(CInt64(CBORObject.FromObject(ei)));
+        Assert.IsFalse(CInt64(CBORObject.FromEInteger(ei)));
       }
 
       CBORObject numbers = GetNumberData();

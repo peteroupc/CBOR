@@ -1477,7 +1477,7 @@ NumberKind.Double) ?
     /// if they receive a null argument rather than treating null as less
     /// or greater than any object.</para>.</returns>
     public int CompareTo(int other) {
-      return this.CompareTo(CBORObject.FromObject(other).AsNumber());
+      return this.CompareTo(CBORObject.FromInt(other).AsNumber());
     }
 
     /// <summary>Compares this CBOR number with a 64-bit signed integer. In
@@ -1497,7 +1497,7 @@ NumberKind.Double) ?
     /// if they receive a null argument rather than treating null as less
     /// or greater than any object.</para>.</returns>
     public int CompareTo(long other) {
-      return this.CompareTo(CBORObject.FromObject(other).AsNumber());
+      return this.CompareTo(CBORObject.FromInt64(other).AsNumber());
     }
 
     /// <summary>Compares this CBOR number with another. In this

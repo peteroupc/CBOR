@@ -243,10 +243,10 @@ namespace PeterO.Cbor {
     /// 8-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(sbyte value) {
-      return FromObject((long)value);
+    public static CBORObject FromSbyte(sbyte value) {
+      return FromInt64((long)value);
     }
-
+    // TODO: re-add FromObject(sbyte value) as deprecated
     private static EInteger UInt64ToEInteger(ulong value) {
       var data = new byte[9];
       ulong uvalue = value;
@@ -267,27 +267,30 @@ namespace PeterO.Cbor {
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(ulong value) {
-      return CBORObject.FromObject(UInt64ToEInteger(value));
+    public static CBORObject FromUInt64(ulong value) {
+      return CBORObject.FromEInteger(UInt64ToEInteger(value));
     }
+    // TODO: re-add FromObject(ulong value) as deprecated
 
     /// <summary>Converts a 32-bit unsigned integer to a CBOR
     /// object.</summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(uint value) {
-      return FromObject((long)value);
+    public static CBORObject FromUInt(uint value) {
+      return FromInt64((long)value);
     }
+    // TODO: re-add FromObject(uint value) as deprecated
 
     /// <summary>Converts a 16-bit unsigned integer to a CBOR
     /// object.</summary>
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(ushort value) {
-      return FromObject((long)value);
+    public static CBORObject FromUShort(ushort value) {
+      return FromInt64((long)value);
     }
+    // TODO re-add FromObject(ushort value) as deprecated
 
     /// <summary>Generates a CBOR object from this one, but gives the
     /// resulting object a tag in addition to its existing tags (the new
@@ -330,6 +333,7 @@ namespace PeterO.Cbor {
     /// . If "valueOb" is null, returns a version of CBORObject.Null with
     /// the given tag.</returns>
     [CLSCompliant(false)]
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToEInteger(tag));
     }
