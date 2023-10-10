@@ -161,9 +161,9 @@ rand) {
         tag = tagselection[rand.GetInt32(tagselection.Length)];
       } else {
         return rand.GetInt32(100) < 90 ?
-          CBORObject.FromObjectAndTag(
+          CBORObject.FromCBORObjectAndTag(
             RandomCBORObject(rand, depth + 1),
-            rand.GetInt32(0x100000)) : CBORObject.FromObjectAndTag(
+            rand.GetInt32(0x100000)) : CBORObject.FromCBORObjectAndTag(
             RandomCBORObject(rand, depth + 1),
             RandomEIntegerMajorType0(rand));
       }
@@ -198,7 +198,7 @@ rand) {
         } else {
           cbor = RandomCBORObject(rand, depth + 1);
         }
-        return CBORObject.FromObjectAndTag(cbor, tag);
+        return CBORObject.FromCBORObjectAndTag(cbor, tag);
       }
     }
 

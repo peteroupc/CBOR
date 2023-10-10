@@ -555,6 +555,41 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
     /// <summary>Gets the value of a CBOR object by integer index in this
     /// array or by CBOR object key in this map, or a default value if that
     /// value is not found.</summary>
+    /// <param name='cborkey'>An arbitrary CBORObject. If this is a CBOR map, this
+    /// parameter is converted to a CBOR object serving as the key to the
+    /// map or index to the array, and can be null. If this is a CBOR
+    /// array, the key must be an integer 0 or greater and less than the
+    /// size of the array, and may be any object convertible to a CBOR
+    /// integer.</param>
+    /// <param name='defaultValue'>A value to return if an item with the
+    /// given key doesn't exist, or if the CBOR object is an array and the
+    /// key is not an integer 0 or greater and less than the size of the
+    /// array.</param>
+    /// <returns>The CBOR object referred to by index or key in this array
+    /// or map. If this is a CBOR map, returns <c>null</c> (not
+    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// exist.</returns>
+    public CBORObject GetOrDefault(CBORObject cborkey, CBORObject defaultValue) {
+      if (this.Type == CBORType.Array) {
+        if (!cborkey.IsNumber || !cborkey.AsNumber().CanFitInInt32()) {
+            return defaultValue;
+        }
+        int index = cborkey.AsNumber().ToInt32Checked();
+        IList<CBORObject> list = this.AsList();
+        return (index < 0 || index >= list.Count) ? defaultValue :
+          list[index];
+      }
+      if (this.Type == CBORType.Map) {
+        IDictionary<CBORObject, CBORObject> map = this.AsMap();
+        var ckey = cborkey;
+        return PropertyMap.GetOrDefault(map, ckey, defaultValue);
+      }
+      return defaultValue;
+    }
+
+    /// <summary>Gets the value of a CBOR object by integer index in this
+    /// array, or a default value if that
+    /// value is not found.</summary>
     /// <param name='key'>An arbitrary object. If this is a CBOR map, this
     /// parameter is converted to a CBOR object serving as the key to the
     /// map or index to the array, and can be null. If this is a CBOR
@@ -570,25 +605,40 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
     /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
     /// exist.</returns>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public CBORObject GetOrDefault(object key, CBORObject defaultValue) { // Suspect method. This is always used with a string key in the main library. But if the key is not a number it will return defaultValue.
+    public CBORObject GetOrDefault(int key, CBORObject defaultValue) {
       if (this.Type == CBORType.Array) {
-        int index;
-        if (key is int) {
-          index = (int)key;
-        } else {
-          var cborkey = CBORObject.FromObject(key);
-          if (!cborkey.IsNumber || !cborkey.AsNumber().CanFitInInt32()) {
-            return defaultValue;
-          }
-          index = cborkey.AsNumber().ToInt32Checked();
-        }
+        int index = key;
         IList<CBORObject> list = this.AsList();
         return (index < 0 || index >= list.Count) ? defaultValue :
           list[index];
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        var ckey = CBORObject.FromObject(key);
+        var ckey = FromInt(key);
+        return PropertyMap.GetOrDefault(map, ckey, defaultValue);
+      }
+      return defaultValue;
+    }
+
+    /// <summary>Gets the value of a CBOR object by string key in a map, or a default value if that
+    /// value is not found.</summary>
+    /// <param name='key'>An arbitrary string. If this is a CBOR map, this
+    /// parameter is converted to a CBOR object serving as the key to the
+    /// map or index to the array, and can be null. If this is a CBOR
+    /// array, defaultValue is returned.</param>
+    /// <param name='defaultValue'>A value to return if an item with the
+    /// given key doesn't exist, or if the CBOR object is an array.</param>
+    /// <returns>The CBOR object referred to by index or key in this array
+    /// or map. If this is a CBOR map, returns <c>null</c> (not
+    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// exist.</returns>
+    public CBORObject GetOrDefault(string key, CBORObject defaultValue) {
+      if (this.Type == CBORType.Array) {
+        return defaultValue;
+      }
+      if (this.Type == CBORType.Map) {
+        IDictionary<CBORObject, CBORObject> map = this.AsMap();
+        var ckey = FromString(key);
         return PropertyMap.GetOrDefault(map, ckey, defaultValue);
       }
       return defaultValue;
@@ -4110,7 +4160,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     /// value if the key doesn't exist.</para>
     /// <para>NOTE: This method can't be used to add a tag to an existing
     /// CBOR object. To create a CBOR object with a given tag, call the
-    /// <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object
+    /// <c>CBORObject.FromCBORObjectAndTag</c> method and pass the CBOR object
     /// and the desired tag number to that method.</para></summary>
     /// <param name='key'>An object representing the key, which will be
     /// converted to a CBORObject. Can be null, in which case this value is
@@ -4163,7 +4213,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     ///  <para>NOTE: This method
     /// can't be used to add a tag to an existing CBOR object. To create a
     /// CBOR object with a given tag, call the
-    /// <c>CBORObject.FromObjectAndTag</c>
+    /// <c>CBORObject.FromCBORObjectAndTag</c>
     ///  method and pass the CBOR object
     /// and the desired tag number to that method.</para>
     ///  </summary>
@@ -4178,7 +4228,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     /// Note the chaining behavior made possible by this method.</para>
     /// <code>CBORObject obj = CBORObject.NewArray() .Add(CBORObject.False)
     /// .Add(CBORObject.FromObject(5)) .Add(CBORObject.FromObject("text
-    /// string")) .Add(CBORObject.FromObjectAndTag(9999, 1));</code>
+    /// string")) .Add(CBORObject.FromCBORObjectAndTag(9999, 1));</code>
     ///  .
     /// </example>
     public CBORObject Add(CBORObject obj) {
@@ -4194,7 +4244,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     /// the end of this array.</para>
     ///  <para>NOTE: This method can't be used
     /// to add a tag to an existing CBOR object. To create a CBOR object
-    /// with a given tag, call the <c>CBORObject.FromObjectAndTag</c>
+    /// with a given tag, call the <c>CBORObject.FromCBORObjectAndTag</c>
     /// method and pass the CBOR object and the desired tag number to that
     /// method.</para>
     ///  </summary>
@@ -4210,7 +4260,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     /// CBOR objects, one of which has a custom CBOR tag, to that array.
     /// Note the chaining behavior made possible by this method.</para>
     /// <code>CBORObject obj = CBORObject.NewArray() .Add(CBORObject.False) .Add(5)
-    /// .Add("text string") .Add(CBORObject.FromObjectAndTag(9999, 1));</code>
+    /// .Add("text string") .Add(CBORObject.FromCBORObjectAndTag(9999, 1));</code>
     ///  .
     /// </example>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
@@ -5617,7 +5667,7 @@ CBORObjectTypeTextStringAscii)) {
     /// 3.4.5.3 of RFC 8949). A byte string will instead be converted to
     /// traditional base64 without whitespace and with padding if it has
     /// tag 22, or base16 for tag 23. (To create a CBOR object with a given
-    /// tag, call the <c>CBORObject.FromObjectAndTag</c>
+    /// tag, call the <c>CBORObject.FromCBORObjectAndTag</c>
     ///  method and pass
     /// the CBOR object and the desired tag number to that method.)</item>
     /// <item>Rational numbers will be converted to their exact form, if

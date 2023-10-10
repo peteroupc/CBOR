@@ -1321,23 +1321,23 @@ namespace Test {
         });
         AddSubCompare(objectTemp, objectTemp2);
       }
-      var cbor = CBORObject.FromObjectAndTag(
-          double.NegativeInfinity,
+      var cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromObject(double.NegativeInfinity),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor = CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromCBORObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor = CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromCBORObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor = CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromCBORObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
-      cbor = CBORObject.FromObjectAndTag(
+      cbor = CBORObject.FromCBORObjectAndTag(
           ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
@@ -1656,10 +1656,10 @@ namespace Test {
       CBORObject cbortag;
       for (int tag = 268; tag <= 269; ++tag) {
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(0);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         Assert.IsFalse(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(-3).Add(99999);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
@@ -1670,10 +1670,10 @@ namespace Test {
           throw new InvalidOperationException(String.Empty, ex);
         }
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(1);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         Assert.IsTrue(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(-1);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
@@ -1684,7 +1684,7 @@ namespace Test {
           throw new InvalidOperationException(String.Empty, ex);
         }
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(2);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
@@ -1695,13 +1695,13 @@ namespace Test {
           throw new InvalidOperationException(String.Empty, ex);
         }
         cbor = CBORObject.NewArray().Add(0).Add(0).Add(2);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         Assert.IsFalse(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(0).Add(0).Add(3);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         Assert.IsTrue(cbortag.AsNumber().IsNegative());
         cbor = CBORObject.NewArray().Add(-3).Add(99999).Add(8);
-        cbortag = CBORObject.FromObjectAndTag(cbor, tag);
+        cbortag = CBORObject.FromCBORObjectAndTag(cbor, tag);
         try {
           Console.WriteLine(String.Empty + cbortag.ToObject(typeof(EDecimal)));
           Assert.Fail("Should have failed " + cbortag.ToString());
@@ -1765,7 +1765,7 @@ namespace Test {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       _ = o.Add(new byte[] { 32, 33, 44, 55 });
-      _ = o.Add(CBORObject.FromObjectAndTag(9999, 1));
+      _ = o.Add(CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(9999), 1));
       Console.WriteLine(o.ToJSONString());
       Console.WriteLine(CBORPlistWriter.ToPlistString(o));
     }
@@ -2087,16 +2087,16 @@ namespace Test {
       CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
       _ = arr.Add("zzz")
       .Add("wwww").Add("iiiiiii").Add("aaa").Add("bbb").Add("ccc");
-      arr = CBORObject.FromObjectAndTag(arr, 28);
+      arr = CBORObject.FromCBORObjectAndTag(arr, 28);
       _ = root.Add(arr);
       CBORObject refobj;
       for (int i = 0; i <= nests; ++i) {
-        refobj = CBORObject.FromObjectAndTag(i, 29);
+        refobj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(i), 29);
         arr = CBORObject.FromObject(new CBORObject[] {
           refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
           refobj,
         });
-        arr = CBORObject.FromObjectAndTag(arr, 28);
+        arr = CBORObject.FromCBORObjectAndTag(arr, 28);
         _ = root.Add(arr);
       }
       return root;
@@ -2952,62 +2952,62 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       for (int i = 200; i < 1000; ++i) {
         CBORObject o, o2;
         o = ToObjectTest.TestToFromObjectRoundTrip(0);
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o =
           ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromString(
               "999999999999999999999999999999999"));
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = ToObjectTest.TestToFromObjectRoundTrip(new byte[] { 1, 2, 3 });
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.NewArray();
         _ = o.Add(ToObjectTest.TestToFromObjectRoundTrip(0));
         _ = o.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
         _ = o.Add(ToObjectTest.TestToFromObjectRoundTrip(2));
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.NewMap();
         _ = o.Add("a", ToObjectTest.TestToFromObjectRoundTrip(0));
         _ = o.Add("b", ToObjectTest.TestToFromObjectRoundTrip(1));
         _ = o.Add("c", ToObjectTest.TestToFromObjectRoundTrip(2));
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = ToObjectTest.TestToFromObjectRoundTrip("a");
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.False;
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.True;
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.Null;
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.Undefined;
-        o2 = CBORObject.FromObjectAndTag(o, i);
+        o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
-        o = CBORObject.FromObjectAndTag(o, i + 1);
+        o = CBORObject.FromCBORObjectAndTag(o, i + 1);
         TestCommon.AssertEqualsHashCode(o, o2);
       }
     }
@@ -3073,7 +3073,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
               continue;
             }
           }
-          var obj = CBORObject.FromObjectAndTag(0, bigintTemp);
+          var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(0), bigintTemp);
           if (!obj.IsTagged) {
             Assert.Fail("obj not tagged");
           }
@@ -3095,7 +3095,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
           if (!bigintTemp.Equals(maxuint)) {
             EInteger bigintNew = bigintNext;
             // Test multiple tags
-            var obj2 = CBORObject.FromObjectAndTag(obj, bigintNew);
+            var obj2 = CBORObject.FromCBORObjectAndTag(obj, bigintNew);
             EInteger[] bi = obj2.GetAllTags();
             if (bi.Length != 2) {
               {
