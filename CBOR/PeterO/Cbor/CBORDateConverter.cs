@@ -127,7 +127,7 @@ ICBORToFromConverter<DateTime>
     /// <exception cref='PeterO.Cbor.CBORException'>The format of the CBOR
     /// object is not supported, or another error occurred in
     /// conversion.</exception>
-    public DateTime FromCBORObject(CBORObject obj) { // TODO: fix this method to only use type-safe code
+    public DateTime FromCBORObject(CBORObject obj) {
       if (obj == null) {
         throw new ArgumentNullException(nameof(obj));
       }
