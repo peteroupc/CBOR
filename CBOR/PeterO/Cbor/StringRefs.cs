@@ -87,7 +87,7 @@ namespace PeterO.Cbor {
       CBORObject ret = lastList[index];
       // Byte strings are mutable, so make a copy
       return (ret.Type == CBORType.ByteString) ?
-        CBORObject.FromObject(ret.GetByteString()) : ret;
+        CBORObject.FromByteArray(ret.GetByteString()) : ret;
     }
 
     public CBORObject GetString(EInteger bigIndex) {
@@ -106,7 +106,7 @@ namespace PeterO.Cbor {
       CBORObject ret = lastList[index];
       // Byte strings are mutable, so make a copy
       return (ret.Type == CBORType.ByteString) ?
-        CBORObject.FromObject(ret.GetByteString()) : ret;
+        CBORObject.FromByteArray(ret.GetByteString()) : ret;
     }
   }
 }

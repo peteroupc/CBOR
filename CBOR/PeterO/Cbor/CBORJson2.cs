@@ -337,9 +337,7 @@ jbytes[this.index++] : -1;
             this.options);
 #if DEBUG
         if (this.options.NumberConversion == JSONOptions.ConversionMode.Full &&
-(
-  (EDecimal)obj.ToObject(
-  typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
+obj.ToEDecimal().CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,
            numberEndIndex - numberStartIndex)) != 0) {
           this.RaiseError(String.Empty + obj);
@@ -394,9 +392,7 @@ jbytes[this.index++] : -1;
             // All-digit number that's short enough
             obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
 #if DEBUG
-            if ((
-  (EDecimal)obj.ToObject(
-  typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
+            if (obj.ToEDecimal().CompareToValue(EDecimal.FromInt32(cval)) !=
 0) {
               this.RaiseError(String.Empty + obj);
             }
@@ -409,10 +405,7 @@ jbytes[this.index++] : -1;
           // is two digits without sign, decimal point, or exponent
           obj = CBORDataUtilities.ParseSmallNumber(cval, this.options);
 #if DEBUG
-          if ((
-  (EDecimal)obj.ToObject(
-  typeof(EDecimal))).CompareToValue(EDecimal.FromInt32(cval)) !=
-0) {
+          if (obj.ToEDecimal().CompareToValue(EDecimal.FromInt32(cval)) != 0) {
             this.RaiseError(String.Empty + obj);
           }
 #endif
@@ -438,9 +431,7 @@ jbytes[this.index++] : -1;
            this.options);
 #if DEBUG
         if (this.options.NumberConversion == JSONOptions.ConversionMode.Full &&
-(
-  (EDecimal)obj.ToObject(
-  typeof(EDecimal))).CompareToValue(EDecimal.FromString(this.bytes,
+obj.ToEDecimal().CompareToValue(EDecimal.FromString(this.bytes,
            numberStartIndex,
            numberEndIndex - numberStartIndex)) != 0) {
           this.RaiseError(String.Empty + obj);

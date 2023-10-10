@@ -61,7 +61,7 @@ namespace PeterO.Cbor {
       if (!URIUtility.HasScheme(uriString)) {
         tag = 267;
       }
-      return CBORObject.FromObjectAndTag(uriString, tag);
+      return CBORObject.FromString(uriString).WithTag(tag);
     }
   }
 }

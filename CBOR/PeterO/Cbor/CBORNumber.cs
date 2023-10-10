@@ -44,7 +44,7 @@ namespace PeterO.Cbor {
       new CBORExtendedRational(),
     };
     private readonly object value;
-    internal CBORNumber(NumberKind kind, object value) {
+    private CBORNumber(NumberKind kind, object value) {
       this.Kind = kind;
       this.value = value;
     }
@@ -84,7 +84,23 @@ namespace PeterO.Cbor {
     /// <summary>Converts this object's value to a CBOR object.</summary>
     /// <returns>A CBOR object that stores this object's value.</returns>
     public CBORObject ToCBORObject() { // TODO: use a safe method to get this
-      return CBORObject.FromObject(this.value);
+      object obj = this.value;
+      if (obj is long l) {
+        return CBORObject.FromInt64(l);
+      }
+      if (obj is EInteger eif) {
+        return CBORObject.FromEInteger(eif);
+      }
+      if (obj is EDecimal edf) {
+        return CBORObject.FromObject(edf);
+      }
+      if (obj is EFloat eff) {
+        return CBORObject.FromObject(eff);
+      }
+      if (obj is ERational erf) {
+        return CBORObject.FromObject(erf);
+      }
+      throw new Exception("Unexpected type: " + obj.GetType());
     }
 
     /// <summary>Gets this value's sign: -1 if nonzero and negative; 1 if

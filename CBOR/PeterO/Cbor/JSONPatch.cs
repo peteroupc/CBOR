@@ -7,9 +7,11 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
 */
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor {
   internal static class JSONPatch {
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static CBORObject AddOperation(
       CBORObject o,
       string valueOpStr,
@@ -54,6 +56,7 @@ namespace PeterO.Cbor {
       }
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static string GetString(CBORObject o, string str) {
 #if DEBUG
       if (o == null) {
@@ -70,6 +73,7 @@ namespace PeterO.Cbor {
 "\u0020text string type") : co.AsString();
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public static CBORObject Patch(CBORObject o, CBORObject ptch) {
       // clone the object in case of failure
       if (o == null) {
@@ -201,6 +205,7 @@ namespace PeterO.Cbor {
       return o ?? CBORObject.Null;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static CBORObject RemoveOperation(
       CBORObject o,
       string valueOpStr,
@@ -226,6 +231,7 @@ namespace PeterO.Cbor {
       }
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static CBORObject ReplaceOperation(
       CBORObject o,
       string valueOpStr,

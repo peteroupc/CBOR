@@ -306,22 +306,13 @@ namespace PeterO.Cbor {
     /// (the new tag is made the outermost tag).</returns>
     [CLSCompliant(false)]
     public CBORObject WithTag(ulong tag) {
-      return FromObjectAndTag(this, UInt64ToEInteger(tag));
+      return FromCBORObjectAndTag(this, UInt64ToEInteger(tag));
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <param name='o'>The parameter <paramref name='o'/> is an arbitrary
-    /// object, which can be null.
-    /// <para><b>NOTE:</b> For security reasons, whenever possible, an
-    /// application should not base this parameter on user input or other
-    /// externally supplied data, and whenever possible, the application
-    /// should limit this parameter's inputs to types specially handled by
-    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
-    /// plain-old-data types (POCO or POJO types) within the control of the
-    /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// CBORObject.</param>
     /// <param name='tag'>A 64-bit integer that specifies a tag number. The
     /// tag number 55799 can be used to mark a "self-described CBOR"
     /// object. This document does not attempt to list all CBOR tags and
@@ -329,13 +320,13 @@ namespace PeterO.Cbor {
     /// registry maintained by the Internet Assigned Numbers Authority(
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='o'/> is
-    /// converted to a CBOR object and given the tag <paramref name='tag'/>
+    /// given the tag <paramref name='tag'/>
     /// . If "valueOb" is null, returns a version of CBORObject.Null with
     /// the given tag.</returns>
     [CLSCompliant(false)]
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
-    public static CBORObject FromObjectAndTag(object o, ulong tag) {
-      return FromObjectAndTag(o, UInt64ToEInteger(tag));
+    public static CBORObject FromCBORObjectAndTag(CBORObject o, ulong tag) {
+      return FromCBORObjectAndTag(o, UInt64ToEInteger(tag));
     }
 
     /// <summary>

@@ -9,6 +9,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
@@ -17,6 +18,7 @@ namespace PeterO.Cbor {
     private readonly bool isRoot;
     private readonly CBORObject jsonobj;
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public static JSONPointer FromPointer(CBORObject obj, string pointer) {
       var index = 0;
       if (pointer == null) {
@@ -134,7 +136,7 @@ namespace PeterO.Cbor {
         }
       }
     }
-
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public static CBORObject GetObject(
       CBORObject obj,
       string pointer,
@@ -269,6 +271,7 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
       return this.jsonobj;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public CBORObject GetValue() {
       if (this.isRoot) {
         // Root always exists
@@ -404,7 +407,7 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
           // and remove the key from the object
           // if necessary
           if (remove) {
-            _ = rootObj.Remove(CBORObject.FromObject(keyToFind));
+            _ = rootObj.Remove(CBORObject.FromString(keyToFind));
           }
         }
         // Search the key's values

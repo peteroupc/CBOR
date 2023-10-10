@@ -38,6 +38,7 @@ namespace PeterO {
 #endif
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static void Log(string str) {
       var type = Type.GetType("System.Console");
       if (type == null) {
@@ -73,6 +74,7 @@ namespace PeterO {
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static void Log(string format, params object[] args) {
       Log(String.Format(
         System.Globalization.CultureInfo.CurrentCulture,
