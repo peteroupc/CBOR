@@ -83,7 +83,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Converts this object's value to a CBOR object.</summary>
     /// <returns>A CBOR object that stores this object's value.</returns>
-    public CBORObject ToCBORObject() { // TODO: use a safe method to get this
+    public CBORObject ToCBORObject() {
       object obj = this.value;
       if (obj is long l) {
         return CBORObject.FromInt64(l);
