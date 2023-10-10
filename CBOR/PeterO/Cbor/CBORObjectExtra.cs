@@ -246,7 +246,14 @@ namespace PeterO.Cbor {
     public static CBORObject FromSbyte(sbyte value) {
       return FromInt64((long)value);
     }
-    // TODO: re-add FromObject(sbyte value) as deprecated
+
+    /// <summary>Converts a signed 8-bit integer to a CBOR object.</summary>
+    /// <param name='value'>The input.</param>
+    /// <returns>A CBORObject object.</returns>
+    [Obsolete("Use FromSbyte instead")]
+    [CLSCompliant(false)]
+    public static CBORObject FromObject(sbyte value) => FromSbyte(value);
+
     private static EInteger UInt64ToEInteger(ulong value) {
       var data = new byte[9];
       ulong uvalue = value;
