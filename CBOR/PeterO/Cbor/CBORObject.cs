@@ -604,7 +604,6 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
     /// or map. If this is a CBOR map, returns <c>null</c> (not
     /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
     /// exist.</returns>
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public CBORObject GetOrDefault(int key, CBORObject defaultValue) {
       if (this.Type == CBORType.Array) {
         int index = key;
