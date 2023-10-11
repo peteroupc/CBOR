@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
   /// CBORObject.Read method reads a CBOR object from a data
   /// stream.</para>
   /// <para><b>To and from other objects:</b> The
-  /// <c>CBORObject.FromObject</c> method converts many kinds of objects
+  /// <c>CBORObject.From[Type]</c> method converts many kinds of objects
   /// to a CBOR object, including numbers, strings, and arrays and maps
   /// of numbers and strings. Methods like AsNumber and AsString convert
   /// a CBOR object to different types of object. The
@@ -2865,7 +2865,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         return FromUShort((ushort)obj);
       }
       if (obj is decimal) {
-        return FromObject((decimal)obj);
+        return FromDecimal((decimal)obj);
       }
       if (obj is double) {
         return FromDouble((double)obj);
