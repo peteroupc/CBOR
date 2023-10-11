@@ -2092,7 +2092,7 @@ namespace Test {
       CBORObject refobj;
       for (int i = 0; i <= nests; ++i) {
         refobj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(i), 29);
-        arr = CBORObject.FromObject(new CBORObject[] {
+        arr = CBORObject.FromCBORArray(new CBORObject[] {
           refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
           refobj,
         });
