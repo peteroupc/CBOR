@@ -92,13 +92,13 @@ namespace PeterO.Cbor {
         return CBORObject.FromEInteger(eif);
       }
       if (obj is EDecimal edf) {
-        return CBORObject.FromObject(edf);
+        return CBORObject.FromEDecimal(edf);
       }
       if (obj is EFloat eff) {
-        return CBORObject.FromObject(eff);
+        return CBORObject.FromEFloat(eff);
       }
       if (obj is ERational erf) {
-        return CBORObject.FromObject(erf);
+        return CBORObject.FromERational(erf);
       }
       throw new Exception("Unexpected type: " + obj.GetType());
     }

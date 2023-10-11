@@ -181,7 +181,7 @@ CBORObject.FromFloatingPointBits(0x8000, 2);
                 negative ? DoubleNegInfinity : DoublePosInfinity,
                 8);
           } else if (kind == JSONOptions.ConversionMode.Decimal128) {
-            return CBORObject.FromObject(negative ?
+            return CBORObject.FromEDecimal(negative ?
                 EDecimal.NegativeInfinity : EDecimal.PositiveInfinity);
           }
         }
@@ -203,14 +203,14 @@ CBORObject.FromFloatingPointBits(0x8000, 2);
             ?
 CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8) :
             kind == JSONOptions.ConversionMode.Decimal128 ?
-CBORObject.FromObject(EDecimal.FromInt64(v)) : CBORObject.FromInt64(v);
+CBORObject.FromEDecimal(EDecimal.FromInt64(v)) : CBORObject.FromInt64(v);
         }
       }
       if (kind == JSONOptions.ConversionMode.Full) {
         if (!haveDecimalPoint && !haveExponent) {
           EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
           return (preserveNegativeZero && ei.IsZero && negative) ?
-CBORObject.FromObject(EDecimal.NegativeZero) :
+CBORObject.FromEDecimal(EDecimal.NegativeZero) :
 CBORObject.FromEInteger(ei);
         }
         if (!haveExponent && haveDecimalPoint) {
@@ -263,15 +263,15 @@ CBORObject.FromEInteger(ei);
         if (ed.IsZero && negative) {
           if (ed.Exponent.IsZero) {
             return preserveNegativeZero ?
-              CBORObject.FromObject(EDecimal.NegativeZero) :
+              CBORObject.FromEDecimal(EDecimal.NegativeZero) :
               CBORObject.FromInt(0);
           } else {
             return !preserveNegativeZero ?
-CBORObject.FromObject(ed.Negate()) : CBORObject.FromObject(ed);
+CBORObject.FromEDecimal(ed.Negate()) : CBORObject.FromEDecimal(ed);
           }
         } else {
           return ed.Exponent.IsZero ? CBORObject.FromEInteger(ed.Mantissa) :
-            CBORObject.FromObject(ed);
+            CBORObject.FromEDecimal(ed);
         }
       } else if (kind == JSONOptions.ConversionMode.Double) {
         var ef = EFloat.FromString(
@@ -293,7 +293,7 @@ CBORObject.FromObject(ed.Negate()) : CBORObject.FromObject(ed);
         if (!preserveNegativeZero && ed.IsNegative && ed.IsZero) {
           ed = ed.Negate();
         }
-        return CBORObject.FromObject(ed);
+        return CBORObject.FromEDecimal(ed);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
         var ef = EFloat.FromString(
             chars,

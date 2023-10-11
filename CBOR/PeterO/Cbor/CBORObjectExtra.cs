@@ -215,9 +215,13 @@ namespace PeterO.Cbor {
     /// Decimal object.</param>
     /// <returns>A CBORObject object with the same value as the.NET
     /// decimal.</returns>
-    public static CBORObject FromObject(decimal value) {
-      return FromObject((EDecimal)value);
-    }
+    public static CBORObject FromDecimal(decimal value) => FromEDecimal((EDecimal)value);
+
+    /// <summary>Converts a.NET decimal to a CBOR object.</summary>
+    /// <param name='value'>A Decimal.</param>
+    /// <returns>A CBORObject object.</returns>
+    [Obsolete("Use FromDecimal instead")]
+    public static CBORObject FromObject(decimal value) => FromDecimal(value);
 
     /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data
     /// stream.</summary>

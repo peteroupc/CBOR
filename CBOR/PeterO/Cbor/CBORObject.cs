@@ -130,11 +130,11 @@ namespace PeterO.Cbor {
       CBORObject.ConstructSimpleValue(20);
 
     /// <summary>A not-a-number value.</summary>
-    public static readonly CBORObject NaN = CBORObject.FromObject(double.NaN);
+    public static readonly CBORObject NaN = FromDouble(double.NaN);
 
     /// <summary>The value negative infinity.</summary>
     public static readonly CBORObject NegativeInfinity =
-      CBORObject.FromObject(double.NegativeInfinity);
+      FromDouble(double.NegativeInfinity);
 
     /// <summary>Represents the value null.</summary>
 #if CODE_ANALYSIS
@@ -148,7 +148,7 @@ namespace PeterO.Cbor {
 
     /// <summary>The value positive infinity.</summary>
     public static readonly CBORObject PositiveInfinity =
-      CBORObject.FromObject(double.PositiveInfinity);
+      FromDouble(double.PositiveInfinity);
 
     /// <summary>Represents the value true.</summary>
 #if CODE_ANALYSIS
@@ -1901,8 +1901,9 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// CBOR object.</param>
     /// <returns>Same as <paramref name='value'/>, or "CBORObject.Null" is
     /// <paramref name='value'/> is null.</returns>
+    [Obsolete("Don't use a function and use Nullable Reference Types to guard against nulls.")]
     public static CBORObject FromObject(CBORObject value) {
-      return value ?? CBORObject.Null;
+      return value ?? Null;
     }
 
     private static int IntegerByteLength(int intValue) {
@@ -2091,9 +2092,9 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// number. Can be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
     /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
-    public static CBORObject FromObject(EFloat bigValue) {
+    public static CBORObject FromEFloat(EFloat bigValue) {
       if (bigValue == null) {
-        return CBORObject.Null;
+        return Null;
       }
       CBORObject cbor;
       int tag;
@@ -2132,6 +2133,14 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
       return cbor.WithTag(tag);
     }
 
+    /// <summary>Generates a CBOR object from an arbitrary-precision binary
+    /// floating-point number.</summary>
+    /// <param name='bigValue'>An arbitrary-precision binary floating-point
+    /// number.</param>
+    /// <returns>The given number encoded as a CBOR object.</returns>
+    [Obsolete("Use FromEFloat instead.")]
+    public static CBORObject FromObject(EFloat bigValue) => FromEFloat(bigValue);
+
     /// <summary>Generates a CBOR object from an arbitrary-precision
     /// rational number. The CBOR object is generated as follows (this is a
     /// change in version 4.0):
@@ -2146,7 +2155,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
     /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
-    public static CBORObject FromObject(ERational bigValue) {
+    public static CBORObject FromERational(ERational bigValue) {
       if (bigValue == null) {
         return Null;
       }
@@ -2197,6 +2206,13 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
       return cbor.WithTag(tag);
     }
 
+    /// <summary>Generates a CBOR object from an arbitrary-precision
+    /// rational number.</summary>
+    /// <param name='bigValue'>An arbitrary-precision rational number.</param>
+    /// <returns>The given number encoded as a CBOR object.</returns>
+    [Obsolete("Use FromERational instead.")]
+    public static CBORObject FromObject(ERational bigValue) => FromERational(bigValue);
+
     /// <summary>Generates a CBOR object from a decimal number. The CBOR
     /// object is generated as follows (this is a change in version 4.0):
     /// <list>
@@ -2213,9 +2229,9 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// be null.</param>
     /// <returns>The given number encoded as a CBOR object. Returns
     /// CBORObject.Null if <paramref name='bigValue'/> is null.</returns>
-    public static CBORObject FromObject(EDecimal bigValue) {
+    public static CBORObject FromEDecimal(EDecimal bigValue) {
       if (bigValue == null) {
-        return CBORObject.Null;
+        return Null;
       }
       CBORObject cbor;
       int tag;
@@ -2234,7 +2250,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
         cbor = NewArray(
             FromEInteger(bigValue.Exponent),
             FromEInteger(bigValue.UnsignedMantissa),
-            CBORObject.FromInt(options));
+            FromInt(options));
         tag = 268;
       } else {
         EInteger exponent = bigValue.Exponent;
@@ -2253,6 +2269,12 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
       }
       return cbor.WithTag(tag);
     }
+
+    /// <summary>Generates a CBOR object from a decimal number.</summary>
+    /// <param name='bigValue'>An arbitrary-precision decimal number.</param>
+    /// <returns>The given number encoded as a CBOR object.</returns>
+    [Obsolete("Use FromEDecimal instead.")]
+    public static CBORObject FromObject(EDecimal bigValue) => FromEDecimal(bigValue);
 
     /// <summary>Generates a CBOR object from a text string.</summary>
     /// <param name='strValue'>A text string value. Can be null.</param>
@@ -2363,10 +2385,17 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 64-bit floating-point number.</param>
     /// <returns>A CBOR object generated from the given number.</returns>
-    public static CBORObject FromObject(double value) {
+    public static CBORObject FromDouble(double value) {
       long doubleBits = CBORUtilities.DoubleToInt64Bits(value);
       return new CBORObject(CBORObjectTypeDouble, doubleBits);
     }
+
+    /// <summary>Generates a CBOR object from a 64-bit floating-point
+    /// number.</summary>
+    /// <param name='value'>A 64-bit floating-point number.</param>
+    /// <returns>A CBOR object generated from the given number.</returns>
+    [Obsolete("Use FromDouble instead.")]
+    public static CBORObject FromObject(double value) => FromDouble(value);
 
     /// <summary>Generates a CBOR object from an array of 8-bit bytes; the
     /// byte array is copied to a new byte array in this process. (This
@@ -2775,10 +2804,10 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         throw new CBORException("Nesting depth too high");
       }
       if (obj == null) {
-        return CBORObject.Null;
+        return Null;
       }
       if (obj is CBORObject) {
-        return FromObject((CBORObject)obj);
+        return (CBORObject)obj;
       }
       CBORObject objret;
       if (mapper != null) {
@@ -2800,13 +2829,13 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         return FromEInteger(eif);
       }
       if (obj is EDecimal edf) {
-        return FromObject(edf);
+        return FromEDecimal(edf);
       }
       if (obj is EFloat eff) {
-        return FromObject(eff);
+        return FromEFloat(eff);
       }
       if (obj is ERational erf) {
-        return FromObject(erf);
+        return FromERational(erf);
       }
       if (obj is short) {
         return FromObject((short)obj);
@@ -2839,7 +2868,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         return FromObject((decimal)obj);
       }
       if (obj is double) {
-        return FromObject((double)obj);
+        return FromDouble((double)obj);
       }
       if (obj is byte[] bytearr) {
         return FromByteArray(bytearr);
@@ -3671,7 +3700,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
       }
       if ((bignum.IsZero && bignum.IsNegative) || bignum.IsInfinity() ||
         bignum.IsNaN()) {
-        Write(CBORObject.FromObject(bignum), stream);
+        Write(FromEFloat(bignum), stream);
         return;
       }
       EInteger exponent = bignum.Exponent;
@@ -3712,7 +3741,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
         return;
       }
       if (!rational.IsFinite || (rational.IsNegative && rational.IsZero)) {
-        Write(CBORObject.FromObject(rational), stream);
+        Write(FromERational(rational), stream);
         return;
       }
       stream.WriteByte(0xd8); // tag 30
@@ -3743,7 +3772,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
         return;
       }
       if (!bignum.IsFinite || (bignum.IsNegative && bignum.IsZero)) {
-        Write(CBORObject.FromObject(bignum), stream);
+        Write(FromEDecimal(bignum), stream);
         return;
       }
       EInteger exponent = bignum.Exponent;

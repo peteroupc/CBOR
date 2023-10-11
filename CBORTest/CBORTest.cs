@@ -304,7 +304,7 @@ namespace Test {
       Assert.IsTrue(cbor.ContainsKey(ToObjectTest.TestToFromObjectRoundTrip(
             "hello")));
       Assert.AreEqual(2, cbor["hello"].AsInt32Value());
-      _ = cbor.Set(1, 3);
+      _ = cbor.Set(1, CBORObject.FromInt(3));
       CBORObject cborone = ToObjectTest.TestToFromObjectRoundTrip(1);
       Assert.IsTrue(cbor.ContainsKey(cborone));
       Assert.AreEqual(3, cbor[cborone].AsInt32Value());
@@ -1042,7 +1042,7 @@ namespace Test {
       cbor3 = CBORObject.FromJSONString(str, jsoptions);
       cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign
             == 0)) ?
-        CBORObject.FromEInteger(ed.Mantissa) : CBORObject.FromObject(ed);
+        CBORObject.FromEInteger(ed.Mantissa) : CBORObject.FromEDecimal(ed);
       Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
       Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
       Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
@@ -1071,7 +1071,7 @@ namespace Test {
       cbor = CBORObject.FromJSONBytes(bytes, jsoptions);
       cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
       cbor3 = CBORObject.FromJSONString(str, jsoptions);
-      cbored = CBORObject.FromObject(ed);
+      cbored = CBORObject.FromEDecimal(ed);
       Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
       Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
       Assert.AreEqual(cbor, cbored, "[" + str + "] cbored");
@@ -1322,7 +1322,7 @@ namespace Test {
         AddSubCompare(objectTemp, objectTemp2);
       }
       var cbor = CBORObject.FromCBORObjectAndTag(
-          CBORObject.FromObject(double.NegativeInfinity),
+          CBORObject.FromDouble(double.NegativeInfinity),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
       cbor = CBORObject.FromCBORObjectAndTag(
@@ -1488,8 +1488,8 @@ namespace Test {
         {
           ERational objectTemp = er;
           ERational objectTemp2;
-          CBORNumber cn = CBORObject.FromObject(o1).AsNumber()
-            .Divide(CBORObject.FromObject(o2).AsNumber());
+          CBORNumber cn = o1.AsNumber()
+            .Divide(o2.AsNumber());
           objectTemp2 = cn.ToERational();
           TestCommon.CompareTestEqual(objectTemp, objectTemp2);
         }
@@ -1498,11 +1498,11 @@ namespace Test {
 
     [Test]
     public void TestCBORCompareTo() {
-      int cmp = CBORObject.FromObject(0).CompareTo(null);
+      int cmp = CBORObject.FromInt(0).CompareTo(null);
       if (cmp <= 0) {
         Assert.Fail();
       }
-      cmp = CBORObject.FromObject(0).AsNumber().CompareTo(null);
+      cmp = CBORObject.FromInt(0).AsNumber().CompareTo(null);
       if (cmp <= 0) {
         Assert.Fail();
       }
@@ -2924,26 +2924,26 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         list.Add(obj);
       }
       Assert.AreEqual(3, list.Count);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"), list[0]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("b"), list[1]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"), list[2]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromString("a"), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromString("b"), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromString("c"), list[2]);
       cbor = CBORObject.NewOrderedMap().Add("c", 1).Add("a", 2).Add("vv", 3);
       list = new List<CBORObject>();
       foreach (CBORObject obj in cbor.Keys) {
         list.Add(obj);
       }
       Assert.AreEqual(3, list.Count);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("c"), list[0]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("a"), list[1]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject("vv"), list[2]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromString("c"), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromString("a"), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromString("vv"), list[2]);
       list = new List<CBORObject>();
       foreach (CBORObject obj in cbor.Values) {
         list.Add(obj);
       }
       Assert.AreEqual(3, list.Count);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject(1), list[0]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject(2), list[1]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromObject(3), list[2]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromInt(1), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromInt(2), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromInt(3), list[2]);
     }
 
     [Test]
@@ -4088,34 +4088,34 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       CBORObject cbor;
       // 0 versus 0.0
       cbor = CBORObject.NewMap();
-      _ = cbor.Set(0, CBORObject.FromObject("testzero"));
-      _ = cbor.Set(0.0, CBORObject.FromObject("testpointzero"));
+      _ = cbor.Set(0, CBORObject.FromString("testzero"));
+      _ = cbor.Set(CBORObject.FromDouble(0.0), CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt(0)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
       }
       {
-        string stringTemp = cbor[CBORObject.FromObject(
+        string stringTemp = cbor[CBORObject.FromDouble(
               (double)0.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
       }
       cbor = CBORObject.NewMap();
-      _ = cbor.Set(0.0, CBORObject.FromObject("testpointzero"));
-      _ = cbor.Set(0, CBORObject.FromObject("testzero"));
+      _ = cbor.Set(CBORObject.FromDouble(0.0), CBORObject.FromString("testpointzero"));
+      _ = cbor.Set(0, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromObject(0)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt(0)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
       }
       {
-        string stringTemp = cbor[CBORObject.FromObject(
+        string stringTemp = cbor[CBORObject.FromDouble(
               (double)0.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
@@ -4123,34 +4123,34 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       }
       // 3 versus 3.0
       cbor = CBORObject.NewMap();
-      _ = cbor.Set(3, CBORObject.FromObject("testzero"));
-      _ = cbor.Set(3.0, CBORObject.FromObject("testpointzero"));
+      _ = cbor.Set(3, CBORObject.FromString("testzero"));
+      _ = cbor.Set(CBORObject.FromDouble(3.0), CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt(3)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
       }
       {
-        string stringTemp = cbor[CBORObject.FromObject(
+        string stringTemp = cbor[CBORObject.FromDouble(
               (double)3.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
           stringTemp);
       }
       cbor = CBORObject.NewMap();
-      _ = cbor.Set(3.0, CBORObject.FromObject("testpointzero"));
-      _ = cbor.Set(3, CBORObject.FromObject("testzero"));
+      _ = cbor.Set(CBORObject.FromDouble(3.0), CBORObject.FromString("testpointzero"));
+      _ = cbor.Set(3, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromObject(3)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt(3)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
       }
       {
-        string stringTemp = cbor[CBORObject.FromObject(
+        string stringTemp = cbor[CBORObject.FromDouble(
               (double)3.0)].AsString();
         Assert.AreEqual(
           "testpointzero",
@@ -4205,7 +4205,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
           Assert.AreEqual(0, cbor.TagCount);
         }
         var ef = EFloat.Create(EInteger.One, eints[i]);
-        cbor = CBORObject.FromObject(ef);
+        cbor = CBORObject.FromEFloat(ef);
         Assert.IsTrue(cbor.IsNumber, cbor.ToString());
         if (isPastCbor[i]) {
           Assert.IsTrue(cbor.HasOneTag(265));
@@ -4238,7 +4238,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
             }
           }
           var ed = EDecimal.Create(EInteger.One, eints[i]);
-          cbor = CBORObject.FromObject(ed);
+          cbor = CBORObject.FromEDecimal(ed);
           Assert.IsTrue(cbor.IsNumber, cbor.ToString());
           if (isPastCbor[i]) {
             Assert.IsTrue(cbor.HasOneTag(264));
@@ -4279,21 +4279,21 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       var er =
 
   ERational.FromString("1088692579850251977918382727683876451288883451475551838663907953515213777772897669/734154292316019508508581520803142368704146796235662433292652");
-      _ = CBORObject.FromObject(er).ToJSONString();
+      _ = CBORObject.FromERational(er).ToJSONString();
     }
     [Test]
     public void TestRationalJSONSpecificB() {
       var er2 =
 
   ERational.FromString("1117037884940373468269515037592447741921166676191625235424/13699696515096285881634845839085271311137");
-      _ = CBORObject.FromObject(er2).ToJSONString();
+      _ = CBORObject.FromERational(er2).ToJSONString();
     }
     [Test]
     public void TestRationalJSONSpecificC() {
       var er2 =
 
   ERational.FromString("42595158956667/1216724793801972483341765319799605241541780250657492435");
-      _ = CBORObject.FromObject(er2).ToJSONString();
+      _ = CBORObject.FromERational(er2).ToJSONString();
     }
 
     [Test]
@@ -4652,7 +4652,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       var er = ERational.Create(
           EInteger.FromString(s1),
           EInteger.FromString(s2));
-      var cbor = CBORObject.FromObject(er);
+      var cbor = CBORObject.FromERational(er);
       _ = cbor.ToJSONString();
     }
 
@@ -4675,16 +4675,16 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     [Test]
     public void TestWriteBasic() {
       var jsonop1 = new JSONOptions("writebasic=true");
-      string json = CBORObject.FromObject("\uD800\uDC00").ToJSONString(jsonop1);
+      string json = CBORObject.FromString("\uD800\uDC00").ToJSONString(jsonop1);
       Assert.AreEqual("\"\\uD800\\uDC00\"", json);
-      json = CBORObject.FromObject("\u0800\u0C00").ToJSONString(jsonop1);
+      json = CBORObject.FromString("\u0800\u0C00").ToJSONString(jsonop1);
       Assert.AreEqual("\"\\u0800\\u0C00\"", json);
-      json = CBORObject.FromObject("\u0085\uFFFF").ToJSONString(jsonop1);
+      json = CBORObject.FromString("\u0085\uFFFF").ToJSONString(jsonop1);
       Assert.AreEqual("\"\\u0085\\uFFFF\"", json);
       var rg = new RandomGenerator();
       for (int i = 0; i < 1000; ++i) {
         string rts = RandomObjects.RandomTextString(rg);
-        var cbor = CBORObject.FromObject(rts);
+        var cbor = CBORObject.FromString(rts);
         json = cbor.ToJSONString(jsonop1);
         // Check that the JSON contains only ASCII code points
         for (int j = 0; j < json.Length; ++j) {

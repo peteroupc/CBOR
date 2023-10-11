@@ -99,7 +99,7 @@ lowExponent) {
           return CBORObject.FromEInteger(
               RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(
+          return CBORObject.FromEFloat(
               RandomObjects.RandomEFloat(rand));
         case 4:
           o = RandomObjects.RandomEDecimal(rand);
@@ -225,9 +225,9 @@ depth) {
         4 => rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False,
         5 => rand.GetInt32(2) == 0 ? CBORObject.Null :
                     CBORObject.Undefined,
-        6 => CBORObject.FromObject(
+        6 => CBORObject.FromString(
                       RandomObjects.RandomTextString(rand)),
-        7 => CBORObject.FromObject(
+        7 => CBORObject.FromByteArray(
                       RandomObjects.RandomByteString(rand)),
         8 => RandomCBORArray(rand, depth),
         9 => RandomCBORMap(rand, depth),
