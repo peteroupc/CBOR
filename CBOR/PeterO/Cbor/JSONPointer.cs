@@ -18,7 +18,6 @@ namespace PeterO.Cbor {
     private readonly bool isRoot;
     private readonly CBORObject jsonobj;
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public static JSONPointer FromPointer(CBORObject obj, string pointer) {
       var index = 0;
       if (pointer == null) {
@@ -136,7 +135,6 @@ namespace PeterO.Cbor {
         }
       }
     }
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public static CBORObject GetObject(
       CBORObject obj,
       string pointer,
@@ -271,7 +269,6 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
       return this.jsonobj;
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public CBORObject GetValue() {
       if (this.isRoot) {
         // Root always exists

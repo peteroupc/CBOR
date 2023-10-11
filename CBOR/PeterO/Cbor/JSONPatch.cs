@@ -11,7 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor {
   internal static class JSONPatch {
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static CBORObject AddOperation(
       CBORObject o,
       string valueOpStr,
@@ -38,7 +37,7 @@ namespace PeterO.Cbor {
           // DebugUtility.Log("after "+parent+"");
         } else if (pointer.GetParent().Type == CBORType.Map) {
           string key = pointer.GetKey();
-          _ = parent.Set(key, value);
+          _ = parent.Set(CBORObject.FromString(key), value);
         } else {
           throw new CBORException("Patch " + valueOpStr + " path");
         }
@@ -56,7 +55,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static string GetString(CBORObject o, string str) {
 #if DEBUG
       if (o == null) {
@@ -73,7 +71,6 @@ namespace PeterO.Cbor {
 "\u0020text string type") : co.AsString();
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     public static CBORObject Patch(CBORObject o, CBORObject ptch) {
       // clone the object in case of failure
       if (o == null) {
@@ -205,7 +202,6 @@ namespace PeterO.Cbor {
       return o ?? CBORObject.Null;
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static CBORObject RemoveOperation(
       CBORObject o,
       string valueOpStr,
@@ -225,13 +221,12 @@ namespace PeterO.Cbor {
           _ = pointer.GetParent().RemoveAt(pointer.GetIndex());
         } else if (pointer.GetParent().Type == CBORType.Map) {
           _ = pointer.GetParent().Remove(
-            CBORObject.FromObject(pointer.GetKey()));
+            CBORObject.FromString(pointer.GetKey()));
         }
         return o;
       }
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // This uses GetOrDefault. TODO: reassess when GetOrDefault is adjusted.
     private static CBORObject ReplaceOperation(
       CBORObject o,
       string valueOpStr,
@@ -261,7 +256,7 @@ namespace PeterO.Cbor {
           pointer.GetParent().Set(index, value);
         } else if (pointer.GetParent().Type == CBORType.Map) {
           string key = pointer.GetKey();
-          pointer.GetParent().Set(key, value);
+          pointer.GetParent().Set(CBORObject.FromString(key), value);
         } else {
           throw new CBORException("Patch " + valueOpStr + " path");
         }

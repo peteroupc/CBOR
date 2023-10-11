@@ -277,7 +277,14 @@ namespace PeterO.Cbor {
     public static CBORObject FromUInt64(ulong value) {
       return CBORObject.FromEInteger(UInt64ToEInteger(value));
     }
-    // TODO: re-add FromObject(ulong value) as deprecated
+
+    /// <summary>Converts a 64-bit unsigned integer to a CBOR
+    /// object.</summary>
+    /// <param name='value'>A 64-bit unsigned integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    [CLSCompliant(false)]
+    [Obsolete("Use FromUInt64 instead")]
+    public static CBORObject FromObject(ulong value) => FromUInt64(value);
 
     /// <summary>Converts a 32-bit unsigned integer to a CBOR
     /// object.</summary>
@@ -287,7 +294,14 @@ namespace PeterO.Cbor {
     public static CBORObject FromUInt(uint value) {
       return FromInt64((long)value);
     }
-    // TODO: re-add FromObject(uint value) as deprecated
+
+    /// <summary>Converts a 32-bit unsigned integer to a CBOR
+    /// object.</summary>
+    /// <param name='value'>A 32-bit unsigned integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    [CLSCompliant(false)]
+    [Obsolete("Use FromUInt instead")]
+    public static CBORObject FromObject(uint value) => FromUInt(value);
 
     /// <summary>Converts a 16-bit unsigned integer to a CBOR
     /// object.</summary>
@@ -297,7 +311,14 @@ namespace PeterO.Cbor {
     public static CBORObject FromUShort(ushort value) {
       return FromInt64((long)value);
     }
-    // TODO re-add FromObject(ushort value) as deprecated
+
+    /// <summary>Converts a 16-bit unsigned integer to a CBOR
+    /// object.</summary>
+    /// <param name='value'>A 16-bit unsigned integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    [CLSCompliant(false)]
+    [Obsolete("Use FromUShort instead")]
+    public static CBORObject FromObject(ushort value) => FromInt64((long)value);
 
     /// <summary>Generates a CBOR object from this one, but gives the
     /// resulting object a tag in addition to its existing tags (the new
