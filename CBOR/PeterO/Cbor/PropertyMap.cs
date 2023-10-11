@@ -932,7 +932,7 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object TypeToObject(
       CBORObject objThis,
-      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
+      Type t,
       CBORTypeMapper mapper,
       PODOptions options,
       int depth) {
@@ -1316,7 +1316,7 @@ typeof(
 
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object ObjectWithProperties(
-      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
+      Type t,
       IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
       CBORTypeMapper mapper,
       PODOptions options,

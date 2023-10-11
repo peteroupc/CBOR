@@ -1811,7 +1811,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
 
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     internal object ToObject(
-      [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type t,
+      Type t,
       CBORTypeMapper mapper,
       PODOptions options,
       int depth) {
