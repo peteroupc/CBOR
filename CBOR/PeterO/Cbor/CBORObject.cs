@@ -2827,7 +2827,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
 ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     }
 
-    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")] // Annotation comes from use of GetProperties
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     internal static CBORObject FromObject(
       object obj,
       PODOptions options,
@@ -3071,6 +3071,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     /// <returns>A CBOR object where the object <paramref name='valueObValue'/>
     /// is given the tag <paramref name='bigintTag'/>.</returns>
     [Obsolete("Use FromCBORObjectAndTag instead.")]
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(object valueObValue, EInteger bigintTag) =>
       FromCBORObjectAndTag(FromObject(valueObValue), bigintTag);
 
@@ -3138,6 +3139,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='smallTag'/> is less than 0.</exception>
     [Obsolete("Use FromCBORObjectAndTag instead.")]
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(object valueObValue, int smallTag) =>
       FromCBORObjectAndTag(FromObject(valueObValue), smallTag);
 

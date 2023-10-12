@@ -28,12 +28,12 @@ namespace PeterO {
     private static MethodInfo GetTypeMethod(
       Type t,
       string name,
-      Type parameter) {
+      Type[] parameters) {
 #if NET40 || NET20
         return t.GetMethod(name, new[] { parameter });
 #else
       {
-        return t?.GetRuntimeMethod(name, new[] { parameter });
+        return t?.GetRuntimeMethod(name, parameters);
       }
 #endif
     }
@@ -63,7 +63,8 @@ namespace PeterO {
 #endif
         }
       }
-      MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", typeof(string));
+      Type[] types = new[] { typeof(string) };
+      MethodInfo typeMethod = GetTypeMethod(type, "WriteLine", types);
       if (typeMethod != null) {
         typeMethod.Invoke(
           type,

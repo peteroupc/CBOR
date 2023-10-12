@@ -474,8 +474,8 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
     private static MethodInfo GetTypeMethod(
       Type t,
       string name,
-      Type parameter) {
-      return t.GetRuntimeMethod(name, new[] { parameter });
+      Type[] parameters) {
+      return t.GetRuntimeMethod(name, parameters);
     }
 
     private static bool HasCustomAttribute(
@@ -867,10 +867,10 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
 
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object FindOneArgumentMethod(
-      Type objType,
+      object obj,
       string name,
       Type argtype) {
-      return GetTypeMethod(objType, name, argtype);
+      return GetTypeMethod(obj.GetType(), name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(
@@ -1151,7 +1151,7 @@ System.Collections.ObjectModel.ReadOnlyCollection<byte>(byteret);
 #endif
         if (objThis.Type == CBORType.Array && genericListObject != null) {
           object addMethod = FindOneArgumentMethod(
-              genericListObject.GetType(),
+              genericListObject,
               "Add",
               objectType);
           if (addMethod == null) {
