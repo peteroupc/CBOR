@@ -1847,7 +1847,8 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       // might throw InvalidOperationException rather than CBORException.
       // Make them throw CBORException in next major version.
       if (t.Equals(typeof(EDecimal))) {
-        this.ToEDecimal();
+        CBORNumber cn = this.AsNumber();
+        return cn.GetNumberInterface().AsEDecimal(cn.GetValue());
       }
       if (t.Equals(typeof(EFloat))) {
         var cn = CBORNumber.FromCBORObject(this);
