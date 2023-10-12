@@ -867,10 +867,10 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
 
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object FindOneArgumentMethod(
-      object obj,
+      Type ty,
       string name,
       Type argtype) {
-      return GetTypeMethod(obj.GetType(), name, new[] { argtype });
+      return GetTypeMethod(ty, name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(
@@ -1151,7 +1151,7 @@ System.Collections.ObjectModel.ReadOnlyCollection<byte>(byteret);
 #endif
         if (objThis.Type == CBORType.Array && genericListObject != null) {
           object addMethod = FindOneArgumentMethod(
-              genericListObject,
+              genericListObject.GetType(),
               "Add",
               objectType);
           if (addMethod == null) {
