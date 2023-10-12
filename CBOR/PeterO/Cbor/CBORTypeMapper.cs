@@ -54,7 +54,7 @@ namespace PeterO.Cbor {
       {
         Converter = converter,
         ToObject = PropertyMap.FindOneArgumentMethod(
-          typeof(ICBORConverter<T>),
+          converter.GetType(),
           "ToCBORObject",
           type),
       };
@@ -63,7 +63,7 @@ namespace PeterO.Cbor {
           "Converter doesn't contain a proper ToCBORObject method");
       }
       ci.FromObject = PropertyMap.FindOneArgumentMethod(
-          typeof(ICBORConverter<T>),
+          converter.GetType(),
           "FromCBORObject",
           typeof(CBORObject));
       this.converters[type] = ci;
