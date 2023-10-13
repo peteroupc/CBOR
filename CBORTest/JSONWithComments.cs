@@ -420,7 +420,7 @@ ArgumentNullException(nameof(jstring)) : FromJSONString(jstring,
           _ = sb.Append("/");
           string str = obj.AsString();
           for (int j = 0; j < str.Length; ++j) {
-            _ = str[j] == '/' ? sb.Append("~1") : str[j] == '~' ?
+            sb = str[j] == '/' ? sb.Append("~1") : str[j] == '~' ?
 sb.Append("~0") : sb.Append(str[j]);
           }
         } else {

@@ -369,7 +369,8 @@ builder.Append(property.Name);
     }
 
     public static string FormatTypeSig(Type typeInfo) {
-      bool isPublic = typeInfo.IsNested ? typeInfo.IsNestedPublic : typeInfo.IsPublic;
+      bool isPublic = typeInfo.IsNested ? typeInfo.IsNestedPublic :
+typeInfo.IsPublic;
       var builder = new StringBuilder();
       _ = builder.Append(FourSpaces);
       _ = isPublic ? builder.Append("public ") : builder.Append("internal ");
@@ -800,8 +801,8 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
       } else if (info is PropertyInfo property) {
         return property.Name;
       } else {
- return (info is FieldInfo field) ? field.Name : (ret);
-}
+        return (info is FieldInfo field) ? field.Name : ret;
+      }
     }
 
     private static string HeadingUnambiguous(MemberInfo info) {

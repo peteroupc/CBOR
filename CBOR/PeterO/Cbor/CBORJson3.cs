@@ -61,8 +61,8 @@ namespace PeterO.Cbor {
         }
       }
       this.sb = this.sb ?? new StringBuilder();
-      _ = this.sb.Remove(0, this.sb.Length);
-      _ = this.sb.Append(js, startIndex, endIndex - startIndex);
+      this.sb.Remove(0, this.sb.Length);
+      this.sb.Append(js, startIndex, endIndex - startIndex);
       while (true) {
         c = this.index < ep ? js[this.index++] & 0xffff : -1;
         if (c == -1 || c < 0x20) {
@@ -70,7 +70,6 @@ namespace PeterO.Cbor {
         }
         switch (c) {
           case '\\':
-            _ = this.index - 1;
             c = this.index < ep ? js[this.index++] & 0xffff : -1;
             switch (c) {
               case '\\':

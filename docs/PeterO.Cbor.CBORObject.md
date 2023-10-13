@@ -48,7 +48,6 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[Add(PeterO.Cbor.CBORObject)](#Add_PeterO_Cbor_CBORObject)</code> - Adds a new object to the end of this array.
 * <code>[ApplyJSONPatch(PeterO.Cbor.CBORObject)](#ApplyJSONPatch_PeterO_Cbor_CBORObject)</code> - Returns a copy of this object after applying the operations in a JSON patch, in the form of a CBOR object.
 * <code>[AsBoolean()](#AsBoolean)</code> - Returns false if this object is a CBOR false, null, or undefined value (whether or not the object has tags); otherwise, true.
-* <code>[AsDecimal()](#AsDecimal)</code> - <b>Deprecated:</b> Instead, use .ToObject&lt;decimal&gt;().
 * <code>[AsDouble()](#AsDouble)</code> - Converts this object to a 64-bit floating point number.
 * <code>[AsDoubleBits()](#AsDoubleBits)</code> - Converts this object to the bits of a 64-bit floating-point number if this CBOR object's type is FloatingPoint.
 * <code>[AsDoubleValue()](#AsDoubleValue)</code> - Converts this object to a 64-bit floating-point number if this CBOR object's type is FloatingPoint.
@@ -57,12 +56,8 @@ The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 * <code>[AsInt32Value()](#AsInt32Value)</code> - Converts this object to a 32-bit signed integer if this CBOR object's type is Integer.
 * <code>[AsInt64Value()](#AsInt64Value)</code> - Converts this object to a 64-bit signed integer if this CBOR object's type is Integer.
 * <code>[AsNumber()](#AsNumber)</code> - Converts this object to a CBOR number.
-* <code>[AsSByte()](#AsSByte)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToSByteChecked()), or .ToObject&lt;sbyte&gt;().
 * <code>[AsSingle()](#AsSingle)</code> - Converts this object to a 32-bit floating point number.
 * <code>[AsString()](#AsString)</code> - Gets the value of this object as a text string.
-* <code>[AsUInt16()](#AsUInt16)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToUInt16Checked()), or .ToObject&lt;ushort&gt;().
-* <code>[AsUInt32()](#AsUInt32)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToUInt32Checked()), or .ToObject&lt;uint&gt;().
-* <code>[AsUInt64()](#AsUInt64)</code> - <b>Deprecated:</b> Instead, use the following: (cbor.AsNumber().ToUInt64Checked()), or .ToObject&lt;ulong&gt;().
 * <code>[AtJSONPointer(string)](#AtJSONPointer_string)</code> - Gets the CBOR object referred to by a JSON Pointer according to RFC6901.
 * <code>[AtJSONPointer(string, PeterO.Cbor.CBORObject)](#AtJSONPointer_string_PeterO_Cbor_CBORObject)</code> - Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a default value if the operation fails.
 * <code>[CalcEncodedSize()](#CalcEncodedSize)</code> - Calculates the number of bytes this CBOR object takes when serialized as a byte array using the EncodeToBytes() method.
@@ -642,27 +637,6 @@ Returns false if this object is a CBOR false, null, or undefined value (whether 
 
 False if this object is a CBOR false, null, or undefined value; otherwise, true.
 
-<a id="AsDecimal"></a>
-### AsDecimal
-
-    public decimal AsDecimal();
-
-<b>Deprecated.</b> Instead, use .ToObject&lt;decimal&gt;().
-
-Converts this object to a DotNet decimal.
-
-<b>Return Value:</b>
-
-The closest big integer to this object.
-
-<b>Exceptions:</b>
-
- * System.InvalidOperationException:
-This object does not represent a number (for this purpose, infinities and not-a-number or NaN values, but not CBORObject.Null, are considered numbers).
-
- * System.OverflowException:
-This object's value exceeds the range of a DotNet decimal.
-
 <a id="AsDouble"></a>
 ### AsDouble
 
@@ -829,21 +803,6 @@ The number represented by this object.
  * System.InvalidOperationException:
 This object does not represent a number (for this purpose, infinities and not-a-number or NaN values, but not CBORObject.Null, are considered numbers).
 
-<a id="AsSByte"></a>
-### AsSByte
-
-    public sbyte AsSByte();
-
-<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToSByteChecked()), or .ToObject&lt;sbyte&gt;().
-
-<b>This API is not CLS-compliant.</b>
-
-Converts this object to an 8-bit signed integer.
-
-<b>Return Value:</b>
-
-An 8-bit signed integer.
-
 <a id="AsSingle"></a>
 ### AsSingle
 
@@ -878,75 +837,6 @@ Gets this object's string.
  * System.InvalidOperationException:
 This object's type is not a text string (for the purposes of this method, infinity and not-a-number values, but not  `CBORObject.Null` , are considered numbers). To check the CBOR object for null before conversion, use the following idiom (originally written in C# for the.NET version):  `(cbor == null || cbor.IsNull) ? null :
             cbor.AsString()` .
-
-<a id="AsUInt16"></a>
-### AsUInt16
-
-    public ushort AsUInt16();
-
-<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToUInt16Checked()), or .ToObject&lt;ushort&gt;().
-
-<b>This API is not CLS-compliant.</b>
-
-Converts this object to a 16-bit unsigned integer after discarding any fractional part, if any, from its value.
-
-<b>Return Value:</b>
-
-A 16-bit unsigned integer.
-
-<b>Exceptions:</b>
-
- * System.InvalidOperationException:
-This object does not represent a number (for this purpose, infinities and not-a-number or NaN values, but not CBORObject.Null, are considered numbers).
-
- * System.OverflowException:
-This object's value, if converted to an integer by discarding its fractional part, is outside the range of a 16-bit unsigned integer.
-
-<a id="AsUInt32"></a>
-### AsUInt32
-
-    public uint AsUInt32();
-
-<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToUInt32Checked()), or .ToObject&lt;uint&gt;().
-
-<b>This API is not CLS-compliant.</b>
-
-Converts this object to a 32-bit unsigned integer after discarding any fractional part, if any, from its value.
-
-<b>Return Value:</b>
-
-A 32-bit unsigned integer.
-
-<b>Exceptions:</b>
-
- * System.InvalidOperationException:
-This object does not represent a number (for this purpose, infinities and not-a-number or NaN values, but not CBORObject.Null, are considered numbers).
-
- * System.OverflowException:
-This object's value, if converted to an integer by discarding its fractional part, is outside the range of a 32-bit unsigned integer.
-
-<a id="AsUInt64"></a>
-### AsUInt64
-
-    public ulong AsUInt64();
-
-<b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToUInt64Checked()), or .ToObject&lt;ulong&gt;().
-
-<b>This API is not CLS-compliant.</b>
-
-Converts this object to a 64-bit unsigned integer after discarding any fractional part, if any, from its value.
-
-<b>Return Value:</b>
-
-A 64-bit unsigned integer.
-
-<b>Exceptions:</b>
-
- * System.InvalidOperationException:
-This object does not represent a number (for this purpose, infinities and not-a-number or NaN values, but not CBORObject.Null, are considered numbers).
-
- * System.OverflowException:
-This object's value, if converted to an integer by discarding its fractional part, is outside the range of a 64-bit unsigned integer.
 
 <a id="AtJSONPointer_string"></a>
 ### AtJSONPointer

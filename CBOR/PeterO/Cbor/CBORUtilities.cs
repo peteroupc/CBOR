@@ -535,13 +535,13 @@ namespace PeterO.Cbor {
     }
 
     public static string LongToString(long longValue) {
-      if (longValue == long.MinValue) {
+      if (longValue == Int64.MinValue) {
         return "-9223372036854775808";
       }
       if (longValue == 0L) {
         return "0";
       }
-      if (longValue == int.MinValue) {
+      if (longValue == Int32.MinValue) {
         return "-2147483648";
       }
       bool neg = longValue < 0;
@@ -672,7 +672,7 @@ namespace PeterO.Cbor {
         }
         if (intDay < -101) {
           // Number of days in a 400-year block
-          int intCount = (intDay == int.MinValue) ? 14699 : Math.Abs(intDay)
+          int intCount = (intDay == Int32.MinValue) ? 14699 : Math.Abs(intDay)
             / 146097;
           intDay = checked(intDay + (intCount * 146097));
           longYear = checked(longYear - (intCount * 400));
@@ -929,7 +929,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       EDecimal edec,
       EInteger[] year,
       int[] lesserFields) {
-      var integerPart = edec.Quantize(0, ERounding.Floor)
+      EInteger integerPart = edec.Quantize(0, ERounding.Floor)
         .ToEInteger();
       EDecimal fractionalPart = edec.Subtract(
           EDecimal.FromEInteger(integerPart)).Abs();
@@ -1351,7 +1351,7 @@ longSecondsInDay + ") is not less or equal to 86399");
     }
 
     public static long IntegerToDoubleBits(int i) {
-      if (i == int.MinValue) {
+      if (i == Int32.MinValue) {
         return unchecked((long)0xc1e0000000000000L);
       }
       if (i == 0) {

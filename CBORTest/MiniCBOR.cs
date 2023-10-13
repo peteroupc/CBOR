@@ -118,8 +118,11 @@ count);
         }
         b = stream.ReadByte();
       }
-      return b != 0xf4 && (b == 0xf5 ? true : throw new IOException("Not a" +
-"\u0020boolean"));
+      return b switch {
+        0xf4 => false,
+        0xf5 => true,
+        _ => throw new IOException("Not a boolean"),
+      };
     }
 
     public static void WriteBoolean(bool value, Stream stream) {
@@ -199,12 +202,6 @@ count);
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 ||
             bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
-        }
-        if (!check32bit) {
-          _ = ((long)bytes[0]) & 0xff;
-          _ = ((long)bytes[1]) & 0xff;
-          _ = ((long)bytes[2]) & 0xff;
-          _ = ((long)bytes[3]) & 0xff;
         }
         b = ((long)bytes[4]) & 0xff;
         b <<= 8;
@@ -366,7 +363,7 @@ count);
           throw new IOException("Not a 32-bit integer");
         }
         dbl = (dbl < 0) ? Math.Ceiling(dbl) : Math.Floor(dbl);
-        return dbl is < int.MinValue or > int.MaxValue ? throw new
+        return dbl is < Int32.MinValue or > Int32.MaxValue ? throw new
 IOException("Not a 32-bit integer") : (int)dbl;
       }
       return (b & 0xdc) == 0x18 ? (int)ReadInteger(stream, b, true) : throw

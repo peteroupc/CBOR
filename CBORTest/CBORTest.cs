@@ -1899,10 +1899,10 @@ namespace Test {
     public void TestLong() {
       long[] ranges = {
         0, 65539, 0xfffff000L, 0x100000400L,
-        long.MaxValue - 1000,
-        long.MaxValue,
-        long.MinValue,
-        long.MinValue + 1000,
+        Int64.MaxValue - 1000,
+        Int64.MaxValue,
+        Int64.MinValue,
+        Int64.MinValue + 1000,
       };
       ranges[0] = -65539;
       var jso = new JSONOptions("numberconversion=full");
@@ -2388,7 +2388,8 @@ namespace Test {
           }
         } catch (CBORException ex) {
           // Expected exception
-          Console.Write(ex.Message[..0]);
+          string exmessage = ex.Message;
+          Console.Write(exmessage[..0]);
         } catch (InvalidOperationException ex) {
           string failString = ex.ToString() +
             (ex.InnerException == null ? String.Empty : "\n" +
@@ -2397,8 +2398,8 @@ namespace Test {
           failString += "\nstart pos: " + oldPos + ", truelen=" +
             (inputStream.Position - oldPos);
           failString += "\n" + TestCommon.ToByteArrayString(array);
-          failString = failString[
-..Math.Min(2000, failString.Length)];
+          int endPos = Math.Min(2000, failString.Length);
+          failString = failString[..endPos];
           throw new InvalidOperationException(failString, ex);
         }
       }
@@ -2468,10 +2469,10 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       TestUnsignedLongOne(0xFFFFFFFFL, "ffffffff");
       TestUnsignedLongOne(-1, "ffffffffffffffff");
       TestUnsignedLongOne(-3, "fffffffffffffffd");
-      TestUnsignedLongOne(long.MaxValue, "7fffffffffffffff");
-      TestUnsignedLongOne(long.MaxValue - 1, "7ffffffffffffffe");
-      TestUnsignedLongOne(long.MinValue, "8000000000000000");
-      TestUnsignedLongOne(long.MinValue + 1, "8000000000000001");
+      TestUnsignedLongOne(Int64.MaxValue, "7fffffffffffffff");
+      TestUnsignedLongOne(Int64.MaxValue - 1, "7ffffffffffffffe");
+      TestUnsignedLongOne(Int64.MinValue, "8000000000000000");
+      TestUnsignedLongOne(Int64.MinValue + 1, "8000000000000001");
     }
 
     [Test]
@@ -3793,35 +3794,35 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       new int[] { 11, 31, 0, 0, 0, 0, 0 },
       new int[] { 12, 32, 0, 0, 0, 0, 0 },
       new int[] { 13, 1, 0, 0, 0, 0, 0 },
-      new int[] { int.MinValue, 1, 0, 0, 0, 0, 0 },
-      new int[] { int.MaxValue, 1, 0, 0, 0, 0, 0 },
+      new int[] { Int32.MinValue, 1, 0, 0, 0, 0, 0 },
+      new int[] { Int32.MaxValue, 1, 0, 0, 0, 0, 0 },
       new int[] { 1, 0, 0, 0, 0, 0, 0 },
       new int[] { 1, -1, 0, 0, 0, 0, 0 },
-      new int[] { 1, int.MinValue, 0, 0, 0, 0, 0 },
+      new int[] { 1, Int32.MinValue, 0, 0, 0, 0, 0 },
       new int[] { 1, 32, 0, 0, 0, 0, 0 },
-      new int[] { 1, int.MaxValue, 0, 0, 0, 0, 0 },
+      new int[] { 1, Int32.MaxValue, 0, 0, 0, 0, 0 },
       new int[] { 1, 1, -1, 0, 0, 0, 0 },
-      new int[] { 1, 1, int.MinValue, 0, 0, 0, 0 },
+      new int[] { 1, 1, Int32.MinValue, 0, 0, 0, 0 },
       new int[] { 1, 1, 24, 0, 0, 0, 0 },
       new int[] { 1, 1, 59, 0, 0, 0, 0 },
       new int[] { 1, 1, 60, 0, 0, 0, 0 },
-      new int[] { 1, 1, int.MaxValue, 0, 0, 0, 0 },
+      new int[] { 1, 1, Int32.MaxValue, 0, 0, 0, 0 },
       new int[] { 1, 1, 0, -1, 0, 0, 0 },
-      new int[] { 1, 1, 0, int.MinValue, 0, 0, 0 },
+      new int[] { 1, 1, 0, Int32.MinValue, 0, 0, 0 },
       new int[] { 1, 1, 0, 60, 0, 0, 0 },
-      new int[] { 1, 1, 0, int.MaxValue, 0, 0, 0 },
+      new int[] { 1, 1, 0, Int32.MaxValue, 0, 0, 0 },
       new int[] { 1, 1, 0, 0, -1, 0, 0 },
-      new int[] { 1, 1, 0, 0, int.MinValue, 0, 0 },
+      new int[] { 1, 1, 0, 0, Int32.MinValue, 0, 0 },
       new int[] { 1, 1, 0, 0, 60, 0, 0 },
-      new int[] { 1, 1, 0, 0, int.MaxValue, 0, 0 },
+      new int[] { 1, 1, 0, 0, Int32.MaxValue, 0, 0 },
       new int[] { 1, 1, 0, 0, 0, -1, 0 },
-      new int[] { 1, 1, 0, 0, 0, int.MinValue, 0 },
+      new int[] { 1, 1, 0, 0, 0, Int32.MinValue, 0 },
       new int[] { 1, 1, 0, 0, 0, 1000 * 1000 * 1000, 0 },
-      new int[] { 1, 1, 0, 0, 0, int.MaxValue, 0 },
+      new int[] { 1, 1, 0, 0, 0, Int32.MaxValue, 0 },
       new int[] { 1, 1, 0, 0, 0, 0, -1440 },
-      new int[] { 1, 1, 0, 0, 0, 0, int.MinValue },
+      new int[] { 1, 1, 0, 0, 0, 0, Int32.MinValue },
       new int[] { 1, 1, 0, 0, 0, 0, 1440 },
-      new int[] { 1, 1, 0, 0, 0, 0, int.MaxValue },
+      new int[] { 1, 1, 0, 0, 0, 0, Int32.MaxValue },
     };
 
     private static void TestBadDateFieldsOne(CBORDateConverter conv) {
@@ -4185,10 +4186,6 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         false, false, false, false, true, false, true,
         false,
       };
-      _ = new bool[] {
-        false, false, false, false, true, true, true,
-        true,
-      };
       for (int i = 0; i < eints.Length; ++i) {
         CBORObject cbor;
         bool isNegative = eints[i].Sign < 0;
@@ -4252,9 +4249,10 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
             Assert.AreEqual(CBORType.Integer, cbor[0].Type);
             Assert.AreEqual(0, cbor[0].TagCount);
           }
-          using var ms2 = new Test.DelayingStream();
-          CBORObject.Write(ed, ms2);
-          cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
+          using (var ms2 = new Test.DelayingStream()) {
+            CBORObject.Write(ed, ms2);
+            cbor = CBORObject.DecodeFromBytes(ms2.ToArray());
+          }
           Assert.IsTrue(cbor.IsNumber, cbor.ToString());
           if (isPastCbor[i]) {
             Assert.IsTrue(cbor.HasOneTag(264));
@@ -4631,8 +4629,9 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     }
 
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {
-      EDecimal cmpDecFrac = AsED(o1).Add(AsED(o2));
-      var cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
+      EDecimal cmpDecFrac, cmpCobj;
+      cmpDecFrac = AsED(o1).Add(AsED(o2));
+      cmpCobj = o1.AsNumber().Add(o2.AsNumber()).ToEDecimal();
       TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       cmpDecFrac = AsED(o1).Subtract(AsED(o2));
       cmpCobj = o1.AsNumber().Subtract(o2.AsNumber()).ToEDecimal();

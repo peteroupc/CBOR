@@ -178,9 +178,7 @@ ICBORToFromConverter<DateTime>
     /// cannot be less than -1439 or greater than 1439. For tags 0 and 1,
     /// this value is always 0.</item></list>.</param>
     /// <returns>Either <c>true</c> if the method is successful, or
-    /// <c>false</c> otherwise. Returns <c>false</c> if the parameter
-    /// <paramref name='year'/> or <paramref name='lesserFields'/> is null,
-    /// or contains fewer elements than required.</returns>
+    /// <c>false</c> otherwise.</returns>
     public bool TryGetDateTimeFields(CBORObject obj, EInteger[] year, int[]
       lesserFields) {
       if (year == null) {
@@ -235,7 +233,8 @@ ICBORToFromConverter<DateTime>
         return "\"lesserFields\" + \"'s length\" (" +
           lesserFields.Length + ") is not greater or equal to 7";
       }
-      if (this.Type == ConversionType.UntaggedNumber) {
+      ConversionType thisType = this.Type;
+      if (thisType == ConversionType.UntaggedNumber) {
         if (obj.IsTagged) {
           return "May not be tagged";
         }
@@ -247,8 +246,8 @@ ICBORToFromConverter<DateTime>
         if (!num.IsFinite()) {
           return "Not a finite number";
         }
-        if (num.CompareTo(long.MinValue) < 0 ||
-          num.CompareTo(long.MaxValue) > 0) {
+        if (num.CompareTo(Int64.MinValue) < 0 ||
+          num.CompareTo(Int64.MaxValue) > 0) {
           return "Too big or small to fit a DateTime";
         }
         if (num.CanFitInInt64()) {
@@ -399,7 +398,8 @@ ICBORToFromConverter<DateTime>
       }
       try {
         CBORUtilities.CheckYearAndLesserFields(bigYear, lesserFields);
-        switch (this.Type) {
+        ConversionType thisType = this.Type;
+        switch (thisType) {
           case ConversionType.TaggedString:
             {
               string str = CBORUtilities.ToAtomDateTimeString(bigYear,
@@ -414,21 +414,23 @@ ICBORToFromConverter<DateTime>
                   bigYear,
                   lesserFields,
                   status);
-              return status[0] == 0 ?
-                this.Type == ConversionType.TaggedNumber ?
-                  CBORObject.FromObjectAndTag(ef.ToEInteger(), 1) :
-                CBORObject.FromObject(ef.ToEInteger()) : status[0] == 1 ?
-                  this.Type == ConversionType.TaggedNumber ?
-                  CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)
-                  .WithTag(1) :
-                  CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8) :
-                  throw new CBORException("Too big or small to fit an" +
-                "\u0020integer" + "\u0020or floating-point number");
+              switch (status[0]) {
+                case 0:
+                  return thisType == ConversionType.TaggedNumber ?
+                    CBORObject.FromObjectAndTag(ef.ToEInteger(), 1) :
+                    CBORObject.FromObject(ef.ToEInteger());
+                case 1:
+                  return thisType == ConversionType.TaggedNumber ?
+                    CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)
+                    .WithTag(1) :
+                    CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8);
+                default: throw new CBORException("Too big or small to fit an" +
+                    "\u0020integer" + "\u0020or floating-point number");
+              }
             } catch (ArgumentException ex) {
               throw new CBORException(ex.Message, ex);
             }
-          default:
-            throw new CBORException("Internal error");
+          default: throw new CBORException("Internal error");
         }
       } catch (ArgumentException ex) {
         throw new CBORException(ex.Message, ex);

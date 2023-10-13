@@ -90,21 +90,23 @@ ArgumentNullException(nameof(stream)) : ReadObject(stream, false);
 
     private static CBORObject ReadObject(Stream stream, bool allowEnd) {
       int c = stream.ReadByte();
-      if (c == 'd') {
-        return ReadDictionary(stream);
-      }
-      return c == 'l' ? ReadList(stream) : allowEnd && c == 'e' ? null :
-        c == 'i' ? ReadInteger(stream) :
-        c is >= '0' and <= '9' ? ReadString(stream, (char)c) : throw new
-CBORException("Object expected");
+      return c switch {
+        'd' => ReadDictionary(stream),
+        'l' => ReadList(stream),
+        'i' => ReadInteger(stream),
+        'e' => allowEnd ? null : throw new CBORException("Object expected"),
+        '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9'
+=> ReadString(stream, (char)c),
+        _ => throw new CBORException("Object expected"),
+      };
     }
 
     private const string ValueDigits = "0123456789";
 
     public static string LongToString(long longValue) {
-      return longValue == long.MinValue ?
+      return longValue == Int64.MinValue ?
         "-9223372036854775808" : longValue == 0L ?
-        "0" : (longValue == int.MinValue) ? "-2147483648" :
+        "0" : (longValue == Int32.MinValue) ? "-2147483648" :
 EInteger.FromInt64(longValue).ToString();
     }
 

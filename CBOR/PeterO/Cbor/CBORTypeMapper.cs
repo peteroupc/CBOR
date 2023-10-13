@@ -71,15 +71,21 @@ namespace PeterO.Cbor {
     internal object ConvertBackWithConverter(
       CBORObject cbor,
       Type type) {
-      return !this.converters.TryGetValue(type, out ConverterInfo convinfo) ?
-        null : convinfo == null ? null : (convinfo.FromObject == null) ? null :
+      ConverterInfo convinfo = PropertyMap.GetOrDefault(
+        this.converters,
+        type,
+        null);
+      return convinfo == null ? null : (convinfo.FromObject == null) ? null :
         PropertyMap.CallFromObject(convinfo, cbor);
     }
 
     internal CBORObject ConvertWithConverter(object obj) {
       object type = obj.GetType();
-      return !this.converters.TryGetValue(type, out ConverterInfo convinfo) ?
-        null : (convinfo == null) ? null :
+      ConverterInfo convinfo = PropertyMap.GetOrDefault(
+        this.converters,
+        type,
+        null);
+      return (convinfo == null) ? null :
         PropertyMap.CallToObject(convinfo, obj);
     }
 

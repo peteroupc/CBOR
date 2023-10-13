@@ -196,7 +196,7 @@ namespace PeterO.Cbor {
           --index;
           break;
         }
-        if (lvalue > int.MaxValue) {
+        if (lvalue > Int32.MaxValue) {
           return index - 1;
         }
       }
@@ -383,7 +383,7 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
       _ = sb.Append(str.Substring(0, j));
       _ = sb.Append(srep);
       for (int i = j + 1; i < str.Length; ++i) {
-        _ = str[i] == c ? sb.Append(srep) : sb.Append(str[i]);
+        sb = str[i] == c ? sb.Append(srep) : sb.Append(str[i]);
       }
       return sb.ToString();
     }

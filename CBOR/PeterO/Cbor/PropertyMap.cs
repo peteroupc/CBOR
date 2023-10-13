@@ -1295,10 +1295,10 @@ typeof(
       }
     }
 
-    public static CBORObject GetOrDefault(IDictionary<CBORObject, CBORObject> map,
-      CBORObject key,
-      CBORObject defaultValue) {
-      return (!map.TryGetValue(key, out CBORObject ret)) ? defaultValue : ret;
+    public static TValue GetOrDefault<TKey, TValue>(IDictionary<TKey, TValue> map,
+      TKey key,
+      TValue defaultValue) {
+      return (!map.TryGetValue(key, out TValue ret)) ? defaultValue : ret;
     }
 
     public static CBORObject FromObjectOther(object obj) {

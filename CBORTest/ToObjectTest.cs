@@ -1042,12 +1042,13 @@ namespace Test {
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
               (string)numberinfo["number"].ToObject(typeof(string))));
 
-        var f1 =
-(float)EDecimal.FromString((string)numberinfo["number"].ToObject(
+        float f1, f2;
+        f1 = (float)EDecimal.FromString(
+            (string)numberinfo["number"].ToObject(
               typeof(string))).ToSingle();
-        object f2 = cbornumber.ToObject(typeof(float));
-        if (!f1.Equals(f2)) {
-          Assert.Fail();
+        f2 = (float)cbornumber.ToObject(typeof(float));
+        if (!EFloat.FromSingle(f1).Equals(EFloat.FromSingle(f2))) {
+          Assert.Fail("f1="+f1+"\nf2="+f2);
         }
       }
     }
@@ -1629,8 +1630,21 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         }
         // Tests for DecodeObjectFromBytes
         byte[] encdata = cbor.EncodeToBytes();
-        object obj3 =
-          CBORObject.DecodeFromBytes(encdata).ToObject(obj.GetType());
+        CBORObject cbor2 = null;
+        try {
+          cbor2 = CBORObject.DecodeFromBytes(encdata);
+        } catch (Exception ex) {
+          string failString = String.Empty + encdata.Length;
+          if (encdata.Length < 200) {
+            failString += " ";
+            failString += TestCommon.ToByteArrayString(encdata);
+          }
+          throw new InvalidOperationException(failString, ex);
+        }
+        if (cbor2 == null) {
+          Assert.Fail();
+        }
+        object obj3 = cbor2.ToObject(obj.GetType());
         object obj4 = CBORObject.DecodeObjectFromBytes(encdata, obj.GetType());
         TestCommon.AssertEqualsHashCode(obj, obj2);
         TestCommon.AssertEqualsHashCode(obj, obj3);

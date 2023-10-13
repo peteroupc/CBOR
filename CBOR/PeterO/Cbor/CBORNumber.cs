@@ -188,7 +188,6 @@ namespace PeterO.Cbor {
       if (denominator.Sign <= 0) {
         return null; // "Denominator may not be negative or zero");
       }
-      var erat = ERational.Create(numerator, denominator);
       if (tagName == 270) {
         if (numerator.Sign < 0) {
           return null; // "Numerator may not be negative");
@@ -197,11 +196,13 @@ namespace PeterO.Cbor {
           return null; // "Invalid options";
         }
         int options = o[2].AsInt32Value();
+        ERational erat = null;
         switch (options) {
           case 0:
+            erat = ERational.Create(numerator, denominator);
             break;
           case 1:
-            erat = erat.Negate();
+            erat = ERational.Create(numerator, denominator).Negate();
             break;
           case 2:
             if (!numerator.IsZero || denominator.CompareTo(1) != 0) {
@@ -229,8 +230,10 @@ namespace PeterO.Cbor {
             break;
           default: return null; // "Invalid options");
         }
+        return CBORNumber.FromObject(erat);
+      } else {
+        return CBORNumber.FromObject(ERational.Create(numerator, denominator));
       }
-      return CBORNumber.FromObject(erat);
     }
 
     private static bool CheckRationalToNumber(
@@ -617,11 +620,15 @@ CBORNumber.FromObject(efloat);
     /// not-a-number, is not an exact integer, or is less than 0 or greater
     /// than 255.</exception>
     public byte ToByteIfExact() {
-      return !this.IsFinite() ?
-        throw new OverflowException("Value is infinity or NaN") :
-        this.IsZero() ? (byte)0 : this.IsNegative() ? throw new
-OverflowException("Value out of range") :
-this.ToEIntegerIfExact().ToByteChecked();
+      if (!this.IsFinite()) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsZero()) {
+        return (byte)0;
+      }
+      return this.IsNegative() ? throw new
+        OverflowException("Value out of range") :
+        this.ToEIntegerIfExact().ToByteChecked();
     }
 
     /// <summary>Converts a byte (from 0 to 255) to an arbitrary-precision
@@ -920,7 +927,7 @@ this.ToEIntegerIfExact().ToByteChecked();
         return false;
       }
       long v = icn.AsInt64(gv);
-      return v >= int.MinValue && v <= int.MaxValue;
+      return v >= Int32.MinValue && v <= Int32.MaxValue;
     }
 
     /// <summary>Returns whether this object's numerical value is an
@@ -1003,7 +1010,7 @@ this.ToEIntegerIfExact().ToByteChecked();
         case NumberKind.Integer:
           {
             var longValue = (long)this.value;
-            return longValue == long.MinValue ?
+            return longValue == Int64.MinValue ?
               FromObject(EInteger.FromInt64(longValue).Negate()) :
               longValue >= 0 ? this : new CBORNumber(
                   this.Kind,
@@ -1030,7 +1037,7 @@ this.ToEIntegerIfExact().ToByteChecked();
           {
             var longValue = (long)this.value;
             return longValue == 0 ? FromObject(EDecimal.NegativeZero) :
-              longValue == long.MinValue ?
+              longValue == Int64.MinValue ?
 FromObject(EInteger.FromInt64(longValue).Negate()) : new
 CBORNumber(this.Kind, -longValue);
           }
@@ -1114,8 +1121,8 @@ NumberKind.Double) ?
       if (typeA == NumberKind.Integer && typeB == NumberKind.Integer) {
         var valueA = (long)objA;
         var valueB = (long)objB;
-        if ((valueA < 0 && valueB < long.MinValue - valueA) ||
-          (valueA > 0 && valueB > long.MaxValue - valueA)) {
+        if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
+          (valueA > 0 && valueB > Int64.MaxValue - valueA)) {
           // would overflow, convert to EInteger
           return CBORNumber.FromObject(
               EInteger.FromInt64(valueA).Add(EInteger.FromInt64(valueB)));
@@ -1188,8 +1195,8 @@ NumberKind.Double) ?
       if (typeA == NumberKind.Integer && typeB == NumberKind.Integer) {
         var valueA = (long)objA;
         var valueB = (long)objB;
-        if ((valueB < 0 && long.MaxValue + valueB < valueA) ||
-          (valueB > 0 && long.MinValue + valueB > valueA)) {
+        if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
+          (valueB > 0 && Int64.MinValue + valueB > valueA)) {
           // would overflow, convert to EInteger
           return CBORNumber.FromObject(
               EInteger.FromInt64(valueA).Subtract(EInteger.FromInt64(
@@ -1227,9 +1234,9 @@ NumberKind.Double) ?
       } else {
         // DebugUtility.Log("type=" + typeA + "/" + typeB + " finite=" +
         // (// this.IsFinite()) + "/" + (b.IsFinite()));
-        EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA);
-        EInteger b2 = GetNumberInterface(typeB).AsEInteger(objB);
-        return new CBORNumber(NumberKind.EInteger, b1 - b2);
+        EInteger b1 = GetNumberInterface(typeA).AsEInteger(objA)
+           .Subtract(GetNumberInterface(typeB).AsEInteger(objB));
+        return new CBORNumber(NumberKind.EInteger, b1);
       }
     }
 
@@ -1259,11 +1266,11 @@ NumberKind.Double) ?
         bool apos = valueA > 0L;
         bool bpos = valueB > 0L;
         if (
-          (apos && ((!bpos && (long.MinValue / valueA) > valueB) ||
-              (bpos && valueA > (long.MaxValue / valueB)))) ||
+          (apos && ((!bpos && (Int64.MinValue / valueA) > valueB) ||
+              (bpos && valueA > (Int64.MaxValue / valueB)))) ||
           (!apos && ((!bpos && valueA != 0L &&
-                (long.MaxValue / valueA) > valueB) ||
-              (bpos && valueA < (long.MinValue / valueB))))) {
+                (Int64.MaxValue / valueA) > valueB) ||
+              (bpos && valueA < (Int64.MinValue / valueB))))) {
           // would overflow, convert to EInteger
           var bvalueA = (EInteger)valueA;
           var bvalueB = (EInteger)valueB;
@@ -1327,7 +1334,7 @@ NumberKind.Double) ?
 
               CBORNumber.FromObject(EDecimal.PositiveInfinity));
         }
-        if (valueA == long.MinValue && valueB == -1) {
+        if (valueA == Int64.MinValue && valueB == -1) {
           return new CBORNumber(NumberKind.Integer, valueA).Negate();
         }
         long quo = valueA / valueB;
@@ -1431,7 +1438,7 @@ NumberKind.Double) ?
       if (typeA == NumberKind.Integer && typeB == NumberKind.Integer) {
         var valueA = (long)objA;
         var valueB = (long)objB;
-        return (valueA == long.MinValue && valueB == -1) ?
+        return (valueA == Int64.MinValue && valueB == -1) ?
           CBORNumber.FromObject(0) : CBORNumber.FromObject(valueA % valueB);
       }
       NumberKind convertKind = GetConvertKind(this, b);

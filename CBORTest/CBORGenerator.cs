@@ -8,17 +8,19 @@ namespace Test {
 
       public ByteWriter Write(int b) {
         if (this.ByteLength < this.bytes.Length) {
-          this.bytes[this.ByteLength++] = (byte)b;
+          this.bytes[this.ByteLength] = (byte)b;
+          ++this.ByteLength;
         } else {
           var newbytes = new byte[this.bytes.Length * 2];
           Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
           this.bytes = newbytes;
-          this.bytes[this.ByteLength++] = (byte)b;
+          this.bytes[this.ByteLength] = (byte)b;
+          ++this.ByteLength;
         }
         return this;
       }
 
-      public int ByteLength { get; private set; }
+      public int ByteLength { get; set; }
 
       public byte[] ToBytes() {
         var newbytes = new byte[this.ByteLength];
@@ -245,8 +247,11 @@ namespace Test {
           break;
         case 1:
           _ = bs.Write((majorType * 0x20) + 0x18);
-          _ = majorType == 7 ? bs.Write(32 + r.GetInt32(224)) :
-bs.Write(r.GetInt32(256));
+          if (majorType == 7) {
+            bs.Write(32 + r.GetInt32(224));
+          } else {
+            bs.Write(r.GetInt32(256));
+          }
           break;
         case 2:
           _ = bs.Write((majorType * 0x20) + 0x19);

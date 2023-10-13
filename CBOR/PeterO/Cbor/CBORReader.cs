@@ -142,19 +142,21 @@ untagged.AsNumber().IsNegative() ?
     }
 
     private CBORObject ReadStringArrayMap(int type, long uadditional) {
-      _ = this.options.Ctap2Canonical;
       if (type == 2 || type == 3) { // Byte string or text string
         if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
             ToUnsignedEInteger(uadditional).ToString() + " is bigger" +
             "\u0020than supported");
         }
-        int hint = (uadditional > int.MaxValue ||
-            (uadditional >> 63) != 0) ? int.MaxValue : (int)uadditional;
+        int hint = (uadditional > Int32.MaxValue ||
+            (uadditional >> 63) != 0) ? Int32.MaxValue : (int)uadditional;
         byte[] data = ReadByteData(this.stream, uadditional, null);
-        return type == 3 ? !CBORUtilities.CheckUtf8(data) ? throw new
-CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint) :
-          this.ObjectFromByteArray(data, hint);
+        if (type == 3) {
+          return !CBORUtilities.CheckUtf8(data) ? throw new
+CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint);
+        } else {
+          return this.ObjectFromByteArray(data, hint);
+        }
       }
       if (type == 4) { // Array
         if (this.options.Ctap2Canonical && this.depth >= 4) {
@@ -349,7 +351,7 @@ count);
         if (expectedLength > 1) {
           ReadHelper(this.stream, data, 1, expectedLength - 1);
         }
-        var cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
+        CBORObject cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
         if (this.stringRefs != null && (type == 2 || type == 3)) {
           this.stringRefs.AddStringIfNeeded(cbor, expectedLength - 1);
         }
@@ -371,7 +373,7 @@ count);
                     break;
                   }
                   long len = ReadDataLength(this.stream, nextByte, 2);
-                  if ((len >> 63) != 0 || len > int.MaxValue) {
+                  if ((len >> 63) != 0 || len > Int32.MaxValue) {
                     throw new CBORException("Length" + ToUnsignedEInteger(len) +
                         " is bigger than supported ");
                   }
@@ -380,7 +382,7 @@ count);
                     _ = ReadByteData(this.stream, len, ms);
                   }
                 }
-                if (ms.Position > int.MaxValue) {
+                if (ms.Position > Int32.MaxValue) {
                   throw new
                   CBORException("Length of bytes to be streamed is bigger" +
   "\u0020than supported ");
@@ -399,7 +401,7 @@ count);
                   break;
                 }
                 long len = ReadDataLength(this.stream, nextByte, 3);
-                if ((len >> 63) != 0 || len > int.MaxValue) {
+                if ((len >> 63) != 0 || len > Int32.MaxValue) {
                   throw new CBORException("Length" + ToUnsignedEInteger(len) +
                     " is bigger than supported");
                 }
@@ -536,7 +538,7 @@ count);
       if (uadditional == 0) {
         return EmptyByteArray;
       }
-      if ((uadditional >> 63) != 0 || uadditional > int.MaxValue) {
+      if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length" + ToUnsignedEInteger(uadditional) +
           " is bigger than supported ");
       }
