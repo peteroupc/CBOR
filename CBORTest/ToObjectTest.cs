@@ -1048,7 +1048,7 @@ namespace Test {
               typeof(string))).ToSingle();
         f2 = (float)cbornumber.ToObject(typeof(float));
         if (!EFloat.FromSingle(f1).Equals(EFloat.FromSingle(f2))) {
-          Assert.Fail("f1="+f1+"\nf2="+f2);
+          Assert.Fail("f1=" + f1 + "\nf2=" + f2);
         }
       }
     }

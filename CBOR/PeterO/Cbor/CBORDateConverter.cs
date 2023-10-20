@@ -406,9 +406,12 @@ ICBORToFromConverter<DateTime>
                   status);
               switch (status[0]) {
                 case 0:
-                  return thisType == ConversionType.TaggedNumber ?
-                    CBORObject.FromObjectAndTag(ef.ToEInteger(), 1) :
-                    CBORObject.FromObject(ef.ToEInteger());
+                  {
+                    CBORObject cbor = CBORObject.FromEInteger(ef.ToEInteger());
+                    return thisType == ConversionType.TaggedNumber ?
+                      CBORObject.FromCBORObjectAndTag(cbor, 1) :
+                      cbor;
+                  }
                 case 1:
                   return thisType == ConversionType.TaggedNumber ?
                     CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)

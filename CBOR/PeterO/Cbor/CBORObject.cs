@@ -3057,6 +3057,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     public static CBORObject FromCBORObjectAndTag(
       CBORObject cborObj,
       EInteger bigintTag) {
+      // ArgumentAssert.NotNull(cborObj);
       return bigintTag == null ?
         throw new ArgumentNullException(nameof(bigintTag)) :
         bigintTag.Sign < 0 ?
@@ -3064,7 +3065,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
           ") is less than 0") : bigintTag.CompareTo(UInt64MaxValue) > 0 ?
         throw new ArgumentException(
           "tag more than 18446744073709551615") :
-        FromObject(valueOb).WithTag(bigintTag);
+          cborObj.WithTag(bigintTag);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives

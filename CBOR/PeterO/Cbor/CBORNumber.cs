@@ -246,9 +246,9 @@ namespace PeterO.Cbor {
             break;
           default: return null; // "Invalid options");
         }
-        return CBORNumber.FromObject(erat);
+        return CBORNumber.FromERational(erat);
       } else {
-        return CBORNumber.FromObject(ERational.Create(numerator, denominator));
+        return CBORNumber.FromERational(ERational.Create(numerator, denominator));
       }
     }
 
