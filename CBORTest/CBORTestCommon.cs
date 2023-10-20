@@ -57,12 +57,12 @@ lowExponent) {
         case 0:
           o = RandomObjects.RandomDouble(
             rand,
-            int.MaxValue);
+            Int32.MaxValue);
           return CBORObject.FromObject(o);
         case 1:
           o = RandomObjects.RandomSingle(
             rand,
-            int.MaxValue);
+            Int32.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
           return CBORObject.FromEInteger(
@@ -88,12 +88,12 @@ lowExponent) {
         case 0:
           o = RandomObjects.RandomDouble(
             rand,
-            int.MaxValue);
+            Int32.MaxValue);
           return CBORObject.FromObject(o);
         case 1:
           o = RandomObjects.RandomSingle(
             rand,
-            int.MaxValue);
+            Int32.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
           return CBORObject.FromEInteger(

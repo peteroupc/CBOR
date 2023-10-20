@@ -248,7 +248,8 @@ namespace PeterO.Cbor {
         }
         return CBORNumber.FromERational(erat);
       } else {
-        return CBORNumber.FromERational(ERational.Create(numerator, denominator));
+        return CBORNumber.FromERational(ERational.Create(numerator,
+  denominator));
       }
     }
 
@@ -1025,7 +1026,7 @@ namespace PeterO.Cbor {
         case NumberKind.Integer:
           {
             var longValue = (long)this.value;
-            return longValue == long.MinValue ?
+            return longValue == Int64.MinValue ?
               FromEInteger(EInteger.FromInt64(longValue).Negate()) :
               longValue >= 0 ? this : new CBORNumber(
                   this.Kind,
@@ -1052,7 +1053,7 @@ namespace PeterO.Cbor {
           {
             var longValue = (long)this.value;
             return longValue == 0 ? FromEDecimal(EDecimal.NegativeZero) :
-              longValue == long.MinValue ?
+              longValue == Int64.MinValue ?
               FromEInteger(EInteger.FromInt64(longValue).Negate()) : new
               CBORNumber(this.Kind, -longValue);
           }
@@ -1454,14 +1455,17 @@ NumberKind.Double) ?
       if (typeA == NumberKind.Integer && typeB == NumberKind.Integer) {
         var valueA = (long)objA;
         var valueB = (long)objB;
-        return (valueA == long.MinValue && valueB == -1) ?
+        return (valueA == Int64.MinValue && valueB == -1) ?
           CBORNumber.FromInt(0) : CBORNumber.FromInt64(valueA % valueB);
       }
       NumberKind convertKind = GetConvertKind(this, b);
       if (convertKind == NumberKind.ERational) {
         ERational e1 = GetNumberInterface(typeA).AsERational(objA);
         ERational e2 = GetNumberInterface(typeB).AsERational(objB);
-        return CBORNumber.FromERational(CheckOverflow(e1, e2, e1.Remainder(e2)));
+        return CBORNumber.FromERational(CheckOverflow(
+          e1,
+          e2,
+          e1.Remainder(e2)));
       }
       if (convertKind == NumberKind.EDecimal) {
         EDecimal e1 = GetNumberInterface(typeA).AsEDecimal(objA);

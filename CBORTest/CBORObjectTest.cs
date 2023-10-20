@@ -2928,7 +2928,8 @@ namespace Test {
 
     [Test]
     public void TestTagArray() {
-      var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromString("test"), 999);
+      var obj =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromString("test"), 999);
       EInteger[] etags = obj.GetAllTags();
       Assert.AreEqual(1, etags.Length);
       Assert.AreEqual(999, etags[0].ToInt32Checked());
@@ -3406,7 +3407,8 @@ DataUtilities.ToLowerCaseAscii(cbor.AsString()) : throw new CBORException();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(2), EInteger.FromString("-1"));
+        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(2),
+  EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         // NOTE: Intentionally empty
@@ -6303,7 +6305,10 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
         throw new InvalidOperationException(String.Empty, ex);
       }
       cbor = CBORObject.NewMap().Add("9999-01-01T00:00:00Z", 1)
-        .Add(CBORObject.FromCBORObjectAndTag(CBORObject.FromString("9999-01-01T00:00:00Z"), 0), 1);
+
+  .Add(CBORObject.FromCBORObjectAndTag(CBORObject.FromString("9999-01-01T00:00:00Z"),
+  0),
+ 1);
       try {
         _ = cbor.ToJSONString();
         Assert.Fail("Should have failed");
@@ -6686,7 +6691,8 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
 
     [Test]
     public void TestUntag() {
-      var o = CBORObject.FromCBORObjectAndTag(CBORObject.FromString("test"), 999);
+      var o = CBORObject.FromCBORObjectAndTag(CBORObject.FromString("test"),
+  999);
       Assert.AreEqual(EInteger.FromString("999"), o.MostInnerTag);
       o = o.Untag();
       Assert.AreEqual(EInteger.FromString("-1"), o.MostInnerTag);
@@ -8784,7 +8790,8 @@ cborTemp1.AsNumber().IsZero()) {
         dateList.Add(dtstr);
       }
       foreach (string dtstr in dateList) {
-        var cbor = CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dtstr), 0);
+        var cbor =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dtstr), 0);
         var dt = (DateTime)cbor.ToObject(typeof(DateTime));
         _ = ToObjectTest.TestToFromObjectRoundTrip(dt);
       }
@@ -8807,7 +8814,9 @@ cborTemp1.AsNumber().IsZero()) {
         throw new ArgumentNullException(nameof(ei));
       }
       if (ei.CanFitInInt64()) {
-        cbornum = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt64(ei.ToInt64Checked()), 1);
+        cbornum =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromInt64(ei.ToInt64Checked()),
+  1);
         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
         TestCommon.AssertEqualsHashCode(dtx, dtx2);
         _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
@@ -8815,11 +8824,13 @@ cborTemp1.AsNumber().IsZero()) {
       EFloat ef1 = EFloat.FromEInteger(ei).Plus(EContext.Binary64);
       var ef2 = EFloat.FromEInteger(ei);
       if (ef1.CompareTo(ef2) == 0) {
-        cbornum = CBORObject.FromCBORObjectAndTag(CBORObject.FromObject(ef1), 1);
+        cbornum =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromObject(ef1), 1);
         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
         TestCommon.AssertEqualsHashCode(dtx, dtx2);
         _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
-        cbornum = CBORObject.FromCBORObjectAndTag(CBORObject.FromObject(ef1.ToDouble()), 1);
+        cbornum =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromObject(ef1.ToDouble()), 1);
         dtx2 = (DateTime)cbornum.ToObject(typeof(DateTime));
         TestCommon.AssertEqualsHashCode(dtx, dtx2);
         _ = ToObjectTest.TestToFromObjectRoundTrip(dtx2);
@@ -8842,7 +8853,8 @@ cborTemp1.AsNumber().IsZero()) {
     public void TestDateTimeTag1Specific1() {
       // Test speed
       var ei = EInteger.FromString("-14261178672295354872");
-      var cbornum = CBORObject.FromCBORObjectAndTag(CBORObject.FromEInteger(ei), 1);
+      var cbornum =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromEInteger(ei), 1);
       try {
         var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
         _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
@@ -9143,7 +9155,8 @@ cborTemp1.AsNumber().IsZero()) {
       DateTime dt, dt2;
       for (int i = 0; i < 1000; ++i) {
         EInteger ei = CBORTestCommon.RandomEIntegerMajorType0Or1(rg);
-        cbornum = CBORObject.FromCBORObjectAndTag(CBORObject.FromEInteger(ei), 1);
+        cbornum =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromEInteger(ei), 1);
         try {
           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
           _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
@@ -9153,7 +9166,8 @@ cborTemp1.AsNumber().IsZero()) {
       }
       for (int i = 0; i < 1000; ++i) {
         double dbl = RandomObjects.RandomFiniteDouble(rg);
-        cbornum = CBORObject.FromCBORObjectAndTag(CBORObject.FromObject(dbl), 1);
+        cbornum =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromObject(dbl), 1);
         try {
           var dtx = (DateTime)cbornum.ToObject(typeof(DateTime));
           _ = ToObjectTest.TestToFromObjectRoundTrip(dtx);
@@ -9162,7 +9176,8 @@ cborTemp1.AsNumber().IsZero()) {
         }
       }
       string dateStr = "1970-01-01T00:00:00.000Z";
-      var cbor = CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dateStr), 0);
+      var cbor =
+CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dateStr), 0);
       dt = (DateTime)cbor.ToObject(typeof(DateTime));
       _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(0), 1);
       dt2 = (DateTime)cbor.ToObject(typeof(DateTime));

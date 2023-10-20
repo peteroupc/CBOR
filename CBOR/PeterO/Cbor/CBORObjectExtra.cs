@@ -7,8 +7,8 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
  */
 using System;
-using System.IO;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
@@ -142,7 +142,7 @@ namespace PeterO.Cbor {
       if (outputStream == null) {
         throw new ArgumentNullException(nameof(outputStream));
       }
-      if (value <= long.MaxValue) {
+      if (value <= Int64.MaxValue) {
         return WriteValue(outputStream, majorType, (long)value);
       } else {
         if (majorType < 0) {
@@ -195,7 +195,7 @@ namespace PeterO.Cbor {
       if (stream == null) {
         throw new ArgumentNullException(nameof(stream));
       }
-      if (value <= long.MaxValue) {
+      if (value <= Int64.MaxValue) {
         Write((long)value, stream);
       } else {
         stream.WriteByte(27);
@@ -215,7 +215,8 @@ namespace PeterO.Cbor {
     /// Decimal object.</param>
     /// <returns>A CBORObject object with the same value as the.NET
     /// decimal.</returns>
-    public static CBORObject FromDecimal(decimal value) => FromEDecimal((EDecimal)value);
+    public static CBORObject FromDecimal(decimal value) =>
+FromEDecimal((EDecimal)value);
 
     /// <summary>Converts a.NET decimal to a CBOR object.</summary>
     /// <param name='value'>A Decimal.</param>
@@ -251,7 +252,8 @@ namespace PeterO.Cbor {
       return FromInt64((long)value);
     }
 
-    /// <summary>Converts a signed 8-bit integer to a CBOR object.</summary>
+    /// <summary>Converts a signed 8-bit integer to a CBOR
+    /// object.</summary>
     /// <param name='value'>The input.</param>
     /// <returns>A CBORObject object.</returns>
     [Obsolete("Use FromSbyte instead")]
@@ -352,9 +354,8 @@ namespace PeterO.Cbor {
     /// registry maintained by the Internet Assigned Numbers Authority(
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='o'/> is
-    /// given the tag <paramref name='tag'/>
-    /// . If "valueOb" is null, returns a version of CBORObject.Null with
-    /// the given tag.</returns>
+    /// given the tag <paramref name='tag'/>. If "valueOb" is null,
+    /// returns a version of CBORObject.Null with the given tag.</returns>
     [CLSCompliant(false)]
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromCBORObjectAndTag(CBORObject o, ulong tag) {

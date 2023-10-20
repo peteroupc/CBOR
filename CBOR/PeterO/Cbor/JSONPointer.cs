@@ -8,8 +8,8 @@ https://creativecommons.org/publicdomain/zero/1.0/
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {

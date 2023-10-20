@@ -7,8 +7,8 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
  */
 using System;
-using PeterO.Numbers;
 using System.Diagnostics.CodeAnalysis;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   /// <summary>
@@ -405,8 +405,7 @@ ICBORToFromConverter<DateTime>
                   lesserFields,
                   status);
               switch (status[0]) {
-                case 0:
-                  {
+                case 0: {
                     CBORObject cbor = CBORObject.FromEInteger(ef.ToEInteger());
                     return thisType == ConversionType.TaggedNumber ?
                       CBORObject.FromCBORObjectAndTag(cbor, 1) :

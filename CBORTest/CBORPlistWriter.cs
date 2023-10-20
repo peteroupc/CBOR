@@ -329,8 +329,7 @@ namespace Test {
                       str = sb.ToString();
                       break;
                     }
-                  default:
-                    {
+                    default: {
                       str = key.ToJSONString(options);
                       break;
                     }

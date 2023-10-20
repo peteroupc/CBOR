@@ -9,10 +9,10 @@ https://creativecommons.org/publicdomain/zero/1.0/
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Diagnostics.CodeAnalysis;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {

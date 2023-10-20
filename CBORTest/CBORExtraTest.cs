@@ -6411,7 +6411,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
       ulong[] ranges = {
         0, 65539, 0xfffff000UL, 0x100000400UL,
         0x7ffffffffffff000UL, 0x8000000000000400UL,
-        ulong.MaxValue - 1000, ulong.MaxValue,
+        UInt64.MaxValue - 1000, UInt64.MaxValue,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
@@ -6502,7 +6502,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     public void TestUInt() {
       uint[] ranges = {
         0, 65539,
-        0x7ffff000U, 0x80000400U, uint.MaxValue - 1000, uint.MaxValue,
+        0x7ffff000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue,
       };
       for (int i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
@@ -6599,9 +6599,9 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     [Test]
     public void TestDoubleToOther() {
       CBORObject dbl1 =
-        ToObjectTest.TestToFromObjectRoundTrip((double)int.MinValue);
+        ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MinValue);
       CBORObject dbl2 =
-        ToObjectTest.TestToFromObjectRoundTrip((double)int.MaxValue);
+        ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MaxValue);
       try {
         _ = dbl1.ToObject<ushort>();
       } catch (OverflowException) {

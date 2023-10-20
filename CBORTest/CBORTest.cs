@@ -3074,7 +3074,8 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
               continue;
             }
           }
-          var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(0), bigintTemp);
+          var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(0),
+  bigintTemp);
           if (!obj.IsTagged) {
             Assert.Fail("obj not tagged");
           }
@@ -4090,7 +4091,8 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       // 0 versus 0.0
       cbor = CBORObject.NewMap();
       _ = cbor.Set(0, CBORObject.FromString("testzero"));
-      _ = cbor.Set(CBORObject.FromDouble(0.0), CBORObject.FromString("testpointzero"));
+      _ = cbor.Set(CBORObject.FromDouble(0.0),
+  CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
         string stringTemp = cbor[CBORObject.FromInt32(0)].AsString();
@@ -4106,7 +4108,8 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
           stringTemp);
       }
       cbor = CBORObject.NewMap();
-      _ = cbor.Set(CBORObject.FromDouble(0.0), CBORObject.FromString("testpointzero"));
+      _ = cbor.Set(CBORObject.FromDouble(0.0),
+  CBORObject.FromString("testpointzero"));
       _ = cbor.Set(0, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
@@ -4125,7 +4128,8 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       // 3 versus 3.0
       cbor = CBORObject.NewMap();
       _ = cbor.Set(3, CBORObject.FromString("testzero"));
-      _ = cbor.Set(CBORObject.FromDouble(3.0), CBORObject.FromString("testpointzero"));
+      _ = cbor.Set(CBORObject.FromDouble(3.0),
+  CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
         string stringTemp = cbor[CBORObject.FromInt32(3)].AsString();
@@ -4141,7 +4145,8 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
           stringTemp);
       }
       cbor = CBORObject.NewMap();
-      _ = cbor.Set(CBORObject.FromDouble(3.0), CBORObject.FromString("testpointzero"));
+      _ = cbor.Set(CBORObject.FromDouble(3.0),
+  CBORObject.FromString("testpointzero"));
       _ = cbor.Set(3, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {

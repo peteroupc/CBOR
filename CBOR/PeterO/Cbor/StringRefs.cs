@@ -75,7 +75,7 @@ namespace PeterO.Cbor {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
       }
-      if (smallIndex > int.MaxValue) {
+      if (smallIndex > Int32.MaxValue) {
         throw new CBORException("Index " + smallIndex +
           " is bigger than supported ");
       }

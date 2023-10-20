@@ -7,10 +7,10 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
  */
 using System;
-using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 // Use directives rather than the Conditional attribute,
-// to avoid the chance of logging statements leaking in release builds
+  // to avoid the chance of logging statements leaking in release builds
 #if DEBUG
 namespace PeterO {
   internal static class DebugUtility {
@@ -32,7 +32,7 @@ namespace PeterO {
 #if NET40 || NET20
         return t.GetMethod(name, new[] { parameter });
 #else
-      {
+{
         return t?.GetRuntimeMethod(name, parameters);
       }
 #endif
