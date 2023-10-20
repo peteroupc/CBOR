@@ -7,6 +7,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 
 */
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor {
   internal static class JSONPatch {
@@ -36,7 +37,7 @@ namespace PeterO.Cbor {
           // DebugUtility.Log("after "+parent+"");
         } else if (pointer.GetParent().Type == CBORType.Map) {
           string key = pointer.GetKey();
-          _ = parent.Set(key, value);
+          _ = parent.Set(CBORObject.FromString(key), value);
         } else {
           throw new CBORException("Patch " + valueOpStr + " path");
         }
@@ -220,7 +221,7 @@ namespace PeterO.Cbor {
           _ = pointer.GetParent().RemoveAt(pointer.GetIndex());
         } else if (pointer.GetParent().Type == CBORType.Map) {
           _ = pointer.GetParent().Remove(
-            CBORObject.FromObject(pointer.GetKey()));
+            CBORObject.FromString(pointer.GetKey()));
         }
         return o;
       }
@@ -255,7 +256,7 @@ namespace PeterO.Cbor {
           pointer.GetParent().Set(index, value);
         } else if (pointer.GetParent().Type == CBORType.Map) {
           string key = pointer.GetKey();
-          pointer.GetParent().Set(key, value);
+          pointer.GetParent().Set(CBORObject.FromString(key), value);
         } else {
           throw new CBORException("Patch " + valueOpStr + " path");
         }

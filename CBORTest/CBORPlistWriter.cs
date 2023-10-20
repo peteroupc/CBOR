@@ -329,7 +329,8 @@ namespace Test {
                       str = sb.ToString();
                       break;
                     }
-                    default: str = key.ToJSONString(options);
+                  default:
+                    str = key.ToJSONString(options);
                     break;
                 }
                 if (stringMap.ContainsKey(str)) {

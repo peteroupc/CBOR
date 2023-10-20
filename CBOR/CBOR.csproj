@@ -1,7 +1,7 @@
-<Project Sdk='Microsoft.NET.Sdk'>
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.0; net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>5.0-alpha1</Version>
     <Owners>Peter Occil</Owners>
@@ -29,26 +29,38 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
     <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>
-  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression></PropertyGroup>
+  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
 
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Debug&apos; '>
+  <IsTrimmable>true</IsTrimmable>
+  <LangVersion>11.0</LangVersion>
+      <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+      <DefineConstants>MULTI_TARGETING_SUPPORT_ATTRIBUTES</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugType>full</DebugType>
     <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Release&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <DebugType>none</DebugType>
     <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
 
-  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
+  <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
 
-  <PackageReference Include='StyleCop.Analyzers' PrivateAssets='All' Version='1.2.0-beta.354'/>
- <AdditionalFiles Include='stylecop.json'/>
-<AdditionalFiles Include='rules.ruleset'/><PackageReference Include='PeterO.URIUtility' Version='1.0.0'/>
+  <PackageReference Include="PolySharp" Version="1.13.2">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
 
-<PackageReference Include='PeterO.Numbers' Version='1.8.2'/>
+  <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All" Version="1.2.0-beta.354" />
+ <AdditionalFiles Include="stylecop.json" />
+<AdditionalFiles Include="rules.ruleset" /><PackageReference Include="PeterO.URIUtility" Version="1.0.0" />
 
-<PackageReference Include='PeterO.DataUtilities' Version='1.1'/>
-<PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='6.0.0'/></ItemGroup>
+<PackageReference Include="PeterO.Numbers" Version="1.8.2" />
+
+<PackageReference Include="PeterO.DataUtilities" Version="1.1" />
+<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" PrivateAssets="All" Version="7.0.3" /></ItemGroup>
                   </Project>

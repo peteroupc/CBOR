@@ -8,6 +8,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 using System.IO;
+using System.Diagnostics.CodeAnalysis;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
@@ -214,9 +215,13 @@ namespace PeterO.Cbor {
     /// Decimal object.</param>
     /// <returns>A CBORObject object with the same value as the.NET
     /// decimal.</returns>
-    public static CBORObject FromObject(decimal value) {
-      return FromObject((EDecimal)value);
-    }
+    public static CBORObject FromDecimal(decimal value) => FromEDecimal((EDecimal)value);
+
+    /// <summary>Converts a.NET decimal to a CBOR object.</summary>
+    /// <param name='value'>A Decimal.</param>
+    /// <returns>A CBORObject object.</returns>
+    [Obsolete("Use FromDecimal instead")]
+    public static CBORObject FromObject(decimal value) => FromDecimal(value);
 
     /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data
     /// stream.</summary>
@@ -242,9 +247,16 @@ namespace PeterO.Cbor {
     /// 8-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(sbyte value) {
-      return FromObject((long)value);
+    public static CBORObject FromSbyte(sbyte value) {
+      return FromInt64((long)value);
     }
+
+    /// <summary>Converts a signed 8-bit integer to a CBOR object.</summary>
+    /// <param name='value'>The input.</param>
+    /// <returns>A CBORObject object.</returns>
+    [Obsolete("Use FromSbyte instead")]
+    [CLSCompliant(false)]
+    public static CBORObject FromObject(sbyte value) => FromSbyte(value);
 
     private static EInteger UInt64ToEInteger(ulong value) {
       var data = new byte[9];
@@ -266,8 +278,25 @@ namespace PeterO.Cbor {
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(ulong value) {
-      return CBORObject.FromObject(UInt64ToEInteger(value));
+    public static CBORObject FromUInt64(ulong value) {
+      return CBORObject.FromEInteger(UInt64ToEInteger(value));
+    }
+
+    /// <summary>Converts a 64-bit unsigned integer to a CBOR
+    /// object.</summary>
+    /// <param name='value'>A 64-bit unsigned integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    [CLSCompliant(false)]
+    [Obsolete("Use FromUInt64 instead")]
+    public static CBORObject FromObject(ulong value) => FromUInt64(value);
+
+    /// <summary>Converts a 32-bit unsigned integer to a CBOR
+    /// object.</summary>
+    /// <param name='value'>A 32-bit unsigned integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    [CLSCompliant(false)]
+    public static CBORObject FromUInt(uint value) {
+      return FromInt64((long)value);
     }
 
     /// <summary>Converts a 32-bit unsigned integer to a CBOR
@@ -275,8 +304,16 @@ namespace PeterO.Cbor {
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(uint value) {
-      return FromObject((long)value);
+    [Obsolete("Use FromUInt instead")]
+    public static CBORObject FromObject(uint value) => FromUInt(value);
+
+    /// <summary>Converts a 16-bit unsigned integer to a CBOR
+    /// object.</summary>
+    /// <param name='value'>A 16-bit unsigned integer.</param>
+    /// <returns>A CBORObject object.</returns>
+    [CLSCompliant(false)]
+    public static CBORObject FromUShort(ushort value) {
+      return FromInt64((long)value);
     }
 
     /// <summary>Converts a 16-bit unsigned integer to a CBOR
@@ -284,9 +321,8 @@ namespace PeterO.Cbor {
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObject(ushort value) {
-      return FromObject((long)value);
-    }
+    [Obsolete("Use FromUShort instead")]
+    public static CBORObject FromObject(ushort value) => FromInt64((long)value);
 
     /// <summary>Generates a CBOR object from this one, but gives the
     /// resulting object a tag in addition to its existing tags (the new
@@ -302,22 +338,13 @@ namespace PeterO.Cbor {
     /// (the new tag is made the outermost tag).</returns>
     [CLSCompliant(false)]
     public CBORObject WithTag(ulong tag) {
-      return FromObjectAndTag(this, UInt64ToEInteger(tag));
+      return FromCBORObjectAndTag(this, UInt64ToEInteger(tag));
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <param name='o'>The parameter <paramref name='o'/> is an arbitrary
-    /// object, which can be null.
-    /// <para><b>NOTE:</b> For security reasons, whenever possible, an
-    /// application should not base this parameter on user input or other
-    /// externally supplied data, and whenever possible, the application
-    /// should limit this parameter's inputs to types specially handled by
-    /// this method (such as <c>int</c> or <c>String</c> ) and/or to
-    /// plain-old-data types (POCO or POJO types) within the control of the
-    /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// CBORObject.</param>
     /// <param name='tag'>A 64-bit integer that specifies a tag number. The
     /// tag number 55799 can be used to mark a "self-described CBOR"
     /// object. This document does not attempt to list all CBOR tags and
@@ -325,12 +352,13 @@ namespace PeterO.Cbor {
     /// registry maintained by the Internet Assigned Numbers Authority(
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='o'/> is
-    /// converted to a CBOR object and given the tag <paramref name='tag'/>
+    /// given the tag <paramref name='tag'/>
     /// . If "valueOb" is null, returns a version of CBORObject.Null with
     /// the given tag.</returns>
     [CLSCompliant(false)]
-    public static CBORObject FromObjectAndTag(object o, ulong tag) {
-      return FromObjectAndTag(o, UInt64ToEInteger(tag));
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
+    public static CBORObject FromCBORObjectAndTag(CBORObject o, ulong tag) {
+      return FromCBORObjectAndTag(o, UInt64ToEInteger(tag));
     }
 
     /// <summary>
@@ -350,6 +378,7 @@ namespace PeterO.Cbor {
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>() {
       return (T)this.ToObject(typeof(T));
     }
@@ -374,6 +403,7 @@ namespace PeterO.Cbor {
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>(CBORTypeMapper mapper) {
       return (T)this.ToObject(typeof(T), mapper);
     }
@@ -397,6 +427,7 @@ namespace PeterO.Cbor {
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>(PODOptions options) {
       return (T)this.ToObject(typeof(T), options);
     }
@@ -423,6 +454,7 @@ namespace PeterO.Cbor {
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public T ToObject<T>(CBORTypeMapper mapper, PODOptions options) {
       return (T)this.ToObject(typeof(T), mapper, options);
     }
@@ -470,6 +502,7 @@ namespace PeterO.Cbor {
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter "T" or <paramref name='pod'/> is
     /// null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(
       byte[] data,
       CBOREncodeOptions enc,
@@ -513,6 +546,7 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(byte[] data, CBOREncodeOptions
 enc) {
       return (T)DecodeObjectFromBytes(data, enc, typeof(T));
@@ -555,6 +589,7 @@ enc) {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter "T" or <paramref
     /// name='pod'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(
       byte[] data,
       CBORTypeMapper mapper,
@@ -592,6 +627,7 @@ enc) {
     /// error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null.</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(byte[] data) {
       return (T)DecodeObjectFromBytes(data, typeof(T));
     }

@@ -9,6 +9,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
@@ -134,7 +135,6 @@ namespace PeterO.Cbor {
         }
       }
     }
-
     public static CBORObject GetObject(
       CBORObject obj,
       string pointer,
@@ -404,7 +404,7 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
           // and remove the key from the object
           // if necessary
           if (remove) {
-            _ = rootObj.Remove(CBORObject.FromObject(keyToFind));
+            _ = rootObj.Remove(CBORObject.FromString(keyToFind));
           }
         }
         // Search the key's values

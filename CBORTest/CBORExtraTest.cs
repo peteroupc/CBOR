@@ -63,7 +63,7 @@ namespace Test {
         }
       }
       try {
-        _ = CBORObject.FromObject(EDecimal.NaN).ToObject<decimal>();
+        _ = CBORObject.FromEDecimal(EDecimal.NaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -72,7 +72,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromObject(
+        _ = CBORObject.FromEDecimal(
           EDecimal.SignalingNaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
@@ -112,7 +112,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).ToObject<decimal>();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromObject(EFloat.SignalingNaN).ToObject<decimal>();
+        _ = CBORObject.FromEFloat(EFloat.SignalingNaN).ToObject<decimal>();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -366,11 +366,11 @@ System.Collections.IEnumerable.GetEnumerator() {
     [Test]
     public void TestCustomFlagsEnum() {
       var cbor = CBORObject.FromObject(CustomBits.A | CustomBits.B);
-      Assert.AreEqual(CBORObject.FromObject(3), cbor);
+      Assert.AreEqual(CBORObject.FromInt(3), cbor);
       CustomBits cfe = cbor.ToObject<CustomBits>();
       Assert.AreEqual(CustomBits.A | CustomBits.B, cfe);
       cbor = CBORObject.FromObject(CustomBits.A);
-      Assert.AreEqual(CBORObject.FromObject(1), cbor);
+      Assert.AreEqual(CBORObject.FromInt(1), cbor);
       cfe = cbor.ToObject<CustomBits>();
       Assert.AreEqual(CustomBits.A, cfe);
     }
@@ -6573,22 +6573,22 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     [Test]
     public void TestNullable() {
       int? nvalue = 1;
-      var cbor = CBORObject.FromObject(nvalue);
-      Assert.AreEqual(CBORObject.FromObject(1), cbor);
+      var cbor = CBORObject.FromObject((object)nvalue);
+      Assert.AreEqual(CBORObject.FromInt(1), cbor);
       nvalue = null;
-      _ = CBORObject.FromObject(nvalue);
+      _ = CBORObject.FromObject((object)nvalue);
       uint? unvalue = 1u;
-      cbor = CBORObject.FromObject(unvalue);
-      Assert.AreEqual(CBORObject.FromObject(1), cbor);
+      cbor = CBORObject.FromObject((object)unvalue);
+      Assert.AreEqual(CBORObject.FromInt(1), cbor);
       unvalue = null;
-      cbor = CBORObject.FromObject(unvalue);
+      cbor = CBORObject.FromObject((object)unvalue);
       Assert.AreEqual(CBORObject.Null, cbor);
       Assert.AreEqual(null, CBORObject.Null.ToObject<int?>());
-      Assert.AreEqual(1, CBORObject.FromObject(1).ToObject<int?>());
+      Assert.AreEqual(1, CBORObject.FromInt(1).ToObject<int?>());
       Assert.AreEqual(null, CBORObject.Null.ToObject<uint?>());
-      Assert.AreEqual(1u, CBORObject.FromObject(1).ToObject<uint?>());
+      Assert.AreEqual(1u, CBORObject.FromInt(1).ToObject<uint?>());
       Assert.AreEqual(null, CBORObject.Null.ToObject<double?>());
-      if (CBORObject.FromObject(3.5).ToObject<double?>() != 3.5) {
+      if (CBORObject.FromDouble(3.5).ToObject<double?>() != 3.5) {
         Assert.Fail();
       }
       ExoticStruct? es = null;

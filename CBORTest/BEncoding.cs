@@ -67,7 +67,7 @@ namespace PeterO {
         throw new CBORException("Invalid integer encoding") :
         s.Length >= 3 && s[0] == '-' && s[1] == '0' && s[2] == '0' ?
         throw new CBORException("Invalid integer encoding") :
-        CBORObject.FromObject(
+        CBORObject.FromEInteger(
           EInteger.FromString(s));
     }
 
@@ -143,7 +143,7 @@ EInteger.FromInt64(longValue).ToString();
         false) switch {
         -2 => throw new CBORException("Premature end of data"),
         -1 => throw new CBORException("Invalid UTF-8"),
-        _ => CBORObject.FromObject(builder.ToString()),
+        _ => CBORObject.FromString(builder.ToString()),
       };
     }
 

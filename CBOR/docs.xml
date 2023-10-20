@@ -1904,7 +1904,7 @@
              <para>NOTE: This method
             can't be used to add a tag to an existing CBOR object. To create a
             CBOR object with a given tag, call the
-            <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object
+            <c>CBORObject.FromCBORObjectAndTag</c> method and pass the CBOR object
             and the desired tag number to that method.</para>
              </summary>
             <param name='obj'>The parameter <paramref name='obj'/> is a CBOR
@@ -1917,7 +1917,7 @@
             Note the chaining behavior made possible by this method.</para>
             <code>CBORObject obj = CBORObject.NewArray() .Add(CBORObject.False)
             .Add(CBORObject.FromObject(5)) .Add(CBORObject.FromObject("text
-            string")) .Add(CBORObject.FromObjectAndTag(9999, 1));</code> .
+            string")) .Add(CBORObject.FromCBORObjectAndTag(9999, 1));</code> .
             </example>
 
 </doc>
@@ -1927,7 +1927,7 @@
             the end of this array.</para>
              <para>NOTE: This method can't be used
             to add a tag to an existing CBOR object. To create a CBOR object
-            with a given tag, call the <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object and the desired tag number to that
+            with a given tag, call the <c>CBORObject.FromCBORObjectAndTag</c> method and pass the CBOR object and the desired tag number to that
             method.</para>
              </summary>
             <param name='obj'>A CBOR object (or an object convertible to a CBOR
@@ -1940,7 +1940,7 @@
             CBOR objects, one of which has a custom CBOR tag, to that array.
             Note the chaining behavior made possible by this method.</para>
             <code>CBORObject obj = CBORObject.NewArray() .Add(CBORObject.False) .Add(5)
-            .Add("text string") .Add(CBORObject.FromObjectAndTag(9999, 1));</code> .
+            .Add("text string") .Add(CBORObject.FromCBORObjectAndTag(9999, 1));</code> .
             </example>
 
 </doc>
@@ -1950,7 +1950,7 @@
             value if the key doesn't exist.</para>
             <para>NOTE: This method can't be used to add a tag to an existing
             CBOR object. To create a CBOR object with a given tag, call the
-            <c>CBORObject.FromObjectAndTag</c> method and pass the CBOR object
+            <c>CBORObject.FromCBORObjectAndTag</c> method and pass the CBOR object
             and the desired tag number to that method.</para></summary>
             <param name='key'>An object representing the key, which will be
             converted to a CBORObject. Can be null, in which case this value is
@@ -3871,7 +3871,7 @@
             <returns>A CBORObject object.</returns>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.Numbers.EInteger)">
+<doc name="M:PeterO.Cbor.CBORObject.FromCBORObjectAndTag(System.Object,PeterO.Numbers.EInteger)">
 
             <summary>Generates a CBOR object from an arbitrary object and gives
             the resulting object a tag in addition to its existing tags (the
@@ -3901,7 +3901,7 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigintTag'/> is null.</exception>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)">
+<doc name="M:PeterO.Cbor.CBORObject.FromCBORObjectAndTag(System.Object,System.Int32)">
 
             <summary>Generates a CBOR object from an arbitrary object and gives
             the resulting object a tag in addition to its existing tags (the
@@ -3929,7 +3929,7 @@
             <exception cref='ArgumentException'>The parameter <paramref name='smallTag'/> is less than 0.</exception>
 
 </doc>
-<doc name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.UInt64)">
+<doc name="M:PeterO.Cbor.CBORObject.FromCBORObjectAndTag(System.Object,System.UInt64)">
 
             <summary>Generates a CBOR object from an arbitrary object and gives
             the resulting object a tag.</summary>
@@ -4770,7 +4770,7 @@
             3.4.5.3 of RFC 8949). A byte string will instead be converted to
             traditional base64 without whitespace and with padding if it has
             tag 22, or base16 for tag 23. (To create a CBOR object with a given
-            tag, call the <c>CBORObject.FromObjectAndTag</c> method and pass
+            tag, call the <c>CBORObject.FromCBORObjectAndTag</c> method and pass
             the CBOR object and the desired tag number to that method.)</item>
             <item>Rational numbers will be converted to their exact form, if
             possible, otherwise to a high-precision approximation. (The

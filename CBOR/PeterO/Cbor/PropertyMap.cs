@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
@@ -454,18 +455,22 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       return superType.GetTypeInfo().IsAssignableFrom(subType.GetTypeInfo());
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static IEnumerable<FieldInfo> GetTypeFields(Type t) {
       return t.GetRuntimeFields();
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static IEnumerable<Type> GetTypeInterfaces(Type t) {
       return t.GetTypeInfo().ImplementedInterfaces;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static MethodInfo GetTypeMethod(
       Type t,
       string name,
@@ -495,6 +500,7 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
         pn;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     private static IList<PropertyData> GetPropertyList(Type t) {
       {
         propertyLists = propertyLists ?? new Dictionary<Type, IList<PropertyData>>();
@@ -634,6 +640,7 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       return ret;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromArray(
       object arrObj,
       PODOptions options,
@@ -704,6 +711,7 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       ret[ilen] = obj;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static Array FillArray(
       Array arr,
       Type elementType,
@@ -857,11 +865,12 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       return new OrderedDictionary<CBORObject, CBORObject>();
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object FindOneArgumentMethod(
-      object obj,
+      Type ty,
       string name,
       Type argtype) {
-      return GetTypeMethod(obj.GetType(), name, new[] { argtype });
+      return GetTypeMethod(ty, name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(
@@ -920,7 +929,7 @@ ArgumentException("key not found") : new KeyValuePair<TKey, TValue>(k, v);
       }
       throw new CBORException("Type not supported");
     }
-
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object TypeToObject(
       CBORObject objThis,
       Type t,
@@ -1142,7 +1151,7 @@ System.Collections.ObjectModel.ReadOnlyCollection<byte>(byteret);
 #endif
         if (objThis.Type == CBORType.Array && genericListObject != null) {
           object addMethod = FindOneArgumentMethod(
-              genericListObject,
+              genericListObject.GetType(),
               "Add",
               objectType);
           if (addMethod == null) {
@@ -1305,6 +1314,7 @@ typeof(
       return null;
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object ObjectWithProperties(
       Type t,
       IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
@@ -1361,11 +1371,13 @@ options.UseCamelCase);
           obj);
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(
       object o) {
       return GetProperties(o, true);
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static IEnumerable<string> GetPropertyNames(Type t, bool
       useCamelCase) {
       foreach (PropertyData key in GetPropertyList(t)) {
@@ -1373,6 +1385,7 @@ options.UseCamelCase);
       }
     }
 
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(
       object o,
       bool useCamelCase) {

@@ -1241,8 +1241,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
       if (iintDict["b"] != 2) {
         Assert.Fail();
       }
-      co = CBORObject.FromObjectAndTag(
-          "2000-01-01T00:00:00Z",
+      co = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("2000-01-01T00:00:00Z"),
           0);
       try {
         _ = co.ToObject(typeof(DateTime));
@@ -1304,7 +1304,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
       var rand = new RandomGenerator();
       for (int i = 0; i < 5000; ++i) {
         string s = RandomDate(rand);
-        var cbor = CBORObject.FromObjectAndTag(s, 0);
+        var cbor = CBORObject.FromCBORObjectAndTag(CBORObject.FromString(s), 0);
         var dtime = (DateTime)cbor.ToObject(typeof(DateTime));
         var cbor2 = CBORObject.FromObject(dtime);
         Assert.AreEqual(s, cbor2.AsString());
@@ -1320,7 +1320,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
          CBORDateConverter.TaggedNumber);
       for (int i = 0; i < 5000; ++i) {
         string s = RandomDate(rand);
-        var cbor = CBORObject.FromObjectAndTag(s, 0);
+        var cbor = CBORObject.FromCBORObjectAndTag(CBORObject.FromString(s), 0);
         var dtime = (DateTime)cbor.ToObject(typeof(DateTime));
         var cbor2 = CBORObject.FromObject(dtime);
         Assert.AreEqual(s, cbor2.AsString());
@@ -1345,7 +1345,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
          CBORDateConverter.UntaggedNumber);
       for (int i = 0; i < 5000; ++i) {
         string s = RandomDate(rand);
-        var cbor = CBORObject.FromObjectAndTag(s, 0);
+        var cbor = CBORObject.FromCBORObjectAndTag(CBORObject.FromString(s), 0);
         var dtime = (DateTime)cbor.ToObject(typeof(DateTime));
         var cbor2 = CBORObject.FromObject(dtime);
         Assert.AreEqual(s, cbor2.AsString());
@@ -1364,8 +1364,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
 
     [Test]
     public void TestBadDate() {
-      var cbor = CBORObject.FromObjectAndTag(
-          "2000-1-01T00:00:00Z",
+      var cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("2000-1-01T00:00:00Z"),
           0);
       try {
         _ = cbor.ToObject(typeof(DateTime));
@@ -1376,8 +1376,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.FromObjectAndTag(
-          "2000-01-1T00:00:00Z",
+      cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("2000-01-1T00:00:00Z"),
           0);
       try {
         _ = cbor.ToObject(typeof(DateTime));
@@ -1388,8 +1388,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.FromObjectAndTag(
-          "2000-01-01T0:00:00Z",
+      cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("2000-01-01T0:00:00Z"),
           0);
       try {
         _ = cbor.ToObject(typeof(DateTime));
@@ -1400,8 +1400,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.FromObjectAndTag(
-          "2000-01-01T00:0:00Z",
+      cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("2000-01-01T00:0:00Z"),
           0);
       try {
         _ = cbor.ToObject(typeof(DateTime));
@@ -1412,8 +1412,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.FromObjectAndTag(
-          "2000-01-01T00:00:0Z",
+      cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("2000-01-01T00:00:0Z"),
           0);
       try {
         _ = cbor.ToObject(typeof(DateTime));
@@ -1424,8 +1424,8 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      cbor = CBORObject.FromObjectAndTag(
-          "T01:01:01Z",
+      cbor = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromString("T01:01:01Z"),
           0);
       try {
         _ = cbor.ToObject(typeof(DateTime));

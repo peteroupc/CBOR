@@ -161,7 +161,7 @@ namespace PeterO.Cbor {
 CBORObject.FromFloatingPointBits(0x8000, 2);
           } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {
-            return CBORObject.FromObject(0);
+            return CBORObject.FromInt(0);
           }
         } else if (negativeExp) {
           // underflow
@@ -170,7 +170,7 @@ CBORObject.FromFloatingPointBits(0x8000, 2);
             return !negative ? CBORObject.FromFloatingPointBits(0, 2) :
 CBORObject.FromFloatingPointBits(0x8000, 2);
           } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
-            return CBORObject.FromObject(0);
+            return CBORObject.FromInt(0);
           }
         } else {
           // overflow
@@ -181,7 +181,7 @@ CBORObject.FromFloatingPointBits(0x8000, 2);
                 negative ? DoubleNegInfinity : DoublePosInfinity,
                 8);
           } else if (kind == JSONOptions.ConversionMode.Decimal128) {
-            return CBORObject.FromObject(negative ?
+            return CBORObject.FromEDecimal(negative ?
                 EDecimal.NegativeInfinity : EDecimal.PositiveInfinity);
           }
         }
@@ -203,15 +203,15 @@ CBORObject.FromFloatingPointBits(0x8000, 2);
             ?
 CBORObject.FromFloatingPointBits(EFloat.FromInt64(v).ToDoubleBits(), 8) :
             kind == JSONOptions.ConversionMode.Decimal128 ?
-CBORObject.FromObject(EDecimal.FromInt64(v)) : CBORObject.FromObject(v);
+CBORObject.FromEDecimal(EDecimal.FromInt64(v)) : CBORObject.FromInt64(v);
         }
       }
       if (kind == JSONOptions.ConversionMode.Full) {
         if (!haveDecimalPoint && !haveExponent) {
           EInteger ei = EInteger.FromSubstring(chars, initialOffset, endPos);
           return (preserveNegativeZero && ei.IsZero && negative) ?
-CBORObject.FromObject(EDecimal.NegativeZero) :
-CBORObject.FromObject(ei);
+CBORObject.FromEDecimal(EDecimal.NegativeZero) :
+CBORObject.FromEInteger(ei);
         }
         if (!haveExponent && haveDecimalPoint) {
           // No more than 18 digits plus one decimal point (which
@@ -243,12 +243,12 @@ CBORObject.FromObject(ei);
           }
           if (digitCount >= 0 && (!negative || lv != 0)) {
             if (expo == 0) {
-              return CBORObject.FromObject(lv);
+              return CBORObject.FromInt64(lv);
             } else {
               var cbor = CBORObject.FromArrayBackedObject(
               new CBORObject[] {
-                CBORObject.FromObject(expo),
-                CBORObject.FromObject(lv),
+                CBORObject.FromInt(expo),
+                CBORObject.FromInt64(lv),
               });
               return cbor.WithTag(4);
             }
@@ -262,12 +262,12 @@ CBORObject.FromObject(ei);
             endPos - initialOffset);
         return ed.IsZero && negative ? ed.Exponent.IsZero ?
             preserveNegativeZero ?
-              CBORObject.FromObject(EDecimal.NegativeZero) :
-              CBORObject.FromObject(0) :
-            !preserveNegativeZero ? CBORObject.FromObject(ed.Negate()) :
-CBORObject.FromObject(ed) :
-          ed.Exponent.IsZero ? CBORObject.FromObject(ed.Mantissa) :
-            CBORObject.FromObject(ed);
+              CBORObject.FromEDecimal(EDecimal.NegativeZero) :
+              CBORObject.FromInt(0) :
+            !preserveNegativeZero ? CBORObject.FromEDecimal(ed.Negate()) :
+CBORObject.FromEDecimal(ed) :
+          ed.Exponent.IsZero ? CBORObject.FromEInteger(ed.Mantissa) :
+            CBORObject.FromEDecimal(ed);
       } else if (kind == JSONOptions.ConversionMode.Double) {
         var ef = EFloat.FromString(
             chars,
@@ -288,7 +288,7 @@ CBORObject.FromObject(ed) :
         if (!preserveNegativeZero && ed.IsNegative && ed.IsZero) {
           ed = ed.Negate();
         }
-        return CBORObject.FromObject(ed);
+        return CBORObject.FromEDecimal(ed);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
         var ef = EFloat.FromString(
             chars,
@@ -298,7 +298,7 @@ CBORObject.FromObject(ed) :
         long lb = ef.ToDoubleBits();
         return (!CBORUtilities.IsBeyondSafeRange(lb) &&
 CBORUtilities.IsIntegerValue(lb)) ?
-          CBORObject.FromObject(CBORUtilities.GetIntegerValue(lb)) :
+          CBORObject.FromInt64(CBORUtilities.GetIntegerValue(lb)) :
           CBORObject.FromFloatingPointBits(lb, 8);
       } else if (kind == JSONOptions.ConversionMode.IntOrFloat) {
         EContext ctx = EContext.Binary64.WithBlankFlags();
@@ -320,7 +320,7 @@ CBORUtilities.IsIntegerValue(lb)) ?
           // Exact conversion; treat as ConversionMode.IntToFloatFromDouble
           return (!CBORUtilities.IsBeyondSafeRange(lb) &&
 CBORUtilities.IsIntegerValue(lb)) ?
-            CBORObject.FromObject(CBORUtilities.GetIntegerValue(lb)) :
+            CBORObject.FromInt64(CBORUtilities.GetIntegerValue(lb)) :
             CBORObject.FromFloatingPointBits(lb, 8);
         }
       } else {

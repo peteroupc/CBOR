@@ -65,7 +65,7 @@ lowExponent) {
             int.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
-          return CBORObject.FromObject(
+          return CBORObject.FromEInteger(
               RandomObjects.RandomEInteger(rand));
         case 3:
           o = lowExponent ? RandomEFloatLowExponent(rand) :
@@ -96,10 +96,10 @@ lowExponent) {
             int.MaxValue);
           return CBORObject.FromObject(o);
         case 2:
-          return CBORObject.FromObject(
+          return CBORObject.FromEInteger(
               RandomObjects.RandomEInteger(rand));
         case 3:
-          return CBORObject.FromObject(
+          return CBORObject.FromEFloat(
               RandomObjects.RandomEFloat(rand));
         case 4:
           o = RandomObjects.RandomEDecimal(rand);
@@ -161,9 +161,9 @@ rand) {
         tag = tagselection[rand.GetInt32(tagselection.Length)];
       } else {
         return rand.GetInt32(100) < 90 ?
-          CBORObject.FromObjectAndTag(
+          CBORObject.FromCBORObjectAndTag(
             RandomCBORObject(rand, depth + 1),
-            rand.GetInt32(0x100000)) : CBORObject.FromObjectAndTag(
+            rand.GetInt32(0x100000)) : CBORObject.FromCBORObjectAndTag(
             RandomCBORObject(rand, depth + 1),
             RandomEIntegerMajorType0(rand));
       }
@@ -198,7 +198,7 @@ rand) {
         } else {
           cbor = RandomCBORObject(rand, depth + 1);
         }
-        return CBORObject.FromObjectAndTag(cbor, tag);
+        return CBORObject.FromCBORObjectAndTag(cbor, tag);
       }
     }
 
@@ -225,9 +225,9 @@ depth) {
         4 => rand.GetInt32(2) == 0 ? CBORObject.True : CBORObject.False,
         5 => rand.GetInt32(2) == 0 ? CBORObject.Null :
                     CBORObject.Undefined,
-        6 => CBORObject.FromObject(
+        6 => CBORObject.FromString(
                       RandomObjects.RandomTextString(rand)),
-        7 => CBORObject.FromObject(
+        7 => CBORObject.FromByteArray(
                       RandomObjects.RandomByteString(rand)),
         8 => RandomCBORArray(rand, depth),
         9 => RandomCBORMap(rand, depth),

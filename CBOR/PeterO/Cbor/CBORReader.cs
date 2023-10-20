@@ -67,7 +67,7 @@ namespace PeterO.Cbor {
     }
 
     private CBORObject ObjectFromUtf8Array(byte[] data, int lengthHint) {
-      CBORObject cbor = data.Length == 0 ? CBORObject.FromObject(String.Empty) :
+      CBORObject cbor = data.Length == 0 ? CBORObject.FromString(String.Empty) :
          CBORObject.FromRawUtf8(data);
       this.stringRefs?.AddStringIfNeeded(cbor, lengthHint);
       return cbor;
@@ -303,12 +303,12 @@ count);
           type == 7);
         if (type == 0) {
           return (uadditional >> 63) != 0 ?
-            CBORObject.FromObject(ToUnsignedEInteger(uadditional)) :
-            CBORObject.FromObject(uadditional);
+            CBORObject.FromEInteger(ToUnsignedEInteger(uadditional)) :
+            CBORObject.FromInt64(uadditional);
         } else if (type == 1) {
-          return (uadditional >> 63) != 0 ? CBORObject.FromObject(
+          return (uadditional >> 63) != 0 ? CBORObject.FromEInteger(
               ToUnsignedEInteger(uadditional).Add(1).Negate()) :
-            CBORObject.FromObject((-uadditional) - 1L);
+            CBORObject.FromInt64((-uadditional) - 1L);
         } else if (type == 7) {
           if (additional < 24) {
             return CBORObject.FromSimpleValue(additional);
@@ -495,7 +495,7 @@ count);
             newFirstByte) : this.ReadInternal();
         --this.depth;
         if ((uadditional >> 63) != 0) {
-          return CBORObject.FromObjectAndTag(o,
+          return CBORObject.FromCBORObjectAndTag(o,
               ToUnsignedEInteger(uadditional));
         }
         if (uadditional < 65536) {
@@ -516,11 +516,11 @@ count);
                 return this.stringRefs.GetString(o.AsEIntegerValue());
             }
           }
-          return CBORObject.FromObjectAndTag(
+          return CBORObject.FromCBORObjectAndTag(
               o,
               (int)uadditional);
         }
-        return CBORObject.FromObjectAndTag(
+        return CBORObject.FromCBORObjectAndTag(
             o,
             (EInteger)uadditional);
       }

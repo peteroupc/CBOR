@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor {
   /// <summary>Holds converters to customize the serialization and
@@ -39,6 +40,7 @@ namespace PeterO.Cbor {
     /// name='type'/> or <paramref name='converter'/> is null.</exception>
     /// <exception cref='ArgumentException'>Converter doesn't contain a
     /// proper ToCBORObject method".</exception>
+    [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public CBORTypeMapper AddConverter<T>(
       Type type,
       ICBORConverter<T> converter) {
@@ -52,7 +54,7 @@ namespace PeterO.Cbor {
       {
         Converter = converter,
         ToObject = PropertyMap.FindOneArgumentMethod(
-          converter,
+          converter.GetType(),
           "ToCBORObject",
           type),
       };
@@ -61,7 +63,7 @@ namespace PeterO.Cbor {
           "Converter doesn't contain a proper ToCBORObject method");
       }
       ci.FromObject = PropertyMap.FindOneArgumentMethod(
-          converter,
+          converter.GetType(),
           "FromCBORObject",
           typeof(CBORObject));
       this.converters[type] = ci;

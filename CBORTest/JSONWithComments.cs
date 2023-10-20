@@ -58,7 +58,7 @@ not (char)0x09) {
           this.index = idx;
           return escaped ?
             CBORObject.FromJSONString(js[(startIndex - 1)..endIndex]) :
-            CBORObject.FromObject(js[startIndex..(endIndex - 1)]);
+            CBORObject.FromString(js[startIndex..(endIndex - 1)]);
         } else if (c == '\\') {
           this.index = idx++;
           escaped = true;
@@ -567,7 +567,7 @@ sb.Append("~0") : sb.Append(str[j]);
           // Situation like '[,0,1,2]' or '[0,,1]'
           this.RaiseError("Empty array element");
         }
-        this.SetPointer(CBORObject.FromObject(arrayIndex));
+        this.SetPointer(CBORObject.FromInt64(arrayIndex));
         arrayIndex = checked(arrayIndex + 1);
         _ = myArrayList.Add(
           this.NextJSONValue(

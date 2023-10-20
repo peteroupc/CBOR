@@ -8,6 +8,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
  */
 using System;
 using PeterO.Numbers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PeterO.Cbor {
   /// <summary>
@@ -112,17 +113,6 @@ ICBORToFromConverter<DateTime>
     /// converting dates and times to and from CBOR objects.</param>
     public CBORDateConverter(ConversionType convType) {
       this.Type = convType;
-    }
-
-    private static string DateTimeToString(DateTime bi) {
-      try {
-        var lesserFields = new int[7];
-        var outYear = new EInteger[1];
-        PropertyMap.BreakDownDateTime(bi, outYear, lesserFields);
-        return CBORUtilities.ToAtomDateTimeString(outYear[0], lesserFields);
-      } catch (ArgumentException ex) {
-        throw new CBORException(ex.Message, ex);
-      }
     }
 
     /// <summary>Converts a CBOR object to a DateTime (in DotNet) or a Date
@@ -258,7 +248,7 @@ ICBORToFromConverter<DateTime>
             lesserFields);
         } else {
           EDecimal dec;
-          dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
+          dec = untagobj.ToEDecimal();
           CBORUtilities.BreakDownSecondsSinceEpoch(
             dec,
             outYear,
@@ -294,7 +284,7 @@ ICBORToFromConverter<DateTime>
             lesserFields);
         } else {
           EDecimal dec;
-          dec = (EDecimal)untagobj.ToObject(typeof(EDecimal));
+          dec = untagobj.ToEDecimal();
           CBORUtilities.BreakDownSecondsSinceEpoch(
             dec,
             outYear,
@@ -404,7 +394,7 @@ ICBORToFromConverter<DateTime>
             {
               string str = CBORUtilities.ToAtomDateTimeString(bigYear,
                   lesserFields);
-              return CBORObject.FromObjectAndTag(str, 0);
+              return CBORObject.FromString(str).WithTag(0);
             }
           case ConversionType.TaggedNumber:
           case ConversionType.UntaggedNumber:
@@ -416,8 +406,8 @@ ICBORToFromConverter<DateTime>
                   status);
               return status[0] == 0 ?
                 this.Type == ConversionType.TaggedNumber ?
-                  CBORObject.FromObjectAndTag(ef.ToEInteger(), 1) :
-                CBORObject.FromObject(ef.ToEInteger()) : status[0] == 1 ?
+                  CBORObject.FromEInteger(ef.ToEInteger()).WithTag(1) :
+                CBORObject.FromEInteger(ef.ToEInteger()) : status[0] == 1 ?
                   this.Type == ConversionType.TaggedNumber ?
                   CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)
                   .WithTag(1) :

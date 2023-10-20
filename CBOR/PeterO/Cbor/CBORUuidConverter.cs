@@ -26,7 +26,7 @@ namespace PeterO.Cbor {
     /// <returns>A CBORObject object.</returns>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = PropertyMap.UUIDToBytes(obj);
-      return CBORObject.FromObjectAndTag(bytes, 37);
+      return CBORObject.FromByteArray(bytes).WithTag(37);
     }
 
     public Guid FromCBORObject(CBORObject obj) {
