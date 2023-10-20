@@ -305,7 +305,7 @@ namespace PeterO.Cbor {
       } else {
         // NOTE: Assumes digit is greater than zero, so PreserveNegativeZeros is
         // irrelevant
-        return CBORObject.FromInt(-digit);
+        return CBORObject.FromInt32(-digit);
       }
     }
 
@@ -328,7 +328,7 @@ namespace PeterO.Cbor {
         return CBORObject.FromEDecimal(EDecimal.FromInt32(digit));
       } else {
         // NOTE: Assumes digit is nonnegative, so PreserveNegativeZeros is irrelevant
-        return CBORObject.FromInt(digit);
+        return CBORObject.FromInt32(digit);
       }
     }
 

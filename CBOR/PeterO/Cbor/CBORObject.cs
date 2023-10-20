@@ -528,7 +528,7 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
         }
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          var key = CBORObject.FromInt(index);
+          var key = CBORObject.FromInt32(index);
           // TODO: In next major version, consider throwing an exception
           // instead if key does not exist.
           return PropertyMap.GetOrDefault(map, key, null);
@@ -548,7 +548,7 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
           list[index] = value;
         } else if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
-          var key = CBORObject.FromInt(index);
+          var key = CBORObject.FromInt32(index);
           map[key] = value;
         } else {
           throw new InvalidOperationException("Not an array or map");
@@ -617,7 +617,7 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        var ckey = FromInt(key);
+        var ckey = FromInt32(key);
         return PropertyMap.GetOrDefault(map, ckey, defaultValue);
       }
       return defaultValue;
@@ -2118,7 +2118,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
         cbor = NewArray(
             FromEInteger(bigValue.Exponent),
             FromEInteger(bigValue.UnsignedMantissa),
-            FromInt(options));
+            FromInt32(options));
         tag = 269;
       } else {
         EInteger exponent = bigValue.Exponent;
@@ -2200,7 +2200,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
         cbor = NewArray(
             FromEInteger(bigValue.UnsignedNumerator),
             FromEInteger(bigValue.Denominator),
-            FromInt(options));
+            FromInt32(options));
         tag = 270;
       } else {
         tag = 30;
@@ -2255,7 +2255,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
         cbor = NewArray(
             FromEInteger(bigValue.Exponent),
             FromEInteger(bigValue.UnsignedMantissa),
-            FromInt(options));
+            FromInt32(options));
         tag = 268;
       } else {
         EInteger exponent = bigValue.Exponent;
@@ -2314,7 +2314,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 32-bit signed integer.</param>
     /// <returns>A CBOR object.</returns>
-    public static CBORObject FromInt(int value) {
+    public static CBORObject FromInt32(int value) {
       return value >= 0 && value < 24 ? FixedObjects[value] :
         (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
           FromInt64((long)value);
@@ -2326,7 +2326,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// 32-bit signed integer.</param>
     /// <returns>A CBOR object.</returns>
     [Obsolete("Use FromInt instead.")]
-    public static CBORObject FromObject(int value) => FromInt(value);
+    public static CBORObject FromObject(int value) => FromInt32(value);
 
     /// <summary>Generates a CBOR object from a 16-bit signed
     /// integer.</summary>
@@ -2368,7 +2368,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// byte (from 0 to 255).</param>
     /// <returns>A CBOR object generated from the given integer.</returns>
     public static CBORObject FromByte(byte value) {
-      return FromInt(value & 0xff);
+      return FromInt32(value & 0xff);
     }
 
     /// <summary>Generates a CBOR object from a byte.</summary>
@@ -2500,7 +2500,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
       IList<CBORObject> list = new List<CBORObject>(array.Length ==
         Int32.MaxValue ? array.Length : (array.Length + 1));
       foreach (int i in array) {
-        list.Add(FromInt(i));
+        list.Add(FromInt32(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
     }
@@ -2860,7 +2860,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         return FromString((string)obj);
       }
       if (obj is int) {
-        return FromInt((int)obj);
+        return FromInt32((int)obj);
       }
       if (obj is long) {
         return FromInt64((long)obj);
@@ -2881,7 +2881,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         return FromInt16((short)obj);
       }
       if (obj is char) {
-        return FromInt((int)(char)obj);
+        return FromInt32((int)(char)obj);
       }
       if (obj is bool) {
         return FromBool((bool)obj);
@@ -5769,7 +5769,7 @@ CBORObjectTypeTextStringAscii)) {
     /// an array.</exception>
     public CBORObject Set(int key, CBORObject mapValue) {
       if (this.Type == CBORType.Map) {
-        CBORObject mapKey = CBORObject.FromInt(key);
+        CBORObject mapKey = CBORObject.FromInt32(key);
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         map[mapKey] = mapValue;
       } else if (this.Type == CBORType.Array) {

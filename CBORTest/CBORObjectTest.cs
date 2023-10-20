@@ -2617,7 +2617,7 @@ namespace Test {
         CBORObject.FromObject(9), CBORObject.True,
         CBORObject.FromObject(bytes),
         CBORObject.False, CBORObject.Null, CBORObject.FromObject("test"),
-        CBORObject.FromInt(99999), CBORObject.FromObject(-1),
+        CBORObject.FromInt32(99999), CBORObject.FromObject(-1),
       };
       foreach (CBORObject c2 in othercbor) {
         try {
@@ -3047,7 +3047,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromInt(CBORObject.NewArray().AsNumber().Sign);
+        _ = CBORObject.FromInt32(CBORObject.NewArray().AsNumber().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3056,7 +3056,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromInt(CBORObject.NewMap().AsNumber().Sign);
+        _ = CBORObject.FromInt32(CBORObject.NewMap().AsNumber().Sign);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -3363,7 +3363,7 @@ DataUtilities.ToLowerCaseAscii(cbor.AsString()) : throw new CBORException();
     public void TestFromObjectAndTag() {
       var bigvalue = EInteger.FromString("99999999999999999999999999999");
       try {
-        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(2), bigvalue);
+        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(2), bigvalue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         // NOTE: Intentionally empty
@@ -3372,7 +3372,7 @@ DataUtilities.ToLowerCaseAscii(cbor.AsString()) : throw new CBORException();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(2), -1);
+        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(2), -1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         // NOTE: Intentionally empty
@@ -3397,7 +3397,7 @@ DataUtilities.ToLowerCaseAscii(cbor.AsString()) : throw new CBORException();
       }
       EInteger eintNull = null;
       try {
-        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(2), eintNull);
+        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(2), eintNull);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         // NOTE: Intentionally empty
@@ -3406,7 +3406,7 @@ DataUtilities.ToLowerCaseAscii(cbor.AsString()) : throw new CBORException();
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(2), EInteger.FromString("-1"));
+        _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(2), EInteger.FromString("-1"));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
         // NOTE: Intentionally empty
@@ -9164,7 +9164,7 @@ cborTemp1.AsNumber().IsZero()) {
       string dateStr = "1970-01-01T00:00:00.000Z";
       var cbor = CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dateStr), 0);
       dt = (DateTime)cbor.ToObject(typeof(DateTime));
-      _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(0), 1);
+      _ = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(0), 1);
       dt2 = (DateTime)cbor.ToObject(typeof(DateTime));
       Assert.AreEqual(dt2, dt);
     }

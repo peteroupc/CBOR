@@ -366,11 +366,11 @@ System.Collections.IEnumerable.GetEnumerator() {
     [Test]
     public void TestCustomFlagsEnum() {
       var cbor = CBORObject.FromObject(CustomBits.A | CustomBits.B);
-      Assert.AreEqual(CBORObject.FromInt(3), cbor);
+      Assert.AreEqual(CBORObject.FromInt32(3), cbor);
       CustomBits cfe = cbor.ToObject<CustomBits>();
       Assert.AreEqual(CustomBits.A | CustomBits.B, cfe);
       cbor = CBORObject.FromObject(CustomBits.A);
-      Assert.AreEqual(CBORObject.FromInt(1), cbor);
+      Assert.AreEqual(CBORObject.FromInt32(1), cbor);
       cfe = cbor.ToObject<CustomBits>();
       Assert.AreEqual(CustomBits.A, cfe);
     }
@@ -6574,19 +6574,19 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     public void TestNullable() {
       int? nvalue = 1;
       var cbor = CBORObject.FromObject((object)nvalue);
-      Assert.AreEqual(CBORObject.FromInt(1), cbor);
+      Assert.AreEqual(CBORObject.FromInt32(1), cbor);
       nvalue = null;
       _ = CBORObject.FromObject((object)nvalue);
       uint? unvalue = 1u;
       cbor = CBORObject.FromObject((object)unvalue);
-      Assert.AreEqual(CBORObject.FromInt(1), cbor);
+      Assert.AreEqual(CBORObject.FromInt32(1), cbor);
       unvalue = null;
       cbor = CBORObject.FromObject((object)unvalue);
       Assert.AreEqual(CBORObject.Null, cbor);
       Assert.AreEqual(null, CBORObject.Null.ToObject<int?>());
-      Assert.AreEqual(1, CBORObject.FromInt(1).ToObject<int?>());
+      Assert.AreEqual(1, CBORObject.FromInt32(1).ToObject<int?>());
       Assert.AreEqual(null, CBORObject.Null.ToObject<uint?>());
-      Assert.AreEqual(1u, CBORObject.FromInt(1).ToObject<uint?>());
+      Assert.AreEqual(1u, CBORObject.FromInt32(1).ToObject<uint?>());
       Assert.AreEqual(null, CBORObject.Null.ToObject<double?>());
       if (CBORObject.FromDouble(3.5).ToObject<double?>() != 3.5) {
         Assert.Fail();

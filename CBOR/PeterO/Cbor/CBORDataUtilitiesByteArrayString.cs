@@ -161,7 +161,7 @@ namespace PeterO.Cbor {
 CBORObject.FromFloatingPointBits(0x8000, 2);
           } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble ||
             kind == JSONOptions.ConversionMode.IntOrFloat) {
-            return CBORObject.FromInt(0);
+            return CBORObject.FromInt32(0);
           }
         } else if (negativeExp) {
           // underflow
@@ -170,7 +170,7 @@ CBORObject.FromFloatingPointBits(0x8000, 2);
             return !negative ? CBORObject.FromFloatingPointBits(0, 2) :
 CBORObject.FromFloatingPointBits(0x8000, 2);
           } else if (kind == JSONOptions.ConversionMode.IntOrFloatFromDouble) {
-            return CBORObject.FromInt(0);
+            return CBORObject.FromInt32(0);
           }
         } else {
           // overflow
@@ -247,7 +247,7 @@ CBORObject.FromEInteger(ei);
             } else {
               var cbor = CBORObject.FromArrayBackedObject(
               new CBORObject[] {
-                CBORObject.FromInt(expo),
+                CBORObject.FromInt32(expo),
                 CBORObject.FromInt64(lv),
               });
               return cbor.WithTag(4);
@@ -264,7 +264,7 @@ CBORObject.FromEInteger(ei);
           if (ed.Exponent.IsZero) {
             return preserveNegativeZero ?
               CBORObject.FromEDecimal(EDecimal.NegativeZero) :
-              CBORObject.FromInt(0);
+              CBORObject.FromInt32(0);
           } else {
             return !preserveNegativeZero ?
 CBORObject.FromEDecimal(ed.Negate()) : CBORObject.FromEDecimal(ed);

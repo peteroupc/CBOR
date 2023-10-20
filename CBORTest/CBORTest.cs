@@ -304,7 +304,7 @@ namespace Test {
       Assert.IsTrue(cbor.ContainsKey(ToObjectTest.TestToFromObjectRoundTrip(
             "hello")));
       Assert.AreEqual(2, cbor["hello"].AsInt32Value());
-      _ = cbor.Set(1, CBORObject.FromInt(3));
+      _ = cbor.Set(1, CBORObject.FromInt32(3));
       CBORObject cborone = ToObjectTest.TestToFromObjectRoundTrip(1);
       Assert.IsTrue(cbor.ContainsKey(cborone));
       Assert.AreEqual(3, cbor[cborone].AsInt32Value());
@@ -1498,11 +1498,11 @@ namespace Test {
 
     [Test]
     public void TestCBORCompareTo() {
-      int cmp = CBORObject.FromInt(0).CompareTo(null);
+      int cmp = CBORObject.FromInt32(0).CompareTo(null);
       if (cmp <= 0) {
         Assert.Fail();
       }
-      cmp = CBORObject.FromInt(0).AsNumber().CompareTo(null);
+      cmp = CBORObject.FromInt32(0).AsNumber().CompareTo(null);
       if (cmp <= 0) {
         Assert.Fail();
       }
@@ -1765,7 +1765,7 @@ namespace Test {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       _ = o.Add(new byte[] { 32, 33, 44, 55 });
-      _ = o.Add(CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(9999), 1));
+      _ = o.Add(CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(9999), 1));
       Console.WriteLine(o.ToJSONString());
       Console.WriteLine(CBORPlistWriter.ToPlistString(o));
     }
@@ -2091,7 +2091,7 @@ namespace Test {
       _ = root.Add(arr);
       CBORObject refobj;
       for (int i = 0; i <= nests; ++i) {
-        refobj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(i), 29);
+        refobj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(i), 29);
         arr = CBORObject.FromCBORArray(new CBORObject[] {
           refobj, refobj, refobj, refobj, refobj, refobj, refobj, refobj,
           refobj,
@@ -2942,9 +2942,9 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         list.Add(obj);
       }
       Assert.AreEqual(3, list.Count);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromInt(1), list[0]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromInt(2), list[1]);
-      TestCommon.AssertEqualsHashCode(CBORObject.FromInt(3), list[2]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromInt32(1), list[0]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromInt32(2), list[1]);
+      TestCommon.AssertEqualsHashCode(CBORObject.FromInt32(3), list[2]);
     }
 
     [Test]
@@ -3074,7 +3074,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
               continue;
             }
           }
-          var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt(0), bigintTemp);
+          var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(0), bigintTemp);
           if (!obj.IsTagged) {
             Assert.Fail("obj not tagged");
           }
@@ -4093,7 +4093,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       _ = cbor.Set(CBORObject.FromDouble(0.0), CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromInt(0)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt32(0)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
@@ -4110,7 +4110,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       _ = cbor.Set(0, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromInt(0)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt32(0)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
@@ -4128,7 +4128,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       _ = cbor.Set(CBORObject.FromDouble(3.0), CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromInt(3)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt32(3)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);
@@ -4145,7 +4145,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       _ = cbor.Set(3, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
-        string stringTemp = cbor[CBORObject.FromInt(3)].AsString();
+        string stringTemp = cbor[CBORObject.FromInt32(3)].AsString();
         Assert.AreEqual(
           "testzero",
           stringTemp);

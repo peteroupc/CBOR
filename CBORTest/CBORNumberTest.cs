@@ -62,8 +62,8 @@ namespace Test {
 
     [Test]
     public void TestCanFitInInt64() {
-      Assert.IsTrue(CBORObject.FromInt(0).AsNumber().CanFitInInt64());
-      Assert.IsTrue(CBORObject.FromInt(99).AsNumber().CanFitInInt64());
+      Assert.IsTrue(CBORObject.FromInt32(0).AsNumber().CanFitInInt64());
+      Assert.IsTrue(CBORObject.FromInt32(99).AsNumber().CanFitInInt64());
       Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().CanFitInInt64());
       Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().CanFitInInt64());
       Assert.IsFalse(CBORObject.NaN.AsNumber().CanFitInInt64());
@@ -71,9 +71,9 @@ namespace Test {
 
     [Test]
     public void TestCanFitInUInt64() {
-      Assert.IsTrue(CBORObject.FromInt(0).AsNumber().CanFitInUInt64(), "0");
+      Assert.IsTrue(CBORObject.FromInt32(0).AsNumber().CanFitInUInt64(), "0");
       Assert.IsTrue(
-        CBORObject.FromInt(99).AsNumber().CanFitInUInt64(),
+        CBORObject.FromInt32(99).AsNumber().CanFitInUInt64(),
         "99");
 
       Assert.IsTrue(CBORObject.FromDouble(99.0).AsNumber().CanFitInUInt64(),
@@ -91,7 +91,7 @@ namespace Test {
       Assert.IsFalse(b);
 
       Assert.IsFalse(
-        CBORObject.FromInt(-99).AsNumber().CanFitInUInt64(),
+        CBORObject.FromInt32(-99).AsNumber().CanFitInUInt64(),
         "-99");
 
       Assert.IsFalse(CBORObject.FromDouble(-99.0).AsNumber().CanFitInUInt64(),
@@ -111,11 +111,11 @@ namespace Test {
     [Test]
     public void TestCanTruncatedIntFitInUInt64() {
       Assert.IsTrue(
-        CBORObject.FromInt(0).AsNumber().CanTruncatedIntFitInUInt64(),
+        CBORObject.FromInt32(0).AsNumber().CanTruncatedIntFitInUInt64(),
         "0");
 
       Assert.IsTrue(
-        CBORObject.FromInt(99).AsNumber().CanTruncatedIntFitInUInt64(),
+        CBORObject.FromInt32(99).AsNumber().CanTruncatedIntFitInUInt64(),
         "99");
 
       Assert.IsTrue(
@@ -125,7 +125,7 @@ namespace Test {
           -0.0).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
-        CBORObject.FromInt(-99).AsNumber().CanTruncatedIntFitInUInt64());
+        CBORObject.FromInt32(-99).AsNumber().CanTruncatedIntFitInUInt64());
       bool
       b = CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         .CanTruncatedIntFitInUInt64();
@@ -154,8 +154,8 @@ namespace Test {
 
     [Test]
     public void TestIsInfinity() {
-      Assert.IsFalse(CBORObject.FromInt(0).AsNumber().IsInfinity());
-      Assert.IsFalse(CBORObject.FromInt(99).AsNumber().IsInfinity());
+      Assert.IsFalse(CBORObject.FromInt32(0).AsNumber().IsInfinity());
+      Assert.IsFalse(CBORObject.FromInt32(99).AsNumber().IsInfinity());
       Assert.IsTrue(CBORObject.PositiveInfinity.AsNumber().IsInfinity());
       Assert.IsTrue(CBORObject.NegativeInfinity.AsNumber().IsInfinity());
       Assert.IsFalse(CBORObject.NaN.AsNumber().IsInfinity());
@@ -163,8 +163,8 @@ namespace Test {
 
     [Test]
     public void TestIsNaN() {
-      Assert.IsFalse(CBORObject.FromInt(0).AsNumber().IsNaN());
-      Assert.IsFalse(CBORObject.FromInt(99).AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.FromInt32(0).AsNumber().IsNaN());
+      Assert.IsFalse(CBORObject.FromInt32(99).AsNumber().IsNaN());
       Assert.IsFalse(CBORObject.PositiveInfinity.AsNumber().IsNaN());
       Assert.IsFalse(CBORObject.NegativeInfinity.AsNumber().IsNaN());
       Assert.IsTrue(CBORObject.NaN.AsNumber().IsNaN());
