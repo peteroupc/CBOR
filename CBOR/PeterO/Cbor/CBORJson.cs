@@ -192,7 +192,6 @@ namespace PeterO.Cbor {
         this.RaiseError("JSON number can't be parsed.");
       }
 
-      _ = -(c - '0');
       int cstart = c;
       c = this.ReadChar();
       this.sb = this.sb ?? new StringBuilder();
@@ -279,8 +278,8 @@ namespace PeterO.Cbor {
         case 't':
           {
             // Parse true
-            if ((_ = this.ReadChar()) != 'r' || (_ = this.ReadChar()) != 'u' ||
-              (_ = this.ReadChar()) != 'e') {
+            if (this.ReadChar() != 'r' || this.ReadChar() != 'u' ||
+this.ReadChar() != 'e') {
               this.RaiseError("Value can't be parsed.");
             }
             c = this.ReadChar();
@@ -298,8 +297,8 @@ namespace PeterO.Cbor {
         case 'f':
           {
             // Parse false
-            if ((_ = this.ReadChar()) != 'a' || (_ = this.ReadChar()) != 'l' ||
-              (_ = this.ReadChar()) != 's' || (_ = this.ReadChar()) != 'e') {
+            if (this.ReadChar() != 'a' || this.ReadChar() != 'l' ||
+this.ReadChar() != 's' || this.ReadChar() != 'e') {
               this.RaiseError("Value can't be parsed.");
             }
             c = this.ReadChar();
@@ -317,8 +316,8 @@ namespace PeterO.Cbor {
         case 'n':
           {
             // Parse null
-            if ((_ = this.ReadChar()) != 'u' || (_ = this.ReadChar()) != 'l' ||
-              (_ = this.ReadChar()) != 'l') {
+            if (this.ReadChar() != 'u' || this.ReadChar() != 'l' ||
+this.ReadChar() != 'l') {
               this.RaiseError("Value can't be parsed.");
             }
             c = this.ReadChar();
@@ -540,7 +539,7 @@ namespace PeterO.Cbor {
         // a truncated JSON text
         return new CBORObject[] { null };
       }
-      var list = new List<CBORObject>();
+      var cborList = new List<CBORObject>();
       while (true) {
         CBORObject co;
         try {
@@ -554,7 +553,7 @@ namespace PeterO.Cbor {
           cj.SkipToEnd();
           co = null;
         }
-        list.Add(co);
+        cborList.Add(co);
         if (!cj.recordSeparatorSeen) {
           // End of the stream was reached
           nextChar[0] = -1;
@@ -567,12 +566,12 @@ namespace PeterO.Cbor {
           if (nextChar[0] < 0) {
             // Rest of stream had only record separators, so we found
             // a truncated JSON text
-            list.Add(null);
+            cborList.Add(null);
             break;
           }
         }
       }
-      return list.ToArray();
+      return cborList.ToArray();
     }
 
     private CBORObject ParseJSONObject(int depth) {

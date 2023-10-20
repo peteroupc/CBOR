@@ -40,13 +40,13 @@ namespace PeterO.Cbor {
           }
         }
       } else {
-        _ = this.builder.Append(str);
+        this.builder.Append(str);
       }
     }
 
     public void WriteString(string str, int index, int length) {
       if (this.outputStream == null) {
-        _ = this.builder.Append(str, index, length);
+        this.builder.Append(str, index, length);
       } else {
         if (length == 1) {
           this.WriteCodePoint(str[index]);
@@ -111,7 +111,7 @@ length);
       if ((codePoint >> 7) == 0) {
         // Code point is in the Basic Latin range (U+0000 to U+007F)
         if (this.outputStream == null) {
-          _ = this.builder.Append((char)codePoint);
+          this.builder.Append((char)codePoint);
         } else {
           this.outputStream.WriteByte((byte)codePoint);
         }
@@ -156,13 +156,13 @@ length);
         }
         if (codePoint <= 0xffff) {
           {
-            _ = this.builder.Append((char)codePoint);
+            this.builder.Append((char)codePoint);
           }
         } else if (codePoint <= 0x10ffff) {
-          _ = this.builder.Append((char)((((codePoint - 0x10000) >> 10) &
+          this.builder.Append((char)((((codePoint - 0x10000) >> 10) &
 0x3ff) |
               0xd800));
-          _ = this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) |
+          this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) |
               0xdc00));
         }
       }

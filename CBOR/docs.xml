@@ -44,14 +44,12 @@
 
             <summary>Parses a number from a byte sequence whose format follows
             the JSON specification. The method uses a JSONOptions with all
-            default properties except for a PreserveNegativeZero property of
-            false.</summary>
+            default properties.</summary>
             <param name='bytes'>A byte sequence to parse as a JSON
             number.</param>
             <returns>A CBOR object that represents the parsed number. Returns
-            positive zero if the number is a zero that starts with a minus sign
-            (such as "-0" or "-0.0"). Returns null if the parsing fails,
-            including if the byte sequence is null or empty.</returns>
+            null if the parsing fails, including if the byte sequence is null
+            or empty.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Byte[],PeterO.Cbor.JSONOptions)">
@@ -141,15 +139,11 @@
 
             <summary>Parses a number from a sequence of <c>char</c> s whose
             format follows the JSON specification. The method uses a
-            JSONOptions with all default properties except for a
-            PreserveNegativeZero property of false.</summary>
+            JSONOptions with all default properties.</summary>
             <param name='chars'>A sequence of <c>char</c> s to parse as a JSON
             number.</param>
             <returns>A CBOR object that represents the parsed number. Returns
-            positive zero if the number is a zero that starts with a minus sign
-            (such as "-0" or "-0.0"). Returns null if the parsing fails,
-            including if the sequence of <c>char</c> s is null or
-            empty.</returns>
+            null if the parsing fails, including if the sequence of <c>char</c> s is null or empty.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.Char[],PeterO.Cbor.JSONOptions)">
@@ -234,13 +228,11 @@
 
             <summary>Parses a number whose format follows the JSON
             specification. The method uses a JSONOptions with all default
-            properties except for a PreserveNegativeZero property of
-            false.</summary>
+            properties.</summary>
             <param name='str'>A text string to parse as a JSON number.</param>
             <returns>A CBOR object that represents the parsed number. Returns
-            positive zero if the number is a zero that starts with a minus sign
-            (such as "-0" or "-0.0"). Returns null if the parsing fails,
-            including if the string is null or empty.</returns>
+            null if the parsing fails, including if the string is null or
+            empty.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,PeterO.Cbor.JSONOptions)">
@@ -674,15 +666,12 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORDateConverter.TryGetDateTimeFields(PeterO.Cbor.CBORObject,PeterO.Numbers.EInteger[],System.Int32[])">
 
-            <summary>Tries to extract the fields of a date and time in the form
-            of a CBOR object.</summary>
-            <param name='obj'>A CBOR object that specifies a date/time
+        <summary>Tries to extract the fields of a date and time in the form
+            of a CBOR object.</summary><param name='obj'>A CBOR object that specifies a date/time
             according to the conversion type used to create this date
-            converter.</param>
-            <param name='year'>An array whose first element will store the
+            converter.</param><param name='year'>An array whose first element will store the
             year. The array's length must be 1 or greater. If this function
-            fails, the first element is set to null.</param>
-            <param name='lesserFields'>An array that will store the fields
+            fails, the first element is set to null.</param><param name='lesserFields'>An array that will store the fields
             (other than the year) of the date and time. The array's length must
             be 7 or greater. If this function fails, the first seven elements
             are set to 0. If this method is successful, the first seven
@@ -699,12 +688,8 @@
             <item>6 - Number of minutes to subtract from this date and time to
             get global time. This number can be positive or negative, but
             cannot be less than -1439 or greater than 1439. For tags 0 and 1,
-            this value is always 0.</item></list>.</param>
-            <returns>Either <c>true</c> if the method is successful, or
+            this value is always 0.</item></list>.</param><returns>Either <c>true</c> if the method is successful, or
             <c>false</c> otherwise.</returns>
-            <exception cref='ArgumentNullException'>The parameter <paramref name='year'/> or <paramref name='lesserFields'/> is null, or
-            contains fewer elements than required.</exception>
-
 </doc>
 <doc name="P:PeterO.Cbor.CBORDateConverter.Type">
 
@@ -1472,6 +1457,13 @@
             <returns>A CBOR object that stores this object's value.</returns>
 
 </doc>
+<doc name="M:PeterO.Cbor.CBORNumber.ToDecimal">
+<summary>Converts this number's value to a CLR decimal.</summary>
+            <returns>This number's value, converted to a decimal as though by
+            <c>(decimal)this.ToEDecimal()</c>.</returns>
+            <exception cref='OverflowException'>This value is infinity or
+            not-a-number.</exception>
+</doc>
 <doc name="M:PeterO.Cbor.CBORNumber.ToEDecimal">
 
             <summary>Converts this object to a decimal number.</summary>
@@ -2031,8 +2023,7 @@
             part).</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsDecimal">
-
-            <summary>Converts this object to a DotNet decimal.</summary>
+<summary>Converts this object to a DotNet decimal.</summary>
             <returns>The closest big integer to this object.</returns>
             <exception cref='InvalidOperationException'>This object does not
             represent a number (for this purpose, infinities and not-a-number
@@ -2040,7 +2031,6 @@
             numbers).</exception>
             <exception cref='OverflowException'>This object's value exceeds the
             range of a DotNet decimal.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsDouble">
 
@@ -2252,10 +2242,8 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsSByte">
-
-            <summary>Converts this object to an 8-bit signed integer.</summary>
+<summary>Converts this object to an 8-bit signed integer.</summary>
             <returns>An 8-bit signed integer.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsSingle">
 
@@ -2294,8 +2282,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt16">
-
-            <summary>Converts this object to a 16-bit unsigned integer after
+<summary>Converts this object to a 16-bit unsigned integer after
             discarding any fractional part, if any, from its value.</summary>
             <returns>A 16-bit unsigned integer.</returns>
             <exception cref='InvalidOperationException'>This object does not
@@ -2305,11 +2292,9 @@
             <exception cref='OverflowException'>This object's value, if
             converted to an integer by discarding its fractional part, is
             outside the range of a 16-bit unsigned integer.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt32">
-
-            <summary>Converts this object to a 32-bit unsigned integer after
+<summary>Converts this object to a 32-bit unsigned integer after
             discarding any fractional part, if any, from its value.</summary>
             <returns>A 32-bit unsigned integer.</returns>
             <exception cref='InvalidOperationException'>This object does not
@@ -2319,11 +2304,9 @@
             <exception cref='OverflowException'>This object's value, if
             converted to an integer by discarding its fractional part, is
             outside the range of a 32-bit unsigned integer.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsUInt64">
-
-            <summary>Converts this object to a 64-bit unsigned integer after
+<summary>Converts this object to a 64-bit unsigned integer after
             discarding any fractional part, if any, from its value.</summary>
             <returns>A 64-bit unsigned integer.</returns>
             <exception cref='InvalidOperationException'>This object does not
@@ -2333,7 +2316,6 @@
             <exception cref='OverflowException'>This object's value, if
             converted to an integer by discarding its fractional part, is
             outside the range of a 64-bit unsigned integer.</exception>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AtJSONPointer(System.String)">
 
@@ -3666,13 +3648,13 @@
              <item>A <c>String</c> is converted to a CBOR text
             string. To create a CBOR byte string object from <c>String</c> ,
             see the example given in <see cref='PeterO.Cbor.CBORObject.FromObject(System.Byte[])'/>.</item>
-            <item>In the.NET version, a nullable is converted to
-            <c>CBORObject.Null</c> if the nullable's value is <c>null</c> , or
-            converted according to the nullable's underlying type, if that type
-            is supported by this method.</item>
-             <item>In the Java version, a
-            number of type <c>BigInteger</c> or <c>BigDecimal</c> is converted
-            to the corresponding CBOR number.</item>
+             <item>In
+            the.NET version, a nullable is converted to <c>CBORObject.Null</c> if the nullable's value is <c>null</c> , or converted according to
+            the nullable's underlying type, if that type is supported by this
+            method.</item>
+             <item>In the Java version, a number of type
+            <c>BigInteger</c> or <c>BigDecimal</c> is converted to the
+            corresponding CBOR number.</item>
              <item>A number of type
             <c>EDecimal</c> , <c>EFloat</c> , <c>EInteger</c> , and
             <c>ERational</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c> </a>
@@ -7671,8 +7653,7 @@
     </exception>
 </doc>
 <doc name="T:PeterO.DataUtilities">
-
-            <summary>Contains methods useful for reading and writing text
+<summary>Contains methods useful for reading and writing text
             strings. It is designed to have no dependencies other than the
             basic runtime class library.
             <para>Many of these methods work with text encoded in UTF-8, an
@@ -7693,11 +7674,9 @@
             found in text strings, such as throwing an error or treating the
             unpaired surrogate as a replacement character
             (U+FFFD).</para></summary>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)">
-
-            <summary>Gets the Unicode code point at the given index of the
+<summary>Gets the Unicode code point at the given index of the
             string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -7709,11 +7688,9 @@
             surrogate code point. If the return value is 65536 (0x10000) or
             greater, the code point takes up two UTF-16 code units.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)">
-
-            <summary>Gets the Unicode code point at the given index of the
+<summary>Gets the Unicode code point at the given index of the
             string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -7738,11 +7715,9 @@
             Unpaired surrogate */ } Console.WriteLine("codePoint:"+codePoint); if
             (codePoint &gt;= 0x10000) { i++; /* Supplementary code point */ } }</code> .
             </example>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)">
-
-            <summary>Gets the Unicode code point just before the given index of
+<summary>Gets the Unicode code point just before the given index of
             the string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -7754,11 +7729,9 @@
             surrogate code point. If the return value is 65536 (0x10000) or
             greater, the code point takes up two UTF-16 code units.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)">
-
-            <summary>Gets the Unicode code point just before the given index of
+<summary>Gets the Unicode code point just before the given index of
             the string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -7776,11 +7749,9 @@
             return value is 65536 (0x10000) or greater, the code point takes up
             two UTF-16 code units.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)">
-
-            <summary>Compares two strings in Unicode code point order. Unpaired
+<summary>Compares two strings in Unicode code point order. Unpaired
             surrogate code points are treated as individual code
             points.</summary>
             <param name='strA'>The first string. Can be null.</param>
@@ -7792,11 +7763,9 @@
             null and a isn't; or the first code point that's different is
             greater in A than in B; or a starts with b and is longer than
             b.</returns>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointLength(System.String)">
-
-            <summary>Finds the number of Unicode code points in the given text
+<summary>Finds the number of Unicode code points in the given text
             string. Unpaired surrogate code points increase this number by 1.
             This is not necessarily the length of the string in "char"
             s.</summary>
@@ -7805,11 +7774,9 @@
             <returns>The number of Unicode code points in the given
             string.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)">
-
-            <summary><para>Encodes a string in UTF-8 as a byte array. This method does
+<summary><para>Encodes a string in UTF-8 as a byte array. This method does
             not insert a byte-order mark (U+FEFF) at the beginning of the
             encoded byte array.</para>
             <para>REMARK: It is not recommended to use
@@ -7826,11 +7793,9 @@
             <exception cref='ArgumentException'>The string contains an unpaired
             surrogate code point and <paramref name='replace'/> is false, or an
             internal error occurred.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)">
-
-            <summary><para>Encodes a string in UTF-8 as a byte array. This method does
+<summary><para>Encodes a string in UTF-8 as a byte array. This method does
             not insert a byte-order mark (U+FEFF) at the beginning of the
             encoded byte array.</para>
             <para>REMARK: It is not recommended to use
@@ -7850,11 +7815,9 @@
             <exception cref='ArgumentException'>The string contains an unpaired
             surrogate code point and <paramref name='replace'/> is false, or an
             internal error occurred.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8Length(System.String,System.Boolean)">
-
-            <summary>Calculates the number of bytes needed to encode a string
+<summary>Calculates the number of bytes needed to encode a string
             in UTF-8.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -7865,11 +7828,9 @@
             UTF-8, or -1 if the string contains an unpaired surrogate code
             point and <paramref name='replace'/> is false.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Boolean)">
-
-            <summary>Generates a text string from a UTF-8 byte array.</summary>
+<summary>Generates a text string from a UTF-8 byte array.</summary>
             <param name='bytes'>A byte array containing text encoded in
             UTF-8.</param>
             <param name='replace'>If true, replaces invalid encoding with the
@@ -7879,11 +7840,9 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception>
             <exception cref='ArgumentException'>The string is not valid UTF-8
             and <paramref name='replace'/> is false.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Int32,System.Int32,System.Boolean)">
-
-            <summary>Generates a text string from a portion of a UTF-8 byte
+<summary>Generates a text string from a portion of a UTF-8 byte
             array.</summary>
             <param name='bytes'>A byte array containing text encoded in
             UTF-8.</param>
@@ -7902,11 +7861,9 @@
             <exception cref='ArgumentException'>The parameter <paramref name='offset'/> is less than 0, <paramref name='bytesCount'/> is
             less than 0, or offset plus bytesCount is greater than the length
             of "data" .</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.ReadUtf8(System.IO.Stream,System.Int32,System.Text.StringBuilder,System.Boolean)">
-
-            <summary>Reads a string in UTF-8 encoding from a data
+<summary>Reads a string in UTF-8 encoding from a data
             stream.</summary>
             <param name='stream'>A readable data stream.</param>
             <param name='bytesCount'>The length, in bytes, of the string. If
@@ -7925,11 +7882,9 @@
             occurred.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null or <paramref name='builder'/> is
             null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.ReadUtf8FromBytes(System.Byte[],System.Int32,System.Int32,System.Text.StringBuilder,System.Boolean)">
-
-            <summary>Reads a string in UTF-8 encoding from a byte
+<summary>Reads a string in UTF-8 encoding from a byte
             array.</summary>
             <param name='data'>A byte array containing a UTF-8 text
             string.</param>
@@ -7950,11 +7905,9 @@
             <exception cref='ArgumentException'>The parameter <paramref name='offset'/> is less than 0, <paramref name='bytesCount'/> is
             less than 0, or offset plus bytesCount is greater than the length
             of <paramref name='data'/>.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream)">
-
-            <summary>Reads a string in UTF-8 encoding from a data stream in
+<summary>Reads a string in UTF-8 encoding from a data stream in
             full and returns that string. Replaces invalid encoding with the
             replacement character (U+FFFD).</summary>
             <param name='stream'>A readable data stream.</param>
@@ -7962,11 +7915,9 @@
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream,System.Int32,System.Boolean)">
-
-            <summary>Reads a string in UTF-8 encoding from a data stream and
+<summary>Reads a string in UTF-8 encoding from a data stream and
             returns that string.</summary>
             <param name='stream'>A readable data stream.</param>
             <param name='bytesCount'>The length, in bytes, of the string. If
@@ -7980,33 +7931,27 @@
             the string is not valid UTF-8 and <paramref name='replace'/> is
             false.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.ToLowerCaseAscii(System.String)">
-
-            <summary>Returns a string with the basic upper-case letters A to Z
+<summary>Returns a string with the basic upper-case letters A to Z
             (U+0041 to U+005A) converted to the corresponding basic lower-case
             letters. Other characters remain unchanged.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
             <returns>The converted string, or null if <paramref name='str'/> is
             null.</returns>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.ToUpperCaseAscii(System.String)">
-
-            <summary>Returns a string with the basic lower-case letters A to Z
+<summary>Returns a string with the basic lower-case letters A to Z
             (U+0061 to U+007A) converted to the corresponding basic upper-case
             letters. Other characters remain unchanged.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
             <returns>The converted string, or null if <paramref name='str'/> is
             null.</returns>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.IO.Stream,System.Boolean)">
-
-            <summary>Writes a string in UTF-8 encoding to a data
+<summary>Writes a string in UTF-8 encoding to a data
             stream.</summary>
             <param name='str'>A string to write.</param>
             <param name='stream'>A writable data stream.</param>
@@ -8019,11 +7964,9 @@
             null.</exception>
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean)">
-
-            <summary>Writes a portion of a string in UTF-8 encoding to a data
+<summary>Writes a portion of a string in UTF-8 encoding to a data
             stream.</summary>
             <param name='str'>A string to write.</param>
             <param name='offset'>The Index starting at 0 where the string
@@ -8044,11 +7987,9 @@
             <exception cref='ArgumentException'>Either <paramref name='offset'/> or <paramref name='length'/> is less than 0 or
             greater than <paramref name='str'/> 's length, or <paramref name='str'/> 's length minus <paramref name='offset'/> is less than
             <paramref name='length'/>.</exception>
-
 </doc>
 <doc name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)">
-
-            <summary>Writes a portion of a string in UTF-8 encoding to a data
+<summary>Writes a portion of a string in UTF-8 encoding to a data
             stream.</summary>
             <param name='str'>A string to write.</param>
             <param name='offset'>The Index starting at 0 where the string
@@ -8072,6 +8013,5 @@
             is greater than the string's length.</exception>
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
-
 </doc>
 </docs>

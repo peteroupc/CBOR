@@ -10,17 +10,19 @@ namespace Test {
 
       public ByteWriter Write(int b) {
         if (this.ByteLength < this.bytes.Length) {
-          this.bytes[this.ByteLength++] = (byte)b;
+          this.bytes[this.ByteLength] = (byte)b;
+          ++this.ByteLength;
         } else {
           var newbytes = new byte[this.bytes.Length * 2];
           Array.Copy(this.bytes, 0, newbytes, 0, this.bytes.Length);
           this.bytes = newbytes;
-          this.bytes[this.ByteLength++] = (byte)b;
+          this.bytes[this.ByteLength] = (byte)b;
+          ++this.ByteLength;
         }
         return this;
       }
 
-      public int ByteLength { get; private set; }
+      public int ByteLength { get; set; }
 
       public byte[] ToBytes() {
         var newbytes = new byte[this.ByteLength];
@@ -56,8 +58,9 @@ namespace Test {
       var shift = 12;
       for (int i = 0; i < 4; ++i) {
         c = (cu >> shift) & 0xf;
-        _ = c < 10 ? bs.Write(0x30 + c) : bs.Write(0x41 + (c - 10) +
-(ra.GetInt32(2) * 0x20));
+        int bw = c < 10 ? (0x30 + c) : (0x41 + (c - 10) +
+          (ra.GetInt32(2) * 0x20));
+        bs.Write(bw);
         shift -= 4;
       }
     }
@@ -278,8 +281,10 @@ namespace Test {
         int r = ra.GetInt32(10);
         if (r > 2) {
           int x = 0x20 + ra.GetInt32(60);
-          _ = x == '\"' ? bs.Write('\\').Write(x) : x == '\\' ?
-bs.Write('\\').Write(x) : bs.Write(x);
+          if (x is '\"' or '\\') {
+            bs.Write('\\');
+          }
+          bs.Write(x);
           ++i;
         } else if (r == 1) {
           _ = bs.Write('\\');

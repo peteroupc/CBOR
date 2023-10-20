@@ -24,7 +24,7 @@ Contains methods useful for reading and writing data, with a focus on CBOR.
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
         byte[] bytes);
 
-Parses a number from a byte sequence whose format follows the JSON specification. The method uses a JSONOptions with all default properties except for a PreserveNegativeZero property of false.
+Parses a number from a byte sequence whose format follows the JSON specification. The method uses a JSONOptions with all default properties.
 
 <b>Parameters:</b>
 
@@ -32,7 +32,7 @@ Parses a number from a byte sequence whose format follows the JSON specification
 
 <b>Return Value:</b>
 
-A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the byte sequence is null or empty.
+A CBOR object that represents the parsed number. Returns null if the parsing fails, including if the byte sequence is null or empty.
 
 <a id="ParseJSONNumber_byte_int_int"></a>
 ### ParseJSONNumber
@@ -143,7 +143,7 @@ A CBOR object that represents the parsed number. Returns null if the parsing fai
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
         char[] chars);
 
-Parses a number from a sequence of  `char`  s whose format follows the JSON specification. The method uses a JSONOptions with all default properties except for a PreserveNegativeZero property of false.
+Parses a number from a sequence of  `char`  s whose format follows the JSON specification. The method uses a JSONOptions with all default properties.
 
 <b>Parameters:</b>
 
@@ -151,7 +151,7 @@ Parses a number from a sequence of  `char`  s whose format follows the JSON spec
 
 <b>Return Value:</b>
 
-A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the sequence of  `char`  s is null or empty.
+A CBOR object that represents the parsed number. Returns null if the parsing fails, including if the sequence of  `char`  s is null or empty.
 
 <a id="ParseJSONNumber_char_int_int"></a>
 ### ParseJSONNumber
@@ -262,7 +262,7 @@ A CBOR object that represents the parsed number. Returns null if the parsing fai
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
         string str);
 
-Parses a number whose format follows the JSON specification. The method uses a JSONOptions with all default properties except for a PreserveNegativeZero property of false.
+Parses a number whose format follows the JSON specification. The method uses a JSONOptions with all default properties.
 
 <b>Parameters:</b>
 
@@ -270,7 +270,7 @@ Parses a number whose format follows the JSON specification. The method uses a J
 
 <b>Return Value:</b>
 
-A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails, including if the string is null or empty.
+A CBOR object that represents the parsed number. Returns null if the parsing fails, including if the string is null or empty.
 
 <a id="ParseJSONNumber_string_int_int"></a>
 ### ParseJSONNumber

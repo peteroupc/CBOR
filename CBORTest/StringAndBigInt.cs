@@ -14,6 +14,11 @@ namespace Test {
 
     public EInteger BigIntValue { get; private set; }
 
+    private StringAndBigInt(string sv, EInteger biv) {
+      this.StringValue = sv;
+      this.BigIntValue = biv;
+    }
+
     public static StringAndBigInt Generate(IRandomGenExtended rand, int radix) {
       return Generate(rand, radix, 50);
     }
@@ -31,7 +36,6 @@ namespace Test {
           ") is more than 36");
       }
       EInteger bv = EInteger.Zero;
-      var sabi = new StringAndBigInt();
       int numDigits = 1 + rand.GetInt32(maxNumDigits);
       var negative = false;
       var builder = new StringBuilder();
@@ -54,13 +58,13 @@ namespace Test {
         int digit4 = digitvalues % radix;
         count += 4;
         int bits = rand.GetInt32(16);
-        _ = (bits & 0x01) == 0 ? builder.Append(ValueDigits[digit]) :
+        builder = (bits & 0x01) == 0 ? builder.Append(ValueDigits[digit]) :
 builder.Append(ValueDigitsLower[digit]);
-        _ = (bits & 0x02) == 0 ? builder.Append(ValueDigits[digit2]) :
+        builder = (bits & 0x02) == 0 ? builder.Append(ValueDigits[digit2]) :
 builder.Append(ValueDigitsLower[digit2]);
-        _ = (bits & 0x04) == 0 ? builder.Append(ValueDigits[digit3]) :
+        builder = (bits & 0x04) == 0 ? builder.Append(ValueDigits[digit3]) :
 builder.Append(ValueDigitsLower[digit3]);
-        _ = (bits & 0x08) == 0 ? builder.Append(ValueDigits[digit4]) :
+        builder = (bits & 0x08) == 0 ? builder.Append(ValueDigits[digit4]) :
 builder.Append(ValueDigitsLower[digit4]);
         int digits = (((((digit * radix) + digit2) *
                 radix) + digit3) * radix) + digit4;
@@ -70,7 +74,7 @@ builder.Append(ValueDigitsLower[digit4]);
       }
       for (int i = count; i < numDigits; ++i) {
         int digit = rand.GetInt32(radix);
-        _ = rand.GetInt32(2) == 0 ? builder.Append(ValueDigits[digit]) :
+        builder = rand.GetInt32(2) == 0 ? builder.Append(ValueDigits[digit]) :
 builder.Append(ValueDigitsLower[digit]);
         bv *= radixpow1;
         var bigintTmp = (EInteger)digit;
@@ -79,9 +83,7 @@ builder.Append(ValueDigitsLower[digit]);
       if (negative) {
         bv = -bv;
       }
-      sabi.BigIntValue = bv;
-      sabi.StringValue = builder.ToString();
-      return sabi;
+      return new StringAndBigInt(builder.ToString(), bv);
     }
   }
 }

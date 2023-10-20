@@ -11,11 +11,11 @@ namespace Test {
   public sealed class QueryStringHelper {
     private QueryStringHelper() {
     }
-    private static string[] SplitAt(string s, string delimiter) {
+    private static string[] SplitAt(string stringToSplit, string delimiter) {
       if (delimiter == null || delimiter.Length == 0) {
         throw new ArgumentException();
       }
-      if (s == null || s.Length == 0) {
+      if (stringToSplit == null || stringToSplit.Length == 0) {
         return new string[] { String.Empty };
       }
       var index = 0;
@@ -23,19 +23,22 @@ namespace Test {
       List<string> strings = null;
       int delimLength = delimiter.Length;
       while (true) {
-        int index2 = s.IndexOf(delimiter, index, StringComparison.Ordinal);
+        int index2 = stringToSplit.IndexOf(
+          delimiter,
+          index,
+          StringComparison.Ordinal);
         if (index2 < 0) {
           if (first) {
-            return new string[] { s };
+            return new string[] { stringToSplit };
           }
-          strings.Add(s[index..]);
+          strings.Add(stringToSplit[index..]);
           break;
         } else {
           if (first) {
             strings = new List<string>();
             first = false;
           }
-          string newstr = s[index..index2];
+          string newstr = stringToSplit[index..index2];
           strings.Add(newstr);
           index = index2 + delimLength;
         }
@@ -235,7 +238,7 @@ namespace Test {
       if (value == 0) {
         return "0";
       }
-      if (value == int.MinValue) {
+      if (value == Int32.MinValue) {
         return "-2147483648";
       }
       bool neg = value < 0;

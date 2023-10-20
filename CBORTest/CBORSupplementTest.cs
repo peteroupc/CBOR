@@ -356,7 +356,7 @@ namespace Test {
           }
           // Maximum nesting depth not reached, so shouldn't throw
           try {
-            _ = CBORObject.DecodeFromBytes(ms.ToArray());
+            CBORObject.DecodeFromBytes(ms.ToArray());
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -700,8 +700,9 @@ namespace Test {
           Assert.AreEqual(-1 - 7, MiniCBOR.ReadInt32(ms5));
         }
         bytes = new byte[] { 0x37 };
-        using var ms6 = new Test.DelayingStream(bytes);
-        Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
+        using (var ms6 = new Test.DelayingStream(bytes)) {
+          Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
+        }
       } catch (IOException ioex) {
         Assert.Fail(ioex.Message);
       }

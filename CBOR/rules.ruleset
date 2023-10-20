@@ -1,41 +1,47 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <RuleSet Description='Code analysis rules for PeterO projects.' Name='Rules for PeterO projects' ToolsVersion='14.0'>
   <Rules AnalyzerId='Microsoft.CodeAnalysis.FxCopAnalyzers' RuleNamespace='Microsoft.CodeAnalysis.FxCopAnalyzers'>
-    <Rule Action='None' Id='CA1720'/>
-    <Rule Id='CA1303' Action='None'/>
+    <!--Rule Action='Warning' Id='CA1720'/-->
+    <!--RuleId='CA1303' Action='Warning'/-->
     <!--"Modify X to call Y(Uri) rather than Y(String)" rule disabled -->
-    <Rule Action='None' Id='CA2234'/>
+    <!--Rule Action='Warning' Id='CA2234'/-->
     <!--Return value of Uri methods rule disabled; these are often breaking changes -->
-    <Rule Action='None' Id='CA1055'/>
-    <Rule Id='CA1200' Action='None'/>
+    <!--Rule Action='Warning' Id='CA1055'/-->
+    <!--RuleId='CA1200' Action='Warning'/-->
   </Rules>
   <Rules AnalyzerId='StyleCop.Analyzers' RuleNamespace='StyleCop.Analyzers'>
     <!--SA1009 disabled for now due to bug with cref attributes that end in closing parenthesis -->
     <Rule Action='None' Id='SA1009'/>
+    <!-- "The parameters should begin on the line after the declaration, whenever the parameter span across multiple lines" -->
     <Rule Action='None' Id='SA1116'/>
     <!--SA1121 disabled because writing String.IsNullOrEmpty, Int32.Parse, etc. is
   part of the code style -->
     <Rule Action='None' Id='SA1121'/>
     <!--SA1124 is DoNotUseRegions-->
-    <Rule Action='None' Id='SA1124'/>
+    <!--Rule Action='Warning' Id='SA1124'/-->
     <!--"... where T : ..." rule disabled -->
-    <Rule Action='None' Id='SA1127'/>
+    <!--Rule Action='Warning' Id='SA1127'/-->
+    <!-- "Put constructor initializers on their own line" -->
     <Rule Action='None' Id='SA1128'/>
-    <Rule Action='None' Id='SA1200'/>
+    <!--Rule Action='Warning' Id='SA1200'/-->
+    <!-- disable three member-ordering rules -->
     <Rule Action='None' Id='SA1201'/>
     <Rule Action='None' Id='SA1202'/>
     <Rule Action='None' Id='SA1204'/>
-    <!--Disabled because of BOM check -->
-    <Rule Action='None' Id='SA1412'/>
+    <!-- SA1500, braces for multiline statements should not share line, is disabled -->
     <Rule Action='None' Id='SA1500'/>
     <!-- SA1513, closing brace not followed by blank line, is disabled -->
     <Rule Action='None' Id='SA1513'/>
+    <!-- SA1515, single-line comment not preceded by blank line, is disabled -->
     <Rule Action='None' Id='SA1515'/>
+    <!-- SA1516, elements not separated by blank line, is disabled -->
     <Rule Action='None' Id='SA1516'/>
+    <!-- SA1516, partial elements should be documented, is disabled -->
     <Rule Action='None' Id='SA1601'/>
+    <!-- Disable because this project doesn't use file header XML -->
     <Rule Action='None' Id='SA1633'/>
-    <Rule Action='None' Id='SX1101'/>
-    <Rule Action='None' Id='SX1309'/>
-    <Rule Action='None' Id='SX1309S'/>
+    <!--Rule Action='Warning' Id='SX1101'/-->
+    <!--Rule Action='Warning' Id='SX1309'/-->
+    <!--Rule Action='Warning' Id='SX1309S'/-->
   </Rules>
 </RuleSet>

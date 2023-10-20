@@ -11,10 +11,16 @@ namespace Test {
   [TestFixture]
 #pragma warning disable CS0618
   public class CBORObjectTest {
+    /*
+    private static readonly string[] ValueJsonSurrogateFails = {
+      "\"\\ud800-udc00\"",
+      "\"-ud800\\udc00\"",
+      "[\"-ud800\\udc00\"]", "[\"\\ud800-udc00\"]",
+    }
+    */
+
     private static readonly string[] ValueJsonFails = {
-      "\"\\uxxxx\"",
-      "\"\\ud800\udc00\"",
-      "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
+      "\"\\uxxxx\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
       "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
       "trub", "falsb", "nulb", "[true", "[true,", "[true]!", "tr\u0020",
       "tr", "fa", "nu", "True", "False", "Null", "TRUE", "FALSE", "NULL",
@@ -22,9 +28,9 @@ namespace Test {
       "[tr]", "[fa]",
       "[nu]", "[True]", "[False]", "[Null]", "[TRUE]", "[FALSE]", "[NULL]",
       "[truE]", "[falsE]",
+      "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
       "[nulL]", "[tRUE]", "[fALSE]", "[nULL]", "[tRuE]", "[fAlSe]", "[nUlL]",
       "fa ", "nu ", "fa lse", "nu ll", "tr ue",
-      "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
       "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
       "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
       "{\"0\"::0}", "{\"0\":0,,\"1\":1}",
@@ -1514,9 +1520,9 @@ namespace Test {
         .AsNumber().CanTruncatedIntFitInInt32());
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(2.5)
         .AsNumber().CanTruncatedIntFitInInt32());
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(int.MinValue)
+      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Int32.MinValue)
         .AsNumber().CanTruncatedIntFitInInt32());
-      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(int.MaxValue)
+      Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(Int32.MaxValue)
         .AsNumber().CanTruncatedIntFitInInt32());
       var negint32 = new object[] {
         double.PositiveInfinity,
@@ -1730,6 +1736,15 @@ namespace Test {
       Console.WriteLine(cbor1);
       Console.WriteLine(cbor2);
       TestCommon.CompareTestGreater(cbor1.AsNumber(), cbor2.AsNumber());
+    }
+
+    [Test]
+    public void TestSuccessfulDecode() {
+      CBORObject.DecodeFromBytes(new byte[] {
+        (byte)0xc0, 0x78, 0x18, 0x31,
+        0x39, 0x36, 0x39, 0x2d, 0x31, 0x32, 0x2d, 0x33, 0x31, 0x54, 0x32, 0x33,
+        0x3a, 0x35, 0x39, 0x3a, 0x35, 0x39, 0x2e, 0x39, 0x39, 0x39, 0x5a,
+      });
     }
 
     [Test]
@@ -4161,8 +4176,9 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
-        var cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).ToEDecimal();
+        EDecimal cmpDecFrac, cmpCobj;
+        cmpDecFrac = AsED(o1).Multiply(AsED(o2));
+        cmpCobj = o1.AsNumber().Multiply(o2.AsNumber()).ToEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
           TestCommon.CompareTestEqual(
             cmpDecFrac,
@@ -6753,7 +6769,7 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
           TestWriteObj(bigintVal, bigintVal);
         }
 
-        if (longValue is >= int.MinValue and <= int.MaxValue) {
+        if (longValue is >= Int32.MinValue and <= Int32.MaxValue) {
           var intval = (int)longValue;
           {
             CBORObject cborTemp1 =
@@ -6937,8 +6953,8 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
           -32768, -65536, -32769, -65537,
           0x7fffff, 0x7fff7f, 0x7fff7fff, 0x7fff7fff7fL, 0x7fff7fff7fffL,
           0x7fff7fff7fff7fL, 0x7fff7fff7fff7fffL,
-          long.MaxValue, long.MinValue, int.MinValue,
-          int.MaxValue,
+          Int64.MaxValue, Int64.MinValue, Int32.MinValue,
+          Int32.MaxValue,
         };
         for (int i = 0; i < values.Length; ++i) {
           TestWriteExtraOne(values[i]);
@@ -7650,6 +7666,7 @@ cborTemp1.AsNumber().IsZero()) {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
+        {
         using var ms = new Test.DelayingStream();
         try {
           _ = CBORObject.WriteValue(ms, -1, 0);
@@ -7679,7 +7696,7 @@ cborTemp1.AsNumber().IsZero()) {
           throw new InvalidOperationException(String.Empty, ex);
         }
         try {
-          _ = CBORObject.WriteValue(ms, 7, int.MaxValue);
+          _ = CBORObject.WriteValue(ms, 7, Int32.MaxValue);
           Assert.Fail("Should have failed");
         } catch (ArgumentException) {
           // NOTE: Intentionally empty
@@ -7688,7 +7705,7 @@ cborTemp1.AsNumber().IsZero()) {
           throw new InvalidOperationException(String.Empty, ex);
         }
         try {
-          _ = CBORObject.WriteValue(ms, 7, long.MaxValue);
+          _ = CBORObject.WriteValue(ms, 7, Int64.MaxValue);
           Assert.Fail("Should have failed");
         } catch (ArgumentException) {
           // NOTE: Intentionally empty
@@ -7707,7 +7724,7 @@ cborTemp1.AsNumber().IsZero()) {
             throw new InvalidOperationException(String.Empty, ex);
           }
           try {
-            _ = CBORObject.WriteValue(ms, i, int.MinValue);
+            _ = CBORObject.WriteValue(ms, i, Int32.MinValue);
             Assert.Fail("Should have failed");
           } catch (ArgumentException) {
             // NOTE: Intentionally empty
@@ -7725,7 +7742,7 @@ cborTemp1.AsNumber().IsZero()) {
             throw new InvalidOperationException(String.Empty, ex);
           }
           try {
-            _ = CBORObject.WriteValue(ms, i, long.MinValue);
+            _ = CBORObject.WriteValue(ms, i, Int64.MinValue);
             Assert.Fail("Should have failed");
           } catch (ArgumentException) {
             // NOTE: Intentionally empty
@@ -7736,13 +7753,13 @@ cborTemp1.AsNumber().IsZero()) {
         }
         for (int i = 0; i <= 6; ++i) {
           try {
-            _ = CBORObject.WriteValue(ms, i, int.MaxValue);
+            _ = CBORObject.WriteValue(ms, i, Int32.MaxValue);
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
           try {
-            _ = CBORObject.WriteValue(ms, i, long.MaxValue);
+            _ = CBORObject.WriteValue(ms, i, Int64.MaxValue);
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
@@ -7786,6 +7803,7 @@ cborTemp1.AsNumber().IsZero()) {
             }
             bj += EInteger.One;
           }
+        }
         }
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
@@ -9172,8 +9190,9 @@ cborTemp1.AsNumber().IsZero()) {
           _ = sb.Append(hex[irg.GetInt32(hex.Length)]);
           _ = sb.Append(hex[irg.GetInt32(hex.Length)]);
         } else {
-          _ = x < 95 ? sb.Append((char)(irg.GetInt32(0x5e) + 0x21)) :
-sb.Append((char)irg.GetInt32(0x80));
+          char charToAppend = x < 95 ? ((char)(irg.GetInt32(0x5e) + 0x21)) :
+            ((char)irg.GetInt32(0x80));
+          sb.Append(charToAppend);
         }
       }
       return sb.ToString();
@@ -9766,7 +9785,7 @@ sb.Append((char)irg.GetInt32(0x80));
     public void TestFromJsonStringSmallDoubleSpec() {
       var rg = new RandomGenerator();
       for (int i = 0; i < 10000; ++i) {
-        int rv = rg.GetInt32(int.MaxValue) * ((rg.GetInt32(2) * 2) - 1);
+        int rv = rg.GetInt32(Int32.MaxValue) * ((rg.GetInt32(2) * 2) - 1);
         string rvstring = TestCommon.IntToString(rv);
         AssertJSONDouble(
           rvstring,
@@ -9780,17 +9799,17 @@ sb.Append((char)irg.GetInt32(0x80));
       AssertJSONDouble("511", "double", 511);
       AssertJSONDouble("-511", "double", -511);
       AssertJSONDouble(
-        TestCommon.IntToString(int.MaxValue),
+        TestCommon.IntToString(Int32.MaxValue),
         "double",
-        int.MaxValue);
+        Int32.MaxValue);
       AssertJSONDouble(
-        TestCommon.IntToString(int.MaxValue),
+        TestCommon.IntToString(Int32.MaxValue),
         "double",
-        int.MaxValue);
+        Int32.MaxValue);
       AssertJSONDouble(
-        TestCommon.IntToString(int.MinValue),
+        TestCommon.IntToString(Int32.MinValue),
         "double",
-        int.MinValue);
+        Int32.MinValue);
     }
 
     [Test]

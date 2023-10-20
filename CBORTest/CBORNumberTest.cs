@@ -206,8 +206,9 @@ namespace Test {
       for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
-        EDecimal cmpDecFrac = AsED(o1).Multiply(AsED(o2));
-        var cmpCobj = ToCN(o1).Multiply(ToCN(o2)).ToEDecimal();
+        EDecimal cmpDecFrac, cmpCobj;
+        cmpDecFrac = AsED(o1).Multiply(AsED(o2));
+        cmpCobj = ToCN(o1).Multiply(ToCN(o2)).ToEDecimal();
         if (!cmpDecFrac.Equals(cmpCobj)) {
           TestCommon.CompareTestEqual(
             cmpDecFrac,
