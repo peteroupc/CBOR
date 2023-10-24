@@ -5,7 +5,11 @@
 Assumes that the `System.Formats.Cbor` namespace was declared and the `System.Formats.Cbor` package was installed.
 
 ```
-    public CborWriter WriteUsingCborWriter(CBORObject obj, CborWriter writer) {
+    public CborWriter WriteUsingCborWriter(CBORObject obj, CborWriter writer, int depth) {
+      if (depth>50) {
+        // Fail for unusual depth
+        throw new InvalidOperationException("too deep");
+      }
       foreach(var tag in obj.GetAllTags()){
         writer.WriteTag((CborTag)(ulong)tag);
       }
@@ -43,15 +47,15 @@ Assumes that the `System.Formats.Cbor` namespace was declared and the `System.Fo
          case CBORType.Array:
             writer.WriteStartArray(obj.Count);
             foreach(var o in obj.Values){
-               WriteUsingCborWriter(o, writer);
+               WriteUsingCborWriter(o, writer, depth+1);
             }
             writer.WriteEndArray();
             break;
          case CBORType.Map:
             writer.WriteStartMap(obj.Count);
             foreach(var o in obj.Keys){
-               WriteUsingCborWriter(o, writer);
-               WriteUsingCborWriter(obj[o], writer);
+               WriteUsingCborWriter(o, writer, depth+1);
+               WriteUsingCborWriter(obj[o], writer, depth+1);
             }
             writer.WriteEndMap();
             break;

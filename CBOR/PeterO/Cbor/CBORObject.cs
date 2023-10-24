@@ -14,10 +14,10 @@ using System.Text;
 using PeterO;
 using PeterO.Numbers;
 
+// TODO: Consider making CBORTypeMapper and PODOptions obsolete
 // TODO: Add ReadObject that combines Read and ToObject; similarly
 // for ReadJSON, FromJSONString, FromJSONBytes
-// TODO: In Java version add overloads for Class<T> in overloads
-// that take java.lang.reflect.Type
+// TODO: Let certain methods support integers as map keys, such as Set/Add/Get
 namespace PeterO.Cbor {
   /// <summary>
   /// <para>Represents an object in Concise Binary Object Representation
@@ -44,7 +44,11 @@ namespace PeterO.Cbor {
   /// <c>CBORObject.ToObject</c> method converts a CBOR object to an
   /// object of a given type; for example, a CBOR array to a native
   /// <c>List</c> (or <c>ArrayList</c> in Java), or a CBOR integer to an
-  /// <c>int</c> or <c>long</c>.</para>
+  /// <c>int</c> or <c>long</c>. Of these methods, the.NET versions of
+  /// the methods <c>CBORObject.FromObject</c> and
+  /// <c>CBORObject.ToObject</c> are not compatible with any context that
+  /// disallows reflection, such as ahead-of-time compilation or
+  /// self-contained app deployment.</para>
   /// <para><b>To and from JSON:</b> This class also doubles as a reader
   /// and writer of JavaScript Object Notation (JSON). The
   /// CBORObject.FromJSONString method converts JSON in text string form
@@ -1675,8 +1679,7 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
       Type t,
       CBORTypeMapper mapper,
       PODOptions pod) {
-      return pod == null ?
-        throw new ArgumentNullException(nameof(pod)) :
+      return pod == null ? throw new ArgumentNullException(nameof(pod)) :
         enc == null ? throw new ArgumentNullException(nameof(enc)) :
 DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
     }
