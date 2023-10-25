@@ -2394,7 +2394,7 @@ FromString(strValue);
     /// applications' purposes, and <c>Single.NaN</c> / <c>Float.NaN</c> is
     /// only one of these equivalent forms. In fact,
     /// <c>CBORObject.FromSingle(Single.NaN)</c> or
-    /// <c>CBORObject.FromFloat(Float.NaN)</c> could produce a CBOR-encoded
+    /// <c>CBORObject.FromSingle(Float.NaN)</c> could produce a CBOR-encoded
     /// object that differs between DotNet and Java, because
     /// <c>Single.NaN</c> / <c>Float.NaN</c> may have a different form in
     /// DotNet and Java (for example, the NaN value's sign may be negative
@@ -2402,7 +2402,7 @@ FromString(strValue);
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 32-bit floating-point number.</param>
     /// <returns>A CBOR object generated from the given number.</returns>
-    public static CBORObject FromFloat(float value) {
+    public static CBORObject FromSingle(float value) {
       long doubleBits = CBORUtilities.SingleToDoublePrecision(
           CBORUtilities.SingleToInt32Bits(value));
       return new CBORObject(CBORObjectTypeDouble, doubleBits);
@@ -2413,7 +2413,7 @@ FromString(strValue);
     /// <param name='value'>A 32-bit floating-point number.</param>
     /// <returns>A CBOR object.</returns>
     [Obsolete("Use FromFloat instead.")]
-    public static CBORObject FromObject(float value) => FromFloat(value);
+    public static CBORObject FromObject(float value) => FromSingle(value);
 
     /// <summary>Generates a CBOR object from a 64-bit floating-point
     /// number. The input value can be a not-a-number (NaN) value (such as
@@ -2902,7 +2902,7 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         return FromByte((byte)obj);
       }
       if (obj is float) {
-        return FromFloat((float)obj);
+        return FromSingle((float)obj);
       }
       if (obj is sbyte) {
         return FromSbyte((sbyte)obj);
