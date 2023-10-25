@@ -1540,6 +1540,8 @@ longSecondsInDay + ") is not less or equal to 86399");
         int newmant = unchecked((int)(mant >> 42));
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) :
           -1;
+      } else if (exp == 0 && mant == 0) { // positive or negative zero always fits in half precision
+        return sign;
       } else if (sexp >= 31) { // overflow
         return -1;
       } else if (sexp < -10) { // underflow
@@ -1547,7 +1549,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       } else if (sexp > 0) { // normal
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | (sexp << 10) |
             RoundedShift(mant, 42)) : -1;
-      } else { // subnormal and zero
+      } else { // subnormal and nonzero
         int rs = RoundedShift(mant | (1L << 52), 42 - (sexp - 1));
         // DebugUtility.Log("mant=" + mant + " rs=" + (rs));
         return sexp == -10 && rs == 0 ? -1 :

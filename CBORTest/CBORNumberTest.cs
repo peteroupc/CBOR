@@ -710,5 +710,49 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         ToObjectTest.TestToFromObjectRoundTrip(double.NaN)
         .AsNumber().ToERational().IsNaN());
     }
+
+    [Test]
+    public void TestEncodingZeros() {
+        TestCommon.CompareTestEqual(ToCN(0.0), ToCN(-0.0).Abs());
+        TestCommon.CompareTestEqual(ToCN(0.0f), ToCN(-0.0f).Abs());
+
+        if (!CBORObject.FromDouble(0.0).AsNumber().CanFitInSingle()) {
+            Assert.Fail();
+        }
+        if (!CBORObject.FromDouble(-0.0).AsNumber().CanFitInSingle()) {
+            Assert.Fail();
+        }
+        if (!CBORObject.FromSingle(0.0f).AsNumber().CanFitInSingle()) {
+            Assert.Fail();
+        }
+        if (!CBORObject.FromSingle(-0.0f).AsNumber().CanFitInSingle()) {
+            Assert.Fail();
+        }
+
+        ToObjectTest.TestToFromObjectRoundTrip(0.0);
+        ToObjectTest.TestToFromObjectRoundTrip(0.0f);
+        ToObjectTest.TestToFromObjectRoundTrip(-0.0);
+        ToObjectTest.TestToFromObjectRoundTrip(-0.0f);
+
+        TestCommon.CompareTestEqual(ToCN(0.0), CBORObject.FromDouble(-0.0).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(-0.0), CBORObject.FromDouble(0.0).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(0.0f), CBORObject.FromSingle(-0.0f).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(-0.0f), CBORObject.FromSingle(0.0f).AsNumber().Negate());
+
+        byte[] bytes;
+        bytes=CBORObject.FromSingle(1.0f).EncodeToBytes();
+        Assert.AreEqual(3, bytes.Length);
+        bytes=CBORObject.FromSingle(0.0f).EncodeToBytes();
+        Assert.AreEqual(3, bytes.Length);
+        bytes=CBORObject.FromSingle(-0.0f).EncodeToBytes();
+        Assert.AreEqual(3, bytes.Length);
+        bytes=CBORObject.FromDouble(1.0).EncodeToBytes();
+        Assert.AreEqual(3, bytes.Length);
+        bytes=CBORObject.FromDouble(0.0).EncodeToBytes();
+        Assert.AreEqual(3, bytes.Length);
+        bytes=CBORObject.FromDouble(-0.0).EncodeToBytes();
+        Assert.AreEqual(3, bytes.Length);
+    }
+
   }
 }
