@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>4.5.2</Version>
+    <Version>4.5.3</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949. </Summary>
@@ -13,6 +13,10 @@
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
+Version 4.5.3
+
+- More bug fixes, including a fix to a problem that can occur when reading from compressed or network streams
+
 Version 4.5.2
 
 - Bug and regression fixes
