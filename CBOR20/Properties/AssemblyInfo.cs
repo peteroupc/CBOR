@@ -1,8 +1,8 @@
 using System.Reflection;
 [assembly: System.CLSCompliant(true)]
-[assembly: AssemblyInformationalVersion("4.5.2")]
-[assembly: AssemblyVersion("4.5.2.0")]
-[assembly: AssemblyFileVersion("4.5.2.0")]
+[assembly: AssemblyInformationalVersion("4.5.3")]
+[assembly: AssemblyVersion("4.5.3.0")]
+[assembly: AssemblyFileVersion("4.5.3.0")]
 [assembly: AssemblyProduct("CBOR (Concise Binary Object Representati" +
 "on)")]
 [assembly: AssemblyTitle("CBOR (Concise Binary Object Representati" +
