@@ -2394,8 +2394,8 @@ FromString(strValue);
     /// applications' purposes, and <c>Single.NaN</c> / <c>Float.NaN</c> is
     /// only one of these equivalent forms. In fact,
     /// <c>CBORObject.FromSingle(Single.NaN)</c> or
-    /// <c>CBORObject.FromSingle(Float.NaN)</c> could produce a CBOR-encoded
-    /// object that differs between DotNet and Java, because
+    /// <c>CBORObject.FromSingle(Float.NaN)</c> could produce a
+    /// CBOR-encoded object that differs between DotNet and Java, because
     /// <c>Single.NaN</c> / <c>Float.NaN</c> may have a different form in
     /// DotNet and Java (for example, the NaN value's sign may be negative
     /// in DotNet, but positive in Java).</summary>

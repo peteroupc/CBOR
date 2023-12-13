@@ -126,8 +126,7 @@ namespace Test {
 
       Assert.IsFalse(
         CBORObject.FromInt32(-99).AsNumber().CanTruncatedIntFitInUInt64());
-      bool
-      b =
+      bool b =
 CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         .CanTruncatedIntFitInUInt64();
       Assert.IsFalse(b);
@@ -717,16 +716,16 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         TestCommon.CompareTestEqual(ToCN(0.0f), ToCN(-0.0f).Abs());
 
         if (!CBORObject.FromDouble(0.0).AsNumber().CanFitInSingle()) {
-            Assert.Fail();
+          Assert.Fail();
         }
         if (!CBORObject.FromDouble(-0.0).AsNumber().CanFitInSingle()) {
-            Assert.Fail();
+          Assert.Fail();
         }
         if (!CBORObject.FromSingle(0.0f).AsNumber().CanFitInSingle()) {
-            Assert.Fail();
+          Assert.Fail();
         }
         if (!CBORObject.FromSingle(-0.0f).AsNumber().CanFitInSingle()) {
-            Assert.Fail();
+          Assert.Fail();
         }
 
         ToObjectTest.TestToFromObjectRoundTrip(0.0);
@@ -734,25 +733,28 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         ToObjectTest.TestToFromObjectRoundTrip(-0.0);
         ToObjectTest.TestToFromObjectRoundTrip(-0.0f);
 
-        TestCommon.CompareTestEqual(ToCN(0.0), CBORObject.FromDouble(-0.0).AsNumber().Negate());
-        TestCommon.CompareTestEqual(ToCN(-0.0), CBORObject.FromDouble(0.0).AsNumber().Negate());
-        TestCommon.CompareTestEqual(ToCN(0.0f), CBORObject.FromSingle(-0.0f).AsNumber().Negate());
-        TestCommon.CompareTestEqual(ToCN(-0.0f), CBORObject.FromSingle(0.0f).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(0.0),
+  CBORObject.FromDouble(-0.0).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(-0.0),
+  CBORObject.FromDouble(0.0).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(0.0f),
+  CBORObject.FromSingle(-0.0f).AsNumber().Negate());
+        TestCommon.CompareTestEqual(ToCN(-0.0f),
+  CBORObject.FromSingle(0.0f).AsNumber().Negate());
 
         byte[] bytes;
-        bytes=CBORObject.FromSingle(1.0f).EncodeToBytes();
+        bytes = CBORObject.FromSingle(1.0f).EncodeToBytes();
         Assert.AreEqual(3, bytes.Length);
-        bytes=CBORObject.FromSingle(0.0f).EncodeToBytes();
+        bytes = CBORObject.FromSingle(0.0f).EncodeToBytes();
         Assert.AreEqual(3, bytes.Length);
-        bytes=CBORObject.FromSingle(-0.0f).EncodeToBytes();
+        bytes = CBORObject.FromSingle(-0.0f).EncodeToBytes();
         Assert.AreEqual(3, bytes.Length);
-        bytes=CBORObject.FromDouble(1.0).EncodeToBytes();
+        bytes = CBORObject.FromDouble(1.0).EncodeToBytes();
         Assert.AreEqual(3, bytes.Length);
-        bytes=CBORObject.FromDouble(0.0).EncodeToBytes();
+        bytes = CBORObject.FromDouble(0.0).EncodeToBytes();
         Assert.AreEqual(3, bytes.Length);
-        bytes=CBORObject.FromDouble(-0.0).EncodeToBytes();
+        bytes = CBORObject.FromDouble(-0.0).EncodeToBytes();
         Assert.AreEqual(3, bytes.Length);
     }
-
   }
 }
