@@ -242,7 +242,7 @@ untagged.AsNumber().IsNegative()) {
       int count) {
       // Assert.CheckBuffer(bytes, offset, count);
            int t = count;
-           var tpos = offset;
+           int tpos = offset;
            while (t > 0) {
               int rcount = stream.Read(bytes, tpos, t);
               if (rcount <= 0) {
