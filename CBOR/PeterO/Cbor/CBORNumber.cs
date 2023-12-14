@@ -100,7 +100,7 @@ namespace PeterO.Cbor {
       if (obj is ERational erf) {
         return CBORObject.FromERational(erf);
       }
-      throw new Exception("Unexpected type: " + obj.GetType());
+      throw new InvalidOperationException("Unexpected type: " + obj.GetType());
     }
 
     /// <summary>Gets this value's sign: -1 if nonzero and negative; 1 if

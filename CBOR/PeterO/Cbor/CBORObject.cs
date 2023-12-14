@@ -590,8 +590,7 @@ defaultValue) {
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        var ckey = cborkey;
-        return PropertyMap.GetOrDefault(map, ckey, defaultValue);
+        return PropertyMap.GetOrDefault(map, cborkey, defaultValue);
       }
       return defaultValue;
     }
@@ -621,8 +620,10 @@ defaultValue) {
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        var ckey = FromInt32(key);
-        return PropertyMap.GetOrDefault(map, ckey, defaultValue);
+        return PropertyMap.GetOrDefault(
+          map,
+          FromInt32(key),
+          defaultValue);
       }
       return defaultValue;
     }
@@ -645,8 +646,10 @@ defaultValue) {
       }
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        var ckey = FromString(key);
-        return PropertyMap.GetOrDefault(map, ckey, defaultValue);
+        return PropertyMap.GetOrDefault(
+          map,
+          FromString(key),
+          defaultValue);
       }
       return defaultValue;
     }
@@ -755,8 +758,7 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
         if (key == null) {
           throw new ArgumentNullException(nameof(key));
         }
-        var objkey = FromString(key);
-        return this[objkey];
+        return this[FromString(key)];
       }
 
       set {
@@ -766,9 +768,9 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
         if (value == null) {
           throw new ArgumentNullException(nameof(value));
         }
-        var objkey = FromString(key);
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
+          CBORObject objkey = FromString(key);
           map[objkey] = value;
         } else {
           throw new InvalidOperationException("Not a map");

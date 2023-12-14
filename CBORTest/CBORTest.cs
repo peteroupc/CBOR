@@ -2412,7 +2412,7 @@ namespace Test {
       for (int i = 0; i < 2000; ++i) {
         CBORObject originalObject = CBORTestCommon.RandomCBORObject(rand);
         byte[] array = originalObject.EncodeToBytes();
-        Console.WriteLine("i=" + i + " obj=" + array.Length);
+        // Console.WriteLine("i=" + i + " obj=" + array.Length);
         TestRandomOne(SlightlyModify(array, rand));
       }
     }

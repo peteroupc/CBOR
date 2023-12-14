@@ -30,7 +30,7 @@ namespace PeterO.Cbor {
         return null;
       }
 
-      options = options ?? CBORDataUtilities.DefaultOptions;
+      _ = options ?? CBORDataUtilities.DefaultOptions;
       bool preserveNegativeZero = options.PreserveNegativeZero;
       JSONOptions.ConversionMode kind = options.NumberConversion;
       int endPos = offset + count;
@@ -260,14 +260,19 @@ CBORObject.FromEInteger(ei);
             chars,
             initialOffset,
             endPos - initialOffset);
-        return ed.IsZero && negative ? ed.Exponent.IsZero ?
-            preserveNegativeZero ?
+        if (ed.IsZero && negative) {
+          if (ed.Exponent.IsZero) {
+            return preserveNegativeZero ?
               CBORObject.FromEDecimal(EDecimal.NegativeZero) :
-              CBORObject.FromInt32(0) :
-            !preserveNegativeZero ? CBORObject.FromEDecimal(ed.Negate()) :
-CBORObject.FromEDecimal(ed) :
-          ed.Exponent.IsZero ? CBORObject.FromEInteger(ed.Mantissa) :
+              CBORObject.FromInt32(0);
+          } else {
+            return !preserveNegativeZero ?
+CBORObject.FromEDecimal(ed.Negate()) : CBORObject.FromEDecimal(ed);
+          }
+        } else {
+          return ed.Exponent.IsZero ? CBORObject.FromEInteger(ed.Mantissa) :
             CBORObject.FromEDecimal(ed);
+        }
       } else if (kind == JSONOptions.ConversionMode.Double) {
         var ef = EFloat.FromString(
             chars,
