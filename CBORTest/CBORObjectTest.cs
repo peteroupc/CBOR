@@ -9831,7 +9831,7 @@ CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dateStr), 0);
 
     private static void AreEqualDouble(double a, double b) {
       if (a != b) {
-        Assert.Fail(a+ ", " + b);
+        Assert.Fail(a + ", " + b);
       }
     }
 

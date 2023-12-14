@@ -1770,6 +1770,12 @@ namespace Test {
       Console.WriteLine(CBORPlistWriter.ToPlistString(o));
     }
 
+    private static void AreEqualDouble(double a, double b) {
+      if (a != b) {
+        Assert.Fail(a + ", " + b);
+      }
+    }
+
     [Test]
     public void TestJSON() {
       CBORObject o;
@@ -1783,7 +1789,7 @@ namespace Test {
       Assert.AreEqual(String.Empty, o[5].AsString());
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o[0].AsDouble();
-      Assert.AreEqual(1.5, actual);
+      AreEqualDouble(1.5, actual);
       using (var ms2a = new Test.DelayingStream(new byte[] { })) {
         try {
           _ = CBORObject.ReadJSON(ms2a);

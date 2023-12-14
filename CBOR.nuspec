@@ -1,5 +1,11 @@
 <package
-><metadata><version>4.5</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.5:
+><metadata><version>5.0.0-alpha1</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 5.0:
+
+- Alpha version
+- Some deprecated features from earlier versions were obsoleted.
+- Attempt to make the library trimmable by making use of reflection optional.
+
+Version 4.5:
 
 - Add support for JSON Pointers and JSON Patches
 - Add option to keep map key order when decoding CBOR and JSON
@@ -7,5 +13,5 @@
 - CBORObject.ToString renders strings as ASCII
 - Add support for deserializing CBOR objects to IReadOnlyList, IReadOnlyCollection, and ReadOnlyDictionary
 
-Note that after version 4.5x, the CBOR library&apos;s repository will stop including special projects for .NET 2.0 and .NET 4.0, leaving the .NET-Standard project for building the library.</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group targetFramework='.NETStandard1.0'><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /></files></package
+Note that after version 4.5x, the CBOR library&apos;s repository will stop including special projects for .NET 2.0 and .NET 4.0, leaving the .NET-Standard project for building the library.</releaseNotes><summary></summary><license type='expression'>CC0-1.0</license><projectUrl>https://github.com/peteroupc/CBOR</projectUrl><authors>Peter Occil</authors><description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</description><owners>Peter Occil</owners><title>CBOR (Concise Binary Object Representation)</title><tags>cbor data serialization binary json</tags><dependencies><group targetFramework='.NETStandard1.0'><dependency id='PolySharp' version='1.13.2' /><dependency id='PeterO.URIUtility' version='1.0.0' /><dependency id='PeterO.Numbers' version='1.8.2' /><dependency id='PeterO.DataUtilities' version='1.1.0' /></group></dependencies></metadata><files><file src='CBOR/bin/Release/netstandard1.0/CBOR.dll' target='/lib/netstandard1.0' /><file src='CBOR/bin/Release/netstandard1.0/CBOR.xml' target='/lib/netstandard1.0' /></files></package
 >
