@@ -14,7 +14,7 @@ namespace PeterO.Cbor {
   {
     public object Abs(object obj) {
       var val = (long)obj;
-      return (val == int.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
+      return (val == Int32.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
           -val : obj);
     }
 
@@ -54,7 +54,7 @@ OverflowException("This object's value is out of range");
 
     public bool CanFitInDouble(object obj) {
       var intItem = (long)obj;
-      if (intItem == long.MinValue) {
+      if (intItem == Int64.MinValue) {
         return true;
       }
       intItem = (intItem < 0) ? -intItem : intItem;
@@ -66,7 +66,7 @@ OverflowException("This object's value is out of range");
 
     public bool CanFitInInt32(object obj) {
       var val = (long)obj;
-      return val >= int.MinValue && val <= int.MaxValue;
+      return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
     public bool CanFitInInt64(object obj) {
@@ -75,7 +75,7 @@ OverflowException("This object's value is out of range");
 
     public bool CanFitInSingle(object obj) {
       var intItem = (long)obj;
-      if (intItem == long.MinValue) {
+      if (intItem == Int64.MinValue) {
         return true;
       }
       intItem = (intItem < 0) ? -intItem : intItem;
@@ -87,7 +87,7 @@ OverflowException("This object's value is out of range");
 
     public bool CanTruncatedIntFitInInt32(object obj) {
       var val = (long)obj;
-      return val >= int.MinValue && val <= int.MaxValue;
+      return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
     public bool CanTruncatedIntFitInUInt64(object obj) {
@@ -133,7 +133,7 @@ OverflowException("This object's value is out of range");
     }
 
     public object Negate(object obj) {
-      return (((long)obj) == long.MinValue) ? (EInteger.One << 63) :
+      return (((long)obj) == Int64.MinValue) ? (EInteger.One << 63) :
 (-(long)obj);
     }
 

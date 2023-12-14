@@ -60,7 +60,7 @@ namespace PeterO.Cbor {
         return 0;
       }
       if (neg && b == (0x43eL << 52)) {
-        return long.MinValue;
+        return Int64.MinValue;
       }
       if ((b >> 52) >= 0x43e) {
         throw new OverflowException("This object's value is out of range");

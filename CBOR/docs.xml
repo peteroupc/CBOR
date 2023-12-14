@@ -3353,8 +3353,7 @@
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromFloat(System.Single)">
-
-            <summary>Generates a CBOR object from a 32-bit floating-point
+<summary>Generates a CBOR object from a 32-bit floating-point
             number. The input value can be a not-a-number (NaN) value (such as
             <c>Single.NaN</c> in DotNet or Float.NaN in Java); however, NaN
             values have multiple forms that are equivalent for many
@@ -3369,7 +3368,6 @@
             <param name='value'>The parameter <paramref name='value'/> is a
             32-bit floating-point number.</param>
             <returns>A CBOR object generated from the given number.</returns>
-
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromFloatingPointBits(System.Int64,System.Int32)">
 
@@ -4177,6 +4175,25 @@
             <returns>A CBOR object.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='simpleValue'/> is less than 0, greater than 255, or from 24
             through 31.</exception>
+
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromSingle(System.Single)">
+
+            <summary>Generates a CBOR object from a 32-bit floating-point
+            number. The input value can be a not-a-number (NaN) value (such as
+            <c>Single.NaN</c> in DotNet or Float.NaN in Java); however, NaN
+            values have multiple forms that are equivalent for many
+            applications' purposes, and <c>Single.NaN</c> / <c>Float.NaN</c> is
+            only one of these equivalent forms. In fact,
+            <c>CBORObject.FromSingle(Single.NaN)</c> or
+            <c>CBORObject.FromSingle(Float.NaN)</c> could produce a
+            CBOR-encoded object that differs between DotNet and Java, because
+            <c>Single.NaN</c> / <c>Float.NaN</c> may have a different form in
+            DotNet and Java (for example, the NaN value's sign may be negative
+            in DotNet, but positive in Java).</summary>
+            <param name='value'>The parameter <paramref name='value'/> is a
+            32-bit floating-point number.</param>
+            <returns>A CBOR object generated from the given number.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromString(System.String)">

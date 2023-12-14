@@ -3,16 +3,22 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0; net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>5.0-alpha1</Version>
+    <Version>5.0.0-alpha1</Version>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949. </Summary>
-    <Copyright>2021. Written by Peter O.  Any copyright to this work is released to the Public Domain.  In case this is not possible, this work is also licensed under Creative Commons Zero (CC0).</Copyright>
+    <Copyright>Written by Peter O.  Any copyright to this work is released to the Public Domain.  In case this is not possible, this work is also licensed under Creative Commons Zero (CC0).</Copyright>
     <Authors>Peter Occil</Authors>
     <PackageId>PeterO.Cbor</PackageId>
     <PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/peteroupc/CBOR</PackageProjectUrl>
     <PackageReleaseNotes>
+Version 5.0:
+
+- Alpha version
+- Some deprecated features from earlier versions were obsoleted.
+- Attempt to make the library trimmable by making use of reflection optional.
+
 Version 4.5:
 
 - Add support for JSON Pointers and JSON Patches

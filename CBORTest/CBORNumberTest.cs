@@ -733,12 +733,14 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         ToObjectTest.TestToFromObjectRoundTrip(-0.0);
         ToObjectTest.TestToFromObjectRoundTrip(-0.0f);
 
-        TestCommon.CompareTestEqual(ToCN(0.0),
-  CBORObject.FromDouble(-0.0).AsNumber().Negate());
+        TestCommon.CompareTestEqual(
+          ToCN(0.0),
+          CBORObject.FromDouble(-0.0).AsNumber().Negate());
         TestCommon.CompareTestEqual(ToCN(-0.0),
   CBORObject.FromDouble(0.0).AsNumber().Negate());
-        TestCommon.CompareTestEqual(ToCN(0.0f),
-  CBORObject.FromSingle(-0.0f).AsNumber().Negate());
+        TestCommon.CompareTestEqual(
+          ToCN(0.0f),
+          CBORObject.FromSingle(-0.0f).AsNumber().Negate());
         TestCommon.CompareTestEqual(ToCN(-0.0f),
   CBORObject.FromSingle(0.0f).AsNumber().Negate());
 

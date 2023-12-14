@@ -1,6 +1,28 @@
 Release notes
 ---------------------
 
+### Version 4.5.3
+
+- More bug fixes, including a fix to a problem that can occur when reading from compressed or network streams
+
+### Version 4.5.2
+
+- Bug and regression fixes
+
+### Version 4.5.1
+
+- Fix reported security issue
+
+### Version 4.5:
+
+- Add support for JSON Pointers and JSON Patches
+- Add option to keep map key order when decoding CBOR and JSON
+- Add option to write JSON using only ASCII characters
+- CBORObject.ToString renders strings as ASCII
+- Add support for deserializing CBOR objects to IReadOnlyList, IReadOnlyCollection, and ReadOnlyDictionary
+
+Note that after version 4.5x, the CBOR library's repository will stop including special projects for .NET 2.0 and .NET 4.0, leaving the .NET-Standard project for building the library.
+
 ### Version 4.4.2
 
 - Performance improvements in some cases, especially involving date/time conversions

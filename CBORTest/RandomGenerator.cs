@@ -253,7 +253,7 @@ this.Uniform() < p;
         return 0;
       }
       if (p == 0.0) {
-        return int.MaxValue;
+        return Int32.MaxValue;
       }
       var count = 0;
       if (p == 0.5) {
@@ -410,7 +410,7 @@ this.Uniform() < p;
         return minInclusive + this.UniformInt(maxExclusive - minInclusive);
       } else {
         long diff = maxExclusive - minInclusive;
-        return diff <= int.MaxValue ? minInclusive +
+        return diff <= Int32.MaxValue ? minInclusive +
 this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
       }
     }
@@ -433,9 +433,9 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
       if (minInclusive >= 0) {
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
-        if ((maxExclusive < 0 && long.MaxValue + maxExclusive <
+        if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive <
             minInclusive) ||
-          (maxExclusive > 0 && long.MinValue + maxExclusive > minInclusive) ||
+          (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
           minInclusive - maxExclusive < 0) {
           var b = new byte[8];
           while (true) {
@@ -502,7 +502,7 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
                 return ib;
               }
               int maxexc;
-              maxexc = int.MaxValue / maxExclusive * maxExclusive;
+              maxexc = Int32.MaxValue / maxExclusive * maxExclusive;
               while (true) {
                 _ = this.valueIrg.GetBytes(b, 0, 4);
                 ib = b[0] & 0xff;
@@ -542,7 +542,7 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
         throw new ArgumentException("maxExclusive(" + maxExclusive +
           ") is less than 0");
       }
-      if (maxExclusive <= int.MaxValue) {
+      if (maxExclusive <= Int32.MaxValue) {
         return this.UniformInt((int)maxExclusive);
       }
       if (this.valueIrg is IRandomGenExtended rge) {
@@ -551,7 +551,7 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
 
       long maxexc;
       var b = new byte[8];
-      maxexc = long.MaxValue / maxExclusive * maxExclusive;
+      maxexc = Int64.MaxValue / maxExclusive * maxExclusive;
       while (true) {
         _ = this.valueIrg.GetBytes(b, 0, 8);
         long lb = b[0] & 0xffL;

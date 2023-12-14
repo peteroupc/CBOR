@@ -170,7 +170,7 @@ namespace Test {
     }
 
     public static double RandomDouble(IRandomGenExtended rand, int exponent) {
-      if (exponent == int.MaxValue) {
+      if (exponent == Int32.MaxValue) {
         if (rand == null) {
           throw new ArgumentNullException(nameof(rand));
         }
@@ -211,7 +211,7 @@ namespace Test {
     }
 
     public static float RandomSingle(IRandomGenExtended rand, int exponent) {
-      if (exponent == int.MaxValue) {
+      if (exponent == Int32.MaxValue) {
         if (rand == null) {
           throw new ArgumentNullException(nameof(rand));
         }
@@ -586,7 +586,7 @@ maxExc) {
         }
       }
       var bufferSize = (int)Math.Min(
-          int.MaxValue,
+          Int32.MaxValue,
           8 + count + afterPointCount + exponentCount);
       var sb = new StringBuilder(bufferSize);
       if (r.GetInt32(2) == 0) {

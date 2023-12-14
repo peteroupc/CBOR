@@ -48,10 +48,10 @@ namespace Test {
     public void TestLong() {
       DoTestLong(0);
       DoTestLong(-1);
-      DoTestLong(int.MinValue);
-      DoTestLong(int.MaxValue);
-      DoTestLong(long.MinValue);
-      DoTestLong(long.MaxValue);
+      DoTestLong(Int32.MinValue);
+      DoTestLong(Int32.MaxValue);
+      DoTestLong(Int64.MinValue);
+      DoTestLong(Int64.MaxValue);
     }
 
     [Test]

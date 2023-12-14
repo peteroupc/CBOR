@@ -1541,7 +1541,6 @@ longSecondsInDay + ") is not less or equal to 86399");
         return ((mant & ((1L << 42) - 1)) == 0) ? (sign | 0x7c00 | newmant) :
           -1;
       } else if (exp == 0 && mant == 0) { // positive or negative zero
-always fits in half precision
         return sign;
       } else if (sexp >= 31) { // overflow
         return -1;
