@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard1.0; net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>5.0.0-alpha1</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Owners>Peter Occil</Owners>
     <Description>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949.</Description>
     <Summary>A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 8949. </Summary>
@@ -55,7 +56,7 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-
+<None Include="..\README.md" Pack="true" PackagePath="\"/>
   <PackageReference Include="PolySharp" Version="1.13.2">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

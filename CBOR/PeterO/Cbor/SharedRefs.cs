@@ -6,6 +6,7 @@ licensed under Creative Commons Zero (CC0):
 https://creativecommons.org/publicdomain/zero/1.0/
 
  */
+using System;
 using System.Collections.Generic;
 using PeterO.Numbers;
 
