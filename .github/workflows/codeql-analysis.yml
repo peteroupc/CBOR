@@ -52,9 +52,9 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '5.0'
+        dotnet-version: '7.0'
     - run: |
         dotnet add CBORTest package Microsoft.NET.Test.Sdk # Update is required for GitHubActionsTestLogger to print anything
         dotnet add CBORTest package GitHubActionsTestLogger
