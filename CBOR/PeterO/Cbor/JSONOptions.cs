@@ -102,35 +102,6 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.JSONOptions'/> class with the given value
-    /// for the Base64Padding option.</summary>
-    /// <param name='base64Padding'>Whether padding is included when
-    /// writing data in base64url or traditional base64 format to
-    /// JSON.</param>
-    [Obsolete("Use the more readable string constructor instead.")]
-    public JSONOptions(bool base64Padding)
-      : this("base64Padding=" + (base64Padding ? "1" : "0")) {
-    }
-
-    /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.JSONOptions'/> class with the given values
-    /// for the options.</summary>
-    /// <param name='base64Padding'>Whether padding is included when
-    /// writing data in base64url or traditional base64 format to
-    /// JSON.</param>
-    /// <param name='replaceSurrogates'>Whether surrogate code points not
-    /// part of a surrogate pair (which consists of two consecutive
-    /// <c>char</c> s forming one Unicode code point) are each replaced
-    /// with a replacement character (U+FFFD). The default is false; an
-    /// exception is thrown when such code points are encountered.</param>
-#pragma warning disable CS0618
-    [Obsolete("Use the more readable string constructor instead.")]
-    public JSONOptions(bool base64Padding, bool replaceSurrogates)
-      : this("base64Padding=" + (base64Padding ? "1" : "0") +
-           ";replacesurrogates=" + (replaceSurrogates ? "1" : "0")) {
-    }
-
-    /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.JSONOptions'/> class.</summary>
     /// <param name='paramString'>A string setting forth the options to
     /// use. This is a semicolon-separated list of options, each of which
@@ -139,35 +110,34 @@ namespace PeterO.Cbor {
     /// semicolons or between the equal signs, nor may the string begin or
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
-    /// <c>base64padding=false;replacesurrogates=true</c>. The key can be
-    /// any one of the following where the letters can be any combination
-    /// of basic upper-case and/or basic lower-case letters:
-    /// <c>base64padding</c>, <c>replacesurrogates</c>,
-    /// <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
-    /// <c>numberconversion</c>, <c>writebasic</c>, <c>keepkeyorder</c>.
-    /// Other keys are ignored in this version of the CBOR library. (Keys
-    /// are compared using a basic case-insensitive comparison, in which
-    /// two strings are equal if they match after converting the basic
-    /// upper-case letters A to Z (U+0041 to U+005A) in both strings to
-    /// basic lower-case letters.) If two or more key/value pairs have
-    /// equal keys (in a basic case-insensitive comparison), the value
-    /// given for the last such key is used. The first four keys just given
-    /// can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
-    /// <c>on</c> (where the letters can be any combination of basic
-    /// upper-case and/or basic lower-case letters), which means true, and
-    /// any other value meaning false. The last key,
-    /// <c>numberconversion</c>, can have a value of any name given in the
-    /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
-    /// can be any combination of basic upper-case and/or basic lower-case
-    /// letters), and any other value is unrecognized. (If the
+    /// <c>writebasic=false;replacesurrogates=true</c>. The key can be any
+    /// one of the following where the letters can be any combination of
+    /// basic upper-case and/or basic lower-case letters:
+    /// <c>replacesurrogates</c>, <c>allowduplicatekeys</c>,
+    /// <c>preservenegativezero</c>, <c>numberconversion</c>,
+    /// <c>writebasic</c>, <c>keepkeyorder</c>. Other keys are ignored in
+    /// this version of the CBOR library. (Keys are compared using a basic
+    /// case-insensitive comparison, in which two strings are equal if they
+    /// match after converting the basic upper-case letters A to Z (U+0041
+    /// to U+005A) in both strings to basic lower-case letters.) If two or
+    /// more key/value pairs have equal keys (in a basic case-insensitive
+    /// comparison), the value given for the last such key is used. The
+    /// first four keys just given can have a value of <c>1</c>,
+    /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
+    /// any combination of basic upper-case and/or basic lower-case
+    /// letters), which means true, and any other value meaning false. The
+    /// last key, <c>numberconversion</c>, can have a value of any name
+    /// given in the <c>JSONOptions.ConversionMode</c> enumeration (where
+    /// the letters can be any combination of basic upper-case and/or basic
+    /// lower-case letters), and any other value is unrecognized. (If the
     /// <c>numberconversion</c> key is not given, its value is treated as
     /// <c>intorfloat</c> (formerly <c>full</c> in versions earlier than
     /// 5.0). If that key is given, but has an unrecognized value, an
-    /// exception is thrown.) For example, <c>base64padding=Yes</c> and
-    /// <c>base64padding=1</c> both set the <c>Base64Padding</c> property
-    /// to true, and <c>numberconversion=double</c> sets the
-    /// <c>NumberConversion</c> property to <c>ConversionMode.Double</c>
-    /// .</param>
+    /// exception is thrown.) For example, <c>allowduplicatekeys=Yes</c>
+    /// and <c>allowduplicatekeys=1</c> both set the
+    /// <c>AllowDuplicateKeys</c> property to true, and
+    /// <c>numberconversion=double</c> sets the <c>NumberConversion</c>
+    /// property to <c>ConversionMode.Double</c>.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null. In the future, this class may allow
     /// other keys to store other kinds of values, not just true or
@@ -188,7 +158,6 @@ namespace PeterO.Cbor {
       this.KeepKeyOrder = parser.GetBoolean(
         "keepkeyorder",
         false);
-      this.Base64Padding = parser.GetBoolean("base64padding", true);
       this.ReplaceSurrogates = parser.GetBoolean(
         "replacesurrogates",
         false);
@@ -207,7 +176,6 @@ namespace PeterO.Cbor {
     /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new StringBuilder()
-        .Append("base64padding=").Append(this.Base64Padding ? "true" : "false")
         .Append(";replacesurrogates=")
         .Append(this.ReplaceSurrogates ? "true" : "false")
         .Append(";preservenegativezero=")
@@ -223,22 +191,6 @@ namespace PeterO.Cbor {
     /// <summary>The default options for converting CBOR objects to
     /// JSON.</summary>
     public static readonly JSONOptions Default = new JSONOptions();
-
-    /// <summary>Gets a value indicating whether the Base64Padding property
-    /// is true. This property has no effect; in previous versions, this
-    /// property meant that padding was written out when writing base64url
-    /// or traditional base64 to JSON.</summary>
-    /// <value>A value indicating whether the Base64Padding property is
-    /// true.</value>
-    [Obsolete("This property now has no effect. This library now includes " +
-"\u0020necessary padding when writing traditional base64 to JSON and" +
-"\u0020includes no padding when writing base64url to JSON, in " +
-"\u0020accordance with the revision of the CBOR specification.")]
-    public bool Base64Padding
-    {
-      get;
-      private set;
-    }
 
     private string FromNumberConversion() {
       ConversionMode kind = this.NumberConversion;
