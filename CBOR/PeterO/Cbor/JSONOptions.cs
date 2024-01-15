@@ -176,7 +176,7 @@ namespace PeterO.Cbor {
     /// one described in the String constructor for this class.</returns>
     public override string ToString() {
       return new StringBuilder()
-        .Append(";replacesurrogates=")
+        .Append("replacesurrogates=")
         .Append(this.ReplaceSurrogates ? "true" : "false")
         .Append(";preservenegativezero=")
         .Append(this.PreserveNegativeZero ? "true" : "false")
