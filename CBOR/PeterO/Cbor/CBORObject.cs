@@ -2332,6 +2332,12 @@ FromString(strValue);
           FromInt64((long)value);
     }
 
+    /// <summary>Generates a CBOR object from a Guid.</summary>
+    /// <param name='value'>The parameter <paramref name='value'/> is a
+    /// Guid.</param>
+    /// <returns>A CBOR object.</returns>
+    public static CBORObject FromGuid(Guid value) => new CBORUuidConverter().ToCBORObject(value);
+
     /// <summary>Generates a CBOR object from a 32-bit signed
     /// integer.</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
@@ -4659,6 +4665,14 @@ throw new OverflowException() : (int)longValue;
     public float AsSingle() {
       CBORNumber cn = this.AsNumber();
       return cn.GetNumberInterface().AsSingle(cn.GetValue());
+    }
+
+    /// <summary>Converts this object to a Guid.</summary>
+    /// <returns>A Guid.</returns>
+    /// <exception cref="InvalidOperationException">This object does
+    /// not represent a Guid.</exception>
+    public Guid AsGuid() {
+      return new CBORUuidConverter().FromCBORObject(this);
     }
 
     /// <summary>Gets the value of this object as a text string.</summary>
