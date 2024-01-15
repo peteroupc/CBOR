@@ -4,6 +4,7 @@ Release notes
 ### Version 4.5.3
 
 - More bug fixes, including a fix to a problem that can occur when reading from compressed or network streams
+- Fix issue that floating-point positive and negative zero are not encoded in the shortest form by default
 
 ### Version 4.5.2
 
