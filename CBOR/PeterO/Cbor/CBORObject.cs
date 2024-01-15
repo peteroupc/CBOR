@@ -4670,7 +4670,8 @@ throw new OverflowException() : (int)longValue;
     /// <summary>Converts this object to a Guid.</summary>
     /// <returns>A Guid.</returns>
     /// <exception cref="InvalidOperationException">This object does
-    /// not represent a Guid.</exception>
+    /// not represent a Guid.</exception><exception cref="CBORException">
+    /// This object does not have the expected tag.</exception>
     public Guid AsGuid() {
       return new CBORUuidConverter().FromCBORObject(this);
     }
