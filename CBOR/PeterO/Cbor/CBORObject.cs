@@ -3236,6 +3236,20 @@ smallTag) =>
           new SortedDictionary<CBORObject, CBORObject>());
     }
 
+    /// <summary>Creates a new CBOR map that stores its keys in an
+    /// undefined order.</summary>
+    /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
+    /// <returns>A new CBOR map.</returns>
+    public static CBORObject FromMap(IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
+      var sd = new SortedDictionary<CBORObject, CBORObject>();
+      foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
+        sd.Add(kv.Item1, kv.Item2);
+      }
+      return new CBORObject(
+          CBORObjectTypeMap,
+          sd);
+    }
+
     /// <summary>Creates a new empty CBOR map that ensures that keys are
     /// stored in the order in which they are first inserted.</summary>
     /// <returns>A new CBOR map.</returns>
@@ -3243,6 +3257,20 @@ smallTag) =>
       return new CBORObject(
           CBORObjectTypeMap,
           PropertyMap.NewOrderedDict());
+    }
+
+    /// <summary>Creates a new CBOR map that ensures that keys are
+    /// stored in order.</summary>
+    /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
+    /// <returns>A new CBOR map.</returns>
+    public static CBORObject FromOrderedMap(IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
+      var oDict = PropertyMap.NewOrderedDict();
+      foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
+        oDict.Add(kv.Item1, kv.Item2);
+      }
+      return new CBORObject(
+          CBORObjectTypeMap,
+          oDict);
     }
 
     /// <summary>
