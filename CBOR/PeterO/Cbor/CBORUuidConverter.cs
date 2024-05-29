@@ -35,7 +35,10 @@ namespace PeterO.Cbor {
       }
       _ = ValidateObject(obj);
       byte[] b2 = obj.GetByteString();
-      byte[] bytes = { b2[3], b2[2], b2[1], b2[0], b2[5], b2[4], b2[7], b2[6], b2[8], b2[9], b2[10], b2[11], b2[12], b2[13], b2[14], b2[15] };
+      byte[] bytes = {
+        b2[3], b2[2], b2[1], b2[0], b2[5], b2[4], b2[7],
+        b2[6], b2[8], b2[9], b2[10], b2[11], b2[12], b2[13], b2[14], b2[15],
+      };
       return new Guid(bytes);
     }
   }

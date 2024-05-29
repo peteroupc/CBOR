@@ -2336,7 +2336,8 @@ FromString(strValue);
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// Guid.</param>
     /// <returns>A CBOR object.</returns>
-    public static CBORObject FromGuid(Guid value) => new CBORUuidConverter().ToCBORObject(value);
+    public static CBORObject FromGuid(Guid value) => new
+CBORUuidConverter().ToCBORObject(value);
 
     /// <summary>Generates a CBOR object from a 32-bit signed
     /// integer.</summary>
@@ -3240,7 +3241,8 @@ smallTag) =>
     /// undefined order.</summary>
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
-    public static CBORObject FromMap(IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
+    public static CBORObject FromMap(IEnumerable<Tuple<CBORObject,
+  CBORObject >> keysAndValues) {
       var sd = new SortedDictionary<CBORObject, CBORObject>();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
         sd.Add(kv.Item1, kv.Item2);
@@ -3259,11 +3261,12 @@ smallTag) =>
           PropertyMap.NewOrderedDict());
     }
 
-    /// <summary>Creates a new CBOR map that ensures that keys are
-    /// stored in order.</summary>
+    /// <summary>Creates a new CBOR map that ensures that keys are stored
+    /// in order.</summary>
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
-    public static CBORObject FromOrderedMap(IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
+    public static CBORObject FromOrderedMap(IEnumerable<Tuple<CBORObject,
+  CBORObject >> keysAndValues) {
       var oDict = PropertyMap.NewOrderedDict();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
         oDict.Add(kv.Item1, kv.Item2);
@@ -4697,9 +4700,10 @@ throw new OverflowException() : (int)longValue;
 
     /// <summary>Converts this object to a Guid.</summary>
     /// <returns>A Guid.</returns>
-    /// <exception cref="InvalidOperationException">This object does
-    /// not represent a Guid.</exception><exception cref="CBORException">
-    /// This object does not have the expected tag.</exception>
+    /// <exception cref='InvalidOperationException'>This object does not
+    /// represent a Guid.</exception>
+    /// <exception cref='CBORException'>This object does not have the
+    /// expected tag.</exception>
     public Guid AsGuid() {
       return new CBORUuidConverter().FromCBORObject(this);
     }
