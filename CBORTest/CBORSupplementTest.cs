@@ -9,6 +9,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 using System;
 using System.IO;
 using NUnit.Framework;
+using PeterO;
 using PeterO.Cbor;
 using PeterO.Numbers;
 
@@ -615,6 +616,20 @@ namespace Test {
       Assert.AreEqual((byte)0xdd, bytes[13]);
       Assert.AreEqual((byte)0xee, bytes[14]);
       Assert.AreEqual((byte)0xff, bytes[15]);
+      bytes = new byte[] {
+        0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+        0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+      };
+      obj = CBORObject.FromCBORObjectAndTag(
+          CBORObject.FromByteArray(bytes),
+          37);
+      {
+        string stringTemp =
+DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
+        Assert.AreEqual(
+          "00112233-4455-6677-8899-aabbccddeeff",
+          stringTemp);
+}
     }
 
     // [Test]

@@ -9,4 +9,3 @@ Earlier versions are no longer supported.  Users should upgrade to the latest ve
 ## Reporting a Vulnerability
 
 Report security vulnerabilities (those that can lead to security attacks) to the developer at: poccil14@gmail.com
-
