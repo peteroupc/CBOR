@@ -34,12 +34,25 @@ namespace PeterO.Cbor {
         throw new CBORException("Must have outermost tag 37");
       }
       _ = ValidateObject(obj);
-      byte[] b2 = obj.GetByteString();
-      byte[] bytes = {
-        b2[3], b2[2], b2[1], b2[0], b2[5], b2[4], b2[7],
-        b2[6], b2[8], b2[9], b2[10], b2[11], b2[12], b2[13], b2[14], b2[15],
-      };
-      return new Guid(bytes);
+      byte[] bytes = obj.GetByteString();
+      var guidChars = new char[36];
+      string hex = "0123456789abcdef";
+      var index = 0;
+      for (int i = 0; i < 16; ++i) {
+        if (i == 4 || i == 6 || i == 8 || i == 10) {
+          guidChars[index++] = '-';
+        }
+        guidChars[index++] = hex[(bytes[i] >> 4) & 15];
+        guidChars[index++] = hex[bytes[i] & 15];
+      }
+      var guidString = new String(guidChars);
+      // NOTE: Don't use the byte[] constructor of the DotNet Guid class,
+      // since the bytes may have to be rearranged in order to generate a
+      // Guid from a UUID; thus the exact Guid generated from a byte string
+      // by that constructor may differ between little-endian and big-endian
+      // computers, but I don't have access to a big-endian machine to test
+      // this hypothesis.
+      return new Guid(guidString);
     }
   }
 }

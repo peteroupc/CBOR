@@ -2,8 +2,7 @@
 Written by Peter O.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
-licensed under Creative Commons Zero (CC0):
-https://creativecommons.org/publicdomain/zero/1.0/
+licensed under the Unlicense: https://unlicense.org/
 
  */
 using System;
@@ -3267,7 +3266,8 @@ smallTag) =>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject FromOrderedMap(IEnumerable<Tuple<CBORObject,
   CBORObject >> keysAndValues) {
-      var oDict = PropertyMap.NewOrderedDict();
+      IDictionary<CBORObject, CBORObject> oDict;
+      oDict = PropertyMap.NewOrderedDict();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
         oDict.Add(kv.Item1, kv.Item2);
       }

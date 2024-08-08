@@ -281,8 +281,7 @@ of a given class into CBOR objects.
        cp2=conv.FromCBORObject(cbor);
 ```
 
-NOTE: All code samples in this section are released to the Public Domain,
-as explained in <https://creativecommons.org/publicdomain/zero/1.0/>.
+NOTE: All code samples in this section are released under the Unlicense.
 
 Demo
 ----------
@@ -293,12 +292,11 @@ CBOR library in the form of a calculator.
 About
 -----------
 
-Written in 2013-2019 by Peter O.
+Written in by Peter O.
 
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
-licensed under Creative Commons Zero (CC0):
-[https://creativecommons.org/publicdomain/zero/1.0/](https://creativecommons.org/publicdomain/zero/1.0/)
+licensed under the Unlicense: [https://unlicense.org/](https://unlicense.org/)
 
 Release Notes
 -----------
