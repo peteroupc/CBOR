@@ -292,7 +292,7 @@ CBOR library in the form of a calculator.
 About
 -----------
 
-Written in by Peter O.
+Written by Peter O.
 
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
