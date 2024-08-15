@@ -3240,8 +3240,8 @@ smallTag) =>
     /// undefined order.</summary>
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
-    public static CBORObject FromMap(IEnumerable<Tuple<CBORObject,
-  CBORObject >> keysAndValues) {
+    public static CBORObject FromMap(
+      IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
       var sd = new SortedDictionary<CBORObject, CBORObject>();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
         sd.Add(kv.Item1, kv.Item2);
@@ -3264,8 +3264,8 @@ smallTag) =>
     /// in order.</summary>
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
-    public static CBORObject FromOrderedMap(IEnumerable<Tuple<CBORObject,
-  CBORObject >> keysAndValues) {
+    public static CBORObject FromOrderedMap(
+      IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
       IDictionary<CBORObject, CBORObject> oDict;
       oDict = PropertyMap.NewOrderedDict();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {

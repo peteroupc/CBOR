@@ -6879,20 +6879,26 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
     }
 
     private void TestWriteUnchangedFloatBits(int bits) {
+       try {
           using (var ms = new Test.DelayingStream()) {
             byte[] expectedBytes = {
               (byte)0xfa,
               (byte)((bits >> 24) & 0xff),
               (byte)((bits >> 16) & 0xff),
               (byte)((bits >> 8) & 0xff),
-              (byte)(bits & 0xff)
+              (byte)(bits & 0xff),
             };
             CBORObject.WriteFloatingPointBits(ms, bits, 4, true);
             TestCommon.AssertByteArraysEqual(expectedBytes, ms.ToArray());
           }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
     }
 
     private void TestWriteUnchangedDoubleBits(long bits) {
+       try {
           using (var ms = new Test.DelayingStream()) {
             byte[] expectedBytes = {
               (byte)0xfb,
@@ -6903,11 +6909,15 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
               (byte)((bits >> 24) & 0xffL),
               (byte)((bits >> 16) & 0xffL),
               (byte)((bits >> 8) & 0xffL),
-              (byte)(bits & 0xffL)
+              (byte)(bits & 0xffL),
             };
             CBORObject.WriteFloatingPointBits(ms, bits, 8, true);
             TestCommon.AssertByteArraysEqual(expectedBytes, ms.ToArray());
           }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
     }
 
     [Test]
