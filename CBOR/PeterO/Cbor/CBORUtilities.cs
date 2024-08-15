@@ -2,8 +2,7 @@
 Written by Peter O.
 Any copyright to this work is released to the Public Domain.
 In case this is not possible, this work is also
-licensed under Creative Commons Zero (CC0):
-https://creativecommons.org/publicdomain/zero/1.0/
+licensed under the Unlicense: https://unlicense.org/
 
  */
 using System;
@@ -1660,8 +1659,7 @@ longSecondsInDay + ") is not less or equal to 86399");
       }
     }
 
-    public static int SingleToHalfPrecisionIfSameValue(float f) {
-      int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)f), 0);
+    public static int SingleToHalfPrecisionIfSameValue(int bits) {
       int exp = (bits >> 23) & 0xff;
       int mant = bits & 0x7fffff;
       int sign = (bits >> 16) & 0x8000;
