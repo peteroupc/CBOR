@@ -1627,8 +1627,7 @@ sign | RoundedShift(mant | (1L << 52), 29 - (sexp - 1));
       }
     }
 
-    public static int SingleToHalfPrecisionIfSameValue(float f) {
-      int bits = BitConverter.ToInt32(BitConverter.GetBytes((float)f), 0);
+    public static int SingleToHalfPrecisionIfSameValue(int bits) {
       int exp = (bits >> 23) & 0xff;
       int mant = bits & 0x7fffff;
       int sign = (bits >> 16) & 0x8000;

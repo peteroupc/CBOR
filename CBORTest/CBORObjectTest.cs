@@ -6878,6 +6878,49 @@ CBORObject.False.Remove(ToObjectTest.TestToFromObjectRoundTrip("b"));
       }
     }
 
+    private void TestWriteUnchangedFloatBits(int bits) {
+          using (var ms = new Test.DelayingStream()) {
+            byte[] expectedBytes = {
+              (byte)0xfa,
+              (byte)((bits >> 24) & 0xff),
+              (byte)((bits >> 16) & 0xff),
+              (byte)((bits >> 8) & 0xff),
+              (byte)(bits & 0xff)
+            };
+            CBORObject.WriteFloatingPointBits(ms, bits, 4, true);
+            TestCommon.AssertByteArraysEqual(expectedBytes, ms.ToArray());
+          }
+    }
+
+    private void TestWriteUnchangedDoubleBits(long bits) {
+          using (var ms = new Test.DelayingStream()) {
+            byte[] expectedBytes = {
+              (byte)0xfb,
+              (byte)((bits >> 56) & 0xffL),
+              (byte)((bits >> 48) & 0xffL),
+              (byte)((bits >> 40) & 0xffL),
+              (byte)((bits >> 32) & 0xffL),
+              (byte)((bits >> 24) & 0xffL),
+              (byte)((bits >> 16) & 0xffL),
+              (byte)((bits >> 8) & 0xffL),
+              (byte)(bits & 0xffL)
+            };
+            CBORObject.WriteFloatingPointBits(ms, bits, 8, true);
+            TestCommon.AssertByteArraysEqual(expectedBytes, ms.ToArray());
+          }
+    }
+
+    [Test]
+    public void TestWriteSubnormalFloat() {
+      for (var i = 1; i <= 0x1fff; ++i) {
+          this.TestWriteUnchangedFloatBits(i);
+          this.TestWriteUnchangedFloatBits(0x2000 + i);
+          this.TestWriteUnchangedFloatBits(0x4000 + i);
+          this.TestWriteUnchangedFloatBits(0x8000 + i);
+          this.TestWriteUnchangedDoubleBits((long)i);
+      }
+    }
+
     [Test]
     public void TestWriteExtra() {
       try {
