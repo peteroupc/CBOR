@@ -1,5 +1,9 @@
 <package
-><metadata><version>4.5.3</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.5.3
+><metadata><version>4.5.5</version><id>PeterO.Cbor</id><requireLicenseAcceptance>false</requireLicenseAcceptance><releaseNotes>Version 4.5.5
+
+- Fixes a problem that can occur when serializing &apos;float&apos; values in some circumstances
+
+Version 4.5.3
 
 - More bug fixes, including a fix to a problem that can occur when reading from compressed or network streams
 
