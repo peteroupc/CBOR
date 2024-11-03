@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0; net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0; net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>5.0.0-alpha2</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -46,12 +46,12 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
     <DebugType>full</DebugType>
-    <DocumentationFile>bin\Debug\netstandard1.0\CBOR.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\CBOR.xml</DocumentationFile>
 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <DebugType>none</DebugType>
-    <DocumentationFile>bin\Release\netstandard1.0\CBOR.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.0\CBOR.xml</DocumentationFile>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
