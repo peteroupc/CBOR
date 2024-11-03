@@ -33,7 +33,6 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 </PackageReleaseNotes>
     <PackageTags>cbor data serialization binary json</PackageTags>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <Title>CBOR (Concise Binary Object Representation)</Title>
     <PackOnBuild>true</PackOnBuild>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet><PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
@@ -51,10 +50,12 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet></PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <DebugType>none</DebugType>
+    <AssemblyOriginatorKeyFile>PeterO.snk</AssemblyOriginatorKeyFile>
     <DocumentationFile>bin\Release\netstandard2.0\CBOR.xml</DocumentationFile>
   <CodeAnalysisRuleSet>rules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)'=='Debug' ">
+<PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='9.0.0-preview.24454.1'/>  <ItemGroup>
 <None Include="..\README.md" Pack="true" PackagePath="\"/>
   <PackageReference Include="PolySharp" Version="1.13.2">
     <PrivateAssets>all</PrivateAssets>
@@ -68,5 +69,5 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 <PackageReference Include="PeterO.Numbers" Version="1.8.2" />
 
 <PackageReference Include='PeterO.DataUtilities' Version='1.1.0'/>
-<PackageReference Include='Microsoft.CodeAnalysis.NetAnalyzers' PrivateAssets='All' Version='9.0.0'/></ItemGroup>
+</ItemGroup>
                   </Project>
