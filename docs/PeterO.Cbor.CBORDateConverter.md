@@ -298,3 +298,10 @@ Tries to extract the fields of a date and time in the form of a CBOR object.
 <b>Return Value:</b>
 
 Either  `true`  if the method is successful, or  `false`  otherwise.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>year</i>
+ or  <i>lesserFields</i>
+ is null, or contains fewer elements than required.

@@ -45,7 +45,6 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[ToByteIfExact()](#ToByteIfExact)</code> - Converts this number's value to a byte (from 0 to 255) if it can fit in a byte (from 0 to 255) without rounding to a different numerical value.
 * <code>[ToByteUnchecked()](#ToByteUnchecked)</code> - Converts this number's value to an integer by discarding its fractional part, and returns the least-significant bits of its two's-complement form as a byte (from 0 to 255).
 * <code>[ToCBORObject()](#ToCBORObject)</code> - Converts this object's value to a CBOR object.
-* <code>[ToDecimal()](#ToDecimal)</code> - Converts this number's value to a CLR decimal.
 * <code>[ToEDecimal()](#ToEDecimal)</code> - Converts this object to a decimal number.
 * <code>[ToEFloat()](#ToEFloat)</code> - Converts this object to an arbitrary-precision binary floating point number.
 * <code>[ToEInteger()](#ToEInteger)</code> - Converts this object to an arbitrary-precision integer.
@@ -677,22 +676,6 @@ Converts this object's value to a CBOR object.
 <b>Return Value:</b>
 
 A CBOR object that stores this object's value.
-
-<a id="ToDecimal"></a>
-### ToDecimal
-
-    public decimal ToDecimal();
-
-Converts this number's value to a CLR decimal.
-
-<b>Return Value:</b>
-
-This number's value, converted to a decimal as though by  `(decimal)this.ToEDecimal()` .
-
-<b>Exceptions:</b>
-
- * System.OverflowException:
-This value is infinity or not-a-number.
 
 <a id="ToEDecimal"></a>
 ### ToEDecimal
