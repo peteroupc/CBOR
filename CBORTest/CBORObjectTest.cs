@@ -5550,7 +5550,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
 
     [Test]
     [Timeout(10001)]
-    public void TestCalcEncodedSizeCircularRefs3bc() {
+    public void TestCalcEncodedSizeCircularRefs3bc0() {
       CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       _ = cbor.Add(CBORObject.NewOrderedMap().Add("jkl", cbor), "test");
@@ -5563,6 +5563,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+    }
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc1() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       _ = cbor.Add("test", CBORObject.NewOrderedMap().Add("jkl", cbor));
       try {
@@ -5574,6 +5579,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+    }
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc2() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       _ = cbor.Add(CBORObject.NewOrderedMap().Add(cbor, "jkl"), "test");
       try {
@@ -5584,7 +5594,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }
+      }}
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc2a() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       _ = cbor.Add("test", CBORObject.NewOrderedMap().Add(cbor, "jkl"));
       try {
@@ -5595,7 +5609,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }
+      }}
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc3() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = CBORObject.NewOrderedMap().Add(cbor,
@@ -5612,7 +5630,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }
+      }}
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc4() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = "test";
@@ -5628,7 +5650,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }
+      }}
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc5() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = "test";
@@ -5644,7 +5670,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }
+      }}
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc6() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = CBORObject.NewOrderedMap().Add("mno", 1).Add(cbor,
@@ -5660,7 +5690,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }
+      }}
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc7() {
+      CBORObject cbor;
       // No circular refs
       cbor = CBORObject.NewOrderedMap().Add(1, 2).Add(3, 4);
       _ = cbor.Add("test", CBORObject.NewOrderedMap());
@@ -5679,6 +5713,11 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
         _ = cbor.Add(objectTemp, objectTemp2);
       }
       Assert.IsTrue(cbor.CalcEncodedSize() > 2);
+    }
+    [Test]
+    [Timeout(10001)]
+    public void TestCalcEncodedSizeCircularRefs3bc8() {
+      CBORObject cbor;
       cbor = CBORObject.NewOrderedMap().Add("ghi", 2).Add("abc", 4);
       {
         object objectTemp = "test";
