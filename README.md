@@ -133,7 +133,7 @@ Here is an example.
  using (var stream = new MemoryStream(byteArray)) {
     // Read the CBOR object from the stream
     var cbor = CBORObject.Read(stream);
-    // The rest of the example follows the one given above.
+    // The rest of the example follows the one given earlier.
  }
 ```
 
