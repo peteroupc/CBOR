@@ -5594,7 +5594,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }}
+      }
+    }
     [Test]
     [Timeout(10001)]
     public void TestCalcEncodedSizeCircularRefs3bc2a() {
