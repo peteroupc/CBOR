@@ -18,13 +18,13 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0'
+        dotnet-version: '9.0'
     - name: Test
       run: |
         dotnet add CBORTest package Microsoft.NET.Test.Sdk # Update is required for GitHubActionsTestLogger to print anything
         dotnet add CBORTest package GitHubActionsTestLogger
         dotnet add CBORTest package NUnit3TestAdapter
-        dotnet test CBORTest -c Release --blame-hang-timeout 10s -v diag
+        dotnet test CBORTest -c Release --blame-hang-timeout 10s -v d
 
 permissions:
   contents: read
