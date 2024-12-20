@@ -1,6 +1,6 @@
 <Project Sdk='Microsoft.NET.Sdk'>
   <PropertyGroup>
-    <TargetFramework>netcoreapp8.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Configuration)&apos;==&apos;Debug&apos; '>
     <DebugType>full</DebugType>
