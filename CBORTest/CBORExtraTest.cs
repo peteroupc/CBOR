@@ -42,6 +42,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCBORObjectDecimal() {
       var rand = new RandomGenerator();
       for (int i = 0; i <= 28; ++i) {
@@ -142,6 +143,7 @@ ToObjectTest.TestToFromObjectRoundTrip(EFloat.NaN).ToObject<decimal>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestSByte() {
       for (int i = sbyte.MinValue; i <= sbyte.MaxValue; ++i) {
         CBORTestCommon.AssertJSONSer(
@@ -363,6 +365,7 @@ System.Collections.IEnumerable.GetEnumerator() {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCustomFlagsEnum() {
       var cbor = CBORObject.FromObject(CustomBits.A | CustomBits.B);
       Assert.AreEqual(CBORObject.FromInt32(3), cbor);
@@ -375,6 +378,7 @@ System.Collections.IEnumerable.GetEnumerator() {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCustomCollection() {
       var clist = new CustomCollection
       {
@@ -442,6 +446,7 @@ cbor.ToObject<CustomCollectionContainer>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCPOD2() {
       var m = new CPOD2
       {
@@ -575,6 +580,7 @@ select x;
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestArbitraryTypes() {
       var obj = CBORObject.FromObject(new
       {
@@ -661,6 +667,7 @@ from i in RangeExclusive(0, 10)
 
 #if !NET20 && !NET40
     [Test]
+    [Timeout(30000)]
     public void TestReadOnlyCollection() {
       IReadOnlyCollection<int> roc = new ReadOnlyCollection<int>(new int[] {
         0, 1, 99, 2, 3, 99,
@@ -746,6 +753,7 @@ from i in RangeExclusive(0, 10)
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestReadOnlyDictionary() {
       var dict = new Dictionary<string, int>
       {
@@ -794,6 +802,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
 #endif
 
     [Test]
+    [Timeout(30000)]
     public void TestMultidimArray() {
       int[,] arr = { { 0, 1, 99 }, { 2, 3, 299 } };
       var cbor = CBORObject.FromObject(arr);
@@ -826,6 +835,7 @@ expected = CBORObject.NewMap().Add("a", 1).Add("b", 2).Add("c", 3);
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestFloatCloseToEdge() {
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
@@ -6406,6 +6416,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestULong() {
       ulong[] ranges = {
         0, 65539, 0xfffff000UL, 0x100000400UL,
@@ -6464,6 +6475,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestOther() {
       int[,,] arr3 = new int[2, 3, 2];
       var cbor = CBORObject.FromObject(arr3);
@@ -6476,6 +6488,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDivideUnsigned() {
       var fr = new RandomGenerator();
       unchecked {
@@ -6498,6 +6511,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestUInt() {
       uint[] ranges = {
         0, 65539,
@@ -6518,6 +6532,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDecimal() {
       CBORObject cbor = ToObjectTest.TestToFromObjectRoundTrip(
           decimal.MinValue);
@@ -6545,6 +6560,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestUShort() {
       for (int i = ushort.MinValue; i <= ushort.MaxValue; ++i) {
         CBORTestCommon.AssertJSONSer(
@@ -6563,6 +6579,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestToObjectNull() {
       CBORObject cbor = CBORObject.Null;
       Assert.AreEqual(null, (string)cbor.ToObject(typeof(string)));
@@ -6570,6 +6587,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestNullable() {
       int? nvalue = 1;
       var cbor = CBORObject.FromObject((object)nvalue);
@@ -6596,6 +6614,7 @@ ToObjectTest.TestToFromObjectRoundTrip(125.99999f).ToObject<sbyte>();
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDoubleToOther() {
       CBORObject dbl1 =
         ToObjectTest.TestToFromObjectRoundTrip((double)Int32.MinValue);

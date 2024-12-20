@@ -6,6 +6,7 @@ namespace Test {
   [TestFixture]
   public class CBORExceptionTest {
     [Test]
+    [Timeout(30000)]
     public void TestConstructor() {
       try {
         throw new CBORException("Test exception");

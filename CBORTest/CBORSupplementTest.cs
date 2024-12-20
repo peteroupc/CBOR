@@ -16,6 +16,7 @@ namespace Test {
   [TestFixture]
   public partial class CBORSupplementTest {
     [Test]
+    [Timeout(30000)]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
       CBORObject cbor;
@@ -96,6 +97,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void IncorrectBigFloat() {
       byte[] bytes;
       CBORObject cbor;
@@ -176,6 +178,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCBORObjectArgumentValidation() {
       Assert.AreEqual(
         CBORObject.Null,
@@ -232,6 +235,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestIncompleteCBORString() {
       byte[] bytes = { 0x65, 0x41, 0x41, 0x41, 0x41 };
       try {
@@ -246,6 +250,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestIncompleteIndefLengthArray() {
       byte[] bytes;
       bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0 };
@@ -268,6 +273,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestIncompleteIndefLengthMap() {
       // Premature end after value
       byte[] bytes = { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
@@ -301,6 +307,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCyclicRefs() {
       var cbor = CBORObject.NewArray();
       _ = cbor.Add(CBORObject.NewArray());
@@ -320,6 +327,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestNestingDepth() {
       try {
         {
@@ -368,6 +376,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCBOREInteger() {
       var bi = EInteger.FromString("9223372036854775808");
       try {
@@ -420,6 +429,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestEquivalentInfinities() {
       CBORObject co, co2;
       co = ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.DecPosInf);
@@ -434,6 +444,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestSharedRefs() {
       var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
       byte[] bytes;
@@ -464,6 +475,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestBuiltInTags() {
       // As of 4.0, nearly all tags are no longer converted to native objects; thus,
       // DecodeFromBytes no longer fails when such tags are encountered but
@@ -591,6 +603,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestUUID() {
       CBORObject obj =
         ToObjectTest.TestToFromObjectRoundTrip(new Guid(
@@ -632,6 +645,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
     }
 
     // [Test]
+    [Timeout(30000)]
     public static void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0x19, 2 };
@@ -723,6 +737,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestNegativeBigInts() {
       {
         object objectTemp = EInteger.FromString("-257");
@@ -810,6 +825,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestStringRefs() {
       var encodeOptions = new CBOREncodeOptions("resolvereferences=true");
       var cbor = CBORObject.DecodeFromBytes(
@@ -836,6 +852,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestPodCompareTo() {
       var cpod = new CPOD3();
       CBORObject cbor, cbor2;
@@ -853,6 +870,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCPOD() {
       var m = new CPOD
       {

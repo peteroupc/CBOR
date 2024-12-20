@@ -105,6 +105,7 @@ ValueNormalDays[month];
     }
 
     [Test]
+    [Timeout(30000)]
     public void DateConverterRoundTrip() {
       var dtcs = new CBORDateConverter[] {
         CBORDateConverter.TaggedString,

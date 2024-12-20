@@ -6,6 +6,7 @@ namespace Test {
   [TestFixture]
   public class CBORTypeMapperTest {
     [Test]
+    [Timeout(30000)]
     public void TestAddTypeName() {
       var tm = new CBORTypeMapper();
       try {
@@ -35,6 +36,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAddTypePrefix() {
       var tm = new CBORTypeMapper();
       try {

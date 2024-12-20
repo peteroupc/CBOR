@@ -45,6 +45,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestLong() {
       DoTestLong(0);
       DoTestLong(-1);
@@ -55,6 +56,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestList() {
       var beo = CBORObject.NewArray();
       _ = beo.Add(ToObjectTest.TestToFromObjectRoundTrip(1));
@@ -96,6 +98,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDictionary() {
       var beo = CBORObject.NewMap();
       beo["zero"] = ToObjectTest.TestToFromObjectRoundTrip(1);
@@ -137,6 +140,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestString() {
       DoTestString(String.Empty);
       DoTestString(" ");

@@ -10,6 +10,7 @@ namespace Test {
   [TestFixture]
   public class ToObjectTest {
     [Test]
+    [Timeout(30000)]
     public void TestAsEInteger() {
       if (CBORObject.Null.ToObject(typeof(EInteger)) != null) {
         Assert.Fail();
@@ -249,6 +250,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsBoolean() {
       Assert.AreEqual(true, CBORObject.True.ToObject(typeof(bool)));
       {
@@ -272,6 +274,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestNullBoolean() {
       if (CBORObject.Null.ToObject(typeof(bool)) != null) {
         Assert.Fail();
@@ -279,6 +282,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsByte() {
       try {
         _ = CBORObject.NewArray().ToObject(typeof(byte));
@@ -387,6 +391,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsDouble() {
       try {
         _ = CBORObject.NewArray().ToObject(typeof(double));
@@ -461,6 +466,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsEDecimal() {
       {
         object objectTemp = CBORTestCommon.DecPosInf;
@@ -558,6 +564,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsEFloat() {
       {
         object objectTemp = CBORTestCommon.FloatPosInf;
@@ -596,6 +603,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsERational() {
       {
         object objectTemp = CBORTestCommon.RatPosInf;
@@ -637,6 +645,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsInt16() {
       try {
         _ = CBORObject.NewArray().ToObject(typeof(short));
@@ -720,6 +729,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsInt32() {
       try {
         _ = CBORObject.NewArray().ToObject(typeof(int));
@@ -849,6 +859,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsInt64() {
       try {
         _ = CBORObject.NewArray().ToObject(typeof(long));
@@ -979,6 +990,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsSingle() {
       try {
         _ = CBORObject.NewArray().ToObject(typeof(float));
@@ -1054,6 +1066,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsString() {
       {
         var stringTemp = (string)ToObjectTest.TestToFromObjectRoundTrip("test")
@@ -1117,6 +1130,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestToObjectFieldClass() {
       var fc = new FieldClass();
       var co = CBORObject.FromObject(fc);
@@ -1138,6 +1152,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestToObjectDictStringString() {
       CBORObject cbor = CBORObject.NewMap().Add("a", "b").Add("c", "d");
       var stringDict = (Dictionary<string, string>)cbor.ToObject(
@@ -1149,6 +1164,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
       Assert.AreEqual("d", stringDict["c"]);
     }
     [Test]
+    [Timeout(30000)]
     public void TestToObjectIDictStringString() {
       CBORObject cbor = CBORObject.NewMap().Add("a", "b").Add("c", "d");
       var stringDict2 = (IDictionary<string, string>)cbor.ToObject(
@@ -1254,6 +1270,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestShortRoundTrip() {
       for (int i = -32768; i < 32768; ++i) {
         var c = (short)i;
@@ -1262,6 +1279,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCharRoundTrip() {
       for (int i = 0; i < 0x10000; ++i) {
         var c = (char)i;
@@ -1301,6 +1319,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDateRoundTrip() {
       var rand = new RandomGenerator();
       for (int i = 0; i < 5000; ++i) {
@@ -1314,6 +1333,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDateRoundTripNumber() {
       var rand = new RandomGenerator();
       var typemapper = new CBORTypeMapper().AddConverter(
@@ -1339,6 +1359,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDateRoundTripUntaggedNumber() {
       var rand = new RandomGenerator();
       var typemapper = new CBORTypeMapper().AddConverter(
@@ -1364,6 +1385,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestBadDate() {
       var cbor = CBORObject.FromCBORObjectAndTag(
           CBORObject.FromString("2000-1-01T00:00:00Z"),
@@ -1440,6 +1462,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestUriRoundTrip() {
       try {
         var uri = new Uri("http://example.com/path/path2?query#fragment");
@@ -1470,6 +1493,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCBORTypeMapper() {
       var cp = new CPOD3
       {
@@ -1569,6 +1593,7 @@ ToObjectTest.TestToFromObjectRoundTrip(false).ToObject(typeof(string));
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestUUIDRoundTrip() {
       var rng = new RandomGenerator();
       for (int i = 0; i < 500; ++i) {

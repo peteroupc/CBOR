@@ -12,6 +12,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestPreserveNegativeZero() {
       CBORObject cbor;
       var pnz = new
@@ -82,6 +83,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
 
     // testing obsolete method
     [Test]
+    [Timeout(30000)]
     public void TestParseJSONNumberSubstring() {
       string tstr =
 
@@ -99,6 +101,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestParseJSONNumberNegativeZero() {
       var strings = new string[] {
         "-0", "0", "-0E+0", "0", "-0E-0", "0", "-0E-1", "0.0",
@@ -151,6 +154,7 @@ JSONOptions("numberconversion=full;preservenegativezero=true");
     };
 
     [Test]
+    [Timeout(30000)]
     public void TestParseJSONNumber() {
       foreach (string str in BadJsonNumbers) {
         if (CBORDataUtilities.ParseJSONNumber(str) != null) {

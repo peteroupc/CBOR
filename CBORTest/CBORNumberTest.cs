@@ -12,6 +12,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAbs() {
       TestCommon.CompareTestEqual(
         ToCN(2),
@@ -41,26 +42,31 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestToCBORObject() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestFromCBORObject() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestToString() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCanFitInInt32() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCanFitInInt64() {
       Assert.IsTrue(CBORObject.FromInt32(0).AsNumber().CanFitInInt64());
       Assert.IsTrue(CBORObject.FromInt32(99).AsNumber().CanFitInInt64());
@@ -70,6 +76,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCanFitInUInt64() {
       Assert.IsTrue(CBORObject.FromInt32(0).AsNumber().CanFitInUInt64(), "0");
       Assert.IsTrue(
@@ -109,6 +116,7 @@ namespace Test {
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCanTruncatedIntFitInUInt64() {
       Assert.IsTrue(
         CBORObject.FromInt32(0).AsNumber().CanTruncatedIntFitInUInt64(),
@@ -153,6 +161,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestIsInfinity() {
       Assert.IsFalse(CBORObject.FromInt32(0).AsNumber().IsInfinity());
       Assert.IsFalse(CBORObject.FromInt32(99).AsNumber().IsInfinity());
@@ -162,6 +171,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestIsNaN() {
       Assert.IsFalse(CBORObject.FromInt32(0).AsNumber().IsNaN());
       Assert.IsFalse(CBORObject.FromInt32(99).AsNumber().IsNaN());
@@ -173,16 +183,19 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestNegate() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAdd() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestSubtract() {
       // not implemented yet
     }
@@ -192,6 +205,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestMultiply() {
       try {
         _ = ToCN(2).Multiply(null);
@@ -221,6 +235,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestDivide() {
       try {
         _ = ToCN(2).Divide(null);
@@ -234,6 +249,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestRemainder() {
       try {
         _ = ToCN(2).Remainder(null);
@@ -247,36 +263,43 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestCompareTo() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestLessThan() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestLessThanOrEqual() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestGreaterThan() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestGreaterThanOrEqual() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestGetType() {
       // not implemented yet
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsEInteger() {
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
@@ -539,6 +562,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsEDecimal() {
       {
         object objectTemp = CBORTestCommon.DecPosInf;
@@ -637,6 +661,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsEFloat() {
       {
         object objectTemp = CBORTestCommon.FloatPosInf;
@@ -671,6 +696,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestAsERational() {
       {
         object objectTemp = CBORTestCommon.RatPosInf;
@@ -711,6 +737,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     }
 
     [Test]
+    [Timeout(30000)]
     public void TestEncodingZeros() {
         TestCommon.CompareTestEqual(ToCN(0.0), ToCN(-0.0).Abs());
         TestCommon.CompareTestEqual(ToCN(0.0f), ToCN(-0.0f).Abs());
