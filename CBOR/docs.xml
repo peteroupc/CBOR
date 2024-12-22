@@ -6876,7 +6876,7 @@
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">
 
-            <summary>Contains utility methods that may have use outside of the
+            <summary>Contains auxiliary methods that may have use outside of the
             CBORObject class.</summary>
 
 </doc>
@@ -7709,7 +7709,7 @@
 
 </doc>
 <doc name="T:PeterO.Cbor.URIUtility">
-<summary>Contains utility methods for processing Uniform Resource Identifiers
+<summary>Contains auxiliary methods for processing Uniform Resource Identifiers
       (URIs) and Internationalized Resource Identifiers (IRIs) under RFC3986 and
       RFC3987, respectively. In the following documentation, URIs and IRIs
       include URI references and IRI references, for convenience.

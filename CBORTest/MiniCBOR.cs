@@ -113,14 +113,14 @@ count);
         } else if (b == 0xdb) {
           stream.Position += 8;
         } else if (b > 0xdb) {
-          throw new IOException("Not a boolean");
+          throw new IOException("Not a Boolean");
         }
         b = stream.ReadByte();
       }
       return b switch {
         0xf4 => false,
         0xf5 => true,
-        _ => throw new IOException("Not a boolean"),
+        _ => throw new IOException("Not a Boolean"),
       };
     }
 

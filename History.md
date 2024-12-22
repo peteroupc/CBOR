@@ -93,7 +93,7 @@ The features in this version include:
 
 - The CBOR library no longer stores numbers in a special form beyond the CBOR data model, which represents all "65-bit" signed integers and all "double" values.  This means the CBOR library no longer stores certain numbers as EDecimal, EInteger, EFloat, etc., rather than as tagged CBOR objects.
 - CBORObject.CompareTo now compares objects using the default deterministic encoding comparison in the draft revision of the CBOR specification, and no longer treats numbers (objects with the former type CBORType.Number) as a special class.
-- CBORType.Number is deprecated; CBORObjects no longer have this type.  In its place, certain numbers now have new CBORTypes Integer or FloatingPoint.
+- CBORType.Number is obsolete; CBORObjects no longer have this type.  In its place, certain numbers now have new CBORTypes Integer or FloatingPoint.
 - CBORObject now stores floating-point numbers internally as the bits that make them up, rather than as `double`s, to avoid data loss in conversions.
 - Methods were added to CBORObject to read and write floating-point numbers in terms of their bit patterns rather than as `double`s or `float`s.
 - Ctap2Canonical was made more strict and now works when decoding CBOR objects.
@@ -136,7 +136,7 @@ The features in this version include:
 
 - Add new string constructors to CBOREncodeOptions, JSONOptions, and PODOptions
 - Implement options to disable resolving shared references and allow empty streams when decoding CBOR objects
-- Add IsNumber property to CBORObject to check whether a CBOR object stores a number; CBORType.Number is deprecated
+- Add IsNumber property to CBORObject to check whether a CBOR object stores a number; CBORType.Number is obsolete
 
 ### Version 3.5.2
 
@@ -320,7 +320,7 @@ as well.
 In version 1.3:
 
 - Added a CompareToIgnoreTags method to CBORObject
-- The BigInteger constructor in the C# version is deprecated
+- The BigInteger constructor in the C# version is obsolete
 - Fixed bugs in converting from CBOR float and double to integers in some corner cases
 - Fixed a bug where CBORObject's OutermostTag returns 0 instead of the correct -1 for untagged objects
 - Fixed a bug where BigInteger's bitLength return value can be wrong in some corner cases
