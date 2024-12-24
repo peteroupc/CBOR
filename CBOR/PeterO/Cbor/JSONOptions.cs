@@ -112,24 +112,24 @@ namespace PeterO.Cbor {
     /// The following is an example of this parameter:
     /// <c>writebasic=false;replacesurrogates=true</c>. The key can be any
     /// one of the following where the letters can be any combination of
-    /// basic upper-case and/or basic lower-case letters:
+    /// basic uppercase and/or basic lowercase letters:
     /// <c>replacesurrogates</c>, <c>allowduplicatekeys</c>,
     /// <c>preservenegativezero</c>, <c>numberconversion</c>,
     /// <c>writebasic</c>, <c>keepkeyorder</c>. Other keys are ignored in
     /// this version of the CBOR library. (Keys are compared using a basic
     /// case-insensitive comparison, in which two strings are equal if they
-    /// match after converting the basic upper-case letters A to Z (U+0041
-    /// to U+005A) in both strings to basic lower-case letters.) If two or
+    /// match after converting the basic uppercase letters A to Z (U+0041
+    /// to U+005A) in both strings to basic lowercase letters.) If two or
     /// more key/value pairs have equal keys (in a basic case-insensitive
     /// comparison), the value given for the last such key is used. The
     /// first four keys just given can have a value of <c>1</c>,
     /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-    /// any combination of basic upper-case and/or basic lower-case
-    /// letters), which means true, and any other value meaning false. The
-    /// last key, <c>numberconversion</c>, can have a value of any name
-    /// given in the <c>JSONOptions.ConversionMode</c> enumeration (where
-    /// the letters can be any combination of basic upper-case and/or basic
-    /// lower-case letters), and any other value is unrecognized. (If the
+    /// any combination of basic uppercase and/or basic lowercase letters),
+    /// which means true, and any other value meaning false. The last key,
+    /// <c>numberconversion</c>, can have a value of any name given in the
+    /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
+    /// can be any combination of basic uppercase and/or basic lowercase
+    /// letters), and any other value is unrecognized. (If the
     /// <c>numberconversion</c> key is not given, its value is treated as
     /// <c>intorfloat</c> (formerly <c>full</c> in versions earlier than
     /// 5.0). If that key is given, but has an unrecognized value, an

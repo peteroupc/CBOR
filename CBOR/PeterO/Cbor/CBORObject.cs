@@ -1188,7 +1188,7 @@ CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
     ///  ) or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <returns>The converted object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>The given type
     /// <paramref name='t'/> , or this object's CBOR type, is not
@@ -1235,7 +1235,7 @@ CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
     /// <c>String</c> ) or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <param name='mapper'>This parameter controls which data types are
     /// eligible for Plain-Old-Data deserialization and includes custom
     /// converters from CBOR objects to certain data types.</param>
@@ -1267,7 +1267,7 @@ ArgumentNullException(nameof(mapper)) : this.ToObject(t, mapper, null, 0);
     /// <c>String</c> ) or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <param name='options'>Specifies options for controlling
     /// deserialization of CBOR objects.</param>
     /// <returns>The converted object.</returns>
@@ -1546,7 +1546,7 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// ignored.</item>
     ///  <item>(*) In the Java version, eligible setters are
     /// public, nonstatic methods starting with "set" followed by a
-    /// character other than a basic digit or lower-case letter, that is,
+    /// character other than a basic digit or lowercase letter, that is,
     /// other than "a" to "z" or "0" to "9", that take one parameter. The
     /// class containing an eligible setter must have a public, nonstatic
     /// method with the same name, but starting with "get" or "is" rather
@@ -1581,7 +1581,7 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     ///  , or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <param name='mapper'>This parameter controls which data types are
     /// eligible for Plain-Old-Data deserialization and includes custom
     /// converters from CBOR objects to certain data types. Can be
@@ -1650,7 +1650,7 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <param name='mapper'>This parameter controls which data types are
     /// eligible for Plain-Old-Data deserialization and includes custom
     /// converters from CBOR objects to certain data types. Can be
@@ -1705,7 +1705,7 @@ DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
     /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <returns>An object of the given type decoded from the given byte
     /// array. Returns null (as opposed to CBORObject.Null) if <paramref
     /// name='data'/> is empty and the AllowEmpty property is set on the
@@ -1744,7 +1744,7 @@ DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
     /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <param name='mapper'>This parameter controls which data types are
     /// eligible for Plain-Old-Data deserialization and includes custom
     /// converters from CBOR objects to certain data types. Can be
@@ -1791,7 +1791,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// <c>String</c>, or a plain-old-data type (POCO or POJO type) within
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
-    /// either criterion above.</param>
+    /// either criterion given earlier.</param>
     /// <returns>An object of the given type decoded from the given byte
     /// array. Returns null (as opposed to CBORObject.Null) if <paramref
     /// name='data'/> is empty and the AllowEmpty property is set on the
@@ -2759,7 +2759,7 @@ FromCBORArray(array);
     ///  <item>(*) In
     /// the Java version, eligible getters are public, nonstatic methods
     /// starting with "get" or "is" (either word followed by a character
-    /// other than a basic digit or lower-case letter, that is, other than
+    /// other than a basic digit or lowercase letter, that is, other than
     /// "a" to "z" or "0" to "9"), that take no parameters and do not
     /// return void, except that methods named "getClass" are not eligible
     /// getters. In addition, public, nonstatic, nonfinal fields are also
@@ -5245,7 +5245,7 @@ this.ContainsKey(CBORObject.FromObject(objKey));
     /// <list>
     /// <item>"op" - Required. This key's value is the patch operation and
     /// must be "add", "remove", "move", "copy", "test", or "replace", in
-    /// basic lower case letters and no other case combination.</item>
+    /// basic lowercase letters and no other case combination.</item>
     /// <item>"value" - Required if the operation is "add", "replace", or
     /// "test" and specifies the item to add (insert), or that will replace
     /// the existing item, or to check an existing item for equality,
@@ -7687,7 +7687,7 @@ CBORObjectTypeTextStringAscii)) {
         } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
             // Write bytes retrieved so far - the next two bytes
-            // would exceed the length, and the CBOR spec forbids
+            // would exceed the length, and the CBOR specification forbids
             // splitting characters when generating text strings
             if (!streaming) {
               stream.WriteByte(0x7f);
@@ -7712,7 +7712,7 @@ CBORObjectTypeTextStringAscii)) {
           if (c <= 0xffff) {
             if (byteIndex + 3 > StreamedStringBufferLength) {
               // Write bytes retrieved so far - the next three bytes
-              // would exceed the length, and the CBOR spec forbids
+              // would exceed the length, and the CBOR specification forbids
               // splitting characters when generating text strings
               if (!streaming) {
                 stream.WriteByte(0x7f);
@@ -7728,7 +7728,7 @@ CBORObjectTypeTextStringAscii)) {
           } else {
             if (byteIndex + 4 > StreamedStringBufferLength) {
               // Write bytes retrieved so far - the next four bytes
-              // would exceed the length, and the CBOR spec forbids
+              // would exceed the length, and the CBOR specification forbids
               // splitting characters when generating text strings
               if (!streaming) {
                 stream.WriteByte(0x7f);

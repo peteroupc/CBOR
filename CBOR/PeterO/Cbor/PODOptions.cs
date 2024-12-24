@@ -36,22 +36,22 @@ namespace PeterO.Cbor {
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
     /// <c>usecamelcase=true</c>. The key can be any one of the following
-    /// where the letters can be any combination of basic upper-case and/or
-    /// basic lower-case letters: <c>usecamelcase</c>. Other keys are
+    /// where the letters can be any combination of basic uppercase and/or
+    /// basic lowercase letters: <c>usecamelcase</c>. Other keys are
     /// ignored in this version of the CBOR library. (Keys are compared
     /// using a basic case-insensitive comparison, in which two strings are
-    /// equal if they match after converting the basic upper-case letters A
-    /// to Z (U+0041 to U+005A) in both strings to basic lower-case
+    /// equal if they match after converting the basic uppercase letters A
+    /// to Z (U+0041 to U+005A) in both strings to basic lowercase
     /// letters.) If two or more key/value pairs have equal keys (in a
     /// basic case-insensitive comparison), the value given for the last
     /// such key is used. The key just given can have a value of <c>1</c>,
     /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-    /// any combination of basic upper-case and/or basic lower-case
-    /// letters), which means true, and any other value meaning false. For
-    /// example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set
-    /// the <c>UseCamelCase</c> property to true. In the future, this class
-    /// may allow other keys to store other kinds of values, not just true
-    /// or false.</param>
+    /// any combination of basic uppercase and/or basic lowercase letters),
+    /// which means true, and any other value meaning false. For example,
+    /// <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set the
+    /// <c>UseCamelCase</c> property to true. In the future, this class may
+    /// allow other keys to store other kinds of values, not just true or
+    /// false.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='paramString'/> is null.</exception>
     public PODOptions(string paramString) {
@@ -85,9 +85,9 @@ namespace PeterO.Cbor {
     /// follows. If "useCamelCase" is <c>false</c> :</para>
     /// <list>
     /// <item>In the .NET version, all key names are capitalized, meaning
-    /// the first letter in the name is converted to a basic upper-case
-    /// letter if it's a basic lower-case letter ("a" to "z"). (For
-    /// example, "Name" and "IsName" both remain unchanged.)</item>
+    /// the first letter in the name is converted to a basic uppercase
+    /// letter if it's a basic lowercase letter ("a" to "z"). (For example,
+    /// "Name" and "IsName" both remain unchanged.)</item>
     /// <item>In the Java version, all field names are capitalized, and for
     /// each eligible method name, the word "get" or "set" is removed from
     /// the name if the name starts with that word, then the name is
@@ -98,10 +98,10 @@ namespace PeterO.Cbor {
     /// <item>In the .NET version, for each eligible property or field
     /// name, the word "Is" is removed from the name if the name starts
     /// with that word, then the name is converted to camel case, meaning
-    /// the first letter in the name is converted to a basic lower-case
-    /// letter if it's a basic upper-case letter ("A" to "Z"). (For
-    /// example, "Name" and "IsName" both become "name", and "IsIsName"
-    /// becomes "isName".)</item>
+    /// the first letter in the name is converted to a basic lowercase
+    /// letter if it's a basic uppercase letter ("A" to "Z"). (For example,
+    /// "Name" and "IsName" both become "name", and "IsIsName" becomes
+    /// "isName".)</item>
     /// <item>In the Java version: For each eligible method name, the word
     /// "get", "set", or "is" is removed from the name if the name starts
     /// with that word, then the name is converted to camel case. (For
@@ -112,7 +112,7 @@ namespace PeterO.Cbor {
     /// "name".)</item></list>
     /// <para>In the description above, a name "starts with" a word if that
     /// word begins the name and is followed by a character other than a
-    /// basic digit or basic lower-case letter, that is, other than "a" to
+    /// basic digit or basic lowercase letter, that is, other than "a" to
     /// "z" or "0" to "9".</para></summary>
     /// <value><c>true</c> If the names are converted to camel case;
     /// otherwise, <c>false</c>. This property is <c>true</c> by

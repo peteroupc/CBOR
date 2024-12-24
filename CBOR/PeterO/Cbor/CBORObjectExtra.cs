@@ -374,7 +374,7 @@ FromEDecimal((EDecimal)value);
     /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
     /// (POCO or POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
@@ -399,7 +399,7 @@ FromEDecimal((EDecimal)value);
     /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
     /// (POCO or POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
@@ -423,7 +423,7 @@ FromEDecimal((EDecimal)value);
     /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
     /// (POCO or POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
@@ -450,7 +450,7 @@ FromEDecimal((EDecimal)value);
     /// (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
     /// (POCO or POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>The converted object.</returns>
     /// <exception cref='NotSupportedException'>The given type "T", or this
     /// object's CBOR type, is not supported.</exception>
@@ -485,7 +485,7 @@ FromEDecimal((EDecimal)value);
     /// <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
     /// POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>An object of the given type decoded from the given byte
     /// array. Returns null (as opposed to CBORObject.Null) if <paramref
     /// name='data'/> is empty and the AllowEmpty property is set on the
@@ -530,7 +530,7 @@ FromEDecimal((EDecimal)value);
     /// such as <c>int</c> or <c>String</c>, or a plain-old-data type
     /// (POCO or POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>An object of the given type decoded from the given byte
     /// array. Returns null (as opposed to CBORObject.Null) if <paramref
     /// name='data'/> is empty and the AllowEmpty property is set on the
@@ -573,7 +573,7 @@ enc) {
     /// <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
     /// POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>An object of the given type decoded from the given byte
     /// array. Returns null (as opposed to CBORObject.Null) if <paramref
     /// name='data'/> is empty and the AllowEmpty property is set on the
@@ -612,7 +612,7 @@ enc) {
     /// <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
     /// POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
-    /// likewise meet either criterion above.</typeparam>
+    /// likewise meet either criterion given earlier.</typeparam>
     /// <returns>An object of the given type decoded from the given byte
     /// array. Returns null (as opposed to CBORObject.Null) if <paramref
     /// name='data'/> is empty and the AllowEmpty property is set on the

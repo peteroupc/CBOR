@@ -338,7 +338,7 @@ namespace Test {
       for (int i = 0; i < dict.Count; ++i) {
         object di = dict[i];
         var value = di as IDictionary<string, object>;
-        // A list contains only indexes 0, 1, 2, and so on,
+        // A list contains only integer indices,
         // with no gaps.
         if (IsList(value)) {
           IList<object> newList = ConvertToList(value);
@@ -360,7 +360,7 @@ namespace Test {
       foreach (string key in new List<string>(dict.Keys)) {
         object di = dict[key];
         var value = di as IDictionary<string, object>;
-        // A list contains only indexes 0, 1, 2, and so on,
+        // A list contains only integer indices,
         // with no gaps.
         if (IsList(value)) {
           IList<object> newList = ConvertToList(value);

@@ -3,7 +3,7 @@ Release notes
 
 ### Version 4.5.3
 
-- More bug fixes, including a fix to a problem that can occur when reading from compressed or network streams
+- More issue fixes, including a fix to a problem that can occur when reading from compressed or network streams
 - Fix issue that floating-point positive and negative zero are not encoded in the shortest form by default
 
 ### Version 4.5.2
@@ -40,14 +40,14 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 - CBORDateConverter made public and expanded to enable conversion between various
   date/time formats and CBOR objects
 - Added CanFitInUInt64 and CanTruncatedIntFitInUInt64 methods
-- Bug fixes
+- Issue fixes
 
 ### Version 4.3
 
 - Fixed bugs in DateTime support
 - Added CompareTo overloads in CBORNumber class
 - Add NewOrderedMap method based on a suggestion by a GitHub user
-- Other bug fixes
+- Other issue fixes
 
 ### Version 4.2
 
@@ -55,7 +55,7 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 - Add char array and byte array overloads to ParseJSONNumber
 - Support implementations of IList in CBORObject deserialization
 - Internally, the code avoids storing doubles (64-bit floating-point numbers) directly in CBORNumbers, uses sorted maps rather than hash tables in some CBOR objects, and can now store text strings as UTF-8 byte arrays.  This could help avoid unnecessary string conversions in many cases.
-- Bug fixes and performance improvements
+- Issue fixes and performance improvements
 - Now uses Numbers library version 1.7.3
 
 ### Version 4.1.1
@@ -76,7 +76,7 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 - Deprecated many CBORObject properties and methods, including the following: CanFitInInt32, CanFitInInt64, IsInfinity, IsNaN, AsDecimal, AsEInteger, AsEFloat, AsERational, AsUInt16, AsUInt32, AsUInt64, AsSByte, AsByte, Abs, Negate, Sign, IsPositiveInfinity, IsNegativeInfinity, FromJSONString(string, CBOREncodeOptions)
 - Added several methods and properties to CBORNumber (including certain methods deprecated in CBORObject), and exposed the kind of number stored in the class.
 - JSONOptions string constructor now sets ReplaceSurrogates to false by default (previously, it was inadvertently true).
-- Bug fixes
+- Issue fixes
 
 ### Version 4.0.1:
 
@@ -99,7 +99,7 @@ The features in this version include:
 - Ctap2Canonical was made more strict and now works when decoding CBOR objects.
 - Added ReadSequence and DecodeSequence to CBORObject for reading CBOR sequences.
 - New CBORNumber class for storing numbers representable in CBOR.  The new CBORObject.IsNumber property checks whether a CBOR object represents a number.
-- Bug fixes
+- Issue fixes
 
 ### Version 4.0.0-beta1:
 
@@ -177,7 +177,7 @@ No significant changes from beta1.
 - Added Clear, RemoveAt and Remove(object) methods to CBORObject class.  Formerly, it was very hard with existing methods to remove items from CBOR maps and arrays.
 - Added CodePointLength and ToUpperCaseAscii methods to DataUtilities class.
 - Added WriteValue family of methods to CBORObject class.  This can be used for lower-level encoding of CBOR objects.  Examples on its use were included in the documentation.
-- Bug fixes.
+- Issue fixes.
 
 ### Version 3.2.1
 
@@ -211,7 +211,7 @@ No significant changes from beta1.
 - Hash code calculation was changed in this version
 - Deprecated OutermostTag in favor of MostOuterTag in CBORObject
 - Deprecated InnermostTag in favor of MostInnerTag in CBORObject
-- Bug fixes
+- Issue fixes
 
 ### Version 2.5.2
 
@@ -280,7 +280,7 @@ environments such as the upcoming cross-platform "coreclr" runtime.
 - Fixed line break bug when setting lenientLineBreaks to true in the PeterO.Cbor.DataUtilities.WriteUtf8 method
 - In BigInteger, fixed divideAndRemainder method, added certain methods and made other methods obsolete
 - Many additions to the documentation
-- Other bug fixes
+- Other issue fixes
 
 In version 2.2:
 - Portable Class Library compatibility expanded
@@ -298,7 +298,7 @@ In version 2.1:
   of ExtendedDecimal
 - Added Odd and OddOrZeroFiveUp rounding modes
 - Added non-decimal base conversion features to BigInteger
-- Other bug fixes
+- Other issue fixes
 
 In version 2.0:
 
@@ -330,7 +330,7 @@ In version 1.2:
 - The WriteJSON and WriteJSONTo methods were added to CBORObject
 - Bugs were fixed in the Set and Add methods of CBORObject
 
-In version 1.1 there were many additions and bug fixes in arbitrary-precision
+In version 1.1 there were many additions and issue fixes in arbitrary-precision
 arithmetic, including:
 
 - Added unchecked versions of intValue and longValue in BigInteger

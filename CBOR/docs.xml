@@ -770,7 +770,7 @@
             The following is an example of this parameter:
             <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
             any one of the following where the letters can be any combination
-            of basic upper-case and/or basic lower-case letters:
+            of basic uppercase and/or basic lowercase letters:
             <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
             <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
             <c>allowempty</c>, <c>float64</c>, <c>keepkeyorder</c>. Keys
@@ -779,13 +779,13 @@
             library. The key <c>keepkeyorder</c> was introduced in version 4.5
             of this library.(Keys are compared using a basic case-insensitive
             comparison, in which two strings are equal if they match after
-            converting the basic upper-case letters A to Z (U+0041 to U+005A)
-            in both strings to basic lower-case letters.) If two or more
+            converting the basic uppercase letters A to Z (U+0041 to U+005A)
+            in both strings to basic lowercase letters.) If two or more
             key/value pairs have equal keys (in a basic case-insensitive
             comparison), the value given for the last such key is used. The
             four keys just given can have a value of <c>1</c>, <c>true</c>,
             <c>yes</c>, or <c>on</c> (where the letters can be any combination
-            of basic upper-case and/or basic lower-case letters), which means
+            of basic uppercase and/or basic lowercase letters), which means
             true, and any other value meaning false. For example,
             <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
             set the <c>AllowDuplicateKeys</c> property to true. In the future,
@@ -1995,7 +1995,7 @@
             <list>
             <item>"op" - Required. This key's value is the patch operation and
             must be "add", "remove", "move", "copy", "test", or "replace", in
-            basic lower case letters and no other case combination.</item>
+            basic lowercase letters and no other case combination.</item>
             <item>"value" - Required if the operation is "add", "replace", or
             "test" and specifies the item to add (insert), or that will replace
             the existing item, or to check an existing item for equality,
@@ -3992,7 +3992,7 @@
              <item>(*) In
             the Java version, eligible getters are public, nonstatic methods
             starting with "get" or "is" (either word followed by a character
-            other than a basic digit or lower-case letter, that is, other than
+            other than a basic digit or lowercase letter, that is, other than
             "a" to "z" or "0" to "9"), that take no parameters and do not
             return void, except that methods named "getClass" are not eligible
             getters. In addition, public, nonstatic, nonfinal fields are also
@@ -5434,7 +5434,7 @@
             ignored.</item>
              <item>(*) In the Java version, eligible setters are
             public, nonstatic methods starting with "set" followed by a
-            character other than a basic digit or lower-case letter, that is,
+            character other than a basic digit or lowercase letter, that is,
             other than "a" to "z" or "0" to "9", that take one parameter. The
             class containing an eligible setter must have a public, nonstatic
             method with the same name, but starting with "get" or "is" rather
@@ -7248,24 +7248,24 @@
             The following is an example of this parameter:
             <c>base64padding=false;replacesurrogates=true</c>. The key can be
             any one of the following where the letters can be any combination
-            of basic upper-case and/or basic lower-case letters:
+            of basic uppercase and/or basic lowercase letters:
             <c>base64padding</c>, <c>replacesurrogates</c>,
             <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
             <c>numberconversion</c>, <c>writebasic</c>, <c>keepkeyorder</c>.
             Other keys are ignored in this version of the CBOR library. (Keys
             are compared using a basic case-insensitive comparison, in which
             two strings are equal if they match after converting the basic
-            upper-case letters A to Z (U+0041 to U+005A) in both strings to
-            basic lower-case letters.) If two or more key/value pairs have
+            uppercase letters A to Z (U+0041 to U+005A) in both strings to
+            basic lowercase letters.) If two or more key/value pairs have
             equal keys (in a basic case-insensitive comparison), the value
             given for the last such key is used. The first four keys just given
             can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
             <c>on</c> (where the letters can be any combination of basic
-            upper-case and/or basic lower-case letters), which means true, and
+            uppercase and/or basic lowercase letters), which means true, and
             any other value meaning false. The last key,
             <c>numberconversion</c>, can have a value of any name given in the
             <c>JSONOptions.ConversionMode</c> enumeration (where the letters
-            can be any combination of basic upper-case and/or basic lower-case
+            can be any combination of basic uppercase and/or basic lowercase
             letters), and any other value is unrecognized. (If the
             <c>numberconversion</c> key is not given, its value is treated as
             <c>intorfloat</c> (formerly <c>full</c> in versions earlier than
@@ -7619,17 +7619,17 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>usecamelcase=true</c>. The key can be any one of the following
-            where the letters can be any combination of basic upper-case and/or
-            basic lower-case letters: <c>usecamelcase</c>. Other keys are
+            where the letters can be any combination of basic uppercase and/or
+            basic lowercase letters: <c>usecamelcase</c>. Other keys are
             ignored in this version of the CBOR library. (Keys are compared
             using a basic case-insensitive comparison, in which two strings are
-            equal if they match after converting the basic upper-case letters A
-            to Z (U+0041 to U+005A) in both strings to basic lower-case
+            equal if they match after converting the basic uppercase letters A
+            to Z (U+0041 to U+005A) in both strings to basic lowercase
             letters.) If two or more key/value pairs have equal keys (in a
             basic case-insensitive comparison), the value given for the last
             such key is used. The key just given can have a value of <c>1</c>,
             <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-            any combination of basic upper-case and/or basic lower-case
+            any combination of basic uppercase and/or basic lowercase
             letters), which means true, and any other value meaning false. For
             example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set
             the <c>UseCamelCase</c> property to true. In the future, this class
@@ -7669,8 +7669,8 @@
             follows. If "useCamelCase" is <c>false</c> :</para>
             <list>
             <item>In the .NET version, all key names are capitalized, meaning
-            the first letter in the name is converted to a basic upper-case
-            letter if it's a basic lower-case letter ("a" to "z"). (For
+            the first letter in the name is converted to a basic uppercase
+            letter if it's a basic lowercase letter ("a" to "z"). (For
             example, "Name" and "IsName" both remain unchanged.)</item>
             <item>In the Java version, all field names are capitalized, and for
             each eligible method name, the word "get" or "set" is removed from
@@ -7682,8 +7682,8 @@
             <item>In the .NET version, for each eligible property or field
             name, the word "Is" is removed from the name if the name starts
             with that word, then the name is converted to camel case, meaning
-            the first letter in the name is converted to a basic lower-case
-            letter if it's a basic upper-case letter ("A" to "Z"). (For
+            the first letter in the name is converted to a basic lowercase
+            letter if it's a basic uppercase letter ("A" to "Z"). (For
             example, "Name" and "IsName" both become "name", and "IsIsName"
             becomes "isName".)</item>
             <item>In the Java version: For each eligible method name, the word
@@ -7696,7 +7696,7 @@
             "name".)</item></list>
             <para>In the description above, a name "starts with" a word if that
             word begins the name and is followed by a character other than a
-            basic digit or basic lower-case letter, that is, other than "a" to
+            basic digit or basic lowercase letter, that is, other than "a" to
             "z" or "0" to "9".</para></summary>
             <value><c>true</c> If the names are converted to camel case; otherwise, <c>false</c>. This property is <c>true</c> by
             default.</value>
@@ -8314,8 +8314,8 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.ToLowerCaseAscii(System.String)">
-<summary>Returns a string with the basic upper-case letters A to Z
-            (U+0041 to U+005A) converted to the corresponding basic lower-case
+<summary>Returns a string with the basic uppercase letters A to Z
+            (U+0041 to U+005A) converted to the corresponding basic lowercase
             letters. Other characters remain unchanged.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -8323,8 +8323,8 @@
             null.</returns>
 </doc>
 <doc name="M:PeterO.DataUtilities.ToUpperCaseAscii(System.String)">
-<summary>Returns a string with the basic lower-case letters A to Z
-            (U+0061 to U+007A) converted to the corresponding basic upper-case
+<summary>Returns a string with the basic lowercase letters A to Z
+            (U+0061 to U+007A) converted to the corresponding basic uppercase
             letters. Other characters remain unchanged.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>

@@ -72,7 +72,7 @@ namespace PeterO.Cbor {
     /// The following is an example of this parameter:
     /// <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
     /// any one of the following where the letters can be any combination
-    /// of basic upper-case and/or basic lower-case letters:
+    /// of basic uppercase and/or basic lowercase letters:
     /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
     /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
     /// <c>allowempty</c>, <c>float64</c>, <c>keepkeyorder</c>. Keys
@@ -81,14 +81,14 @@ namespace PeterO.Cbor {
     /// library. The key <c>keepkeyorder</c> was introduced in version 4.5
     /// of this library.(Keys are compared using a basic case-insensitive
     /// comparison, in which two strings are equal if they match after
-    /// converting the basic upper-case letters A to Z (U+0041 to U+005A)
-    /// in both strings to basic lower-case letters.) If two or more
-    /// key/value pairs have equal keys (in a basic case-insensitive
-    /// comparison), the value given for the last such key is used. The
-    /// four keys just given can have a value of <c>1</c>, <c>true</c>,
-    /// <c>yes</c>, or <c>on</c> (where the letters can be any combination
-    /// of basic upper-case and/or basic lower-case letters), which means
-    /// true, and any other value meaning false. For example,
+    /// converting the basic uppercase letters A to Z (U+0041 to U+005A) in
+    /// both strings to basic lowercase letters.) If two or more key/value
+    /// pairs have equal keys (in a basic case-insensitive comparison), the
+    /// value given for the last such key is used. The four keys just given
+    /// can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
+    /// <c>on</c> (where the letters can be any combination of basic
+    /// uppercase and/or basic lowercase letters), which means true, and
+    /// any other value meaning false. For example,
     /// <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
     /// set the <c>AllowDuplicateKeys</c> property to true. In the future,
     /// this class may allow other keys to store other kinds of values, not

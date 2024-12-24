@@ -36,7 +36,7 @@ Initializes a new instance of the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOption
 
 <b>Parameters:</b>
 
- * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `usecamelcase=true` . The key can be any one of the following where the letters can be any combination of basic upper-case and/or basic lower-case letters:  `usecamelcase` . Other keys are ignored in this version of the CBOR library. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic upper-case letters A to Z (U+0041 to U+005A) in both strings to basic lower-case letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The key just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (where the letters can be any combination of basic upper-case and/or basic lower-case letters), which means true, and any other value meaning false. For example,  `usecamelcase=Yes`  and  `usecamelcase=1`  both set the  `UseCamelCase`  property to true. In the future, this class may allow other keys to store other kinds of values, not just true or false.
+ * <i>paramString</i>: A string setting forth the options to use. This is a semicolon-separated list of options, each of which has a key and a value separated by an equal sign ("="). Whitespace and line separators are not allowed to appear between the semicolons or between the equal signs, nor may the string begin or end with whitespace. The string can be empty, but cannot be null. The following is an example of this parameter:  `usecamelcase=true` . The key can be any one of the following where the letters can be any combination of basic uppercase and/or basic lowercase letters:  `usecamelcase` . Other keys are ignored in this version of the CBOR library. (Keys are compared using a basic case-insensitive comparison, in which two strings are equal if they match after converting the basic uppercase letters A to Z (U+0041 to U+005A) in both strings to basic lowercase letters.) If two or more key/value pairs have equal keys (in a basic case-insensitive comparison), the value given for the last such key is used. The key just given can have a value of  `1` ,  `true` ,  `yes` , or  `on`  (where the letters can be any combination of basic uppercase and/or basic lowercase letters), which means true, and any other value meaning false. For example,  `usecamelcase=Yes`  and  `usecamelcase=1`  both set the  `UseCamelCase`  property to true. In the future, this class may allow other keys to store other kinds of values, not just true or false.
 
 <b>Exceptions:</b>
 
@@ -65,17 +65,17 @@ The default settings for "plain old data" options.
 
 Gets a value indicating whether property, field, and method names are converted to camel case before they are used as keys. This option changes the behavior of key name serialization as follows. If "useCamelCase" is  `false`  :
 
- * In the .NET version, all key names are capitalized, meaning the first letter in the name is converted to a basic upper-case letter if it's a basic lower-case letter ("a" to "z"). (For example, "Name" and "IsName" both remain unchanged.)
+ * In the .NET version, all key names are capitalized, meaning the first letter in the name is converted to a basic uppercase letter if it's a basic lowercase letter ("a" to "z"). (For example, "Name" and "IsName" both remain unchanged.)
 
  * In the Java version, all field names are capitalized, and for each eligible method name, the word "get" or "set" is removed from the name if the name starts with that word, then the name is capitalized. (For example, "getName" and "setName" both become "Name", and "isName" becomes "IsName".)
 
 If "useCamelCase" is  `true`  :
 
- * In the .NET version, for each eligible property or field name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to a basic lower-case letter if it's a basic upper-case letter ("A" to "Z"). (For example, "Name" and "IsName" both become "name".)
+ * In the .NET version, for each eligible property or field name, the word "Is" is removed from the name if the name starts with that word, then the name is converted to camel case, meaning the first letter in the name is converted to a basic lowercase letter if it's a basic uppercase letter ("A" to "Z"). (For example, "Name" and "IsName" both become "name".)
 
  * In the Java version: For each eligible method name, the word "get", "set", or "is" is removed from the name if the name starts with that word, then the name is converted to camel case. (For example, "getName", "setName", and "isName" all become "name".) For each eligible field name, the word "is" is removed from the name if the name starts with that word, then the name is converted to camel case. (For example, "name" and "isName" both become "name".)
 
-In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or basic lower-case letter, that is, other than "a" to "z" or "0" to "9".
+In the description above, a name "starts with" a word if that word begins the name and is followed by a character other than a basic digit or basic lowercase letter, that is, other than "a" to "z" or "0" to "9".
 
 <b>Returns:</b>
 
