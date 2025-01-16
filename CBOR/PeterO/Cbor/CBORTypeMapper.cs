@@ -94,7 +94,7 @@ namespace PeterO.Cbor {
     /// <summary>Returns whether the given Java or.NET type name fits the
     /// filters given in this mapper.</summary>
     /// <param name='typeName'>The fully qualified name of a Java or.NET
-    /// class (e.g., <c>java.math.BigInteger</c> or
+    /// class (for example, <c>java.math.BigInteger</c> or
     /// <c>System.Globalization.CultureInfo</c> ).</param>
     /// <returns>Either <c>true</c> if the given Java or.NET type name fits
     /// the filters given in this mapper, or <c>false</c>
@@ -122,7 +122,7 @@ namespace PeterO.Cbor {
     /// matching. A type matches a prefix if its fully qualified name is or
     /// begins with that prefix, using codepoint-by-codepoint
     /// (case-sensitive) matching.</summary>
-    /// <param name='prefix'>The prefix of a Java or.NET type (e.g.,
+    /// <param name='prefix'>The prefix of a Java or.NET type (for example,
     /// `java.math.` or `System.Globalization`).</param>
     /// <returns>This object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -143,7 +143,7 @@ namespace PeterO.Cbor {
     /// <summary>Adds the fully qualified name of a Java or.NET type for
     /// use in type matching.</summary>
     /// <param name='name'>The fully qualified name of a Java or.NET class
-    /// (e.g., <c>java.math.BigInteger</c> or
+    /// (for example, <c>java.math.BigInteger</c> or
     /// <c>System.Globalization.CultureInfo</c> ).</param>
     /// <returns>This object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref

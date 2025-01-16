@@ -2326,7 +2326,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      // Shared ref is non-integer
+      // Shared ref is noninteger
       bytes = new byte[] {
         0x82, 0xd8, 0x1c, 0x00, 0xd8,
         0x1d, 0xc4, 0x82,
@@ -2341,7 +2341,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      // Shared ref is non-number
+      // Shared ref is nonnumber
       bytes = new byte[] {
         0x82, 0xd8, 0x1c, 0x00, 0xd8,
         0x1d, 0x61, 0x41,

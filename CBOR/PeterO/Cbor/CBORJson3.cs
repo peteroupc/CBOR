@@ -113,7 +113,7 @@ namespace PeterO.Cbor {
                     }
                   }
                   if ((c & 0xf800) != 0xd800) {
-                    // Non-surrogate
+                    // Nonsurrogate
                     _ = this.sb.Append((char)c);
                   } else if ((c & 0xfc00) == 0xd800) {
                     int ch = this.index < ep ? js[this.index++] : -1;
@@ -162,7 +162,7 @@ namespace PeterO.Cbor {
             {
               // NOTE: Differs from CBORJson2
               if ((c & 0xf800) != 0xd800) {
-                // Non-surrogate
+                // Nonsurrogate
                 _ = this.sb.Append((char)c);
               } else if ((c & 0xfc00) == 0xd800 && this.index < ep &&
                 (js[this.index] & 0xfc00) == 0xdc00) {

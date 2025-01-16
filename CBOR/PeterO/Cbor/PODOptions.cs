@@ -46,7 +46,7 @@ namespace PeterO.Cbor {
     /// basic case-insensitive comparison), the value given for the last
     /// such key is used. The key just given can have a value of <c>1</c>,
     /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-    /// any combination of basic uppercase and/or basic lowercase letters),
+    /// any combination of basic uppercase and basic lowercase letters),
     /// which means true, and any other value meaning false. For example,
     /// <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set the
     /// <c>UseCamelCase</c> property to true. In the future, this class may

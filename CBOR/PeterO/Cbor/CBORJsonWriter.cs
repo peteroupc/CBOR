@@ -242,8 +242,8 @@ namespace PeterO.Cbor {
             foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
               CBORObject key = entry.Key;
               if (key.Type != CBORType.TextString || key.IsTagged) {
-                // treat a non-text-string item or a tagged item
-                // as having non-string keys
+                // treat a nontext-string item or a tagged item
+                // as having nonstring keys
                 hasNonStringKeys = true;
                 break;
               }
@@ -267,7 +267,7 @@ namespace PeterO.Cbor {
               }
               writer.WriteCodePoint('}');
             } else {
-              // This map has non-string keys
+              // This map has nonstring keys
               IDictionary<string, CBORObject> stringMap = new
               Dictionary<string, CBORObject>();
               // Copy to a map with String keys, since

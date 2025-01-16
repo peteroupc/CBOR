@@ -60,7 +60,7 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 
 ### Version 4.1.1
 
-- Fix issue where some non-basic characters in JSON strings encoded in UTF-8 were read incorrectly by the CBORObject.FromJSONBytes method
+- Fix issue where some nonbasic characters in JSON strings encoded in UTF-8 were read incorrectly by the CBORObject.FromJSONBytes method
 
 ### Version 4.1
 
@@ -297,7 +297,7 @@ In version 2.1:
 - Fixed double-rounding issue with ToDouble and ToFloat methods
   of ExtendedDecimal
 - Added Odd and OddOrZeroFiveUp rounding modes
-- Added non-decimal base conversion features to BigInteger
+- Added nondecimal base conversion features to BigInteger
 - Other issue fixes
 
 In version 2.0:

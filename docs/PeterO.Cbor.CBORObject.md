@@ -1006,7 +1006,7 @@ This object's value exceeds the range of a 16-bit signed integer.
 
     public int AsInt32();
 
-Converts this object to a 32-bit signed integer. Non-integer number values are converted to integers by discarding their fractional parts. (NOTE: To determine whether this method call can succeed, call <b>AsNumber().CanTruncatedIntFitInInt32</b> before calling this method. See the example.).
+Converts this object to a 32-bit signed integer. Noninteger number values are converted to integers by discarding their fractional parts. (NOTE: To determine whether this method call can succeed, call <b>AsNumber().CanTruncatedIntFitInInt32</b> before calling this method. See the example.).
 
 The following example code (originally written in C# for the.NET Framework) shows a way to check whether a given CBOR object stores a 32-bit signed integer before getting its value.
 
@@ -1065,7 +1065,7 @@ This object's value exceeds the range of a 32-bit signed integer.
 
 <b>Deprecated.</b> Instead, use the following: (cbor.AsNumber().ToInt64Checked()), or .ToObject&lt;long&gt;() in .NET.
 
-Converts this object to a 64-bit signed integer. Non-integer numbers are converted to integers by discarding their fractional parts. (NOTE: To determine whether this method call can succeed, call <b>AsNumber().CanTruncatedIntFitInInt64</b> before calling this method. See the example.).
+Converts this object to a 64-bit signed integer. Noninteger numbers are converted to integers by discarding their fractional parts. (NOTE: To determine whether this method call can succeed, call <b>AsNumber().CanTruncatedIntFitInInt64</b> before calling this method. See the example.).
 
 The following example code (originally written in C# for the.NET Framework) shows a way to check whether a given CBOR object stores a 64-bit signed integer before getting its value.
 
@@ -1272,7 +1272,7 @@ An object within this CBOR object. Returns this object if pointer is the empty s
 <b>Exceptions:</b>
 
  * PeterO.Cbor.CBORException:
-Thrown if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer in the context of an array (not a map), or if the pointer is non-empty and this object has a CBOR type other than array or map.
+Thrown if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer in the context of an array (not a map), or if the pointer is nonempty and this object has a CBOR type other than array or map.
 
 <a id="AtJSONPointer_string_PeterO_Cbor_CBORObject"></a>
 ### AtJSONPointer
@@ -1281,7 +1281,7 @@ Thrown if the pointer is null, or if the pointer is invalid, or if there is no o
         string pointer,
         PeterO.Cbor.CBORObject defaultValue);
 
-Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a default value if the operation fails. The syntax for a JSON Pointer is: '/' KEY '/' KEY [...] where KEY represents a key into the JSON object or its sub-objects in the hierarchy. For example, /foo/2/bar means the same as obj['foo'][2]['bar'] in JavaScript. If "~" and/or "/" occurs in a key, it must be escaped with "~0" or "~1", respectively, in a JSON pointer. JSON pointers also support the special key "-" (as in "/foo/-") to indicate the end of an array, but this method treats this key as an error since it refers to a nonexistent item. Indices to arrays (such as 2 in the example) must contain only basic digits 0 to 9 and no leading zeros. (Note that RFC 6901 was published before JSON was extended to support top-level values other than arrays and key-value dictionaries.).
+Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a default value if the operation fails. The syntax for a JSON Pointer is: '/' KEY '/' KEY [...] where KEY represents a key into the JSON object or its subobjects in the hierarchy. For example, /foo/2/bar means the same as obj['foo'][2]['bar'] in JavaScript. If "~" and/or "/" occurs in a key, it must be escaped with "~0" or "~1", respectively, in a JSON pointer. JSON pointers also support the special key "-" (as in "/foo/-") to indicate the end of an array, but this method treats this key as an error since it refers to a nonexistent item. Indices to arrays (such as 2 in the example) must contain only basic digits 0 to 9 and no leading zeros. (Note that RFC 6901 was published before JSON was extended to support top-level values other than arrays and key-value dictionaries.).
 
 <b>Parameters:</b>
 
@@ -1293,7 +1293,7 @@ Gets the CBOR object referred to by a JSON Pointer according to RFC6901, or a de
 <b>Return Value:</b>
 
 An object within the specified JSON object. Returns this object if pointer is the empty string (even if this object has a CBOR type other than array or map). Returns  <i>defaultValue</i>
- if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer in the context of an array (not a map), or if the pointer is non-empty and this object has a CBOR type other than array or map.
+ if the pointer is null, or if the pointer is invalid, or if there is no object at the given pointer, or the special key "-" appears in the pointer in the context of an array (not a map), or if the pointer is nonempty and this object has a CBOR type other than array or map.
 
 <a id="CalcEncodedSize"></a>
 ### CalcEncodedSize
@@ -1439,7 +1439,7 @@ Compares two CBOR objects. This implementation was changed in version 4.0. In th
 
  * If both objects are arrays, they are compared item by item. In this case, if the arrays have different numbers of items, the array with more items is treated as greater than the other array.
 
- * If both objects are maps, their key-value pairs, sorted by key in accordance with this method, are compared, where each pair is compared first by key and then by value. In this case, if the maps have different numbers of key-value pairs, the map with more pairs is treated as greater than the other map.
+ * If both objects are maps, their key-value pairs, sorted by key per this method, are compared, where each pair is compared first by key and then by value. In this case, if the maps have different numbers of key-value pairs, the map with more pairs is treated as greater than the other map.
 
  * If the two objects have different types, the object whose type comes first in the order of untagged integers, untagged byte strings, untagged text strings, untagged arrays, untagged maps, tagged objects, untagged simple values (including True and False) and untagged floating point values sorts before the other object.
 
@@ -1605,7 +1605,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes, us
 
  * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -1643,7 +1643,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes, us
 
  * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
 
@@ -1681,7 +1681,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -1715,7 +1715,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
 
@@ -1751,7 +1751,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It
 
  * <i>data</i>: A byte array in which a single CBOR object is encoded.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -1783,7 +1783,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes, us
 
  * <i>enc</i>: Specifies options to control how the CBOR object is decoded. See [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) for more information.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -1822,7 +1822,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes, us
 
  * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -1859,7 +1859,7 @@ Generates an object of an arbitrary type from an array of CBOR-encoded bytes. It
 
  * <i>pod</i>: Specifies options for controlling deserialization of CBOR objects.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String` , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -2626,7 +2626,7 @@ Generates a CBORObject from an arbitrary object. See the overload of this method
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
- is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -2646,7 +2646,7 @@ Generates a CBORObject from an arbitrary object. See the overload of this method
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
- is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -2718,7 +2718,7 @@ Generates a CBORObject from an arbitrary object, using the given options to cont
 
  * Then, the method returns a CBOR map with each eligible getter's name or property name as each key, and with the corresponding value returned by that getter as that key's value. Before adding a key-value pair to the map, the key's name is adjusted according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) documentation. Note that for security reasons, certain types are not supported even if they contain eligible getters.
 
-<b>REMARK:</b> .NET enumeration (  `Enum`  ) constants could also have been converted to text strings with  `ToString()`  , but that method will return multiple names if the given Enum object is a combination of Enum objects (e.g. if the object is  `FileAccess.Read | FileAccess.Write`  ). More generally, if Enums are converted to text strings, constants from Enum types with the  `Flags`  attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.
+<b>REMARK:</b> .NET enumeration (  `Enum`  ) constants could also have been converted to text strings with  `ToString()`  , but that method will return multiple names if the given Enum object is a combination of Enum objects (for example if the object is  `FileAccess.Read | FileAccess.Write`  ). More generally, if Enums are converted to text strings, constants from Enum types with the  `Flags`  attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.
 
 The following example (originally written in C# for the DotNet version) uses a CBORTypeMapper to change how DateTime objects are converted to CBOR. In this case, such objects are converted to CBOR objects with tag 1 that store numbers giving the number of seconds since the start of 1970.
 
@@ -2742,7 +2742,7 @@ In the Java version, which has java.math.BigInteger, the following can be used i
 
 <b>Parameters:</b>
 
- * <i>obj</i>: An arbitrary object to convert to a CBOR object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>obj</i>: An arbitrary object to convert to a CBOR object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
  .
 
@@ -2775,7 +2775,7 @@ Generates a CBORObject from an arbitrary object. See the overload of this method
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
- is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -3047,7 +3047,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 <b>Parameters:</b>
 
  * <i>o</i>: The parameter  <i>o</i>
- is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -3071,7 +3071,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 <b>Parameters:</b>
 
  * <i>valueOb</i>: The parameter  <i>valueOb</i>
- is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -3106,7 +3106,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 <b>Parameters:</b>
 
  * <i>valueObValue</i>: The parameter  <i>valueObValue</i>
- is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object, which can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -4258,7 +4258,7 @@ A byte array containing the converted in JSON format.
 
  Converts this object to a text string in JavaScript Object Notation (JSON) format, using the specified options to control the encoding process. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
- * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
+ * If this object contains maps with nonstring keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
  * If this object represents a number (the IsNumber property, or isNumber() method in Java, returns true), then it is written out as a number.
 
@@ -4357,7 +4357,7 @@ By comparison, the C# version is much shorter.
 
 <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -4384,7 +4384,7 @@ Converts this CBOR object to an object of an arbitrary type. See the documentati
 
 <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
@@ -4447,7 +4447,7 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is  `EFloat`  ,  `EDecimal`  ,  `EInteger`  , or  `ERational`  in the <a href="https://www.nuget.org/packages/PeterO.Numbers"> `PeterO.Numbers` </a> library (in .NET) or the <a href="https://github.com/peteroupc/numbers-java"> `com.github.peteroupc/numbers` </a> artifact (in Java), or if the type is  `BigInteger`  or  `BigDecimal`  in the Java version, converts the given object to a number of the corresponding type and throws an exception (currently InvalidOperationException) if the object does not represent a number (for this purpose, infinity and not-a-number values, but not  `CBORObject.Null`  , are considered numbers). Currently, this is equivalent to the result of  `AsEFloat()`  ,  `AsEDecimal()`  ,  `AsEInteger`  , or  `AsERational()`  , respectively, but may change slightly in the next major version. Note that in the case of  `EFloat`  , if this object represents a decimal number with a fractional part, the conversion may lose information depending on the number, and if the object is a rational number with a nonterminating binary expansion, the number returned is a binary floating-point number rounded to a high but limited precision. In the case of  `EDecimal`  , if this object expresses a rational number with a nonterminating decimal expansion, returns a decimal number rounded to 34 digits of precision. In the case of  `EInteger`  , if this CBOR object expresses a floating-point number, it is converted to an integer by discarding its fractional part, and if this CBOR object expresses a rational number, it is converted to an integer by dividing the numerator by the denominator and discarding the fractional part of the result, and this method throws an exception (currently OverflowException, but may change in the next major version) if this object expresses infinity or a not-a-number value.
 
- * In the.NET version, if the type is a nullable (e.g.,  `Nullable<int>`  or  `int?`  , returns  `null`  if this CBOR object is null, or this object's value converted to the nullable's underlying type, e.g.,  `int`  .
+ * In the.NET version, if the type is a nullable (for example,  `Nullable<int>`  or  `int?`  , returns  `null`  if this CBOR object is null, or this object's value converted to the nullable's underlying type, for example,  `int`  .
 
  * If the type is an enumeration (  `Enum`  ) type and this CBOR object is a text string or an integer, returns the appropriate enumerated constant. (For example, if  `MyEnum`  includes an entry for  `MyValue`  , this method will return  `MyEnum.MyValue`  if the CBOR object represents  `"MyValue"`  or the underlying value for  `MyEnum.MyValue`  .) <b>Note:</b> If an integer is converted to a.NET Enum constant, and that integer is shared by more than one constant of the same type, it is undefined which constant from among them is returned. (For example, if  `MyEnum.Zero=0`  and  `MyEnum.Null=0`  , converting 0 to  `MyEnum`  may return either  `MyEnum.Zero`  or  `MyEnum.Null`  .) As a result, .NET Enum types with constants that share an underlying value should not be passed to this method.
 
@@ -4455,9 +4455,9 @@ Converts this CBOR object to an object of an arbitrary type. The following cases
 
  * If the type is a one-dimensional or multidimensional array type and this CBOR object is an array, returns an array containing the items in this CBOR object.
 
- * If the type is List, ReadOnlyCollection or the generic or non-generic IList, ICollection, IEnumerable, IReadOnlyCollection, or IReadOnlyList (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
+ * If the type is List, ReadOnlyCollection or the generic or nongeneric IList, ICollection, IEnumerable, IReadOnlyCollection, or IReadOnlyList (or ArrayList, List, Collection, or Iterable in Java), and if this CBOR object is an array, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all items in this CBOR array.
 
- * If the type is Dictionary, ReadOnlyDictionary or the generic or non-generic IDictionary or IReadOnlyDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
+ * If the type is Dictionary, ReadOnlyDictionary or the generic or nongeneric IDictionary or IReadOnlyDictionary (or HashMap or Map in Java), and if this CBOR object is a map, returns an object conforming to the type, class, or interface passed to this method, where the object will contain all keys and values in this CBOR map.
 
  * If the type is an enumeration constant ("enum"), and this CBOR object is an integer or text string, returns the enumeration constant with the given number or name, respectively. (Enumeration constants made up of multiple enumeration constants, as allowed by .NET, can only be matched by number this way.)
 
@@ -4501,7 +4501,7 @@ By comparison, the C# version is much shorter.
 
 <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String`  , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method, such as  `int`  or  `String`  , or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types. Can be null.
 
@@ -4533,7 +4533,7 @@ Converts this CBOR object to an object of an arbitrary type. See the documentati
 
 <b>Parameters:</b>
 
- * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>t</i>: The type, class, or interface that this method's return value will belong to. To express a generic type in Java, see the example. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
@@ -4566,7 +4566,7 @@ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor
 
  * <i>mapper</i>: This parameter controls which data types are eligible for Plain-Old-Data deserialization and includes custom converters from CBOR objects to certain data types.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -4592,7 +4592,7 @@ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -4615,7 +4615,7 @@ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor
 
  * <i>options</i>: Specifies options for controlling deserialization of CBOR objects.
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -4635,7 +4635,7 @@ Converts this CBOR object to an object of an arbitrary type. See **M:PeterO.Cbor
 
 <b>Parameters:</b>
 
- * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * &lt;T&gt;: The type, class, or interface that this method's return value will belong to. <b>Note:</b> For security reasons, an application should not base this parameter on user input or other externally supplied data. Whenever possible, this parameter should be either a type specially handled by this method (such as  `int`  or  `String`  ) or a plain-old-data type (POCO or POJO type) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 <b>Return Value:</b>
 
@@ -4916,7 +4916,7 @@ Writes an arbitrary object to a CBOR data stream, using the specified options fo
 
 <b>Parameters:</b>
 
- * <i>objValue</i>: The arbitrary object to be serialized. Can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ * <i>objValue</i>: The arbitrary object to be serialized. Can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -5359,7 +5359,7 @@ Converts an arbitrary object to a text string in JavaScript Object Notation (JSO
 <b>Parameters:</b>
 
  * <i>obj</i>: The parameter  <i>obj</i>
- is an arbitrary object. Can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion above.
+ is an arbitrary object. Can be null. <b>NOTE:</b> For security reasons, whenever possible, an application should not base this parameter on user input or other externally supplied data unless the application limits this parameter's inputs to types specially handled by this method (such as  `int`  or  `String`  ) and/or to plain-old-data types (POCO or POJO types) within the control of the application. If the plain-old-data type references other data types, those types should likewise meet either criterion given earlier.
 
 .
 
@@ -5394,7 +5394,7 @@ The following example (originally written in C# for the.NET version) shows how t
                 var bytes = ms.ToArray();
                 }
 
-The following example (written in Java for the Java version) shows how to use a subclassed  `OutputStream`  together with a  `ByteArrayOutputStream`  to limit the size of supported JSON serializations of CBOR objects.
+The following example (written in Java for the Java version) shows how to use a subclass of  `OutputStream`  together with a  `ByteArrayOutputStream`  to limit the size of supported JSON serializations of CBOR objects.
 
                 /* maximum supported JSON size in bytes*/
                 final int maxSize = 20000;
@@ -5536,7 +5536,7 @@ The following example (originally written in C# for the.NET version) shows how t
                 var bytes = ms.ToArray();
                 }
 
-The following example (written in Java for the Java version) shows how to use a subclassed  `OutputStream`  together with a  `ByteArrayOutputStream`  to limit the size of supported CBOR serializations.
+The following example (written in Java for the Java version) shows how to use a subclass of  `OutputStream`  together with a  `ByteArrayOutputStream`  to limit the size of supported CBOR serializations.
 
                 /* maximum supported CBOR size in bytes*/
                 final int maxSize = 20000;

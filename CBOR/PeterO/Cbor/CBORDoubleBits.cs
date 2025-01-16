@@ -110,7 +110,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
       if (bits >= unchecked(0x7ffL << 52)) {
         return origbits;
       }
-      // Beyond non-integer range
+      // Beyond noninteger range
       if ((bits >> 52) >= 0x433) {
         return origbits;
       }
@@ -164,7 +164,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
       if (b == 0) {
         return 0;
       }
-      // Beyond non-integer range (thus beyond int32 range)
+      // Beyond noninteger range (thus beyond int32 range)
       if ((b >> 52) >= 0x433) {
         throw new OverflowException("This object's value is out of range");
       }

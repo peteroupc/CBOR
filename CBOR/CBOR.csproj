@@ -67,7 +67,6 @@ Note that after version 4.5x, the CBOR library's repository will stop including 
 <AdditionalFiles Include="rules.ruleset" /><PackageReference Include="PeterO.URIUtility" Version="1.0.0" />
 
 <PackageReference Include="PeterO.Numbers" Version="1.8.2" />
-
 <PackageReference Include='PeterO.DataUtilities' Version='1.1.0'/>
 </ItemGroup>
                   </Project>

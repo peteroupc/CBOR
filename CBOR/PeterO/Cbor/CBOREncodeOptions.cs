@@ -169,9 +169,9 @@ namespace PeterO.Cbor {
     /// references can result in a CBOR object that is orders of magnitude
     /// bigger than if shared references weren't resolved, and this can
     /// cause a denial of service when the decoded CBOR object is then
-    /// serialized (e.g., with <c>EncodeToBytes()</c>, <c>ToString()</c>,
-    /// <c>ToJSONString()</c>, or <c>WriteTo</c> ), because object
-    /// references are expanded in the process.</para>
+    /// serialized (for example, with <c>EncodeToBytes()</c>,
+    /// <c>ToString()</c>, <c>ToJSONString()</c>, or <c>WriteTo</c> ),
+    /// because object references are expanded in the process.</para>
     /// <para>For example, the following object in CBOR diagnostic
     /// notation, <c>[28(["xxx", "yyy"]), 28([29(0), 29(0), 29(0)]),
     /// 28([29(1), 29(1)]), 28([29(2), 29(2)]), 28([29(3), 29(3)]),

@@ -3814,7 +3814,7 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
           Assert.IsTrue(cbornumber.AsNumber().IsFinite(),
   numberinfo["number"].AsString());
         }
-        // NOTE: A nonintegral number is not necessarily non-finite
+        // NOTE: A nonintegral number is not necessarily nonfinite
       }
     }
 

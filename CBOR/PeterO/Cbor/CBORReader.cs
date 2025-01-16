@@ -605,14 +605,14 @@ count);
             int tmp = stream.ReadByte();
             return tmp < 0 ? throw new CBORException("Premature end of data") :
               !allowNonShortest && tmp < 24 ? throw new
-CBORException("Non-shortest CBOR form") : tmp;
+CBORException("Nonshortest CBOR form") : tmp;
           }
         case 25: {
             ReadHelper(stream, data, 0, 2);
             int lowAdditional = (data[0] & 0xff) << 8;
             lowAdditional |= data[1] & 0xff;
             return !allowNonShortest && lowAdditional < 256 ? throw new
-CBORException("Non-shortest CBOR form") : lowAdditional;
+CBORException("Nonshortest CBOR form") : lowAdditional;
           }
         case 26: {
             ReadHelper(stream, data, 0, 4);
@@ -621,7 +621,7 @@ CBORException("Non-shortest CBOR form") : lowAdditional;
             uadditional |= (data[2] & 0xffL) << 8;
             uadditional |= data[3] & 0xffL;
             return !allowNonShortest && (uadditional >> 16) == 0 ? throw new
-CBORException("Non-shortest CBOR form") : uadditional;
+CBORException("Nonshortest CBOR form") : uadditional;
           }
         case 27: {
             ReadHelper(stream, data, 0, 8);
@@ -635,7 +635,7 @@ CBORException("Non-shortest CBOR form") : uadditional;
             uadditional |= (data[6] & 0xffL) << 8;
             uadditional |= data[7] & 0xffL;
             return !allowNonShortest && (uadditional >> 32) == 0 ? throw new
-CBORException("Non-shortest CBOR form") : uadditional;
+CBORException("Nonshortest CBOR form") : uadditional;
           }
         case 28:
         case 29:

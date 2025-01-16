@@ -118,7 +118,7 @@ namespace PeterO.Cbor {
                     }
                   }
                   if ((c & 0xf800) != 0xd800) {
-                    // Non-surrogate
+                    // Nonsurrogate
                     _ = this.sb.Append((char)c);
                   } else if ((c & 0xfc00) == 0xd800) {
                     int ch = this.ReadChar();

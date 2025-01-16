@@ -769,8 +769,7 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
-            any one of the following where the letters can be any combination
-            of basic uppercase and/or basic lowercase letters:
+            any one of the following where the letters can be any combination of basic uppercase and basic lowercase letters:
             <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
             <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
             <c>allowempty</c>, <c>float64</c>, <c>keepkeyorder</c>. Keys
@@ -784,8 +783,7 @@
             key/value pairs have equal keys (in a basic case-insensitive
             comparison), the value given for the last such key is used. The
             four keys just given can have a value of <c>1</c>, <c>true</c>,
-            <c>yes</c>, or <c>on</c> (where the letters can be any combination
-            of basic uppercase and/or basic lowercase letters), which means
+            <c>yes</c>, or <c>on</c> (where the letters can be any combination of basic uppercase and basic lowercase letters), which means
             true, and any other value meaning false. For example,
             <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
             set the <c>AllowDuplicateKeys</c> property to true. In the future,
@@ -950,7 +948,7 @@
             references can result in a CBOR object that is orders of magnitude
             bigger than if shared references weren't resolved, and this can
             cause a denial of service when the decoded CBOR object is then
-            serialized (e.g., with <c>EncodeToBytes()</c>, <c>ToString()</c>,
+            serialized (for example, with <c>EncodeToBytes()</c>, <c>ToString()</c>,
             <c>ToJSONString()</c>, or <c>WriteTo</c> ), because object
             references are expanded in the process.</para>
             <para>For example, the following object in CBOR diagnostic
@@ -2153,7 +2151,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.AsInt32">
 
             <summary>Converts this object to a 32-bit signed integer.
-            Non-integer number values are converted to integers by discarding
+            Noninteger number values are converted to integers by discarding
             their fractional parts. (NOTE: To determine whether this method
             call can succeed, call <b>AsNumber().CanTruncatedIntFitInInt32</b> before calling this method. See the example.).</summary>
             <returns>The closest 32-bit signed integer to this
@@ -2197,7 +2195,7 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.AsInt64">
 <summary>Converts this object to a 64-bit signed integer.
-            Non-integer numbers are converted to integers by discarding their
+            Noninteger numbers are converted to integers by discarding their
             fractional parts. (NOTE: To determine whether this method call can
             succeed, call <b>AsNumber().CanTruncatedIntFitInInt64</b> before
             calling this method. See the example.).</summary>
@@ -2340,7 +2338,7 @@
             <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
             is null, or if the pointer is invalid, or if there is no object at
             the given pointer, or the special key "-" appears in the pointer in
-            the context of an array (not a map), or if the pointer is non-empty
+            the context of an array (not a map), or if the pointer is nonempty
             and this object has a CBOR type other than array or
             map.</exception>
 
@@ -2351,7 +2349,7 @@
             according to RFC6901, or a default value if the operation fails.
             The syntax for a JSON Pointer is:
             <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
-            the JSON object or its sub-objects in the hierarchy. For example,
+            the JSON object or its subobjects in the hierarchy. For example,
             <pre>/foo/2/bar</pre> means the same as
             <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
             occurs in a key, it must be escaped with "~0" or "~1",
@@ -2370,7 +2368,7 @@
             CBOR type other than array or map). Returns <paramref name='defaultValue'/> if the pointer is null, or if the pointer is
             invalid, or if there is no object at the given pointer, or the
             special key "-" appears in the pointer in the context of an array
-            (not a map), or if the pointer is non-empty and this object has a
+            (not a map), or if the pointer is nonempty and this object has a
             CBOR type other than array or map.</returns>
 
 </doc>
@@ -2489,7 +2487,7 @@
             array with more items is treated as greater than the other
             array.</item>
             <item>If both objects are maps, their key-value pairs, sorted by
-            key in accordance with this method, are compared, where each pair
+            key per this method, are compared, where each pair
             is compared first by key and then by value. In this case, if the
             maps have different numbers of key-value pairs, the map with more
             pairs is treated as greater than the other map.</item>
@@ -2650,7 +2648,7 @@
             <c>String</c>, or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
             given CBOREncodeOptions object.</returns>
@@ -2688,7 +2686,7 @@
             <c>String</c>, or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
@@ -2727,7 +2725,7 @@
             <c>String</c>, or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
             given CBOREncodeOptions object.</returns>
@@ -2760,7 +2758,7 @@
             <c>String</c>, or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
@@ -2799,7 +2797,7 @@
             <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
             given CBOREncodeOptions object.</returns>
@@ -2835,7 +2833,7 @@
             such as <c>int</c> or <c>String</c>, or a plain-old-data type
             (POCO or POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
             given CBOREncodeOptions object.</returns>
@@ -2879,7 +2877,7 @@
             <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
             given CBOREncodeOptions object.</returns>
@@ -2919,7 +2917,7 @@
             <c>int</c> or <c>String</c>, or a plain-old-data type (POCO or
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>An object of the given type decoded from the given byte
             array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
             given CBOREncodeOptions object.</returns>
@@ -3108,8 +3106,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='bigintTag'>Tag number. The tag number 55799 can be
             used to mark a "self-described CBOR" object. This document does not
             attempt to list all CBOR tags and their meanings. An up-to-date
@@ -3137,8 +3134,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='smallTag'>A 32-bit integer that specifies a tag
             number. The tag number 55799 can be used to mark a "self-described
             CBOR" object. This document does not attempt to list all CBOR tags
@@ -3183,8 +3179,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='bigintTag'>Tag number. The tag number 55799 can be
             used to mark a "self-described CBOR" object. This document does not
             attempt to list all CBOR tags and their meanings. An up-to-date
@@ -3210,8 +3205,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='smallTag'>A 32-bit integer that specifies a tag
             number. The tag number 55799 can be used to mark a "self-described
             CBOR" object. This document does not attempt to list all CBOR tags
@@ -3236,8 +3230,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='tag'>A 64-bit integer that specifies a tag number. The
             tag number 55799 can be used to mark a "self-described CBOR"
             object. This document does not attempt to list all CBOR tags and
@@ -3875,8 +3868,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <returns>A CBOR object corresponding to the given object. Returns
             CBORObject.Null if the object is null.</returns>
 
@@ -3895,8 +3887,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='mapper'>An object containing optional converters to
             convert objects of certain types to CBOR objects.</param>
             <returns>A CBOR object corresponding to the given object. Returns
@@ -4012,7 +4003,7 @@
             enumeration ( <c>Enum</c> ) constants could also have been
             converted to text strings with <c>ToString()</c> , but that method
             will return multiple names if the given Enum object is a
-            combination of Enum objects (e.g. if the object is
+            combination of Enum objects (for example if the object is
             <c>FileAccess.Read | FileAccess.Write</c> ). More generally, if
             Enums are converted to text strings, constants from Enum types with
             the <c>Flags</c> attribute, and constants from the same Enum type
@@ -4027,8 +4018,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>
+            types, those types should likewise meet either criterion given earlier.</para>
             .</param>
             <param name='mapper'>An object containing optional converters to
             convert objects of certain types to CBOR objects. Can be
@@ -4077,8 +4067,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='options'>An object containing options to control how
             certain objects are converted to CBOR objects.</param>
             <returns>A CBOR object corresponding to the given object. Returns
@@ -5100,7 +5089,7 @@
             options to control the encoding process. This function
             works not only with arrays and maps, but also integers,
             strings, byte arrays, and other JSON data types. Notes:
-            <list type=''><item>If this object contains maps with non-string
+            <list type=''><item>If this object contains maps with nonstring
             keys, the keys are converted to JSON strings before writing the map
             as a JSON string.</item>
              <item>If this object represents a number
@@ -5199,7 +5188,7 @@
             <c>String</c> ) or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <returns>The converted object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
@@ -5240,7 +5229,7 @@
             <c>String</c> ) or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types.</param>
@@ -5351,10 +5340,10 @@
             the result, and this method throws an exception (currently
             OverflowException, but may change in the next major version) if
             this object expresses infinity or a not-a-number value.</item>
-            <item>In the.NET version, if the type is a nullable (e.g.,
+            <item>In the.NET version, if the type is a nullable (for example,
             <c>Nullable&lt;int&gt;</c> or <c>int?</c> , returns <c>null</c> if
             this CBOR object is null, or this object's value converted to the
-            nullable's underlying type, e.g., <c>int</c> .</item>
+            nullable's underlying type, for example, <c>int</c> .</item>
              <item>If the
             type is an enumeration ( <c>Enum</c> ) type and this CBOR object is
             a text string or an integer, returns the appropriate enumerated
@@ -5379,14 +5368,14 @@
             type and this CBOR object is an array, returns an array containing
             the items in this CBOR object.</item>
              <item>If the type is List,
-            ReadOnlyCollection or the generic or non-generic IList,
+            ReadOnlyCollection or the generic or nongeneric IList,
             ICollection, IEnumerable, IReadOnlyCollection, or IReadOnlyList (or
             ArrayList, List, Collection, or Iterable in Java), and if this CBOR
             object is an array, returns an object conforming to the type,
             class, or interface passed to this method, where the object will
             contain all items in this CBOR array.</item>
              <item>If the type is
-            Dictionary, ReadOnlyDictionary or the generic or non-generic
+            Dictionary, ReadOnlyDictionary or the generic or nongeneric
             IDictionary or IReadOnlyDictionary (or HashMap or Map in Java), and
             if this CBOR object is a map, returns an object conforming to the
             type, class, or interface passed to this method, where the object
@@ -5466,7 +5455,7 @@
             <c>String</c> , or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <param name='mapper'>This parameter controls which data types are
             eligible for Plain-Old-Data deserialization and includes custom
             converters from CBOR objects to certain data types. Can be
@@ -5520,7 +5509,7 @@
             <c>String</c> ) or a plain-old-data type (POCO or POJO type) within
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
-            either criterion above.</param>
+            either criterion given earlier.</param>
             <param name='options'>Specifies options for controlling
             deserialization of CBOR objects.</param>
             <returns>The converted object.</returns>
@@ -5546,7 +5535,7 @@
             (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
             (POCO or POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>The converted object.</returns>
             <exception cref='NotSupportedException'>The given type "T", or this
             object's CBOR type, is not supported.</exception>
@@ -5569,7 +5558,7 @@
             (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
             (POCO or POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>The converted object.</returns>
             <exception cref='NotSupportedException'>The given type "T", or this
             object's CBOR type, is not supported.</exception>
@@ -5594,7 +5583,7 @@
             (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
             (POCO or POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>The converted object.</returns>
             <exception cref='NotSupportedException'>The given type "T", or this
             object's CBOR type, is not supported.</exception>
@@ -5616,7 +5605,7 @@
             (such as <c>int</c> or <c>String</c> ) or a plain-old-data type
             (POCO or POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
-            likewise meet either criterion above.</typeparam>
+            likewise meet either criterion given earlier.</typeparam>
             <returns>The converted object.</returns>
             <exception cref='NotSupportedException'>The given type "T", or this
             object's CBOR type, is not supported.</exception>
@@ -6021,8 +6010,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='output'>A writable data stream.</param>
             <param name='options'>CBOR options for encoding the CBOR object to
             bytes.</param>
@@ -6212,8 +6200,7 @@
             this method (such as <c>int</c> or <c>String</c> ) and/or to
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
-            types, those types should likewise meet either criterion
-            above.</para>.</param>
+            types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='outputStream'>A writable data stream.</param>
             <exception cref='ArgumentNullException'>The parameter <paramref name='outputStream'/> is null.</exception>
 
@@ -6249,7 +6236,7 @@
             cborObject.WriteJSONTo(ms);
             var bytes = ms.ToArray();
             }</code> <para>The following example (written in Java for the Java version)
-            shows how to use a subclassed <c>OutputStream</c> together with a
+            shows how to use a subclass of <c>OutputStream</c> together with a
             <c>ByteArrayOutputStream</c> to limit the size of supported JSON
             serializations of CBOR objects.</para>
             <code>&#x2f;&#x2a; maximum supported JSON size in bytes&#x2a;&#x2f;
@@ -6390,7 +6377,7 @@
             cborObject.WriteTo(ms);
             var bytes = ms.ToArray();
             }</code> <para>The following example (written in Java for the Java version)
-            shows how to use a subclassed <c>OutputStream</c> together with a
+            shows how to use a subclass of <c>OutputStream</c> together with a
             <c>ByteArrayOutputStream</c> to limit the size of supported CBOR
             serializations.</para>
             <code>&#x2f;&#x2a; maximum supported CBOR size in bytes&#x2a;&#x2f;
@@ -6843,7 +6830,7 @@
             <summary>Adds the fully qualified name of a Java or.NET type for
             use in type matching.</summary>
             <param name='name'>The fully qualified name of a Java or.NET class
-            (e.g., <c>java.math.BigInteger</c> or
+            (for example, <c>java.math.BigInteger</c> or
             <c>System.Globalization.CultureInfo</c> ).</param>
             <returns>This object.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='name'/> is null.</exception>
@@ -6856,7 +6843,7 @@
             matching. A type matches a prefix if its fully qualified name is or
             begins with that prefix, using codepoint-by-codepoint
             (case-sensitive) matching.</summary>
-            <param name='prefix'>The prefix of a Java or.NET type (e.g.,
+            <param name='prefix'>The prefix of a Java or.NET type (for example,
             `java.math.` or `System.Globalization`).</param>
             <returns>This object.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='prefix'/> is null.</exception>
@@ -6868,7 +6855,7 @@
             <summary>Returns whether the given Java or.NET type name fits the
             filters given in this mapper.</summary>
             <param name='typeName'>The fully qualified name of a Java or.NET
-            class (e.g., <c>java.math.BigInteger</c> or
+            class (for example, <c>java.math.BigInteger</c> or
             <c>System.Globalization.CultureInfo</c> ).</param>
             <returns>Either <c>true</c> if the given Java or.NET type name fits
             the filters given in this mapper, or <c>false</c> otherwise.</returns>
@@ -6876,7 +6863,7 @@
 </doc>
 <doc name="T:PeterO.Cbor.CBORUtilities">
 
-            <summary>Contains auxiliary methods that may have use outside of the
+            <summary>Contains auxiliary methods that may have use outside the
             CBORObject class.</summary>
 
 </doc>
@@ -7247,8 +7234,7 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>base64padding=false;replacesurrogates=true</c>. The key can be
-            any one of the following where the letters can be any combination
-            of basic uppercase and/or basic lowercase letters:
+            any one of the following where the letters can be any combination of basic uppercase and basic lowercase letters:
             <c>base64padding</c>, <c>replacesurrogates</c>,
             <c>allowduplicatekeys</c>, <c>preservenegativezero</c>,
             <c>numberconversion</c>, <c>writebasic</c>, <c>keepkeyorder</c>.
@@ -7260,12 +7246,11 @@
             equal keys (in a basic case-insensitive comparison), the value
             given for the last such key is used. The first four keys just given
             can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
-            <c>on</c> (where the letters can be any combination of basic
-            uppercase and/or basic lowercase letters), which means true, and
+            <c>on</c> (where the letters can be any combination of basic uppercase and basic lowercase letters), which means true, and
             any other value meaning false. The last key,
             <c>numberconversion</c>, can have a value of any name given in the
             <c>JSONOptions.ConversionMode</c> enumeration (where the letters
-            can be any combination of basic uppercase and/or basic lowercase
+            can be any combination of basic uppercase and basic lowercase
             letters), and any other value is unrecognized. (If the
             <c>numberconversion</c> key is not given, its value is treated as
             <c>intorfloat</c> (formerly <c>full</c> in versions earlier than
@@ -7619,8 +7604,7 @@
             end with whitespace. The string can be empty, but cannot be null.
             The following is an example of this parameter:
             <c>usecamelcase=true</c>. The key can be any one of the following
-            where the letters can be any combination of basic uppercase and/or
-            basic lowercase letters: <c>usecamelcase</c>. Other keys are
+            where the letters can be any combination of basic uppercase and basic lowercase letters: <c>usecamelcase</c>. Other keys are
             ignored in this version of the CBOR library. (Keys are compared
             using a basic case-insensitive comparison, in which two strings are
             equal if they match after converting the basic uppercase letters A
@@ -7629,7 +7613,7 @@
             basic case-insensitive comparison), the value given for the last
             such key is used. The key just given can have a value of <c>1</c>,
             <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-            any combination of basic uppercase and/or basic lowercase
+            any combination of basic uppercase and basic lowercase
             letters), which means true, and any other value meaning false. For
             example, <c>usecamelcase=Yes</c> and <c>usecamelcase=1</c> both set
             the <c>UseCamelCase</c> property to true. In the future, this class
@@ -7810,8 +7794,7 @@
             not allowed.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
-<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal
-      digit) in the given string. Successive percent-encoded bytes are assumed
+<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal (base-16) digit) in the given string. Successive percent-encoded bytes are assumed
       to form characters in UTF-8.
     </summary>
     <param name='str'>A string that may contain percent encoding. May be null.
@@ -7820,8 +7803,7 @@
     </returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String,System.Int32,System.Int32)">
-<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal
-      digit) in the given portion of a string. Successive percent-encoded bytes
+<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal (base-16) digit) in the given portion of a string. Successive percent-encoded bytes
       are assumed to form characters in UTF-8.
     </summary>
     <param name='str'>A string a portion of which may contain percent encoding. May be null.

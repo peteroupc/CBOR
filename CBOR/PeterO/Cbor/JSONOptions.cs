@@ -124,11 +124,11 @@ namespace PeterO.Cbor {
     /// comparison), the value given for the last such key is used. The
     /// first four keys just given can have a value of <c>1</c>,
     /// <c>true</c>, <c>yes</c>, or <c>on</c> (where the letters can be
-    /// any combination of basic uppercase and/or basic lowercase letters),
+    /// any combination of basic uppercase and basic lowercase letters),
     /// which means true, and any other value meaning false. The last key,
     /// <c>numberconversion</c>, can have a value of any name given in the
     /// <c>JSONOptions.ConversionMode</c> enumeration (where the letters
-    /// can be any combination of basic uppercase and/or basic lowercase
+    /// can be any combination of basic uppercase and basic lowercase
     /// letters), and any other value is unrecognized. (If the
     /// <c>numberconversion</c> key is not given, its value is treated as
     /// <c>intorfloat</c> (formerly <c>full</c> in versions earlier than

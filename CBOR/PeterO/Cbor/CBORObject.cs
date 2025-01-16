@@ -1434,41 +1434,38 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// the result, and this method throws an exception (currently
     /// OverflowException, but may change in the next major version) if
     /// this object expresses infinity or a not-a-number value.</item>
-    /// <item>In the.NET version, if the type is a nullable (e.g.,
+    /// <item>In the.NET version, if the type is a nullable (for example,
     /// <c>Nullable&lt;int&gt;</c>
     ///  or <c>int?</c>
     ///  , returns <c>null</c>
     ///  if
     /// this CBOR object is null, or this object's value converted to the
-    /// nullable's underlying type, e.g., <c>int</c>
+    /// nullable's underlying type, for example, <c>int</c>
     ///  .</item>
-    ///  <item>If the
-    /// type is an enumeration ( <c>Enum</c>
-    ///  ) type and this CBOR object is
-    /// a text string or an integer, returns the appropriate enumerated
-    /// constant. (For example, if <c>MyEnum</c>
-    ///  includes an entry for
-    /// <c>MyValue</c>
-    ///  , this method will return <c>MyEnum.MyValue</c>
-    ///  if
-    /// the CBOR object represents <c>"MyValue"</c>
-    ///  or the underlying value
-    /// for <c>MyEnum.MyValue</c>
-    ///  .) <b>Note:</b>
-    ///  If an integer is
-    /// converted to a.NET Enum constant, and that integer is shared by
-    /// more than one constant of the same type, it is undefined which
-    /// constant from among them is returned. (For example, if
-    /// <c>MyEnum.Zero=0</c>
+    /// <item>If the type is an enumeration ( <c>Enum</c>
+    ///  ) type and this
+    /// CBOR object is a text string or an integer, returns the appropriate
+    /// enumerated constant. (For example, if <c>MyEnum</c>
+    ///  includes an
+    /// entry for <c>MyValue</c>
+    ///  , this method will return
+    /// <c>MyEnum.MyValue</c>
+    ///  if the CBOR object represents
+    /// <c>"MyValue"</c>
+    ///  or the underlying value for <c>MyEnum.MyValue</c>
+    /// .) <b>Note:</b>
+    ///  If an integer is converted to a.NET Enum constant,
+    /// and that integer is shared by more than one constant of the same
+    /// type, it is undefined which constant from among them is returned.
+    /// (For example, if <c>MyEnum.Zero=0</c>
     ///  and <c>MyEnum.Null=0</c>
-    ///  , converting 0 to
-    /// <c>MyEnum</c>
+    ///  ,
+    /// converting 0 to <c>MyEnum</c>
     ///  may return either <c>MyEnum.Zero</c>
-    ///  or
-    /// <c>MyEnum.Null</c>
-    ///  .) As a result, .NET Enum types with constants
-    /// that share an underlying value should not be passed to this
-    /// method.</item>
+    /// or <c>MyEnum.Null</c>
+    ///  .) As a result, .NET Enum types with
+    /// constants that share an underlying value should not be passed to
+    /// this method.</item>
     ///  <item>If the type is <c>byte[]</c>
     ///  (a
     /// one-dimensional byte array) and this CBOR object is a byte string,
@@ -1479,24 +1476,24 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// type and this CBOR object is an array, returns an array containing
     /// the items in this CBOR object.</item>
     ///  <item>If the type is List,
-    /// ReadOnlyCollection or the generic or non-generic IList,
-    /// ICollection, IEnumerable, IReadOnlyCollection, or IReadOnlyList (or
-    /// ArrayList, List, Collection, or Iterable in Java), and if this CBOR
-    /// object is an array, returns an object conforming to the type,
-    /// class, or interface passed to this method, where the object will
-    /// contain all items in this CBOR array.</item>
+    /// ReadOnlyCollection or the generic or nongeneric IList, ICollection,
+    /// IEnumerable, IReadOnlyCollection, or IReadOnlyList (or ArrayList,
+    /// List, Collection, or Iterable in Java), and if this CBOR object is
+    /// an array, returns an object conforming to the type, class, or
+    /// interface passed to this method, where the object will contain all
+    /// items in this CBOR array.</item>
+    ///  <item>If the type is Dictionary,
+    /// ReadOnlyDictionary or the generic or nongeneric IDictionary or
+    /// IReadOnlyDictionary (or HashMap or Map in Java), and if this CBOR
+    /// object is a map, returns an object conforming to the type, class,
+    /// or interface passed to this method, where the object will contain
+    /// all keys and values in this CBOR map.</item>
     ///  <item>If the type is
-    /// Dictionary, ReadOnlyDictionary or the generic or non-generic
-    /// IDictionary or IReadOnlyDictionary (or HashMap or Map in Java), and
-    /// if this CBOR object is a map, returns an object conforming to the
-    /// type, class, or interface passed to this method, where the object
-    /// will contain all keys and values in this CBOR map.</item>
-    ///  <item>If
-    /// the type is an enumeration constant ("enum"), and this CBOR object
-    /// is an integer or text string, returns the enumeration constant with
-    /// the given number or name, respectively. (Enumeration constants made
-    /// up of multiple enumeration constants, as allowed by .NET, can only
-    /// be matched by number this way.)</item>
+    /// an enumeration constant ("enum"), and this CBOR object is an
+    /// integer or text string, returns the enumeration constant with the
+    /// given number or name, respectively. (Enumeration constants made up
+    /// of multiple enumeration constants, as allowed by .NET, can only be
+    /// matched by number this way.)</item>
     ///  <item>If the type is
     /// <c>DateTime</c>
     ///  (or <c>Date</c>
@@ -2783,7 +2780,7 @@ FromCBORArray(array);
     /// converted to text strings with <c>ToString()</c>
     ///  , but that method
     /// will return multiple names if the given Enum object is a
-    /// combination of Enum objects (e.g. if the object is
+    /// combination of Enum objects (for example if the object is
     /// <c>FileAccess.Read | FileAccess.Write</c>
     ///  ). More generally, if
     /// Enums are converted to text strings, constants from Enum types with
@@ -4656,7 +4653,7 @@ throw new OverflowException() : (int)longValue;
     }
 
     /// <summary>Converts this object to a 32-bit signed integer.
-    /// Non-integer number values are converted to integers by discarding
+    /// Noninteger number values are converted to integers by discarding
     /// their fractional parts. (NOTE: To determine whether this method
     /// call can succeed, call <b>AsNumber().CanTruncatedIntFitInInt32</b>
     /// before calling this method. See the example.).</summary>
@@ -4767,10 +4764,10 @@ throw new OverflowException() : (int)longValue;
     /// array with more items is treated as greater than the other
     /// array.</item>
     /// <item>If both objects are maps, their key-value pairs, sorted by
-    /// key in accordance with this method, are compared, where each pair
-    /// is compared first by key and then by value. In this case, if the
-    /// maps have different numbers of key-value pairs, the map with more
-    /// pairs is treated as greater than the other map.</item>
+    /// key per this method, are compared, where each pair is compared
+    /// first by key and then by value. In this case, if the maps have
+    /// different numbers of key-value pairs, the map with more pairs is
+    /// treated as greater than the other map.</item>
     /// <item>If the two objects have different types, the object whose
     /// type comes first in the order of untagged integers, untagged byte
     /// strings, untagged text strings, untagged arrays, untagged maps,
@@ -5192,7 +5189,7 @@ this.ContainsKey(CBORObject.FromObject(objKey));
     /// <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
     /// is null, or if the pointer is invalid, or if there is no object at
     /// the given pointer, or the special key "-" appears in the pointer in
-    /// the context of an array (not a map), or if the pointer is non-empty
+    /// the context of an array (not a map), or if the pointer is nonempty
     /// and this object has a CBOR type other than array or
     /// map.</exception>
     public CBORObject AtJSONPointer(string pointer) {
@@ -5204,7 +5201,7 @@ this.ContainsKey(CBORObject.FromObject(objKey));
     /// according to RFC6901, or a default value if the operation fails.
     /// The syntax for a JSON Pointer is:
     /// <pre>'/' KEY '/' KEY [...]</pre> where KEY represents a key into
-    /// the JSON object or its sub-objects in the hierarchy. For example,
+    /// the JSON object or its subobjects in the hierarchy. For example,
     /// <pre>/foo/2/bar</pre> means the same as
     /// <pre>obj['foo'][2]['bar']</pre> in JavaScript. If "~" and/or "/"
     /// occurs in a key, it must be escaped with "~0" or "~1",
@@ -5225,7 +5222,7 @@ this.ContainsKey(CBORObject.FromObject(objKey));
     /// name='defaultValue'/> if the pointer is null, or if the pointer is
     /// invalid, or if there is no object at the given pointer, or the
     /// special key "-" appears in the pointer in the context of an array
-    /// (not a map), or if the pointer is non-empty and this object has a
+    /// (not a map), or if the pointer is nonempty and this object has a
     /// CBOR type other than array or map.</returns>
     public CBORObject AtJSONPointer(string pointer, CBORObject defaultValue) {
       return JSONPointer.GetObject(this, pointer, null);
@@ -5897,7 +5894,7 @@ CBORObjectTypeTextStringAscii)) {
     /// works not only with arrays and maps, but also integers,
     /// strings, byte arrays, and other JSON data types. Notes:
     ///
-    /// <list type=''><item>If this object contains maps with non-string
+    /// <list type=''><item>If this object contains maps with nonstring
     /// keys, the keys are converted to JSON strings before writing the map
     /// as a JSON string.</item>
     ///  <item>If this object represents a number
@@ -6101,7 +6098,7 @@ CBORObjectTypeTextStringAscii)) {
     /// }
     /// </code>
     /// <para>The following example (written in Java for the Java version)
-    /// shows how to use a subclassed <c>OutputStream</c>
+    /// shows how to use a subclass of <c>OutputStream</c>
     ///  together with a
     /// <c>ByteArrayOutputStream</c>
     ///  to limit the size of supported JSON
@@ -6791,7 +6788,7 @@ CBORObjectTypeTextStringAscii)) {
     /// }
     /// </code>
     /// <para>The following example (written in Java for the Java version)
-    /// shows how to use a subclassed <c>OutputStream</c>
+    /// shows how to use a subclass of <c>OutputStream</c>
     ///  together with a
     /// <c>ByteArrayOutputStream</c>
     ///  to limit the size of supported CBOR

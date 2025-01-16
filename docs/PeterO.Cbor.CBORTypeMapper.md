@@ -59,7 +59,7 @@ Adds the fully qualified name of a Java or.NET type for use in type matching.
 
 <b>Parameters:</b>
 
- * <i>name</i>: The fully qualified name of a Java or.NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
+ * <i>name</i>: The fully qualified name of a Java or.NET class (for example,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 
 <b>Return Value:</b>
 
@@ -85,7 +85,7 @@ Adds a prefix of a Java or.NET type for use in type matching. A type matches a p
 
 <b>Parameters:</b>
 
- * <i>prefix</i>: The prefix of a Java or.NET type (e.g., `java.math.` or `System.Globalization`).
+ * <i>prefix</i>: The prefix of a Java or.NET type (for example, `java.math.` or `System.Globalization`).
 
 <b>Return Value:</b>
 
@@ -111,7 +111,7 @@ Returns whether the given Java or.NET type name fits the filters given in this m
 
 <b>Parameters:</b>
 
- * <i>typeName</i>: The fully qualified name of a Java or.NET class (e.g.,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
+ * <i>typeName</i>: The fully qualified name of a Java or.NET class (for example,  `java.math.BigInteger`  or  `System.Globalization.CultureInfo`  ).
 
 <b>Return Value:</b>
 

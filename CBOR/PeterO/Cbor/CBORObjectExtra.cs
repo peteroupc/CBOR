@@ -18,7 +18,8 @@ namespace PeterO.Cbor {
     /* The "==" and "!=" operators are not overridden in the .NET version to be
       consistent with Equals, for two reasons: (1) This type is mutable in
     certain cases, which can cause different results when comparing with another
-      object. (2) Objects with this type can have arbitrary size (e.g., they
+      object. (2) Objects with this type can have arbitrary size (for
+example, they
     can be byte strings, text strings, arrays, or maps of arbitrary size), and
     comparing
       two of them for equality can be much more complicated and take much
