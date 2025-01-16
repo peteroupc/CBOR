@@ -9461,19 +9461,20 @@ CBORObject.FromCBORObjectAndTag(CBORObject.FromString(dateStr), 0);
     [Test]
     [Timeout(10001)]
     public void TestQueryStrings() {
-      // TODO: Add utility to create query strings
+      // TODO: Add helper to create query strings
       string test = "a=b&c=d&e=f&g\u005b0]=h&g\u005b1]=j&g\u005b2]\u005b";
       test += "a]=k&g\u005b2]\u005bb]=m";
       var cbor =
         CBORObject.FromObject(QueryStringHelper.QueryStringToDict(test));
       Console.WriteLine(cbor.ToJSONString());
-      cbor = CBORObject.FromObject(QueryStringHelper.QueryStringToCBOR(test));
+      cbor =
+CBORObject.FromObject(QueryStringHelperCBOR.QueryStringToCBOR(test));
       Console.WriteLine(cbor.ToJSONString());
       var rg = new RandomGenerator();
       for (int i = 0; i < 100000; ++i) {
         string str = RandomQueryStringLike(rg);
         try {
-          cbor = QueryStringHelper.QueryStringToCBOR(str);
+          cbor = QueryStringHelperCBOR.QueryStringToCBOR(str);
           // Console.WriteLine("succ: " + str);
           // Console.WriteLine(cbor.ToJSONString());
         } catch (InvalidOperationException) {
