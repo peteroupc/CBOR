@@ -621,7 +621,7 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
           return;
         }
         if (mnm == null) {
-          Console.WriteLine("member info not found: " + mnu);
+          Console.WriteLine("method info not found: " + mnu);
           return;
         }
         using IDisposable ch = this.AddMember(info);
@@ -632,7 +632,7 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
                   "\r\n\r\n" + signature + "\r\n\r\n");
         if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is
 ObsoleteAttribute attr) {
-          this.WriteLine("<b>Deprecated.</b> " +
+          this.WriteLine("<b>Obsolete.</b> " +
 DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
         }
         if (method.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
@@ -669,7 +669,7 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
         this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
         if (type.GetCustomAttribute(typeof(ObsoleteAttribute)) is
 ObsoleteAttribute attr) {
-          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          this.WriteLine("<b>Obsolete.</b> " + attr.Message + "\r\n\r\n");
         }
         if (type.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
 CLSCompliantAttribute cattr && !cattr.IsCompliant) {
@@ -704,7 +704,7 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
                   "\r\n\r\n");
         if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) is
 ObsoleteAttribute attr) {
-          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          this.WriteLine("<b>Obsolete.</b> " + attr.Message + "\r\n\r\n");
         }
         if (property.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
 CLSCompliantAttribute cattr && !cattr.IsCompliant) {
@@ -740,7 +740,7 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
                   "\r\n\r\n");
         if (field.GetCustomAttribute(typeof(ObsoleteAttribute)) is
 ObsoleteAttribute attr) {
-          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          this.WriteLine("<b>Obsolete.</b> " + attr.Message + "\r\n\r\n");
         }
         if (field.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
 CLSCompliantAttribute cattr && !cattr.IsCompliant) {

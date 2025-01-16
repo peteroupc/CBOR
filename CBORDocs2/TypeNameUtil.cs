@@ -132,6 +132,7 @@ namespace PeterO.DocGen {
               p.ParameterType,
               true,
               genericMethod);
+            msb.Append(typeNameString);
             first = false;
           }
           _ = msb.Append(')');

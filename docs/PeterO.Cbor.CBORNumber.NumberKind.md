@@ -4,7 +4,8 @@
         System.Enum,
         System.IComparable,
         System.IConvertible,
-        System.IFormattable
+        System.IFormattable,
+        System.ISpanFormattable
 
 Specifies the underlying form of this CBOR number object.
 

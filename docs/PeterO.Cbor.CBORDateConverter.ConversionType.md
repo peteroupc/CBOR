@@ -4,7 +4,8 @@
         System.Enum,
         System.IComparable,
         System.IConvertible,
-        System.IFormattable
+        System.IFormattable,
+        System.ISpanFormattable
 
 Conversion type for date-time conversion.
 

@@ -10,12 +10,13 @@ using System;
 namespace CBORDocs {
   internal class Program {
     public static void Main(string[] args) {
-      if (args.Length < 2 || String.IsNullOrEmpty(args[0]) ||
-        String.IsNullOrEmpty(args[1])) {
+      if (args.Length < 2 || String.IsNullOrEmpty(args[args.Length - 2]) ||
+        String.IsNullOrEmpty(args[args.Length - 1])) {
         Console.WriteLine("Usage: CBORDocs2 <dllfile> <docpath>");
         return;
       }
-      PeterO.DocGen.DocGenerator.Generate(args[0], args[1]);
+      PeterO.DocGen.DocGenerator.Generate(args[args.Length - 2],
+  args[args.Length - 1]);
     }
   }
 }

@@ -55,7 +55,7 @@ memberName) {
       var attr = info?.GetCustomAttribute(typeof(ObsoleteAttribute)) as
                   ObsoleteAttribute;
       summary = (attr != null) ?
-         ("<b>Deprecated:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
+         ("<b>Obsolete:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
          xdoc?.GetSummary(memberName);
       if (summary != null && attr == null &&
         summary.IndexOf(".", StringComparison.Ordinal) >= 0) {

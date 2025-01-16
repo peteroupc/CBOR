@@ -72,33 +72,6 @@ Gets the conversion type for this date converter.
 
 The conversion type for this date converter.
 
-<a id="DateTimeFieldsToCBORObject_int_int_int"></a>
-### DateTimeFieldsToCBORObject
-
-    public PeterO.Cbor.CBORObject DateTimeFieldsToCBORObject(
-        int smallYear,
-        int month,
-        int day);
-
-Converts a date/time in the form of a year, month, and day to a CBOR object. The hour, minute, and second are treated as 00:00:00 by this method, and the time offset is treated as 0 by this method.
-
-<b>Parameters:</b>
-
- * <i>smallYear</i>: The year.
-
- * <i>month</i>: Month of the year, from 1 (January) through 12 (December).
-
- * <i>day</i>: Day of the month, from 1 through 31.
-
-<b>Return Value:</b>
-
-A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
-
-<b>Exceptions:</b>
-
- * PeterO.Cbor.CBORException:
-An error occurred in conversion.
-
 <a id="DateTimeFieldsToCBORObject_int_int_int_int_int_int"></a>
 ### DateTimeFieldsToCBORObject
 
@@ -125,6 +98,33 @@ Converts a date/time in the form of a year, month, day, hour, minute, and second
  * <i>minute</i>: Minute of the hour, from 0 through 59.
 
  * <i>second</i>: Second of the minute, from 0 through 59.
+
+<b>Return Value:</b>
+
+A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+An error occurred in conversion.
+
+<a id="DateTimeFieldsToCBORObject_int_int_int"></a>
+### DateTimeFieldsToCBORObject
+
+    public PeterO.Cbor.CBORObject DateTimeFieldsToCBORObject(
+        int smallYear,
+        int month,
+        int day);
+
+Converts a date/time in the form of a year, month, and day to a CBOR object. The hour, minute, and second are treated as 00:00:00 by this method, and the time offset is treated as 0 by this method.
+
+<b>Parameters:</b>
+
+ * <i>smallYear</i>: The year.
+
+ * <i>month</i>: Month of the year, from 1 (January) through 12 (December).
+
+ * <i>day</i>: Day of the month, from 1 through 31.
 
 <b>Return Value:</b>
 
@@ -244,28 +244,6 @@ An error occurred in conversion.
 
     public bool TryGetDateTimeFields(
         PeterO.Cbor.CBORObject obj,
-        PeterO.Numbers.EInteger& year,
-        int[] lesserFields);
-
-Tries to extract the fields of a date and time in the form of a CBOR object.
-
-<b>Parameters:</b>
-
- * <i>obj</i>: A CBOR object that specifies a date/time according to the conversion type used to create this date converter.
-
- * <i>year</i>: Will store the year. If this function fails, the year is set to null.
-
- * <i>lesserFields</i>: An array that will store the fields (other than the year) of the date and time. The array's length must be 7 or greater. If this function fails, the first seven elements are set to 0. For more information, see the (EInteger[], int) overload of this method.
-
-<b>Return Value:</b>
-
-Either  `true`  if the method is successful, or  `false`  otherwise.
-
-<a id="TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int"></a>
-### TryGetDateTimeFields
-
-    public bool TryGetDateTimeFields(
-        PeterO.Cbor.CBORObject obj,
         PeterO.Numbers.EInteger[] year,
         int[] lesserFields);
 
@@ -299,9 +277,24 @@ Tries to extract the fields of a date and time in the form of a CBOR object.
 
 Either  `true`  if the method is successful, or  `false`  otherwise.
 
-<b>Exceptions:</b>
+<a id="TryGetDateTimeFields_PeterO_Cbor_CBORObject_PeterO_Numbers_EInteger_int"></a>
+### TryGetDateTimeFields
 
- * System.ArgumentNullException:
-The parameter  <i>year</i>
- or  <i>lesserFields</i>
- is null, or contains fewer elements than required.
+    public bool TryGetDateTimeFields(
+        PeterO.Cbor.CBORObject obj,
+        PeterO.Numbers.EInteger& year,
+        int[] lesserFields);
+
+Tries to extract the fields of a date and time in the form of a CBOR object.
+
+<b>Parameters:</b>
+
+ * <i>obj</i>: A CBOR object that specifies a date/time according to the conversion type used to create this date converter.
+
+ * <i>year</i>: Will store the year. If this function fails, the year is set to null.
+
+ * <i>lesserFields</i>: An array that will store the fields (other than the year) of the date and time. The array's length must be 7 or greater. If this function fails, the first seven elements are set to 0. For more information, see the (EInteger[], int) overload of this method.
+
+<b>Return Value:</b>
+
+Either  `true`  if the method is successful, or  `false`  otherwise.

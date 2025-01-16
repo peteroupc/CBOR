@@ -4,7 +4,8 @@
         System.Enum,
         System.IComparable,
         System.IConvertible,
-        System.IFormattable
+        System.IFormattable,
+        System.ISpanFormattable
 
 Specifies how JSON numbers are converted to CBOR objects when decoding JSON (such as via  `FromJSONString`  or  `ReadJSON`  ). None of these conversion modes affects how CBOR objects are later encoded (such as via  `EncodeToBytes`  ).
 
