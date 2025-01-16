@@ -5610,7 +5610,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }}
+      }
+    }
     [Test]
     [Timeout(10001)]
     public void TestCalcEncodedSizeCircularRefs3bc3() {
@@ -5631,7 +5632,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }}
+      }
+    }
     [Test]
     [Timeout(10001)]
     public void TestCalcEncodedSizeCircularRefs3bc4() {
@@ -5651,7 +5653,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }}
+      }
+    }
     [Test]
     [Timeout(10001)]
     public void TestCalcEncodedSizeCircularRefs3bc5() {
@@ -5671,7 +5674,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }}
+      }
+    }
     [Test]
     [Timeout(10001)]
     public void TestCalcEncodedSizeCircularRefs3bc6() {
@@ -5691,7 +5695,8 @@ ToObjectTest.TestToFromObjectRoundTrip(String.Empty).AsNumber().IsFinite();
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      }}
+      }
+    }
     [Test]
     [Timeout(10001)]
     public void TestCalcEncodedSizeCircularRefs3bc7() {
