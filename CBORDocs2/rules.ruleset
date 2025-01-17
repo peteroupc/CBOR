@@ -20,7 +20,7 @@
     <!--SA1124 is DoNotUseRegions-->
     <!--Rule Action='Warning' Id='SA1124'/-->
     <!--"... where T : ..." rule disabled -->
-    <!--Rule Action='Warning' Id='SA1127'/-->
+    <Rule Action='None' Id='SA1127'/>
     <!-- "Put constructor initializers on their own line" -->
     <Rule Action='None' Id='SA1128'/>
     <!--Rule Action='Warning' Id='SA1200'/-->
