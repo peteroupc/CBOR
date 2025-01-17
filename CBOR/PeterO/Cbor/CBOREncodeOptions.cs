@@ -72,7 +72,7 @@ namespace PeterO.Cbor {
     /// The following is an example of this parameter:
     /// <c>allowduplicatekeys=true;ctap2Canonical=true</c>. The key can be
     /// any one of the following where the letters can be any combination
-    /// of basic uppercase and/or basic lowercase letters:
+    /// of basic uppercase and basic lowercase letters:
     /// <c>allowduplicatekeys</c>, <c>ctap2canonical</c>,
     /// <c>resolvereferences</c>, <c>useindeflengthstrings</c>,
     /// <c>allowempty</c>, <c>float64</c>, <c>keepkeyorder</c>. Keys
@@ -87,8 +87,8 @@ namespace PeterO.Cbor {
     /// value given for the last such key is used. The four keys just given
     /// can have a value of <c>1</c>, <c>true</c>, <c>yes</c>, or
     /// <c>on</c> (where the letters can be any combination of basic
-    /// uppercase and/or basic lowercase letters), which means true, and
-    /// any other value meaning false. For example,
+    /// uppercase and basic lowercase letters), which means true, and any
+    /// other value meaning false. For example,
     /// <c>allowduplicatekeys=Yes</c> and <c>allowduplicatekeys=1</c> both
     /// set the <c>AllowDuplicateKeys</c> property to true. In the future,
     /// this class may allow other keys to store other kinds of values, not

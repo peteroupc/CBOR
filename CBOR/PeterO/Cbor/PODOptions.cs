@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
     /// end with whitespace. The string can be empty, but cannot be null.
     /// The following is an example of this parameter:
     /// <c>usecamelcase=true</c>. The key can be any one of the following
-    /// where the letters can be any combination of basic uppercase and/or
+    /// where the letters can be any combination of basic uppercase and
     /// basic lowercase letters: <c>usecamelcase</c>. Other keys are
     /// ignored in this version of the CBOR library. (Keys are compared
     /// using a basic case-insensitive comparison, in which two strings are

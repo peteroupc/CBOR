@@ -112,7 +112,7 @@ namespace PeterO.Cbor {
     /// The following is an example of this parameter:
     /// <c>writebasic=false;replacesurrogates=true</c>. The key can be any
     /// one of the following where the letters can be any combination of
-    /// basic uppercase and/or basic lowercase letters:
+    /// basic uppercase and basic lowercase letters:
     /// <c>replacesurrogates</c>, <c>allowduplicatekeys</c>,
     /// <c>preservenegativezero</c>, <c>numberconversion</c>,
     /// <c>writebasic</c>, <c>keepkeyorder</c>. Other keys are ignored in

@@ -2552,8 +2552,8 @@ FromCBORArray(array);
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
@@ -2573,8 +2573,8 @@ FromCBORArray(array);
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <param name='options'>An object containing options to control how
     /// certain objects are converted to CBOR objects.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
@@ -2600,8 +2600,8 @@ FromCBORArray(array);
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <param name='mapper'>An object containing optional converters to
     /// convert objects of certain types to CBOR objects.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
@@ -2800,8 +2800,8 @@ FromCBORArray(array);
     ///  ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>
     /// .</param>
     /// <param name='mapper'>An object containing optional converters to
     /// convert objects of certain types to CBOR objects. Can be
@@ -3055,8 +3055,8 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
     /// used to mark a "self-described CBOR" object. This document does not
     /// attempt to list all CBOR tags and their meanings. An up-to-date
@@ -3133,8 +3133,8 @@ bigintTag) =>
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <param name='smallTag'>A 32-bit integer that specifies a tag
     /// number. The tag number 55799 can be used to mark a "self-described
     /// CBOR" object. This document does not attempt to list all CBOR tags
@@ -4242,8 +4242,8 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <param name='output'>A writable data stream.</param>
     /// <param name='options'>CBOR options for encoding the CBOR object to
     /// bytes.</param>
@@ -4311,8 +4311,8 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     /// this method (such as <c>int</c> or <c>String</c> ) and/or to
     /// plain-old-data types (POCO or POJO types) within the control of the
     /// application. If the plain-old-data type references other data
-    /// types, those types should likewise meet either criterion
-    /// above.</para>.</param>
+    /// types, those types should likewise meet either criterion given
+    /// earlier.</para>.</param>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='outputStream'/> is null.</exception>
