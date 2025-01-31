@@ -84,19 +84,19 @@ namespace PeterO {
 
     public static CBORObject Read(Stream stream) {
       return stream == null ? throw new
-ArgumentNullException(nameof(stream)) : ReadObject(stream, false);
+        ArgumentNullException(nameof(stream)) : ReadObject(stream, false);
     }
 
     private static CBORObject ReadObject(Stream stream, bool allowEnd) {
       int c = stream.ReadByte();
       return c switch {
         'd' => ReadDictionary(stream),
-        'l' => ReadList(stream),
-        'i' => ReadInteger(stream),
-        'e' => allowEnd ? null : throw new CBORException("Object expected"),
-        '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9'
-=> ReadString(stream, (char)c),
-        _ => throw new CBORException("Object expected"),
+          'l' => ReadList(stream),
+          'i' => ReadInteger(stream),
+          'e' => allowEnd ? null : throw new CBORException("Object expected"),
+          '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9'
+          => ReadString(stream, (char)c),
+          _ => throw new CBORException("Object expected"),
       };
     }
 
@@ -106,7 +106,7 @@ ArgumentNullException(nameof(stream)) : ReadObject(stream, false);
       return longValue == Int64.MinValue ?
         "-9223372036854775808" : longValue == 0L ?
         "0" : (longValue == Int32.MinValue) ? "-2147483648" :
-EInteger.FromInt64(longValue).ToString();
+        EInteger.FromInt64(longValue).ToString();
     }
 
     private static CBORObject ReadString(Stream stream, char firstChar) {
@@ -138,13 +138,13 @@ EInteger.FromInt64(longValue).ToString();
       }
       builder = new StringBuilder();
       return DataUtilities.ReadUtf8(
-        stream,
-        numlength.ToInt32Checked(),
-        builder,
-        false) switch {
+          stream,
+          numlength.ToInt32Checked(),
+          builder,
+      false) switch {
         -2 => throw new CBORException("Premature end of data"),
-        -1 => throw new CBORException("Invalid UTF-8"),
-        _ => CBORObject.FromString(builder.ToString()),
+          -1 => throw new CBORException("Invalid UTF-8"),
+          _ => CBORObject.FromString(builder.ToString()),
       };
     }
 

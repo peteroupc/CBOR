@@ -31,7 +31,7 @@ namespace PeterO.DocGen {
       return XmlDocTypeName(t, param, false);
     }
     public static string XmlDocTypeName(Type t, bool param, bool
-        genericMethod) {
+      genericMethod) {
       var sb = new StringBuilder();
       if (t.IsArray) {
         _ = sb.Append(XmlDocTypeName(t.GetElementType(), param, genericMethod))
@@ -44,8 +44,8 @@ namespace PeterO.DocGen {
           .Append('@');
       } else if (t.IsGenericParameter) {
         string ggastr = Convert.ToString(
-          t.GenericParameterPosition,
-          System.Globalization.CultureInfo.InvariantCulture);
+            t.GenericParameterPosition,
+            System.Globalization.CultureInfo.InvariantCulture);
         _ = sb.Append(genericMethod ? "``" : "`").Append(ggastr);
       } else {
         _ = sb.Append(t.Namespace);
@@ -74,8 +74,8 @@ namespace PeterO.DocGen {
               _ = sb.Append('}');
             } else {
               string ggastr = Convert.ToString(
-                types[i].GetGenericArguments().Length,
-                System.Globalization.CultureInfo.InvariantCulture);
+                  types[i].GetGenericArguments().Length,
+                  System.Globalization.CultureInfo.InvariantCulture);
               _ = sb.Append('`').Append(ggastr);
             }
           }
@@ -91,8 +91,8 @@ namespace PeterO.DocGen {
       if (obj is ConstructorInfo) {
         var cons = obj as ConstructorInfo;
         var msb = new StringBuilder()
-          .Append("M:").Append(XmlDocTypeName(cons.DeclaringType))
-          .Append(cons.IsStatic ? ".#cctor" : ".#ctor");
+        .Append("M:").Append(XmlDocTypeName(cons.DeclaringType))
+        .Append(cons.IsStatic ? ".#cctor" : ".#ctor");
         if (cons.GetParameters().Length > 0) {
           _ = msb.Append('(');
           var first = true;
@@ -110,15 +110,15 @@ namespace PeterO.DocGen {
       if (obj is MethodInfo) {
         var mi = obj as MethodInfo;
         var msb = new StringBuilder()
-          .Append("M:").Append(XmlDocTypeName(mi.DeclaringType))
-          .Append('.').Append(mi.Name);
+        .Append("M:").Append(XmlDocTypeName(mi.DeclaringType))
+        .Append('.').Append(mi.Name);
         int gga = mi.GetGenericArguments().Length;
         bool genericMethod = gga > 0;
         if (genericMethod) {
           _ = msb.Append("``");
           string ggastr = Convert.ToString(
-            gga,
-            System.Globalization.CultureInfo.InvariantCulture);
+              gga,
+              System.Globalization.CultureInfo.InvariantCulture);
           _ = msb.Append(ggastr);
         }
         if (mi.GetParameters().Length > 0) {
@@ -129,16 +129,16 @@ namespace PeterO.DocGen {
               _ = msb.Append(',');
             }
             string typeNameString = XmlDocTypeName(
-              p.ParameterType,
-              true,
-              genericMethod);
+                p.ParameterType,
+                true,
+                genericMethod);
             msb.Append(typeNameString);
             first = false;
           }
           _ = msb.Append(')');
         }
         if (mi.Name.Equals("op_Explicit", StringComparison.Ordinal) ||
-mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
+          mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
           Type rt = mi.ReturnType;
           if (rt != null) {
             _ = msb.Append('~').Append(XmlDocTypeName(rt, true, genericMethod));
@@ -149,8 +149,8 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
       if (obj is PropertyInfo) {
         var pi = obj as PropertyInfo;
         var msb = new StringBuilder().Append("P:")
-          .Append(XmlDocTypeName(pi.DeclaringType)).Append('.')
-          .Append(pi.Name);
+        .Append(XmlDocTypeName(pi.DeclaringType)).Append('.')
+        .Append(pi.Name);
         if (pi.GetIndexParameters().Length > 0) {
           _ = msb.Append('(');
           var first = true;
@@ -167,7 +167,7 @@ mi.Name.Equals("op_Implicit", StringComparison.Ordinal)) {
       }
       if (obj is FieldInfo) {
         string m = "F:" + XmlDocTypeName(((FieldInfo)obj).DeclaringType) +
-           "." + ((FieldInfo)obj).Name;
+          "." + ((FieldInfo)obj).Name;
         return m;
       }
       return obj.ToString();

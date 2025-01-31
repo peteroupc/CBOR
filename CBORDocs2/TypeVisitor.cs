@@ -32,8 +32,8 @@ namespace PeterO.DocGen {
         this.memSummaries[key].Finish();
         string memSummaryString = this.memSummaries[key].ToString();
         string filename = Path.Combine(
-          this.directory,
-          this.typeIDs[key] + ".md");
+            this.directory,
+            this.typeIDs[key] + ".md");
         finalString = DocGenUtil.NormalizeLines(finalString);
         finalString = Regex.Replace(
             finalString,
@@ -95,8 +95,8 @@ namespace PeterO.DocGen {
         currentType = info.ReflectedType;
       }
       if (currentType == null ||
-          !(currentType.IsNested ? currentType.IsNestedPublic :
-currentType.IsPublic)) {
+        !(currentType.IsNested ? currentType.IsNestedPublic :
+          currentType.IsPublic)) {
         return;
       }
       string typeFullName = currentType.FullName;

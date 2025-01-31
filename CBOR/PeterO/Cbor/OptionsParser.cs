@@ -22,9 +22,9 @@ namespace PeterO.Cbor {
       int delimLength = delimiter.Length;
       while (true) {
         int index2 = str.IndexOf(
-          delimiter,
-          index,
-          StringComparison.Ordinal);
+            delimiter,
+            index,
+            StringComparison.Ordinal);
         if (index2 < 0) {
           if (first) {
             var strret = new string[1];
@@ -58,7 +58,7 @@ namespace PeterO.Cbor {
               options);
           }
           string key = DataUtilities.ToLowerCaseAscii(opt.Substring(0,
-                index));
+            index));
           string value = opt.Substring(index + 1);
           this.dict[key] = value;
         }

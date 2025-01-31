@@ -15,18 +15,17 @@ using System.Text.RegularExpressions;
 
 namespace PeterO.DocGen {
   /// <summary>A documentation visitor.</summary>
-  internal class DocVisitor : IVisitor
-  {
+  internal class DocVisitor : IVisitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
     private static readonly IDictionary<string, string> ValueOperators =
-          OperatorList();
+      OperatorList();
 
     private readonly StringBuilder buffer = new();
     private readonly StringBuilder exceptionStr = new();
 
     private readonly IDictionary<string, StringBuilder> members = new
-      SortedDictionary<string, StringBuilder>();
+    SortedDictionary<string, StringBuilder>();
 
     private readonly StringBuilder paramStr = new();
     private readonly StringBuilder returnStr = new();
@@ -39,10 +38,10 @@ namespace PeterO.DocGen {
         if (arg.IsGenericParameter) {
           Type[] constraints = arg.GetGenericParameterConstraints();
           if (constraints.Length == 0 && (arg.GenericParameterAttributes &
-  (GenericParameterAttributes.ReferenceTypeConstraint |
-  GenericParameterAttributes.NotNullableValueTypeConstraint |
-                   GenericParameterAttributes.DefaultConstructorConstraint))
-                == GenericParameterAttributes.None) {
+            (GenericParameterAttributes.ReferenceTypeConstraint |
+              GenericParameterAttributes.NotNullableValueTypeConstraint |
+              GenericParameterAttributes.DefaultConstructorConstraint))
+            == GenericParameterAttributes.None) {
             continue;
           }
           _ = builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
@@ -50,8 +49,8 @@ namespace PeterO.DocGen {
           _ = builder.Append(" : ");
           var first = true;
           if ((arg.GenericParameterAttributes &
-               GenericParameterAttributes.ReferenceTypeConstraint) !=
-              GenericParameterAttributes.None) {
+            GenericParameterAttributes.ReferenceTypeConstraint) !=
+            GenericParameterAttributes.None) {
             if (!first) {
               _ = builder.Append(", ");
             }
@@ -59,8 +58,8 @@ namespace PeterO.DocGen {
             first = false;
           }
           if ((arg.GenericParameterAttributes &
-               GenericParameterAttributes.NotNullableValueTypeConstraint) !=
-              GenericParameterAttributes.None) {
+            GenericParameterAttributes.NotNullableValueTypeConstraint) !=
+            GenericParameterAttributes.None) {
             if (!first) {
               _ = builder.Append(", ");
             }
@@ -68,8 +67,8 @@ namespace PeterO.DocGen {
             first = false;
           }
           if ((arg.GenericParameterAttributes &
-               GenericParameterAttributes.DefaultConstructorConstraint) !=
-              GenericParameterAttributes.None) {
+            GenericParameterAttributes.DefaultConstructorConstraint) !=
+            GenericParameterAttributes.None) {
             if (!first) {
               _ = builder.Append(", ");
             }
@@ -114,7 +113,7 @@ namespace PeterO.DocGen {
           object obj = field.GetRawConstantValue();
           _ = obj is int ? builder.Append(" = " + (int)obj + ";") :
             obj is long ? builder.Append(" = " + (long)obj + "L;") :
-builder.Append(';');
+            builder.Append(';');
         } catch (InvalidOperationException) {
           _ = builder.Append(';');
         }
@@ -149,7 +148,7 @@ builder.Append(';');
           if (method.IsFinal) {
             _ = builder.Append("sealed ");
           } else if (method is MethodInfo &&
-IsMethodOverride((MethodInfo)method)) {
+            IsMethodOverride((MethodInfo)method)) {
             _ = builder.Append("override ");
           } else if (method.IsVirtual) {
             _ = builder.Append("virtual ");
@@ -161,13 +160,13 @@ IsMethodOverride((MethodInfo)method)) {
       Attribute attr;
       if (methodInfo != null) {
         attr = methodInfo.GetCustomAttribute(
-          typeof(System.Runtime.CompilerServices.ExtensionAttribute));
+            typeof(System.Runtime.CompilerServices.ExtensionAttribute));
         isExtension = attr != null;
         if (method.Name.Equals("op_Explicit", StringComparison.Ordinal)) {
           _ = builder.Append("explicit operator ");
           _ = builder.Append(FormatType(methodInfo.ReturnType));
         } else if (method.Name.Equals("op_Implicit",
-  StringComparison.Ordinal)) {
+          StringComparison.Ordinal)) {
           _ = builder.Append("implicit operator ");
           _ = builder.Append(FormatType(methodInfo.ReturnType));
         } else if (ValueOperators.TryGetValue(method.Name, out string op)) {
@@ -183,7 +182,9 @@ IsMethodOverride((MethodInfo)method)) {
         }
       } else {
         _ =
-builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
+
+          builder.Append(
+            TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       }
       bool first;
       if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
@@ -245,30 +246,30 @@ builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
         _ = builder.Append(FourSpaces);
         if (!property.ReflectedType.IsInterface) {
           if ((getter != null && getter.IsPublic) ||
-              (setter != null && setter.IsPublic)) {
+            (setter != null && setter.IsPublic)) {
             _ = builder.Append("public ");
           } else if ((getter != null && getter.IsAssembly) ||
-                (setter != null && setter.IsAssembly)) {
+            (setter != null && setter.IsAssembly)) {
             _ = builder.Append("internal ");
           } else if ((getter != null && getter.IsFamily) ||
-                (setter != null && setter.IsFamily)) {
+            (setter != null && setter.IsFamily)) {
             _ = builder.Append("protected ");
           }
           if ((getter != null && getter.IsStatic) ||
-              (setter != null && setter.IsStatic)) {
+            (setter != null && setter.IsStatic)) {
             _ = builder.Append("static ");
           }
           if ((getter != null && getter.IsAbstract) ||
-              (setter != null && setter.IsAbstract)) {
+            (setter != null && setter.IsAbstract)) {
             _ = builder.Append("abstract ");
           }
           if ((getter != null && getter.IsFinal) ||
-              (setter != null && setter.IsFinal)) {
+            (setter != null && setter.IsFinal)) {
             _ = builder.Append("sealed ");
           } else if (IsMethodOverride(getter)) {
             _ = builder.Append("override ");
           } else if ((getter != null && getter.IsVirtual) ||
-                (setter != null && setter.IsVirtual)) {
+            (setter != null && setter.IsVirtual)) {
             _ = builder.Append("virtual ");
           }
         }
@@ -278,12 +279,12 @@ builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       bool first;
       ParameterInfo[] indexParams = property.GetIndexParameters();
       _ = indexParams.Length > 0 ? builder.Append("this[") :
-builder.Append(property.Name);
+        builder.Append(property.Name);
       first = true;
       foreach (ParameterInfo param in indexParams) {
         _ = !first ? builder.Append(",\r\n" + FourSpaces + FourSpaces) :
           builder.Append(indexParams.Length == 1 ?
-                    String.Empty : "\r\n" + FourSpaces + FourSpaces);
+            String.Empty : "\r\n" + FourSpaces + FourSpaces);
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
           _ = builder.Append("params ");
@@ -348,28 +349,29 @@ builder.Append(property.Name);
         "decimal" :
         name.Equals("System.Int32", StringComparison.Ordinal) ? "int" :
         (name.Equals("System.Int64", StringComparison.Ordinal) ? "long" :
-         (name.Equals("System.Int16", StringComparison.Ordinal) ? "short" :
-          (name.Equals("System.UInt32", StringComparison.Ordinal) ? "uint" :
-           (name.Equals("System.UInt64", StringComparison.Ordinal) ? "ulong" :
-            (name.Equals("System.UInt16", StringComparison.Ordinal) ? "ushort" :
-             (name.Equals("System.Char", StringComparison.Ordinal) ? "char" :
-              (name.Equals("System.Object", StringComparison.Ordinal) ?
-"object" :
-           (name.Equals("System.Void", StringComparison.Ordinal) ? "void" :
-(name.Equals("System.Byte", StringComparison.Ordinal) ?
-                    "byte" :
-  (name.Equals("System.SByte", StringComparison.Ordinal) ? "sbyte" :
-(name.Equals("System.String", StringComparison.Ordinal) ?
-                "string" : (name.Equals("System.Boolean",
-  StringComparison.Ordinal) ?
-  "bool" : (name.Equals("System.Single", StringComparison.Ordinal) ?
-  "float" : (name.Equals("System.Double", StringComparison.Ordinal) ? "double" :
-  name))))))))))))));
+        (name.Equals("System.Int16", StringComparison.Ordinal) ? "short" :
+        (name.Equals("System.UInt32", StringComparison.Ordinal) ? "uint" :
+        (name.Equals("System.UInt64", StringComparison.Ordinal) ? "ulong" :
+        (name.Equals("System.UInt16", StringComparison.Ordinal) ? "ushort" :
+        (name.Equals("System.Char", StringComparison.Ordinal) ? "char" :
+        (name.Equals("System.Object", StringComparison.Ordinal) ?
+        "object" :
+        (name.Equals("System.Void", StringComparison.Ordinal) ? "void" :
+        (name.Equals("System.Byte", StringComparison.Ordinal) ?
+        "byte" :
+        (name.Equals("System.SByte", StringComparison.Ordinal) ? "sbyte" :
+        (name.Equals("System.String", StringComparison.Ordinal) ?
+        "string" : (name.Equals("System.Boolean",
+        StringComparison.Ordinal) ?
+        "bool" : (name.Equals("System.Single", StringComparison.Ordinal) ?
+        "float" : (name.Equals("System.Double", StringComparison.Ordinal) ?
+        "double" :
+        name))))))))))))));
     }
 
     public static string FormatTypeSig(Type typeInfo) {
       bool isPublic = typeInfo.IsNested ? typeInfo.IsNestedPublic :
-typeInfo.IsPublic;
+        typeInfo.IsPublic;
       var builder = new StringBuilder();
       _ = builder.Append(FourSpaces);
       _ = isPublic ? builder.Append("public ") : builder.Append("internal ");
@@ -381,7 +383,8 @@ typeInfo.IsPublic;
         _ = builder.Append("sealed ");
       }
       _ = typeInfo.IsValueType ? builder.Append("struct ") :
-typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
+        typeInfo.IsClass ? builder.Append("class ") :
+        builder.Append("interface ");
       _ = builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
       bool first;
       if (typeInfo.GetGenericArguments().Length > 0) {
@@ -400,7 +403,7 @@ typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
       Type[] ifaces = typeInfo.GetInterfaces();
       Type derived = typeInfo.BaseType;
       if (typeInfo.BaseType != null &&
-          typeInfo.BaseType.Equals(typeof(object))) {
+        typeInfo.BaseType.Equals(typeof(object))) {
         derived = null;
       }
       if (derived != null || ifaces.Length > 0) {
@@ -442,11 +445,11 @@ typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
           ++i;
         }
         _ = cat == UnicodeCategory.UppercaseLetter ||
-            cat == UnicodeCategory.LowercaseLetter ||
-            cat == UnicodeCategory.TitlecaseLetter ||
-            cat == UnicodeCategory.OtherLetter ||
-            cat == UnicodeCategory.DecimalDigitNumber ||
-            cp == '_' || cp == '.' ?
+          cat == UnicodeCategory.LowercaseLetter ||
+          cat == UnicodeCategory.TitlecaseLetter ||
+          cat == UnicodeCategory.OtherLetter ||
+          cat == UnicodeCategory.DecimalDigitNumber ||
+          cp == '_' || cp == '.' ?
           cp >= 0x10000 ? builder.Append(name, i, 2) : builder.Append(name[i]) :
           builder.Append(' ');
       }
@@ -509,7 +512,7 @@ typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
         } else if (xmlName.Equals("paramref", StringComparison.Ordinal)) {
           this.VisitParamRef(node);
         } else if (xmlName.Equals("remarks", StringComparison.Ordinal) ||
-                  xmlName.Equals("summary", StringComparison.Ordinal)) {
+          xmlName.Equals("summary", StringComparison.Ordinal)) {
           XmlDoc.VisitInnerNode(node, this);
           this.Write("\r\n\r\n");
         } else if (xmlName.Equals("returns", StringComparison.Ordinal)) {
@@ -519,11 +522,11 @@ typeInfo.IsClass ? builder.Append("class ") : builder.Append("interface ");
         } else if (xmlName.Equals("value", StringComparison.Ordinal)) {
           this.VisitValue(node);
         } else if (xmlName.Equals("b", StringComparison.Ordinal) ||
-xmlName.Equals("strong", StringComparison.Ordinal) ||
-xmlName.Equals("i", StringComparison.Ordinal) ||
-xmlName.Equals("a", StringComparison.Ordinal) ||
-xmlName.Equals("sup", StringComparison.Ordinal) ||
-xmlName.Equals("em", StringComparison.Ordinal)) {
+          xmlName.Equals("strong", StringComparison.Ordinal) ||
+          xmlName.Equals("i", StringComparison.Ordinal) ||
+          xmlName.Equals("a", StringComparison.Ordinal) ||
+          xmlName.Equals("sup", StringComparison.Ordinal) ||
+          xmlName.Equals("em", StringComparison.Ordinal)) {
           var sb = new StringBuilder();
           _ = sb.Append("<" + xmlName);
           foreach (string attr in node.GetAttributes()) {
@@ -627,16 +630,16 @@ xmlName.Equals("em", StringComparison.Ordinal)) {
         using IDisposable ch = this.AddMember(info);
         signature = FormatMethod(method, false);
         this.WriteLine("<a id=\"" +
-                  MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+          MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
         this.WriteLine("### " + Heading(info) +
-                  "\r\n\r\n" + signature + "\r\n\r\n");
+          "\r\n\r\n" + signature + "\r\n\r\n");
         if (method.GetCustomAttribute(typeof(ObsoleteAttribute)) is
-ObsoleteAttribute attr) {
+          ObsoleteAttribute attr) {
           this.WriteLine("<b>Obsolete.</b> " +
-DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
+            DocGenUtil.HtmlEscape(attr.Message) + "\r\n\r\n");
         }
         if (method.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
-CLSCompliantAttribute cattr && !cattr.IsCompliant) {
+          CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         _ = this.paramStr.Clear();
@@ -668,11 +671,11 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
         this.WriteLine("## " + Heading(type) + "\r\n\r\n");
         this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
         if (type.GetCustomAttribute(typeof(ObsoleteAttribute)) is
-ObsoleteAttribute attr) {
+          ObsoleteAttribute attr) {
           this.WriteLine("<b>Obsolete.</b> " + attr.Message + "\r\n\r\n");
         }
         if (type.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
-CLSCompliantAttribute cattr && !cattr.IsCompliant) {
+          CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         _ = this.paramStr.Clear();
@@ -699,15 +702,15 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
         using IDisposable ch = this.AddMember(info);
         signature = FormatProperty(property);
         this.WriteLine("<a id=\"" +
-                  MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+          MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
         this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
-                  "\r\n\r\n");
+          "\r\n\r\n");
         if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) is
-ObsoleteAttribute attr) {
+          ObsoleteAttribute attr) {
           this.WriteLine("<b>Obsolete.</b> " + attr.Message + "\r\n\r\n");
         }
         if (property.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
-CLSCompliantAttribute cattr && !cattr.IsCompliant) {
+          CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         _ = this.paramStr.Clear();
@@ -735,15 +738,15 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
         using IDisposable ch = this.AddMember(info);
         signature = FormatField(field);
         this.WriteLine("<a id=\"" +
-                  MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
+          MemberSummaryVisitor.MemberAnchor(info) + "\"></a>");
         this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
-                  "\r\n\r\n");
+          "\r\n\r\n");
         if (field.GetCustomAttribute(typeof(ObsoleteAttribute)) is
-ObsoleteAttribute attr) {
+          ObsoleteAttribute attr) {
           this.WriteLine("<b>Obsolete.</b> " + attr.Message + "\r\n\r\n");
         }
         if (field.GetCustomAttribute(typeof(CLSCompliantAttribute)) is
-CLSCompliantAttribute cattr && !cattr.IsCompliant) {
+          CLSCompliantAttribute cattr && !cattr.IsCompliant) {
           this.WriteLine("<b>This API is not CLS-compliant.</b>\r\n\r\n");
         }
         XmlDoc.VisitInnerNode(mnm, this);
@@ -809,51 +812,51 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
       if (info is MethodBase method) {
         return (method is ConstructorInfo) ? ("<1>" + " " +
           FormatMethod(method, false)) : ("<4>" + method.Name + " " +
-          FormatMethod(method, false));
+            FormatMethod(method, false));
       }
       if (info is Type type) {
         return "<0>" + FormatType(type);
       } else if (info is PropertyInfo property) {
         return "<3>" + property.Name;
       } else {
- return (info is FieldInfo field) ? ("<2>" + field.Name) : ret;
-}
+        return (info is FieldInfo field) ? ("<2>" + field.Name) : ret;
+      }
     }
 
     private static string MethodNameHeading(string p) {
       return ValueOperators.TryGetValue(p, out string op) ? ("Operator `" +
         op + "`") : (p.Equals("op_Explicit", StringComparison.Ordinal) ?
           "Explicit Operator" :
-         (p.Equals("op_Implicit", StringComparison.Ordinal) ?
-          "Implicit Operator" : p));
+          (p.Equals("op_Implicit", StringComparison.Ordinal) ?
+        "Implicit Operator" : p));
     }
 
     private static IDictionary<string, string> OperatorList() {
       var ops = new Dictionary<string, string> {
         ["op_Addition"] = "+",
-        ["op_UnaryPlus"] = "+",
-        ["op_Subtraction"] = "-",
-        ["op_UnaryNegation"] = "-",
-        ["op_Multiply"] = "*",
-        ["op_Division"] = "/",
-        ["op_LeftShift"] = "<<",
-        ["op_RightShift"] = ">>",
-        ["op_BitwiseAnd"] = "&",
-        ["op_BitwiseOr"] = "|",
-        ["op_ExclusiveOr"] = "^",
-        ["op_LogicalNot"] = "!",
-        ["op_OnesComplement"] = "~",
-        ["op_True"] = "true",
-        ["op_False"] = "false",
-        ["op_Modulus"] = "%",
-        ["op_Decrement"] = "--",
-        ["op_Increment"] = "++",
-        ["op_Equality"] = "==",
-        ["op_Inequality"] = "!=",
-        ["op_GreaterThan"] = ">",
-        ["op_GreaterThanOrEqual"] = ">=",
-        ["op_LessThan"] = "<",
-        ["op_LessThanOrEqual"] = "<=",
+          ["op_UnaryPlus"] = "+",
+            ["op_Subtraction"] = "-",
+              ["op_UnaryNegation"] = "-",
+                ["op_Multiply"] = "*",
+                  ["op_Division"] = "/",
+                    ["op_LeftShift"] = "<<",
+                      ["op_RightShift"] = ">>",
+                        ["op_BitwiseAnd"] = "&",
+                          ["op_BitwiseOr"] = "|",
+                            ["op_ExclusiveOr"] = "^",
+                              ["op_LogicalNot"] = "!",
+                                ["op_OnesComplement"] = "~",
+                                  ["op_True"] = "true",
+                                    ["op_False"] = "false",
+                                      ["op_Modulus"] = "%",
+                                        ["op_Decrement"] = "--",
+                                          ["op_Increment"] = "++",
+                                            ["op_Equality"] = "==",
+                                              ["op_Inequality"] = "!=",
+                                                ["op_GreaterThan"] = ">",
+                                                    ["op_GreaterThanOrEqual"] = ">=",
+                                                        ["op_LessThan"] = "<",
+                                                            ["op_LessThanOrEqual"] = "<=",
       };
       return ops;
     }
@@ -863,8 +866,7 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
       MethodInfo setter = property.GetSetMethod();
       return (getter != null && getter.IsPublic) || (setter != null &&
         setter.IsPublic) || (getter != null && getter.IsFamily) || (setter !=
-                null &&
-  setter.IsFamily);
+          null && setter.IsFamily);
     }
 
     private IDisposable AddMember(MemberInfo member) {
@@ -880,7 +882,7 @@ CLSCompliantAttribute cattr && !cattr.IsCompliant) {
 
     private void Write(string ln) {
       _ = this.currentBuffer != null ? this.currentBuffer.Append(ln) :
-this.buffer.Append(ln);
+        this.buffer.Append(ln);
     }
 
     private void WriteLine(string ln) {
@@ -893,8 +895,7 @@ this.buffer.Append(ln);
       }
     }
 
-    private class BufferChanger : IDisposable
-    {
+    private class BufferChanger : IDisposable {
       private readonly StringBuilder oldBuffer;
       private readonly DocVisitor vis;
 

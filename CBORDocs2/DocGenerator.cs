@@ -29,7 +29,7 @@ namespace PeterO.DocGen {
       if (!File.Exists(assemblyXml)) {
         // Exit early, not found
         throw new ArgumentException("XML documentation not found: " +
-              assemblyXml);
+          assemblyXml);
       }
       var asm = Assembly.LoadFrom(assemblyFile);
       _ = Directory.CreateDirectory(directory);
@@ -42,7 +42,7 @@ namespace PeterO.DocGen {
         }
         visitor.Finish();
         var visitor2 = new SummaryVisitor(
-            Path.Combine(directory, "APIDocs.md"));
+          Path.Combine(directory, "APIDocs.md"));
         foreach (Type t in asm.GetTypes()) {
           visitor2.HandleType(t, xmldoc);
         }

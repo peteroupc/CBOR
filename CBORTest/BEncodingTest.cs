@@ -29,7 +29,7 @@ namespace Test {
     public static void DoTestLong(long value) {
       string b = "i" + TestCommon.LongToString(value) + "e";
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
-            false));
+        false));
       Assert.AreEqual(value, beo.AsNumber().ToInt64Checked());
       string newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
@@ -38,7 +38,7 @@ namespace Test {
     public static void DoTestString(string value) {
       string b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,
-            false));
+        false));
       Assert.AreEqual(value, beo.AsString());
       string newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);

@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
   /// <summary>Implements CBOR string references, described at
   /// <c>http://cbor.schmorp.de/stringref</c>.</summary>
   internal class StringRefs {
-    private readonly List<List<CBORObject>> stack;
+    private readonly List<List<CBORObject >> stack;
 
     public StringRefs() {
       this.stack = new List<List<CBORObject>>();
@@ -27,22 +27,22 @@ namespace PeterO.Cbor {
     }
 
     public void Pop() {
-#if DEBUG
+      #if DEBUG
       if (this.stack.Count <= 0) {
         throw new ArgumentException("this.stack.Count(" + this.stack.Count +
           ") is not greater than " + "0 ");
       }
-#endif
+      #endif
       this.stack.RemoveAt(this.stack.Count - 1);
     }
 
     public void AddStringIfNeeded(CBORObject str, int lengthHint) {
-#if DEBUG
+      #if DEBUG
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
       }
       if (!(str.Type == CBORType.ByteString || str.Type ==
-          CBORType.TextString)) {
+        CBORType.TextString)) {
         throw new ArgumentException(
           "doesn't satisfy str.Type== ByteString or TextString");
       }
@@ -50,7 +50,7 @@ namespace PeterO.Cbor {
         throw new ArgumentException("lengthHint(" + lengthHint +
           ") is less than " + "0 ");
       }
-#endif
+      #endif
       var addStr = false;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (lastList.Count < 24) {

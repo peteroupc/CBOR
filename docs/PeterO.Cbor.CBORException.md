@@ -15,7 +15,7 @@ Exception thrown for errors involving CBOR data. This library may throw exceptio
         string message,
         System.Exception innerException);
 
-Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class. Uses the given message and inner exception.
+Initializes a new instance of the [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) class. Uses the specified message and inner exception.
 
 <b>Parameters:</b>
 

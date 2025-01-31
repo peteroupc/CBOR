@@ -31,8 +31,8 @@ namespace PeterO.Cbor {
       }
       var index = (int)smallIndex;
       return index >= this.sharedObjects.Count ? throw new
-CBORException("Index " + index + " is not valid") :
-this.sharedObjects[index];
+        CBORException("Index " + index + " is not valid") :
+        this.sharedObjects[index];
     }
 
     public CBORObject GetObject(EInteger bigIndex) {
@@ -45,8 +45,8 @@ this.sharedObjects[index];
       }
       var index = (int)bigIndex;
       return index >= this.sharedObjects.Count ? throw new
-CBORException("Index " + index + " is not valid") :
-this.sharedObjects[index];
+        CBORException("Index " + index + " is not valid") :
+        this.sharedObjects[index];
     }
   }
 }

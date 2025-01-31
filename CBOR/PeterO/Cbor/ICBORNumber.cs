@@ -9,8 +9,7 @@ using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   /// <summary>This is an internal API.</summary>
-  internal interface ICBORNumber
-  {
+  internal interface ICBORNumber {
     /// <summary>This is an internal API.</summary>
     /// <param name='obj'>The parameter <paramref name='obj'/> is an
     /// arbitrary object.</param>

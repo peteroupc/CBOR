@@ -9,8 +9,7 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORExtendedRational : ICBORNumber
-  {
+  internal class CBORExtendedRational : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return ((ERational)obj).IsPositiveInfinity();
     }
@@ -72,13 +71,13 @@ namespace PeterO.Cbor {
     public bool CanFitInSingle(object obj) {
       var ef = (ERational)obj;
       return (!ef.IsFinite) || (ef.CompareTo(ERational.FromSingle(
-            ef.ToSingle())) == 0);
+        ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (ERational)obj;
       return (!ef.IsFinite) || (ef.CompareTo(ERational.FromDouble(
-            ef.ToDouble())) == 0);
+        ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {

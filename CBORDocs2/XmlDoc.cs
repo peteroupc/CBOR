@@ -7,9 +7,11 @@ using System.Xml;
 
 namespace PeterO.DocGen {
   public partial class XmlDoc {
-    private sealed class Node : INode
-    {
-      public string LocalName { get; private set; }
+    private sealed class Node : INode {
+      public string LocalName {
+        get;
+        private set;
+      }
 
       private readonly bool element;
       private readonly string content;
@@ -47,7 +49,7 @@ namespace PeterO.DocGen {
 
       public string GetAttribute(string str) {
         return (this.attributes == null ||
-           !this.attributes.TryGetValue(str, out string attr)) ? null : attr;
+            !this.attributes.TryGetValue(str, out string attr)) ? null : attr;
       }
 
       public string GetContent() {
@@ -142,14 +144,13 @@ namespace PeterO.DocGen {
           }
           doread = false;
           nodeStack[^1].AppendChild(
-           new Node(String.Empty, false, sb.ToString()));
+            new Node(String.Empty, false, sb.ToString()));
         }
       }
       return node;
     }
 
-    private sealed class SummaryVisitor : IVisitor
-    {
+    private sealed class SummaryVisitor : IVisitor {
       private readonly StringBuilder sb;
 
       public SummaryVisitor() {
@@ -183,7 +184,7 @@ namespace PeterO.DocGen {
 
     public INode GetMemberNode(string memberID) {
       return !this.memberNodes.TryGetValue(memberID, out INode node) ? null :
-node;
+        node;
     }
 
     public string GetSummary(string memberID) {
@@ -216,7 +217,7 @@ node;
           _ = reader.Read();
           while (reader.IsStartElement()) {
             if (reader.LocalName.Equals("member",
-                 StringComparison.Ordinal)) {
+              StringComparison.Ordinal)) {
               string memberName = reader.GetAttribute("name");
               INode node = ReadNode(reader);
               this.memberNodes[memberName] = node;

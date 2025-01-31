@@ -8,15 +8,14 @@ licensed under the Unlicense: https://unlicense.org/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORUuidConverter : ICBORToFromConverter<Guid>
-  {
+  internal class CBORUuidConverter : ICBORToFromConverter<Guid> {
     private static CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.ByteString) {
         throw new CBORException("UUID must be a byte string");
       }
       byte[] bytes = obj.GetByteString();
       return bytes.Length != 16 ? throw new CBORException("UUID must be 16" +
-"\u0020bytes long") : obj;
+          "\u0020bytes long") : obj;
     }
 
     /// <summary>Internal API.</summary>

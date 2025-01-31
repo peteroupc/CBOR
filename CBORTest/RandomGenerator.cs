@@ -9,8 +9,7 @@ namespace PeterO {
   /// <para><b>Thread safety:</b> The methods in this class are safe for
   /// concurrent use by multiple threads, as long as the underlying
   /// random byte generator is as well.</para></summary>
-  public sealed class RandomGenerator : IRandomGenExtended
-  {
+  public sealed class RandomGenerator : IRandomGenExtended {
     private readonly IRandomGen valueIrg;
     private readonly object valueNormalLock = new();
     private bool valueHaveLastNormal;
@@ -30,7 +29,7 @@ namespace PeterO {
       this.valueIrg = valueIrg;
     }
 
-    /// <summary>Returns either true or false, depending on the given
+    /// <summary>Returns either true or false, depending on the specified
     /// probability.</summary>
     /// <param name='p'>A probability from 0 through 1. 0 means always
     /// false, and 1 means always true.</param>
@@ -39,7 +38,7 @@ namespace PeterO {
       return p < 0 ?
         throw new ArgumentException("p(" + p + ") is less than 0") :
         p > 1 ? throw new ArgumentException("p(" + p + ") is more than 1") :
-this.Uniform() < p;
+        this.Uniform() < p;
     }
 
     /// <summary>Returns either true or false at a 50% chance
@@ -49,9 +48,9 @@ this.Uniform() < p;
       return this.UniformInt(2) == 0;
     }
 
-    /// <summary>Conceptually, generates either 1 or 0 the given number of
-    /// times, where either number is equally likely, and counts the number
-    /// of 1's generated.</summary>
+    /// <summary>Conceptually, generates either 1 or 0 the specified number
+    /// of times, where either number is equally likely, and counts the
+    /// number of 1's generated.</summary>
     /// <param name='trials'>The number of times to generate a random
     /// number, conceptually.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -68,9 +67,9 @@ this.Uniform() < p;
       return this.valueIrg.GetBytes(bytes, offset, count);
     }
 
-    /// <summary>Conceptually, generates either 1 or 0 the given number of
-    /// times, where a 1 is generated at the given probability, and counts
-    /// the number of 1's generated.</summary>
+    /// <summary>Conceptually, generates either 1 or 0 the specified number
+    /// of times, where a 1 is generated at the specified probability, and
+    /// counts the number of 1's generated.</summary>
     /// <param name='trials'>The number of times to generate a random
     /// number, conceptually.</param>
     /// <param name='p'>The probability for each trial to succeed, from 0
@@ -123,7 +122,7 @@ this.Uniform() < p;
     /// <returns>A 64-bit floating-point number.</returns>
     public double ChiSquared(int df) {
       return df <= 0 ? throw new ArgumentException("df(" + df + ") is not" +
-"\u0020greater than 0") : this.Gamma(df * 0.5, 2);
+        "\u0020greater than 0") : this.Gamma(df * 0.5, 2);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -138,7 +137,7 @@ this.Uniform() < p;
     /// <returns>A 64-bit floating-point number.</returns>
     public double Gamma(double a, double b) {
       return b <= 0 ? throw new ArgumentException("b(" + b + ") is not" +
-"\u0020greater than 0") : this.Gamma(a) * b;
+        "\u0020greater than 0") : this.Gamma(a) * b;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -173,7 +172,7 @@ this.Uniform() < p;
 
     /// <summary>Conceptually, generates either 1 or 0 until a 1 is
     /// generated, and counts the number of 0's generated. A 1 is generated
-    /// at the given probability.</summary>
+    /// at the specified probability.</summary>
     /// <param name='p'>A 64-bit floating-point number.</param>
     /// <returns>The number of failures until a success happens.</returns>
     public int Geometric(double p) {
@@ -221,7 +220,7 @@ this.Uniform() < p;
     }
 
     /// <summary>Generates a logarithmic normally-distributed number with
-    /// the given mean and standard deviation.</summary>
+    /// the specified mean and standard deviation.</summary>
     /// <param name='mean'>The desired mean.</param>
     /// <param name='sd'>Standard deviation.</param>
     /// <returns>A 64-bit floating-point number.</returns>
@@ -229,9 +228,9 @@ this.Uniform() < p;
       return Math.Exp(this.Normal(mean, sd));
     }
 
-    /// <summary>Conceptually, generates either 1 or 0 until the given
+    /// <summary>Conceptually, generates either 1 or 0 until the specified
     /// number of 1's are generated, and counts the number of 0's
-    /// generated. A 1 is generated at the given probability.</summary>
+    /// generated. A 1 is generated at the specified probability.</summary>
     /// <param name='trials'>The number of 1's to generate before the
     /// process stops.</param>
     /// <param name='p'>The probability for each trial to succeed, from 0
@@ -288,10 +287,10 @@ this.Uniform() < p;
       }
     }
 
-    /// <summary>Conceptually, generates either 1 or 0 the given number of
-    /// times until the given number of 1's are generated, and counts the
-    /// number of 0's generated. Either number has an equal probability of
-    /// being generated.</summary>
+    /// <summary>Conceptually, generates either 1 or 0 the specified number
+    /// of times until the specified number of 1's are generated, and
+    /// counts the number of 0's generated. Either number has an equal
+    /// probability of being generated.</summary>
     /// <param name='trials'>The number of 1's to generate before the
     /// process stops.</param>
     /// <returns>The number of 0's generated. Returns Int32.MaxValue if "p"
@@ -325,7 +324,7 @@ this.Uniform() < p;
       return s * Math.Cos(t);
     }
 
-    /// <summary>Generates a normally-distributed number with the given
+    /// <summary>Generates a normally-distributed number with the specified
     /// mean and standard deviation.</summary>
     /// <param name='mean'>The desired mean.</param>
     /// <param name='sd'>Standard deviation.</param>
@@ -335,8 +334,8 @@ this.Uniform() < p;
     }
 
     /// <summary>Generates a random integer such that the average of random
-    /// numbers approaches the given mean number when this method is called
-    /// repeatedly with the same mean.</summary>
+    /// numbers approaches the specified mean number when this method is
+    /// called repeatedly with the same mean.</summary>
     /// <param name='mean'>The expected mean of the random numbers.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Poisson(double mean) {
@@ -365,11 +364,11 @@ this.Uniform() < p;
     public double Uniform(double min, double max) {
       return min >= max ?
         throw new ArgumentException("min(" + min + ") is not less than " +
-          max) : min + ((max - min) * this.Uniform());
+        max) : min + ((max - min) * this.Uniform());
     }
 
     /// <summary>Returns a uniformly-distributed 64-bit floating-point
-    /// number from 0 and up, but less than the given number.</summary>
+    /// number from 0 and up, but less than the specified number.</summary>
     /// <param name='max'>Number that the randomly-generated number will be
     /// less than.</param>
     /// <returns>A 64-bit floating-point number.</returns>
@@ -411,7 +410,8 @@ this.Uniform() < p;
       } else {
         long diff = maxExclusive - minInclusive;
         return diff <= Int32.MaxValue ? minInclusive +
-this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
+          this.UniformInt((int)diff) : (int)(minInclusive +
+          this.UniformLong(diff));
       }
     }
 
@@ -434,7 +434,7 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
         return minInclusive + this.UniformLong(maxExclusive - minInclusive);
       } else {
         if ((maxExclusive < 0 && Int64.MaxValue + maxExclusive <
-            minInclusive) ||
+          minInclusive) ||
           (maxExclusive > 0 && Int64.MinValue + maxExclusive > minInclusive) ||
           minInclusive - maxExclusive < 0) {
           var b = new byte[8];
@@ -460,7 +460,7 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
     }
 
     /// <summary>Generates a random 32-bit signed integer 0 or greater and
-    /// less than the given number.</summary>
+    /// less than the specified number.</summary>
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -478,43 +478,43 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
       var b = new byte[4];
       switch (maxExclusive) {
         case 2: {
-            _ = this.valueIrg.GetBytes(b, 0, 1);
-            return b[0] & 1;
-          }
+          _ = this.valueIrg.GetBytes(b, 0, 1);
+          return b[0] & 1;
+        }
         case 256: {
-            _ = this.valueIrg.GetBytes(b, 0, 1);
-            return b[0] & 1;
-          }
+          _ = this.valueIrg.GetBytes(b, 0, 1);
+          return b[0] & 1;
+        }
         default: {
+          while (true) {
+            int ib;
+            if (maxExclusive == 0x1000000) {
+              _ = this.valueIrg.GetBytes(b, 0, 3);
+              ib = b[0] & 0xff;
+              ib |= (b[1] & 0xff) << 8;
+              ib |= (b[2] & 0xff) << 16;
+              return ib;
+            }
+            if (maxExclusive == 0x10000) {
+              _ = this.valueIrg.GetBytes(b, 0, 2);
+              ib = b[0] & 0xff;
+              ib |= (b[1] & 0xff) << 8;
+              return ib;
+            }
+            int maxexc;
+            maxexc = Int32.MaxValue / maxExclusive * maxExclusive;
             while (true) {
-              int ib;
-              if (maxExclusive == 0x1000000) {
-                _ = this.valueIrg.GetBytes(b, 0, 3);
-                ib = b[0] & 0xff;
-                ib |= (b[1] & 0xff) << 8;
-                ib |= (b[2] & 0xff) << 16;
-                return ib;
-              }
-              if (maxExclusive == 0x10000) {
-                _ = this.valueIrg.GetBytes(b, 0, 2);
-                ib = b[0] & 0xff;
-                ib |= (b[1] & 0xff) << 8;
-                return ib;
-              }
-              int maxexc;
-              maxexc = Int32.MaxValue / maxExclusive * maxExclusive;
-              while (true) {
-                _ = this.valueIrg.GetBytes(b, 0, 4);
-                ib = b[0] & 0xff;
-                ib |= (b[1] & 0xff) << 8;
-                ib |= (b[2] & 0xff) << 16;
-                ib |= (b[3] & 0x7f) << 24;
-                if (ib < maxexc) {
-                  return ib % maxExclusive;
-                }
+              _ = this.valueIrg.GetBytes(b, 0, 4);
+              ib = b[0] & 0xff;
+              ib |= (b[1] & 0xff) << 8;
+              ib |= (b[2] & 0xff) << 16;
+              ib |= (b[3] & 0x7f) << 24;
+              if (ib < maxexc) {
+                return ib % maxExclusive;
               }
             }
           }
+        }
       }
     }
 
@@ -533,7 +533,7 @@ this.UniformInt((int)diff) : (int)(minInclusive + this.UniformLong(diff));
     }
 
     /// <summary>Generates a random 32-bit signed integer 0 or greater and
-    /// less than the given number.</summary>
+    /// less than the specified number.</summary>
     /// <param name='maxExclusive'>One plus the largest possible value of
     /// the random number.</param>
     /// <returns>A 64-bit signed integer.</returns>

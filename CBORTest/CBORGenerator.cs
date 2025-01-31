@@ -20,7 +20,10 @@ namespace Test {
         return this;
       }
 
-      public int ByteLength { get; set; }
+      public int ByteLength {
+        get;
+        set;
+      }
 
       public byte[] ToBytes() {
         var newbytes = new byte[this.ByteLength];
@@ -36,7 +39,7 @@ namespace Test {
       ByteWriter bs) {
       var maxArg = 4;
       int minArg = (len < 0x18) ? 0 : ((len <= 0xff) ? 1 :
-          ((len <= 0xffff) ? 2 : 3));
+        ((len <= 0xffff) ? 2 : 3));
       int arg = minArg + r.GetInt32(maxArg - minArg + 1);
       int sh;
       switch (arg) {

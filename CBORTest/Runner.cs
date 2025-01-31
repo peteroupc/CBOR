@@ -40,7 +40,7 @@ namespace PeterO {
         TimeSpan span = DateTime.UtcNow - utcn;
         if (span.Seconds > 3) {
           Console.WriteLine("----" + i + ": " + span.Seconds + " " +
-array.Length);
+            array.Length);
         }
       }
       return false;

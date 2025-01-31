@@ -313,7 +313,7 @@ In version 2.0:
   rather than throwing an exception.
 
 **NOTE**: In the "2.0" tag for this repository, the file `DataUtilities.cs` should be copied
-from the `PeterO` directory to the root directory for this repository, in order for the CBORDocs
+from the `PeterO` directory to the top-level folder for this repository, in order for the CBORDocs
 and CBORDocs2 projects to build.  This issue may probably exist in other older versions
 as well.
 

@@ -67,7 +67,7 @@ namespace PeterO.Cbor {
 
     private CBORObject ObjectFromUtf8Array(byte[] data, int lengthHint) {
       CBORObject cbor = data.Length == 0 ? CBORObject.FromString(String.Empty) :
-         CBORObject.FromRawUtf8(data);
+        CBORObject.FromRawUtf8(data);
       this.stringRefs?.AddStringIfNeeded(cbor, lengthHint);
       return cbor;
     }
@@ -83,9 +83,8 @@ namespace PeterO.Cbor {
       if (hasTag) {
         CBORObject untagged = obj.UntagOne();
         return untagged.IsTagged || untagged.Type != CBORType.Integer ||
-untagged.AsNumber().IsNegative() ?
-          throw new CBORException(
-            "Shared ref index must be an untagged integer 0 or greater") :
+          untagged.AsNumber().IsNegative() ? throw new CBORException(
+          "Shared ref index must be an untagged integer 0 or greater") :
           sharedRefs.GetObject(untagged.AsEIntegerValue());
       }
       hasTag = obj.HasMostOuterTag(28);
@@ -137,7 +136,7 @@ untagged.AsNumber().IsNegative() ?
       }
       int firstbyte = this.stream.ReadByte();
       return firstbyte < 0 ? throw new CBORException("Premature end of" +
-"\u0020data") : this.ReadForFirstByte(firstbyte);
+          "\u0020data") : this.ReadForFirstByte(firstbyte);
     }
 
     private CBORObject ReadStringArrayMap(int type, long uadditional) {
@@ -152,7 +151,8 @@ untagged.AsNumber().IsNegative() ?
         byte[] data = ReadByteData(this.stream, uadditional, null);
         if (type == 3) {
           return !CBORUtilities.CheckUtf8(data) ? throw new
-CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint);
+            CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data,
+            hint);
         } else {
           return this.ObjectFromByteArray(data, hint);
         }
@@ -165,16 +165,16 @@ CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint);
         if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
             ToUnsignedEInteger(uadditional).ToString() + " is bigger than" +
-"\u0020supported");
+            "\u0020supported");
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
           throw new CBORException("Remaining data too small for array" +
-"\u0020length");
+            "\u0020length");
         }
         ++this.depth;
         for (long i = 0; i < uadditional; ++i) {
           _ = cbor.Add(
-            this.ReadInternal());
+              this.ReadInternal());
         }
         --this.depth;
         return cbor;
@@ -184,7 +184,7 @@ CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint);
           throw new CBORException("Depth too high in canonical CBOR");
         }
         CBORObject cbor = this.options.KeepKeyOrder ?
-               CBORObject.NewOrderedMap() : CBORObject.NewMap();
+          CBORObject.NewOrderedMap() : CBORObject.NewMap();
         if ((uadditional >> 31) != 0) {
           throw new CBORException("Length of " +
             ToUnsignedEInteger(uadditional).ToString() + " is bigger than" +
@@ -192,7 +192,7 @@ CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint);
         }
         if (PropertyMap.ExceedsKnownLength(this.stream, uadditional)) {
           throw new CBORException("Remaining data too small for map" +
-"\u0020length");
+            "\u0020length");
         }
         CBORObject lastKey = null;
         IComparer<CBORObject> comparer = CBORCanonical.Comparer;
@@ -232,24 +232,24 @@ CBORException("Invalid UTF-8") : this.ObjectFromUtf8Array(data, hint);
       }
       if (offset < 0) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (offset > bytes.Length) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
-"\u0020or equal to " + bytes.Length);
+          "\u0020or equal to " + bytes.Length);
       }
       if (count < 0) {
         throw new ArgumentException(" (" + count + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (count > bytes.Length) {
         throw new ArgumentException(" (" + count + ") is not less or equal" +
-"\u0020to " + bytes.Length);
+          "\u0020to " + bytes.Length);
       }
       if (bytes.Length - offset < count) {
         throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
-"\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
-count);
+          "\u0020offset (" + (bytes.Length - offset) + ") is not greater or" +
+          "\u0020 equal to " + count);
       }
       int t = count;
       int tpos = offset;
@@ -298,17 +298,17 @@ count);
           throw new CBORException("Tags not allowed in canonical CBOR");
         }
         uadditional = ReadDataLength(
-          this.stream,
-          firstbyte,
-          type,
-          type == 7);
+            this.stream,
+            firstbyte,
+            type,
+            type == 7);
         if (type == 0) {
           return (uadditional >> 63) != 0 ?
             CBORObject.FromEInteger(ToUnsignedEInteger(uadditional)) :
             CBORObject.FromInt64(uadditional);
         } else if (type == 1) {
           return (uadditional >> 63) != 0 ? CBORObject.FromEInteger(
-              ToUnsignedEInteger(uadditional).Add(1).Negate()) :
+            ToUnsignedEInteger(uadditional).Add(1).Negate()) :
             CBORObject.FromInt64((-uadditional) - 1L);
         } else if (type == 7) {
           if (additional < 24) {
@@ -362,117 +362,118 @@ count);
         // GetFixedLengthObject).
         switch (type) {
           case 2: {
-              // Streaming byte string
-              using (var ms = new MemoryStream()) {
-                // Requires same type as this one
-                while (true) {
-                  int nextByte = this.stream.ReadByte();
-                  if (nextByte == 0xff) {
-                    // break if the "break" code was read
-                    break;
-                  }
-                  long len = ReadDataLength(this.stream, nextByte, 2);
-                  if ((len >> 63) != 0 || len > Int32.MaxValue) {
-                    throw new CBORException("Length" + ToUnsignedEInteger(len) +
-                        " is bigger than supported ");
-                  }
-                  if (nextByte != 0x40) {
-                    // NOTE: 0x40 means the empty byte string
-                    _ = ReadByteData(this.stream, len, ms);
-                  }
-                }
-                if (ms.Position > Int32.MaxValue) {
-                  throw new
-                  CBORException("Length of bytes to be streamed is bigger" +
-  "\u0020than supported ");
-                }
-                data = ms.ToArray();
-                return CBORObject.FromRaw(data);
-              }
-            }
-          case 3: {
-              // Streaming text string
-              var builder = new StringBuilder();
+            // Streaming byte string
+            using (var ms = new MemoryStream()) {
+              // Requires same type as this one
               while (true) {
                 int nextByte = this.stream.ReadByte();
                 if (nextByte == 0xff) {
                   // break if the "break" code was read
                   break;
                 }
-                long len = ReadDataLength(this.stream, nextByte, 3);
+                long len = ReadDataLength(this.stream, nextByte, 2);
                 if ((len >> 63) != 0 || len > Int32.MaxValue) {
                   throw new CBORException("Length" + ToUnsignedEInteger(len) +
-                    " is bigger than supported");
+                    " is bigger than supported ");
                 }
-                if (nextByte != 0x60) {
-                  // NOTE: 0x60 means the empty string
-                  if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
+                if (nextByte != 0x40) {
+                  // NOTE: 0x40 means the empty byte string
+                  _ = ReadByteData(this.stream, len, ms);
+                }
+              }
+              if (ms.Position > Int32.MaxValue) {
+                throw new
+                CBORException("Length of bytes to be streamed is bigger" +
+                  "\u0020than supported ");
+              }
+              data = ms.ToArray();
+              return CBORObject.FromRaw(data);
+            }
+          }
+          case 3: {
+            // Streaming text string
+            var builder = new StringBuilder();
+            while (true) {
+              int nextByte = this.stream.ReadByte();
+              if (nextByte == 0xff) {
+                // break if the "break" code was read
+                break;
+              }
+              long len = ReadDataLength(this.stream, nextByte, 3);
+              if ((len >> 63) != 0 || len > Int32.MaxValue) {
+                throw new CBORException("Length" + ToUnsignedEInteger(len) +
+                  " is bigger than supported");
+              }
+              if (nextByte != 0x60) {
+                // NOTE: 0x60 means the empty string
+                if (PropertyMap.ExceedsKnownLength(this.stream, len)) {
+                  throw new CBORException("Premature end of data");
+                }
+                switch (
+                  DataUtilities.ReadUtf8(
+                    this.stream,
+                    (int)len,
+                    builder,
+                    false)) {
+                  case -1:
+                    throw new CBORException("Invalid UTF-8");
+                  case -2:
                     throw new CBORException("Premature end of data");
-                  }
-                  switch (
-                    DataUtilities.ReadUtf8(
-                      this.stream,
-                      (int)len,
-                      builder,
-                      false)) {
-                    case -1:
-                      throw new CBORException("Invalid UTF-8");
-                    case -2:
-                      throw new CBORException("Premature end of data");
-                  }
                 }
               }
-              return CBORObject.FromRaw(builder.ToString());
             }
+            return CBORObject.FromRaw(builder.ToString());
+          }
           case 4: {
-              var cbor = CBORObject.NewArray();
-              var vtindex = 0;
-              // Indefinite-length array
-              while (true) {
-                int headByte = this.stream.ReadByte();
-                if (headByte < 0) {
-                  throw new CBORException("Premature end of data");
-                }
-                if (headByte == 0xff) {
-                  // Break code was read
-                  break;
-                }
-                ++this.depth;
-                CBORObject o = this.ReadForFirstByte(
-                    headByte);
-                --this.depth;
-                _ = cbor.Add(o);
-                ++vtindex;
+            var cbor = CBORObject.NewArray();
+            var vtindex = 0;
+            // Indefinite-length array
+            while (true) {
+              int headByte = this.stream.ReadByte();
+              if (headByte < 0) {
+                throw new CBORException("Premature end of data");
               }
-              return cbor;
+              if (headByte == 0xff) {
+                // Break code was read
+                break;
+              }
+              ++this.depth;
+              CBORObject o = this.ReadForFirstByte(
+                  headByte);
+              --this.depth;
+              _ = cbor.Add(o);
+              ++vtindex;
             }
+            return cbor;
+          }
           case 5: {
-              CBORObject cbor = this.options.KeepKeyOrder ?
-                 CBORObject.NewOrderedMap() : CBORObject.NewMap();
-              // Indefinite-length map
-              while (true) {
-                int headByte = this.stream.ReadByte();
-                if (headByte < 0) {
-                  throw new CBORException("Premature end of data");
-                }
-                if (headByte == 0xff) {
-                  // Break code was read
-                  break;
-                }
-                ++this.depth;
-                CBORObject key = this.ReadForFirstByte(headByte);
-                CBORObject value = this.ReadInternal();
-                --this.depth;
-                int oldCount = cbor.Count;
-                cbor[key] = value;
-                int newCount = cbor.Count;
-                if (!this.options.AllowDuplicateKeys && oldCount == newCount) {
-                  throw new CBORException("Duplicate key already exists");
-                }
+            CBORObject cbor = this.options.KeepKeyOrder ?
+              CBORObject.NewOrderedMap() : CBORObject.NewMap();
+            // Indefinite-length map
+            while (true) {
+              int headByte = this.stream.ReadByte();
+              if (headByte < 0) {
+                throw new CBORException("Premature end of data");
               }
-              return cbor;
+              if (headByte == 0xff) {
+                // Break code was read
+                break;
+              }
+              ++this.depth;
+              CBORObject key = this.ReadForFirstByte(headByte);
+              CBORObject value = this.ReadInternal();
+              --this.depth;
+              int oldCount = cbor.Count;
+              cbor[key] = value;
+              int newCount = cbor.Count;
+              if (!this.options.AllowDuplicateKeys && oldCount == newCount) {
+                throw new CBORException("Duplicate key already exists");
+              }
             }
-          default: throw new CBORException("Unexpected data encountered");
+            return cbor;
+          }
+          default:
+            throw new CBORException("Unexpected data encountered");
         }
       }
 
@@ -602,53 +603,54 @@ count);
       var data = new byte[8];
       switch (headByte) {
         case 24: {
-            int tmp = stream.ReadByte();
-            return tmp < 0 ? throw new CBORException("Premature end of data") :
-              !allowNonShortest && tmp < 24 ? throw new
-CBORException("Nonshortest CBOR form") : tmp;
-          }
+          int tmp = stream.ReadByte();
+          return tmp < 0 ? throw new CBORException("Premature end of data") :
+            !allowNonShortest && tmp < 24 ? throw new
+            CBORException("Nonshortest CBOR form") : tmp;
+        }
         case 25: {
-            ReadHelper(stream, data, 0, 2);
-            int lowAdditional = (data[0] & 0xff) << 8;
-            lowAdditional |= data[1] & 0xff;
-            return !allowNonShortest && lowAdditional < 256 ? throw new
-CBORException("Nonshortest CBOR form") : lowAdditional;
-          }
+          ReadHelper(stream, data, 0, 2);
+          int lowAdditional = (data[0] & 0xff) << 8;
+          lowAdditional |= data[1] & 0xff;
+          return !allowNonShortest && lowAdditional < 256 ? throw new
+            CBORException("Nonshortest CBOR form") : lowAdditional;
+        }
         case 26: {
-            ReadHelper(stream, data, 0, 4);
-            long uadditional = (data[0] & 0xffL) << 24;
-            uadditional |= (data[1] & 0xffL) << 16;
-            uadditional |= (data[2] & 0xffL) << 8;
-            uadditional |= data[3] & 0xffL;
-            return !allowNonShortest && (uadditional >> 16) == 0 ? throw new
-CBORException("Nonshortest CBOR form") : uadditional;
-          }
+          ReadHelper(stream, data, 0, 4);
+          long uadditional = (data[0] & 0xffL) << 24;
+          uadditional |= (data[1] & 0xffL) << 16;
+          uadditional |= (data[2] & 0xffL) << 8;
+          uadditional |= data[3] & 0xffL;
+          return !allowNonShortest && (uadditional >> 16) == 0 ? throw new
+            CBORException("Nonshortest CBOR form") : uadditional;
+        }
         case 27: {
-            ReadHelper(stream, data, 0, 8);
-            // Treat return value as an unsigned integer
-            long uadditional = (data[0] & 0xffL) << 56;
-            uadditional |= (data[1] & 0xffL) << 48;
-            uadditional |= (data[2] & 0xffL) << 40;
-            uadditional |= (data[3] & 0xffL) << 32;
-            uadditional |= (data[4] & 0xffL) << 24;
-            uadditional |= (data[5] & 0xffL) << 16;
-            uadditional |= (data[6] & 0xffL) << 8;
-            uadditional |= data[7] & 0xffL;
-            return !allowNonShortest && (uadditional >> 32) == 0 ? throw new
-CBORException("Nonshortest CBOR form") : uadditional;
-          }
+          ReadHelper(stream, data, 0, 8);
+          // Treat return value as an unsigned integer
+          long uadditional = (data[0] & 0xffL) << 56;
+          uadditional |= (data[1] & 0xffL) << 48;
+          uadditional |= (data[2] & 0xffL) << 40;
+          uadditional |= (data[3] & 0xffL) << 32;
+          uadditional |= (data[4] & 0xffL) << 24;
+          uadditional |= (data[5] & 0xffL) << 16;
+          uadditional |= (data[6] & 0xffL) << 8;
+          uadditional |= data[7] & 0xffL;
+          return !allowNonShortest && (uadditional >> 32) == 0 ? throw new
+            CBORException("Nonshortest CBOR form") : uadditional;
+        }
         case 28:
         case 29:
         case 30:
           throw new CBORException("Unexpected data encountered");
         case 31:
           throw new CBORException("Indefinite-length data not allowed" +
-"\u0020here");
-        default: return headByte;
+            "\u0020here");
+        default:
+          return headByte;
       }
     }
 
-#if !NET20 && !NET40
+    #if !NET20 && !NET40
     /*
     // - - - - - ASYNCHRONOUS METHODS
 
@@ -661,6 +663,6 @@ CBORException("Nonshortest CBOR form") : uadditional;
       }
     }
     */
-#endif
+    #endif
   }
 }

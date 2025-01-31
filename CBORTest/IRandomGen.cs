@@ -1,7 +1,6 @@
 namespace PeterO {
   /// <summary>Interface for random-number generators.</summary>
-  public interface IRandomGen
-  {
+  public interface IRandomGen {
     /// <summary>Randomly generates a set of bytes.</summary>
     /// <param name='bytes'>Byte buffer to store the random bytes.</param>
     /// <param name='offset'>A zero-based index showing where the desired

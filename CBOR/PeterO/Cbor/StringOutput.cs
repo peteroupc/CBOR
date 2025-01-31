@@ -69,32 +69,32 @@ namespace PeterO.Cbor {
       }
       if (index < 0) {
         throw new ArgumentException("\"index\" (" + index + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (index > bytes.Length) {
         throw new ArgumentException("\"index\" (" + index + ") is not less" +
-"\u0020or equal to " + bytes.Length);
+          "\u0020or equal to " + bytes.Length);
       }
       if (length < 0) {
         throw new ArgumentException(" (" + length + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (length > bytes.Length) {
         throw new ArgumentException(" (" + length + ") is not less or equal" +
-"\u0020to " + bytes.Length);
+          "\u0020to " + bytes.Length);
       }
       if (bytes.Length - index < length) {
         throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
-"\u0020index (" + (bytes.Length - index) + ") is not greater or equal to " +
-length);
+          "\u0020index (" + (bytes.Length - index) + ") is not greater or" +
+          "\u0020 equal to " + length);
       }
       if (this.outputStream == null) {
         _ = DataUtilities.ReadUtf8FromBytes(
-          bytes,
-          index,
-          length,
-          this.builder,
-          false);
+            bytes,
+            index,
+            length,
+            this.builder,
+            false);
       } else {
         for (int i = 0; i < length; ++i) {
           byte b = bytes[i + index];
@@ -129,24 +129,24 @@ length);
           this.outputStream.WriteByte((byte)codePoint);
         } else if (codePoint <= 0x7ff) {
           this.outputStream.WriteByte((byte)(0xc0 | ((codePoint >> 6) &
-                0x1f)));
+            0x1f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         } else if (codePoint <= 0xffff) {
           if ((codePoint & 0xf800) == 0xd800) {
             throw new ArgumentException("ch is a surrogate");
           }
           this.outputStream.WriteByte((byte)(0xe0 | ((codePoint >> 12) &
-                0x0f)));
+            0x0f)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) &
-                0x3f)));
+            0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         } else {
           this.outputStream.WriteByte((byte)(0xf0 | ((codePoint >> 18) &
-                0x07)));
+            0x07)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 12) &
-                0x3f)));
+            0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) &
-                0x3f)));
+            0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         }
       } else {
@@ -159,10 +159,9 @@ length);
           }
         } else if (codePoint <= 0x10ffff) {
           this.builder.Append((char)((((codePoint - 0x10000) >> 10) &
-0x3ff) |
-              0xd800));
+            0x3ff) | 0xd800));
           this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) |
-              0xdc00));
+            0xdc00));
         }
       }
     }

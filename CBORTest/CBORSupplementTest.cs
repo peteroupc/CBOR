@@ -607,7 +607,7 @@ namespace Test {
     public void TestUUID() {
       CBORObject obj =
         ToObjectTest.TestToFromObjectRoundTrip(new Guid(
-            "00112233-4455-6677-8899-AABBCCDDEEFF"));
+        "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
       Assert.AreEqual(EInteger.FromString("37"), obj.MostInnerTag);
       byte[] bytes = obj.GetByteString();
@@ -637,11 +637,11 @@ namespace Test {
           37);
       {
         string stringTemp =
-DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
+          DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
         Assert.AreEqual(
           "00112233-4455-6677-8899-aabbccddeeff",
           stringTemp);
-}
+      }
     }
 
     // [Test]
@@ -847,7 +847,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
       },
       encodeOptions);
       expected =
-  "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+        "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 
@@ -861,7 +861,7 @@ DataUtilities.ToLowerCaseAscii(obj.AsGuid().ToString());
       cpod.Cc = "Hh";
       cbor = CBORObject.FromObject(cpod);
       cbor2 = CBORObject.NewMap().Add("aa", "Gg").Add("bb", "Jj").Add("cc",
-  "Hh");
+        "Hh");
       TestCommon.CompareTestEqual(cbor, cbor2);
       cbor2 = CBORObject.FromInt32(100);
       TestCommon.CompareTestGreater(cbor, cbor2);

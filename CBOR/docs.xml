@@ -11,8 +11,7 @@
             floating-point number. See #ParseJSONDouble(String,
             preserveNegativeZero) for more information.</summary>
             <param name='str'>A string to parse as a JSON number.</param>
-            <returns>A 64-bit binary floating-point number parsed from the
-            given string. Returns NaN if the parsing fails, including if the
+            <returns>A 64-bit binary floating-point number parsed from the specified string. Returns NaN if the parsing fails, including if the
             string is null or empty. (To check for NaN, use
             <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
             Java.).</returns>
@@ -26,8 +25,7 @@
             if the number is a zero that starts with a minus sign (such as "-0"
             or "-0.0"). Otherwise, returns negative zero in this case. The
             default is false.</param>
-            <returns>A 64-bit binary floating-point number parsed from the
-            given string. Returns NaN if the parsing fails, including if the
+            <returns>A 64-bit binary floating-point number parsed from the specified string. Returns NaN if the parsing fails, including if the
             string is null or empty. (To check for NaN, use
             <c>Double.IsNaN()</c> in.NET or <c>Double.isNaN()</c> in
             Java.).</returns>
@@ -424,7 +422,7 @@
             <param name='doubleApprox'>If true, treats a JSON number as an
             integer or noninteger based on its closest approximation as a CBOR
             (64-bit) floating-point number. If false, this treatment is based
-            on the full precision of the given JSON number string. For example,
+            on the full precision of the specified JSON number string. For example,
             given the string "0.99999999999999999999999999999999999", the
             nearest representable CBOR floating-point number is 1.0, and if
             this parameter is <c>true</c>, this string is treated as 1.0, an
@@ -533,7 +531,7 @@
             (other than the year) of the date and time. See the
             TryGetDateTimeFields method for information on the "lesserFields"
             parameter.</param>
-            <returns>A CBOR object encoding the given date fields according to
+            <returns>A CBOR object encoding the specified date fields according to
             the conversion type used to create this date converter.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigYear'/> or <paramref name='lesserFields'/> is
             null.</exception>
@@ -551,7 +549,7 @@
             <param name='month'>Month of the year, from 1 (January) through 12
             (December).</param>
             <param name='day'>Day of the month, from 1 through 31.</param>
-            <returns>A CBOR object encoding the given date fields according to
+            <returns>A CBOR object encoding the specified date fields according to
             the conversion type used to create this date converter.</returns>
             <exception cref='PeterO.Cbor.CBORException'>An error occurred in
             conversion.</exception>
@@ -570,7 +568,7 @@
             <param name='minute'>Minute of the hour, from 0 through 59.</param>
             <param name='second'>Second of the minute, from 0 through
             59.</param>
-            <returns>A CBOR object encoding the given date fields according to
+            <returns>A CBOR object encoding the specified date fields according to
             the conversion type used to create this date converter.</returns>
             <exception cref='PeterO.Cbor.CBORException'>An error occurred in
             conversion.</exception>
@@ -586,7 +584,7 @@
             (other than the year) of the date and time. See the
             TryGetDateTimeFields method for information on the "lesserFields"
             parameter.</param>
-            <returns>A CBOR object encoding the given date fields according to
+            <returns>A CBOR object encoding the specified date fields according to
             the conversion type used to create this date converter.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='lesserFields'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>An error occurred in
@@ -1027,7 +1025,7 @@
 <doc name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)">
 
             <summary>Initializes a new instance of the
-            <see cref='PeterO.Cbor.CBORException'/> class. Uses the given
+            <see cref='PeterO.Cbor.CBORException'/> class. Uses the specified
             message and inner exception.</summary>
             <param name='message'>The parameter <paramref name='message'/> is a
             text string.</param>
@@ -1228,7 +1226,7 @@
             in.NET or the isNumber() method in Java returns true).</summary>
             <param name='o'>The parameter is a CBOR object representing a
             number.</param>
-            <returns>A CBOR number object, or null if the given CBOR object is
+            <returns>A CBOR number object, or null if the specified CBOR object is
             null or does not represent a number.</returns>
 
 </doc>
@@ -1330,11 +1328,10 @@
 <doc name="M:PeterO.Cbor.CBORNumber.Multiply(PeterO.Cbor.CBORNumber)">
 
             <summary>Returns a CBOR number expressing the product of this
-            number and the given number.</summary>
+            number and the specified number.</summary>
             <param name='b'>The second operand to the multiplication
             operation.</param>
-            <returns>A number expressing the product of this number and the
-            given number.</returns>
+            <returns>A number expressing the product of this number and the specified number.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
             <exception cref='OutOfMemoryException'>The exact result of the
             operation might be too big to fit in memory (or might require more
@@ -1413,7 +1410,7 @@
             <summary>Returns a number that expresses this number minus
             another.</summary>
             <param name='b'>The second operand to the subtraction.</param>
-            <returns>A CBOR number that expresses this number minus the given
+            <returns>A CBOR number that expresses this number minus the specified
             number.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='b'/> is null.</exception>
             <exception cref='OutOfMemoryException'>The exact result of the
@@ -2337,7 +2334,7 @@
             other than array or map).</returns>
             <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
             is null, or if the pointer is invalid, or if there is no object at
-            the given pointer, or the special key "-" appears in the pointer in
+            the specified pointer, or the special key "-" appears in the pointer in
             the context of an array (not a map), or if the pointer is nonempty
             and this object has a CBOR type other than array or
             map.</exception>
@@ -2366,7 +2363,7 @@
             <returns>An object within the specified JSON object. Returns this
             object if pointer is the empty string (even if this object has a
             CBOR type other than array or map). Returns <paramref name='defaultValue'/> if the pointer is null, or if the pointer is
-            invalid, or if there is no object at the given pointer, or the
+            invalid, or if there is no object at the specified pointer, or the
             special key "-" appears in the pointer in the context of an array
             (not a map), or if the pointer is nonempty and this object has a
             CBOR type other than array or map.</returns>
@@ -2526,32 +2523,32 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)">
 
-            <summary>Determines whether a value of the given key exists in this
+            <summary>Determines whether a value of the specified key exists in this
             object.</summary>
             <param name='key'>An object that serves as the key. If this is
             <c>null</c>, checks for <c>CBORObject.Null</c>.</param>
-            <returns><c>true</c> if the given key is found, or <c>false</c> if
-            the given key is not found or this object is not a map.</returns>
+            <returns><c>true</c> if the specified key is found, or <c>false</c> if
+            the specified key is not found or this object is not a map.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ContainsKey(System.Object)">
 
-            <summary>Determines whether a value of the given key exists in this
+            <summary>Determines whether a value of the specified key exists in this
             object.</summary>
             <param name='objKey'>The parameter <paramref name='objKey'/> is an
             arbitrary object.</param>
-            <returns><c>true</c> if the given key is found, or <c>false</c> if
-            the given key is not found or this object is not a map.</returns>
+            <returns><c>true</c> if the specified key is found, or <c>false</c> if
+            the specified key is not found or this object is not a map.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)">
 
-            <summary>Determines whether a value of the given key exists in this
+            <summary>Determines whether a value of the specified key exists in this
             object.</summary>
             <param name='key'>A text string that serves as the key. If this is
             <c>null</c>, checks for <c>CBORObject.Null</c>.</param>
-            <returns><c>true</c> if the given key (as a CBOR object) is found,
-            or <c>false</c> if the given key is not found or this object is not
+            <returns><c>true</c> if the specified key (as a CBOR object) is found,
+            or <c>false</c> if the specified key is not found or this object is not
             a map.</returns>
 
 </doc>
@@ -2583,7 +2580,7 @@
             bytes.</para></summary>
             <param name='data'>A byte array in which a single CBOR object is
             encoded.</param>
-            <returns>A CBOR object decoded from the given byte array.</returns>
+            <returns>A CBOR object decoded from the specified byte array.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
@@ -2595,22 +2592,22 @@
 <doc name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)">
 
             <summary>Generates a CBOR object from an array of CBOR-encoded
-            bytes, using the given <c>CBOREncodeOptions</c> object to control
+            bytes, using the specified <c>CBOREncodeOptions</c> object to control
             the decoding process.</summary>
             <param name='data'>A byte array in which a single CBOR object is
             encoded.</param>
             <param name='options'>Specifies options to control how the CBOR
             object is decoded. See <see cref='PeterO.Cbor.CBOREncodeOptions'/>
             for more information.</param>
-            <returns>A CBOR object decoded from the given byte array. Returns
+            <returns>A CBOR object decoded from the specified byte array. Returns
             null (as opposed to CBORObject.Null) if <paramref name='data'/> is
-            empty and the AllowEmpty property is set on the given options
+            empty and the AllowEmpty property is set on the specified options
             object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object.</exception>
+            AllowEmpty property is set on the specified options object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='options'/>
             is null.</exception>
             <example><para>The following example (originally written in C# for the.NET
@@ -2629,7 +2626,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions,System.Type)">
 
             <summary>Generates an object of an arbitrary type from an array of
-            CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
+            CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
             those methods for more information.</summary>
@@ -2649,16 +2646,15 @@
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
             either criterion given earlier.</param>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type <paramref name='t'/>, or this object's CBOR
-            type, is not supported, or the given object's nesting is too deep,
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type <paramref name='t'/>, or this object's CBOR
+            type, is not supported, or the specified object's nesting is too deep,
             or another error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null, or the parameter <paramref name='t'/> is null.</exception>
@@ -2667,7 +2663,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions,System.Type,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
             <summary>Generates an object of an arbitrary type from an array of
-            CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
+            CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
             those methods for more information.</summary>
@@ -2693,16 +2689,15 @@
             null.</param>
             <param name='pod'>Specifies options for controlling deserialization
             of CBOR objects.</param>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type <paramref name='t'/>, or this object's CBOR
-            type, is not supported, or the given object's nesting is too deep,
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type <paramref name='t'/>, or this object's CBOR
+            type, is not supported, or the specified object's nesting is too deep,
             or another error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null, or the parameter <paramref name='t'/> or <paramref name='pod'/> is null.</exception>
@@ -2726,16 +2721,15 @@
             the control of the application. If the plain-old-data type
             references other data types, those types should likewise meet
             either criterion given earlier.</param>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type <paramref name='t'/>, or this object's CBOR
-            type, is not supported, or the given object's nesting is too deep,
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type <paramref name='t'/>, or this object's CBOR
+            type, is not supported, or the specified object's nesting is too deep,
             or another error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='t'/> is
             null.</exception>
@@ -2765,16 +2759,15 @@
             null.</param>
             <param name='pod'>Specifies options for controlling deserialization
             of CBOR objects.</param>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type <paramref name='t'/>, or this object's CBOR
-            type, is not supported, or the given object's nesting is too deep,
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type <paramref name='t'/>, or this object's CBOR
+            type, is not supported, or the specified object's nesting is too deep,
             or another error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='t'/> or
             <paramref name='pod'/> is null.</exception>
@@ -2798,16 +2791,15 @@
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
             likewise meet either criterion given earlier.</typeparam>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type "T", or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type "T", or this object's CBOR type, is not
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null.</exception>
 
@@ -2815,7 +2807,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes``1(System.Byte[],PeterO.Cbor.CBOREncodeOptions)">
 
             <summary>Generates an object of an arbitrary type from an array of
-            CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
+            CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
             those methods for more information.</summary>
@@ -2834,16 +2826,15 @@
             (POCO or POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
             likewise meet either criterion given earlier.</typeparam>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type "T", or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type "T", or this object's CBOR type, is not
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null.</exception>
@@ -2852,7 +2843,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.DecodeObjectFromBytes``1(System.Byte[],PeterO.Cbor.CBOREncodeOptions,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
             <summary>Generates an object of an arbitrary type from an array of
-            CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
+            CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c> object
             to control the decoding process. It is equivalent to
             DecodeFromBytes followed by ToObject. See the documentation for
             those methods for more information.</summary>
@@ -2878,16 +2869,15 @@
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
             likewise meet either criterion given earlier.</typeparam>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type "T", or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type "T", or this object's CBOR type, is not
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter <paramref name='enc'/> is
             null, or the parameter "T" or <paramref name='pod'/> is
@@ -2918,16 +2908,15 @@
             POJO type) within the control of the application. If the
             plain-old-data type references other data types, those types should
             likewise meet either criterion given earlier.</typeparam>
-            <returns>An object of the given type decoded from the given byte
-            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the
-            given CBOREncodeOptions object.</returns>
+            <returns>An object of the specified type decoded from the specified byte
+            array. Returns null (as opposed to CBORObject.Null) if <paramref name='data'/> is empty and the AllowEmpty property is set on the specified CBOREncodeOptions object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
             reading or parsing the data. This includes cases where not all of
             the byte array represents a CBOR object. This exception is also
             thrown if the parameter <paramref name='data'/> is empty unless the
-            AllowEmpty property is set on the given options object. Also thrown
-            if the given type "T", or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            AllowEmpty property is set on the specified options object. Also thrown
+            if the specified type "T", or this object's CBOR type, is not
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null, or the parameter "T" or <paramref name='pod'/> is null.</exception>
 
@@ -2939,7 +2928,7 @@
             <param name='data'>A byte array in which any number of CBOR objects
             (including zero) are encoded, one after the other. Can be empty,
             but cannot be null.</param>
-            <returns>An array of CBOR objects decoded from the given byte
+            <returns>An array of CBOR objects decoded from the specified byte
             array. Returns an empty array if <paramref name='data'/> is
             empty.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
@@ -2960,7 +2949,7 @@
             <see cref='PeterO.Cbor.CBOREncodeOptions'/> for more information.
             In this method, the AllowEmpty property is treated as always set
             regardless of that value as specified in this parameter.</param>
-            <returns>An array of CBOR objects decoded from the given byte
+            <returns>An array of CBOR objects decoded from the specified byte
             array. Returns an empty array if <paramref name='data'/> is
             empty.</returns>
             <exception cref='PeterO.Cbor.CBORException'>There was an error in
@@ -3067,7 +3056,7 @@
             <summary>Generates a CBOR object from a byte (0 to 255).</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             byte (from 0 to 255).</param>
-            <returns>A CBOR object generated from the given integer.</returns>
+            <returns>A CBOR object generated from the specified integer.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromByteArray(System.Byte[])">
@@ -3077,7 +3066,7 @@
             method can't be used to decode CBOR data from a byte array; for
             that, use the <b>DecodeFromBytes</b> method instead.).</summary>
             <param name='bytes'>An array of 8-bit bytes; can be null.</param>
-            <returns>A CBOR object where each element of the given byte array
+            <returns>A CBOR object where each element of the specified byte array
             is copied to a new array, or CBORObject.Null if the value is
             null.</returns>
 
@@ -3087,7 +3076,7 @@
             <summary>Generates a CBOR object from an array of CBOR
             objects.</summary>
             <param name='array'>An array of CBOR objects.</param>
-            <returns>A CBOR object where each element of the given array is
+            <returns>A CBOR object where each element of the specified array is
             copied to a new array, or CBORObject.Null if the value is
             null.</returns>
 
@@ -3144,7 +3133,7 @@
             <i>iana.org/assignments/cbor-tags</i> ).</param>
             <returns>A CBOR object where the object <paramref name='cborObj'/>
             is given the tag <paramref name='smallTag'/>. If "valueOb" is
-            null, returns a version of CBORObject.Null with the given
+            null, returns a version of CBORObject.Null with the specified
             tag.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='smallTag'/> is less than 0.</exception>
 
@@ -3163,7 +3152,7 @@
             <i>iana.org/assignments/cbor-tags</i> ).</param>
             <returns>A CBOR object where the object <paramref name='o'/> is
             given the tag <paramref name='tag'/>. If "valueOb" is null,
-            returns a version of CBORObject.Null with the given tag.</returns>
+            returns a version of CBORObject.Null with the specified tag.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromCBORObjectAndTag(System.Object,PeterO.Numbers.EInteger)">
@@ -3188,7 +3177,7 @@
             <i>iana.org/assignments/cbor-tags</i> ).</param>
             <returns>A CBOR object where the object <paramref name='valueOb'/>
             is converted to a CBOR object and given the tag <paramref name='bigintTag'/>. If <paramref name='valueOb'/> is null, returns
-            a version of CBORObject.Null with the given tag.</returns>
+            a version of CBORObject.Null with the specified tag.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='bigintTag'/> is less than 0 or greater than
             2^64-1.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigintTag'/> is null.</exception>
@@ -3215,7 +3204,7 @@
             <i>iana.org/assignments/cbor-tags</i> ).</param>
             <returns>A CBOR object where the object <paramref name='valueObValue'/> is converted to a CBOR object and given the
             tag <paramref name='smallTag'/>. If "valueOb" is null, returns a
-            version of CBORObject.Null with the given tag.</returns>
+            version of CBORObject.Null with the specified tag.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='smallTag'/> is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromCBORObjectAndTag(System.Object,System.UInt64)">
@@ -3240,7 +3229,7 @@
             <returns>A CBOR object where the object <paramref name='o'/> is
             converted to a CBOR object and given the tag <paramref name='tag'/>
             . If "valueOb" is null, returns a version of CBORObject.Null with
-            the given tag.</returns>
+            the specified tag.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromDecimal(System.Decimal)">
 
@@ -3265,7 +3254,7 @@
             positive in Java).</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             64-bit floating-point number.</param>
-            <returns>A CBOR object generated from the given number.</returns>
+            <returns>A CBOR object generated from the specified number.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromEDecimal(PeterO.Numbers.EDecimal)">
@@ -3360,7 +3349,7 @@
             in DotNet, but positive in Java).</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             32-bit floating-point number.</param>
-            <returns>A CBOR object generated from the given number.</returns>
+            <returns>A CBOR object generated from the specified number.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromFloatingPointBits(System.Int64,System.Int32)">
 
@@ -3377,7 +3366,7 @@
             number in IEEE 754r binary32 format; or 8 if "floatingBits"
             identifies the floating point number in IEEE 754r binary64 format.
             Any other values for this parameter are invalid.</param>
-            <returns>A CBOR object storing the given floating-point
+            <returns>A CBOR object storing the specified floating-point
             number.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='byteCount'/> is other than 2, 4, or 8.</exception>
 
@@ -3388,7 +3377,7 @@
             integer.</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             16-bit signed integer.</param>
-            <returns>A CBOR object generated from the given integer.</returns>
+            <returns>A CBOR object generated from the specified integer.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromInt32(System.Int32)">
@@ -3549,7 +3538,7 @@
             encoded.</param>
             <returns>A list of CBOR objects read from the JSON sequence.
             Objects that could not be parsed are replaced with <c>null</c> (as
-            opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+            opposed to <c>CBORObject.Null</c> ) in the specified list.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>The byte array is not
             empty and does not begin with a record separator byte (0x1e), or an
@@ -3574,7 +3563,7 @@
             decoding process.</param>
             <returns>A list of CBOR objects read from the JSON sequence.
             Objects that could not be parsed are replaced with <c>null</c> (as
-            opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+            opposed to <c>CBORObject.Null</c> ) in the specified list.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='data'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>The byte array is not
             empty and does not begin with a record separator byte (0x1e), or an
@@ -3788,7 +3777,7 @@
             <summary>Generates a CBOR object from an array of 8-bit
             bytes.</summary>
             <param name='bytes'>An array of 8-bit bytes; can be null.</param>
-            <returns>A CBOR object where each element of the given byte array
+            <returns>A CBOR object where each element of the specified byte array
             is copied to a new array, or CBORObject.Null if the value is
             null.</returns>
 
@@ -3805,7 +3794,7 @@
             <summary>Generates a CBOR object from a 64-bit floating-point
             number.</summary>
             <param name='value'>A 64-bit floating-point number.</param>
-            <returns>A CBOR object generated from the given number.</returns>
+            <returns>A CBOR object generated from the specified number.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)">
@@ -3813,7 +3802,7 @@
             <summary>Generates a CBOR object from a 16-bit signed
             integer.</summary>
             <param name='value'>A 16-bit signed integer.</param>
-            <returns>A CBOR object generated from the given integer.</returns>
+            <returns>A CBOR object generated from the specified integer.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)">
@@ -3830,7 +3819,7 @@
             <summary>Generates a CBOR object from an array of 32-bit
             integers.</summary>
             <param name='array'>An array of 32-bit integers.</param>
-            <returns>A CBOR array object where each element of the given array
+            <returns>A CBOR array object where each element of the specified array
             is copied to a new array, or CBORObject.Null if the value is
             null.</returns>
 
@@ -3849,7 +3838,7 @@
             <summary>Generates a CBOR object from an array of 64-bit
             integers.</summary>
             <param name='array'>An array of 64-bit integers.</param>
-            <returns>A CBOR array object where each element of the given array
+            <returns>A CBOR array object where each element of the specified array
             is copied to a new array, or CBORObject.Null if the value is
             null.</returns>
 
@@ -3869,7 +3858,7 @@
             plain-old-data types (POCO or POJO types) within the control of the
             application. If the plain-old-data type references other data
             types, those types should likewise meet either criterion given earlier.</para>.</param>
-            <returns>A CBOR object corresponding to the given object. Returns
+            <returns>A CBOR object corresponding to the specified object. Returns
             CBORObject.Null if the object is null.</returns>
 
 </doc>
@@ -3890,7 +3879,7 @@
             types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='mapper'>An object containing optional converters to
             convert objects of certain types to CBOR objects.</param>
-            <returns>A CBOR object corresponding to the given object. Returns
+            <returns>A CBOR object corresponding to the specified object. Returns
             CBORObject.Null if the object is null.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='mapper'/> is null.</exception>
 
@@ -3898,7 +3887,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(System.Object,PeterO.Cbor.CBORTypeMapper,PeterO.Cbor.PODOptions)">
 
             <summary><para>Generates a CBORObject from an arbitrary object,
-            using the given options to control how certain objects are
+            using the specified options to control how certain objects are
             converted to CBOR objects. The following cases are checked in the
             logical order given (rather than the strict order in which they are
             implemented by this library):</para>
@@ -4002,7 +3991,7 @@
              <para><b>REMARK:</b> .NET
             enumeration ( <c>Enum</c> ) constants could also have been
             converted to text strings with <c>ToString()</c> , but that method
-            will return multiple names if the given Enum object is a
+            will return multiple names if the specified Enum object is a
             combination of Enum objects (for example if the object is
             <c>FileAccess.Read | FileAccess.Write</c> ). More generally, if
             Enums are converted to text strings, constants from Enum types with
@@ -4025,11 +4014,11 @@
             null.</param>
             <param name='options'>An object containing options to control how
             certain objects are converted to CBOR objects.</param>
-            <returns>A CBOR object corresponding to the given object. Returns
+            <returns>A CBOR object corresponding to the specified object. Returns
             CBORObject.Null if the object is null.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception>
             <exception cref='PeterO.Cbor.CBORException'>An error occurred while
-            converting the given object to a CBOR object.</exception>
+            converting the specified object to a CBOR object.</exception>
             <example><para>The following example (originally written in C# for the
             DotNet version) uses a CBORTypeMapper to change how DateTime
             objects are converted to CBOR. In this case, such objects are
@@ -4070,7 +4059,7 @@
             types, those types should likewise meet either criterion given earlier.</para>.</param>
             <param name='options'>An object containing options to control how
             certain objects are converted to CBOR objects.</param>
-            <returns>A CBOR object corresponding to the given object. Returns
+            <returns>A CBOR object corresponding to the specified object. Returns
             CBORObject.Null if the object is null.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='options'/> is null.</exception>
 
@@ -4182,7 +4171,7 @@
             in DotNet, but positive in Java).</summary>
             <param name='value'>The parameter <paramref name='value'/> is a
             32-bit floating-point number.</param>
-            <returns>A CBOR object generated from the given number.</returns>
+            <returns>A CBOR object generated from the specified number.</returns>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromString(System.String)">
@@ -4259,13 +4248,12 @@
             CBOR array, the key must be an integer 0 or greater and less than
             the size of the array, and may be any object convertible to a CBOR
             integer.</param>
-            <param name='defaultValue'>A value to return if an item with the
-            given key doesn't exist, or if the CBOR object is an array and the
+            <param name='defaultValue'>A value to return if an item with the specified key doesn't exist, or if the CBOR object is an array and the
             key is not an integer 0 or greater and less than the size of the
             array.</param>
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
-            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            <c>CBORObject.Null</c> ) if an item with the specified key doesn't
             exist.</returns>
 
 </doc>
@@ -4279,13 +4267,12 @@
             array, the key must be an integer 0 or greater and less than the
             size of the array, and may be any object convertible to a CBOR
             integer.</param>
-            <param name='defaultValue'>A value to return if an item with the
-            given key doesn't exist, or if the CBOR object is an array and the
+            <param name='defaultValue'>A value to return if an item with the specified key doesn't exist, or if the CBOR object is an array and the
             key is not an integer 0 or greater and less than the size of the
             array.</param>
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
-            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            <c>CBORObject.Null</c> ) if an item with the specified key doesn't
             exist.</returns>
 
 </doc>
@@ -4299,13 +4286,12 @@
             array, the key must be an integer 0 or greater and less than the
             size of the array, and may be any object convertible to a CBOR
             integer.</param>
-            <param name='defaultValue'>A value to return if an item with the
-            given key doesn't exist, or if the CBOR object is an array and the
+            <param name='defaultValue'>A value to return if an item with the specified key doesn't exist, or if the CBOR object is an array and the
             key is not an integer 0 or greater and less than the size of the
             array.</param>
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
-            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            <c>CBORObject.Null</c> ) if an item with the specified key doesn't
             exist.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.GetOrDefault(System.String,PeterO.Cbor.CBORObject)">
@@ -4316,11 +4302,10 @@
             parameter is converted to a CBOR object serving as the key to the
             map or index to the array, and can be null. If this is a CBOR
             array, defaultValue is returned.</param>
-            <param name='defaultValue'>A value to return if an item with the
-            given key doesn't exist, or if the CBOR object is an array.</param>
+            <param name='defaultValue'>A value to return if an item with the specified key doesn't exist, or if the CBOR object is an array.</param>
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
-            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            <c>CBORObject.Null</c> ) if an item with the specified key doesn't
             exist.</returns>
 
 </doc>
@@ -4333,11 +4318,11 @@
 <doc name="M:PeterO.Cbor.CBORObject.HasMostInnerTag(PeterO.Numbers.EInteger)">
 
             <summary>Returns whether this object has an innermost tag and that
-            tag is of the given number, expressed as an arbitrary-precision
+            tag is of the specified number, expressed as an arbitrary-precision
             number.</summary>
             <param name='bigTagValue'>The tag number.</param>
             <returns><c>true</c> if this object has an innermost tag and that
-            tag is of the given number; otherwise, <c>false</c>.</returns>
+            tag is of the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
             <exception cref='ArgumentException'>The parameter <paramref name='bigTagValue'/> is less than 0.</exception>
 
@@ -4345,20 +4330,20 @@
 <doc name="M:PeterO.Cbor.CBORObject.HasMostInnerTag(System.Int32)">
 
             <summary>Returns whether this object has an innermost tag and that
-            tag is of the given number.</summary>
+            tag is of the specified number.</summary>
             <param name='tagValue'>The tag number.</param>
             <returns><c>true</c> if this object has an innermost tag and that
-            tag is of the given number; otherwise, <c>false</c>.</returns>
+            tag is of the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='tagValue'/> is less than 0.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(PeterO.Numbers.EInteger)">
 
             <summary>Returns whether this object has an outermost tag and that
-            tag is of the given number.</summary>
+            tag is of the specified number.</summary>
             <param name='bigTagValue'>The tag number.</param>
             <returns><c>true</c> if this object has an outermost tag and that
-            tag is of the given number; otherwise, <c>false</c>.</returns>
+            tag is of the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
             <exception cref='ArgumentException'>The parameter <paramref name='bigTagValue'/> is less than 0.</exception>
 
@@ -4366,10 +4351,10 @@
 <doc name="M:PeterO.Cbor.CBORObject.HasMostOuterTag(System.Int32)">
 
             <summary>Returns whether this object has an outermost tag and that
-            tag is of the given number.</summary>
+            tag is of the specified number.</summary>
             <param name='tagValue'>The tag number.</param>
             <returns><c>true</c> if this object has an outermost tag and that
-            tag is of the given number; otherwise, <c>false</c>.</returns>
+            tag is of the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='tagValue'/> is less than 0.</exception>
 
 </doc>
@@ -4382,11 +4367,11 @@
 <doc name="M:PeterO.Cbor.CBORObject.HasOneTag(PeterO.Numbers.EInteger)">
 
             <summary>Returns whether this object has only one tag and that tag
-            is the given number, expressed as an arbitrary-precision
+            is the specified number, expressed as an arbitrary-precision
             integer.</summary>
             <param name='bigTagValue'>An arbitrary-precision integer.</param>
             <returns><c>true</c> if this object has only one tag and that tag
-            is the given number; otherwise, <c>false</c>.</returns>
+            is the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
             <exception cref='ArgumentException'>The parameter <paramref name='bigTagValue'/> is less than 0.</exception>
 
@@ -4394,19 +4379,19 @@
 <doc name="M:PeterO.Cbor.CBORObject.HasOneTag(System.Int32)">
 
             <summary>Returns whether this object has only one tag and that tag
-            is the given number.</summary>
+            is the specified number.</summary>
             <param name='tagValue'>The tag number.</param>
             <returns><c>true</c> if this object has only one tag and that tag
-            is the given number; otherwise, <c>false</c>.</returns>
+            is the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='tagValue'/> is less than 0.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)">
-<summary>Returns whether this object has a tag of the given number.
+<summary>Returns whether this object has a tag of the specified number.
     </summary>
     <param name='bigTagValue'>The tag value to search for.
     </param>
-    <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c> .
+    <returns><c>true</c> if this object has a tag of the specified number; otherwise, <c>false</c> .
     </returns>
     <exception cref='ArgumentNullException'>bigTagValue" is null.
     </exception>
@@ -4415,20 +4400,20 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.Numbers.EInteger)">
 
-            <summary>Returns whether this object has a tag of the given
+            <summary>Returns whether this object has a tag of the specified
             number.</summary>
             <param name='bigTagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object has a tag of the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='bigTagValue'/> is null.</exception>
             <exception cref='ArgumentException'>The parameter <paramref name='bigTagValue'/> is less than 0.</exception>
 
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)">
 
-            <summary>Returns whether this object has a tag of the given
+            <summary>Returns whether this object has a tag of the specified
             number.</summary>
             <param name='tagValue'>The tag value to search for.</param>
-            <returns><c>true</c> if this object has a tag of the given number; otherwise, <c>false</c>.</returns>
+            <returns><c>true</c> if this object has a tag of the specified number; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentException'>The parameter <paramref name='tagValue'/> is less than 0.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='tagValue'/> is null.</exception>
 
@@ -4562,7 +4547,7 @@
             integer 0 or greater and less than the size of the array.</param>
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
-            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            <c>CBORObject.Null</c> ) if an item with the specified key doesn't
             exist.</returns>
             <exception cref='ArgumentNullException'>The key is null (as opposed
             to CBORObject.Null); or the set method is called and the value is
@@ -4579,11 +4564,11 @@
             <summary>Gets the value of a CBOR object by integer index in this
             array or by integer key in this map.</summary>
             <param name='index'>Index starting at 0 of the element, or the
-            integer key to this map. (If this is a map, the given index can be
+            integer key to this map. (If this is a map, the specified index can be
             any 32-bit signed integer, even a negative one.).</param>
             <returns>The CBOR object referred to by index or key in this array
             or map. If this is a CBOR map, returns <c>null</c> (not
-            <c>CBORObject.Null</c> ) if an item with the given key doesn't
+            <c>CBORObject.Null</c> ) if an item with the specified key doesn't
             exist (but this behavior may change to throwing an exception in
             version 5.0 or later).</returns>
             <exception cref='InvalidOperationException'>This object is not an
@@ -4600,7 +4585,7 @@
             string as the key.</summary>
             <param name='key'>A key that points to the desired value.</param>
             <returns>The CBOR object referred to by key in this map. Returns
-            <c>null</c> if an item with the given key doesn't exist.</returns>
+            <c>null</c> if an item with the specified key doesn't exist.</returns>
             <exception cref='ArgumentNullException'>The key is
             null.</exception>
             <exception cref='InvalidOperationException'>This object is not a
@@ -4805,7 +4790,7 @@
             record separator byte (0x1e).</param>
             <returns>A list of CBOR objects read from the JSON sequence.
             Objects that could not be parsed are replaced with <c>null</c> (as
-            opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+            opposed to <c>CBORObject.Null</c> ) in the specified list.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
@@ -4833,7 +4818,7 @@
             class.</param>
             <returns>A list of CBOR objects read from the JSON sequence.
             Objects that could not be parsed are replaced with <c>null</c> (as
-            opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+            opposed to <c>CBORObject.Null</c> ) in the specified list.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
             <exception cref='System.IO.IOException'>An I/O error
             occurred.</exception>
@@ -4899,7 +4884,7 @@
 
             <summary>If this object is an array, removes the first instance of
             the specified item from the array. If this object is a map, removes
-            the item with the given key from the map.</summary>
+            the item with the specified key from the map.</summary>
             <param name='obj'>The item or key to remove.</param>
             <returns><c>true</c> if the item was removed; otherwise, <c>false</c>.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='obj'/> is null (as opposed to CBORObject.Null).</exception>
@@ -4911,7 +4896,7 @@
 
             <summary>If this object is an array, removes the first instance of
             the specified item (once converted to a CBOR object) from the
-            array. If this object is a map, removes the item with the given key
+            array. If this object is a map, removes the item with the specified key
             (once converted to a CBOR object) from the map.</summary>
             <param name='obj'>The item or key (once converted to a CBOR object)
             to remove.</param>
@@ -4923,12 +4908,12 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.RemoveAt(System.Int32)">
 
-            <summary>Removes the item at the given index of this CBOR
+            <summary>Removes the item at the specified index of this CBOR
             array.</summary>
             <param name='index'>The index, starting at 0, of the item to
             remove.</param>
             <returns>Returns "true" if the object was removed. Returns "false"
-            if the given index is less than 0, or is at least as high as the
+            if the specified index is less than 0, or is at least as high as the
             number of items in the array.</returns>
             <exception cref='InvalidOperationException'>This object is not a
             CBOR array.</exception>
@@ -4952,8 +4937,8 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Set(System.Int32,PeterO.Cbor.CBORObject)">
 
-            <summary>Sets the value of a CBORObject of type Array at the given
-            index to the given value.</summary>
+            <summary>Sets the value of a CBORObject of type Array at the specified
+            index to the specified value.</summary>
             <param name='key'>This parameter must be a 32-bit signed integer(
             <c>int</c> ) identifying the index (starting from 0) of the item to
             set in the array.</param>
@@ -4968,7 +4953,7 @@
 
             <summary>Maps an object to a key in this CBOR map, or adds the
             value if the key doesn't exist. If this is a CBOR array, instead
-            sets the value at the given index to the given value.</summary>
+            sets the value at the specified index to the specified value.</summary>
             <param name='key'>If this instance is a CBOR map, this parameter is
             an object representing the key, which will be converted to a
             CBORObject; in this case, this parameter can be null, in which case
@@ -5192,7 +5177,7 @@
             <returns>The converted object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='t'/> is null.</exception>
             <example><para>Java offers no easy way to express a generic type, at least
@@ -5236,7 +5221,7 @@
             <returns>The converted object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>The given type
             <paramref name='t'/>, or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='t'/> is null.</exception>
 
@@ -5249,13 +5234,13 @@
             implemented by this library):</para>
              <list><item>If the type is
             <c>CBORObject</c> , return this object.</item>
-             <item>If the given
+             <item>If the specified
             object is <c>CBORObject.Null</c> (with or without tags), returns
             <c>null</c> .</item>
              <item>If the object is of a type corresponding
             to a type converter mentioned in the <paramref name='mapper'/>
             parameter, that converter will be used to convert the CBOR object
-            to an object of the given type. Type converters can be used to
+            to an object of the specified type. Type converters can be used to
             override the default conversion behavior of almost any
             object.</item>
              <item>If the type is <c>object</c> , return this
@@ -5316,7 +5301,7 @@
             <c>ERational</c> in the <a href='https://www.nuget.org/packages/PeterO.Numbers'><c>PeterO.Numbers</c> </a>
              library (in .NET) or the <a href='https://github.com/peteroupc/numbers-java'><c>com.github.peteroupc/numbers</c> </a>
              artifact (in Java), or if the type is <c>BigInteger</c> or
-            <c>BigDecimal</c> in the Java version, converts the given object to
+            <c>BigDecimal</c> in the Java version, converts the specified object to
             a number of the corresponding type and throws an exception
             (currently InvalidOperationException) if the object does not
             represent a number (for this purpose, infinity and not-a-number
@@ -5383,7 +5368,7 @@
              <item>If
             the type is an enumeration constant ("enum"), and this CBOR object
             is an integer or text string, returns the enumeration constant with
-            the given number or name, respectively. (Enumeration constants made
+            the specified number or name, respectively. (Enumeration constants made
             up of multiple enumeration constants, as allowed by .NET, can only
             be matched by number this way.)</item>
              <item>If the type is
@@ -5412,7 +5397,7 @@
             specially handled above, the type includes a zero-parameter
             constructor (default or not), this CBOR object is a CBOR map, and
             the "mapper" parameter (if any) allows this type to be eligible for
-            Plain-Old-Data deserialization, then this method checks the given
+            Plain-Old-Data deserialization, then this method checks the specified
             type for eligible setters as follows:</item>
              <item>(*) In the .NET
             version, eligible setters are the public, nonstatic setters of
@@ -5436,7 +5421,7 @@
             (methods and/or fields) with the same name, but different parameter
             type, they are not eligible setters.</item>
              <item>Then, the method
-            creates an object of the given type and invokes each eligible
+            creates an object of the specified type and invokes each eligible
             setter with the corresponding value in the CBOR map, if any. Key
             names in the map are matched to eligible setters according to the
             rules described in the <see cref='PeterO.Cbor.PODOptions'/>
@@ -5465,7 +5450,7 @@
             <returns>The converted object.</returns>
             <exception cref='PeterO.Cbor.CBORException'>The given type
             <paramref name='t'/> , or this object's CBOR type, is not
-            supported, or the given object's nesting is too deep, or another
+            supported, or the specified object's nesting is too deep, or another
             error occurred when serializing the object.</exception>
             <exception cref='ArgumentNullException'>The parameter <paramref name='t'/> or <paramref name='options'/> is null.</exception>
             <example><para>The following example (originally written in C# for the
@@ -6056,7 +6041,7 @@
 <doc name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
 
             <summary>Writes a text string in CBOR format to a data stream,
-            using the given options to control the encoding process.</summary>
+            using the specified options to control the encoding process.</summary>
             <param name='str'>The string to write. Can be null.</param>
             <param name='stream'>A writable data stream.</param>
             <param name='options'>Options for encoding the data to
@@ -6287,7 +6272,7 @@
 
             <summary>Converts this object to a text string in JavaScript Object
             Notation (JSON) format, as in the ToJSONString method, and writes
-            that string to a data stream in UTF-8, using the given JSON options
+            that string to a data stream in UTF-8, using the specified JSON options
             to control the encoding process. If the CBOR object contains CBOR
             maps, or is a CBOR map, the order in which the keys to the map are
             written out to the JSON string is undefined unless the map was
@@ -6453,7 +6438,7 @@
             greater associated with it to a data stream, where that integer is
             passed to this method as an arbitrary-precision integer. This is a
             low-level method that is useful for implementing custom CBOR
-            encoding methodologies. This method encodes the given major type
+            encoding methodologies. This method encodes the specified major type
             and value in the shortest form allowed for the major
             type.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -6490,7 +6475,7 @@
             greater associated with it to a data stream, where that integer is
             passed to this method as a 32-bit signed integer. This is a
             low-level method that is useful for implementing custom CBOR
-            encoding methodologies. This method encodes the given major type
+            encoding methodologies. This method encodes the specified major type
             and value in the shortest form allowed for the major
             type.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -6547,7 +6532,7 @@
             greater associated with it to a data stream, where that integer is
             passed to this method as a 64-bit signed integer. This is a
             low-level method that is useful for implementing custom CBOR
-            encoding methodologies. This method encodes the given major type
+            encoding methodologies. This method encodes the specified major type
             and value in the shortest form allowed for the major
             type.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -6584,7 +6569,7 @@
             greater associated with it to a data stream, where that integer is
             passed to this method as a 32-bit unsigned integer. This is a
             low-level method that is useful for implementing custom CBOR
-            encoding methodologies. This method encodes the given major type
+            encoding methodologies. This method encodes the specified major type
             and value in the shortest form allowed for the major
             type.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -6611,7 +6596,7 @@
             greater associated with it to a data stream, where that integer is
             passed to this method as a 64-bit unsigned integer. This is a
             low-level method that is useful for implementing custom CBOR
-            encoding methodologies. This method encodes the given major type
+            encoding methodologies. This method encodes the specified major type
             and value in the shortest form allowed for the major
             type.</summary>
             <param name='outputStream'>A writable data stream.</param>
@@ -6852,12 +6837,12 @@
 </doc>
 <doc name="M:PeterO.Cbor.CBORTypeMapper.FilterTypeName(System.String)">
 
-            <summary>Returns whether the given Java or.NET type name fits the
+            <summary>Returns whether the specified Java or.NET type name fits the
             filters given in this mapper.</summary>
             <param name='typeName'>The fully qualified name of a Java or.NET
             class (for example, <c>java.math.BigInteger</c> or
             <c>System.Globalization.CultureInfo</c> ).</param>
-            <returns>Either <c>true</c> if the given Java or.NET type name fits
+            <returns>Either <c>true</c> if the specified Java or.NET type name fits
             the filters given in this mapper, or <c>false</c> otherwise.</returns>
 
 </doc>
@@ -7109,7 +7094,7 @@
     <returns>The converted object.
     </returns>
     <exception cref='PeterO.Cbor.CBORException'>An error occurred in the conversion; for example, the conversion doesn't
-      support the given CBOR object.
+      support the specified CBOR object.
     </exception>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORTag">
@@ -7200,7 +7185,7 @@
 <doc name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean)">
 
             <summary>Initializes a new instance of the
-            <see cref='PeterO.Cbor.JSONOptions'/> class with the given value
+            <see cref='PeterO.Cbor.JSONOptions'/> class with the specified value
             for the Base64Padding option.</summary>
             <param name='base64Padding'>Whether padding is included when
             writing data in base64url or traditional base64 format to
@@ -7210,7 +7195,7 @@
 <doc name="M:PeterO.Cbor.JSONOptions.#ctor(System.Boolean,System.Boolean)">
 
             <summary>Initializes a new instance of the
-            <see cref='PeterO.Cbor.JSONOptions'/> class with the given values
+            <see cref='PeterO.Cbor.JSONOptions'/> class with the specified values
             for the options.</summary>
             <param name='base64Padding'>Whether padding is included when
             writing data in base64url or traditional base64 format to
@@ -7794,7 +7779,7 @@
             not allowed.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String)">
-<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal (base-16) digit) in the given string. Successive percent-encoded bytes are assumed
+<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal (base-16) digit) in the specified string. Successive percent-encoded bytes are assumed
       to form characters in UTF-8.
     </summary>
     <param name='str'>A string that may contain percent encoding. May be null.
@@ -7803,7 +7788,7 @@
     </returns>
 </doc>
 <doc name="M:PeterO.Cbor.URIUtility.PercentDecode(System.String,System.Int32,System.Int32)">
-<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal (base-16) digit) in the given portion of a string. Successive percent-encoded bytes
+<summary>Decodes percent-encoding (of the form "%XX" where X is a hexadecimal (base-16) digit) in the specified portion of a string. Successive percent-encoded bytes
       are assumed to form characters in UTF-8.
     </summary>
     <param name='str'>A string a portion of which may contain percent encoding. May be null.
@@ -7816,7 +7801,7 @@
       <paramref name='str'/>
        ends. The character before this index is the last character.
     </param>
-    <returns>The portion of the given string in which percent-encoding was decoded.
+    <returns>The portion of the specified string in which percent-encoding was decoded.
       Returns null if
       <paramref name='str'/>
        is ull.
@@ -8039,13 +8024,13 @@
             (U+FFFD).</para></summary>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)">
-<summary>Gets the Unicode code point at the given index of the
+<summary>Gets the Unicode code point at the specified index of the
             string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
-            <returns>The Unicode code point at the given position. Returns -1
+            <returns>The Unicode code point at the specified position. Returns -1
             if <paramref name='index'/> is 0 or less, or is at least the string's length. Returns the replacement character
             (U+FFFD) if the code point at that position is an unpaired
             surrogate code point. If the return value is 65536 (0x10000) or
@@ -8053,17 +8038,17 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)">
-<summary>Gets the Unicode code point at the given index of the
+<summary>Gets the Unicode code point at the specified index of the
             string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <param name='surrogateBehavior'>Specifies what kind of value to
-            return if the code point at the given index is an unpaired
+            return if the code point at the specified index is an unpaired
             surrogate code point: if 0, return the replacement character (U+FFFD); if 1, return the value of the surrogate code point; if
             neither 0 nor 1, return -1.</param>
-            <returns>The Unicode code point at the given position. Returns -1
+            <returns>The Unicode code point at the specified position. Returns -1
             if <paramref name='index'/> is 0 or less, or is at least the string's length. Returns a value as specified under
             <paramref name='surrogateBehavior'/> if the code point at that
             position is an unpaired surrogate code point. If the return value
@@ -8080,7 +8065,7 @@
             </example>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)">
-<summary>Gets the Unicode code point just before the given index of
+<summary>Gets the Unicode code point just before the specified index of
             the string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -8094,7 +8079,7 @@
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)">
-<summary>Gets the Unicode code point just before the given index of
+<summary>Gets the Unicode code point just before the specified index of
             the string.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
@@ -8128,13 +8113,13 @@
             b.</returns>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointLength(System.String)">
-<summary>Finds the number of Unicode code points in the given text
+<summary>Finds the number of Unicode code points in the specified text
             string. Unpaired surrogate code points increase this number by 1.
             This is not necessarily the length of the string in "char"
             s.</summary>
             <param name='str'>The parameter <paramref name='str'/> is a text
             string.</param>
-            <returns>The number of Unicode code points in the given
+            <returns>The number of Unicode code points in the specified
             string.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
 </doc>
@@ -8187,7 +8172,7 @@
             <param name='replace'>If true, treats unpaired surrogate code
             points as having 3 UTF-8 bytes (the UTF-8 length of the replacement
             character U+FFFD).</param>
-            <returns>The number of bytes needed to encode the given string in
+            <returns>The number of bytes needed to encode the specified string in
             UTF-8, or -1 if the string contains an unpaired surrogate code
             point and <paramref name='replace'/> is false.</returns>
             <exception cref='ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>

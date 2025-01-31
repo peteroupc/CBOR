@@ -29,7 +29,7 @@ namespace Test {
       for (; i < str.Length; ++i) {
         char c = str[i];
         if (c is (< (char)0x20 and (not (char)0x09 or not (char)0x0a or not
-              (char)0x0d)) or (char)0xfffe or (char)0xffff) {
+          (char)0x0d)) or (char)0xfffe or (char)0xffff) {
           // XML doesn't support certain code points even if escaped.
           // Therefore, replace all unsupported code points with replacement
           // characters.
@@ -38,9 +38,9 @@ namespace Test {
           sb.WriteCodePoint('\\');
           sb.WriteCodePoint(c);
         } else if (c is < (char)0x20 or '&' or '<' or '>' or (>= (char)0x7f and
-            ((char)0x2028 or (char)0x2029 or
-              (>= (char)0x7f and <= (char)0xa0) or (char)0xfeff or
-              (char)0xfffe or (char)0xffff))) {
+          ((char)0x2028 or (char)0x2029 or
+          (>= (char)0x7f and <= (char)0xa0) or (char)0xfeff or
+          (char)0xfffe or (char)0xffff))) {
           sb.WriteString("&#x");
           sb.WriteCodePoint(Hex16[(c >> 12) & 15]);
           sb.WriteCodePoint(Hex16[(c >> 8) & 15]);
@@ -277,7 +277,7 @@ namespace Test {
         case CBORType.Map:
         {
           var hasNonStringKeys = false;
-          ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
+          ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
             obj.Entries;
           foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
             CBORObject key = entry.Key;
@@ -355,7 +355,8 @@ namespace Test {
           }
           break;
         }
-        default: throw new InvalidOperationException("Unexpected item" +
+        default:
+          throw new InvalidOperationException ("Unexpected item" +
             "\u0020type");
       }
     }

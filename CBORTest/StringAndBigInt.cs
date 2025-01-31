@@ -10,9 +10,15 @@ namespace Test {
     private const string ValueDigitsLower =
       "0123456789abcdefghijklmnopqrstuvwxyz";
 
-    public string StringValue { get; private set; }
+    public string StringValue {
+      get;
+      private set;
+    }
 
-    public EInteger BigIntValue { get; private set; }
+    public EInteger BigIntValue {
+      get;
+      private set;
+    }
 
     private StringAndBigInt(string sv, EInteger biv) {
       this.StringValue = sv;
@@ -59,15 +65,15 @@ namespace Test {
         count += 4;
         int bits = rand.GetInt32(16);
         builder = (bits & 0x01) == 0 ? builder.Append(ValueDigits[digit]) :
-builder.Append(ValueDigitsLower[digit]);
+          builder.Append(ValueDigitsLower[digit]);
         builder = (bits & 0x02) == 0 ? builder.Append(ValueDigits[digit2]) :
-builder.Append(ValueDigitsLower[digit2]);
+          builder.Append(ValueDigitsLower[digit2]);
         builder = (bits & 0x04) == 0 ? builder.Append(ValueDigits[digit3]) :
-builder.Append(ValueDigitsLower[digit3]);
+          builder.Append(ValueDigitsLower[digit3]);
         builder = (bits & 0x08) == 0 ? builder.Append(ValueDigits[digit4]) :
-builder.Append(ValueDigitsLower[digit4]);
+          builder.Append(ValueDigitsLower[digit4]);
         int digits = (((((digit * radix) + digit2) *
-                radix) + digit3) * radix) + digit4;
+          radix) + digit3) * radix) + digit4;
         bv *= radixpow4;
         var bigintTmp = (EInteger)digits;
         bv += bigintTmp;
@@ -75,7 +81,7 @@ builder.Append(ValueDigitsLower[digit4]);
       for (int i = count; i < numDigits; ++i) {
         int digit = rand.GetInt32(radix);
         builder = rand.GetInt32(2) == 0 ? builder.Append(ValueDigits[digit]) :
-builder.Append(ValueDigitsLower[digit]);
+          builder.Append(ValueDigitsLower[digit]);
         bv *= radixpow1;
         var bigintTmp = (EInteger)digit;
         bv += bigintTmp;

@@ -7,12 +7,12 @@ Contains methods useful for reading and writing text strings. It is designed to 
 In C# and Java, text strings are represented as sequences of 16-bit values called  `char`  s. These sequences are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they contain unpaired surrogate code points. (A surrogate code point is used to encode supplementary characters, those with code points U+10000 or higher, in UTF-16. A surrogate pair is a high surrogate, U+D800 to U+DBFF, followed by a low surrogate, U+DC00 to U+DFFF. An unpaired surrogate code point is a surrogate not appearing in a surrogate pair.) Many of the methods in this class allow setting the behavior to follow when unpaired surrogate code points are found in text strings, such as throwing an error or treating the unpaired surrogate as a replacement character (U+FFFD).
 
 ### Member Summary
-* <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the given index of the string.
-* <code>[CodePointAt(string, int, int)](#CodePointAt_string_int_int)</code> - Gets the Unicode code point at the given index of the string.
-* <code>[CodePointBefore(string, int)](#CodePointBefore_string_int)</code> - Gets the Unicode code point just before the given index of the string.
-* <code>[CodePointBefore(string, int, int)](#CodePointBefore_string_int_int)</code> - Gets the Unicode code point just before the given index of the string.
+* <code>[CodePointAt(string, int)](#CodePointAt_string_int)</code> - Gets the Unicode code point at the specified index of the string.
+* <code>[CodePointAt(string, int, int)](#CodePointAt_string_int_int)</code> - Gets the Unicode code point at the specified index of the string.
+* <code>[CodePointBefore(string, int)](#CodePointBefore_string_int)</code> - Gets the Unicode code point just before the specified index of the string.
+* <code>[CodePointBefore(string, int, int)](#CodePointBefore_string_int_int)</code> - Gets the Unicode code point just before the specified index of the string.
 * <code>[CodePointCompare(string, string)](#CodePointCompare_string_string)</code> - Compares two strings in Unicode code point order.
-* <code>[CodePointLength(string)](#CodePointLength_string)</code> - Finds the number of Unicode code points in the given text string.
+* <code>[CodePointLength(string)](#CodePointLength_string)</code> - Finds the number of Unicode code points in the specified text string.
 * <code>[GetUtf8Bytes(string, bool)](#GetUtf8Bytes_string_bool)</code> - Encodes a string in UTF-8 as a byte array.
 * <code>[GetUtf8Bytes(string, bool, bool)](#GetUtf8Bytes_string_bool_bool)</code> - Encodes a string in UTF-8 as a byte array.
 * <code>[GetUtf8Length(string, bool)](#GetUtf8Length_string_bool)</code> - Calculates the number of bytes needed to encode a string in UTF-8.
@@ -35,7 +35,7 @@ In C# and Java, text strings are represented as sequences of 16-bit values calle
         string str,
         int index);
 
-Gets the Unicode code point at the given index of the string.
+Gets the Unicode code point at the specified index of the string.
 
 <b>Parameters:</b>
 
@@ -46,7 +46,7 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Return Value:</b>
 
-The Unicode code point at the given position. Returns -1 if  <i>index</i>
+The Unicode code point at the specified position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than or equal to the string's length. Returns the replacement character (U+FFFD) if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
 <b>Exceptions:</b>
@@ -63,7 +63,7 @@ The parameter  <i>str</i>
         int index,
         int surrogateBehavior);
 
-Gets the Unicode code point at the given index of the string.
+Gets the Unicode code point at the specified index of the string.
 
 The following example shows how to iterate a text string code point by code point, terminating the loop when an unpaired surrogate is found.
 
@@ -81,11 +81,11 @@ The following example shows how to iterate a text string code point by code poin
 
  * <i>index</i>: Index of the current position into the string.
 
- * <i>surrogateBehavior</i>: Specifies what kind of value to return if the code point at the given index is an unpaired surrogate code point: if 0, return the replacement character (U + FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
+ * <i>surrogateBehavior</i>: Specifies what kind of value to return if the code point at the specified index is an unpaired surrogate code point: if 0, return the replacement character (U + FFFD); if 1, return the value of the surrogate code point; if neither 0 nor 1, return -1.
 
 <b>Return Value:</b>
 
-The Unicode code point at the given position. Returns -1 if  <i>index</i>
+The Unicode code point at the specified position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than or equal to the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
  if the code point at that position is an unpaired surrogate code point. If the return value is 65536 (0x10000) or greater, the code point takes up two UTF-16 code units.
 
@@ -102,7 +102,7 @@ The parameter  <i>str</i>
         string str,
         int index);
 
-Gets the Unicode code point just before the given index of the string.
+Gets the Unicode code point just before the specified index of the string.
 
 <b>Parameters:</b>
 
@@ -130,7 +130,7 @@ The parameter  <i>str</i>
         int index,
         int surrogateBehavior);
 
-Gets the Unicode code point just before the given index of the string.
+Gets the Unicode code point just before the specified index of the string.
 
 <b>Parameters:</b>
 
@@ -178,7 +178,7 @@ A value indicating which string is " less" or " greater" . 0: Both strings are e
     public static int CodePointLength(
         string str);
 
-Finds the number of Unicode code points in the given text string. Unpaired surrogate code points increase this number by 1. This is not necessarily the length of the string in "char" s.
+Finds the number of Unicode code points in the specified text string. Unpaired surrogate code points increase this number by 1. This is not necessarily the length of the string in "char" s.
 
 <b>Parameters:</b>
 
@@ -187,7 +187,7 @@ Finds the number of Unicode code points in the given text string. Unpaired surro
 
 <b>Return Value:</b>
 
-The number of Unicode code points in the given string.
+The number of Unicode code points in the specified string.
 
 <b>Exceptions:</b>
 
@@ -280,7 +280,7 @@ Calculates the number of bytes needed to encode a string in UTF-8.
 
 <b>Return Value:</b>
 
-The number of bytes needed to encode the given string in UTF-8, or -1 if the string contains an unpaired surrogate code point and  <i>replace</i>
+The number of bytes needed to encode the specified string in UTF-8, or -1 if the string contains an unpaired surrogate code point and  <i>replace</i>
  is false.
 
 <b>Exceptions:</b>

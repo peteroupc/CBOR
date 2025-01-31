@@ -9,12 +9,11 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORInteger : ICBORNumber
-  {
+  internal class CBORInteger : ICBORNumber {
     public object Abs(object obj) {
       var val = (long)obj;
       return (val == Int32.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
-          -val : obj);
+        -val : obj);
     }
 
     public EInteger AsEInteger(object obj) {
@@ -40,7 +39,7 @@ namespace PeterO.Cbor {
     public int AsInt32(object obj, int minValue, int maxValue) {
       var val = (long)obj;
       return val >= minValue && val <= maxValue ? (int)val : throw new
-OverflowException("This object's value is out of range");
+        OverflowException("This object's value is out of range");
     }
 
     public long AsInt64(object obj) {
@@ -133,7 +132,7 @@ OverflowException("This object's value is out of range");
 
     public object Negate(object obj) {
       return (((long)obj) == Int64.MinValue) ? (EInteger.One << 63) :
-(-(long)obj);
+        (-(long)obj);
     }
 
     public int Sign(object obj) {

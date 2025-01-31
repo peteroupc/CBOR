@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 
 namespace PeterO.DocGen {
-  public interface INode
-  {
-    string LocalName { get; }
+  public interface INode {
+    string LocalName {
+      get;
+    }
 
     string GetContent();
 

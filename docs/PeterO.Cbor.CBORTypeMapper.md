@@ -8,7 +8,7 @@ Holds converters to customize the serialization and deserialization behavior of 
 * <code>[AddConverter&lt;T&gt;(System.Type, PeterO.Cbor.ICBORConverter&lt;T&gt;)](#AddConverter_T_System_Type_PeterO_Cbor_ICBORConverter_T)</code> - Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
 * <code>[AddTypeName(string)](#AddTypeName_string)</code> - Adds the fully qualified name of a Java or.
 * <code>[AddTypePrefix(string)](#AddTypePrefix_string)</code> - Adds a prefix of a Java or.
-* <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Returns whether the given Java or.
+* <code>[FilterTypeName(string)](#FilterTypeName_string)</code> - Returns whether the specified Java or.
 
 <a id="Void_ctor"></a>
 ### CBORTypeMapper Constructor
@@ -107,7 +107,7 @@ The parameter  <i>prefix</i>
     public bool FilterTypeName(
         string typeName);
 
-Returns whether the given Java or.NET type name fits the filters given in this mapper.
+Returns whether the specified Java or.NET type name fits the filters given in this mapper.
 
 <b>Parameters:</b>
 
@@ -115,4 +115,4 @@ Returns whether the given Java or.NET type name fits the filters given in this m
 
 <b>Return Value:</b>
 
-Either  `true`  if the given Java or.NET type name fits the filters given in this mapper, or  `false`  otherwise.
+Either  `true`  if the specified Java or.NET type name fits the filters given in this mapper, or  `false`  otherwise.

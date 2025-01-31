@@ -101,7 +101,7 @@ Converts a date/time in the form of a year, month, day, hour, minute, and second
 
 <b>Return Value:</b>
 
-A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
+A CBOR object encoding the specified date fields according to the conversion type used to create this date converter.
 
 <b>Exceptions:</b>
 
@@ -128,7 +128,7 @@ Converts a date/time in the form of a year, month, and day to a CBOR object. The
 
 <b>Return Value:</b>
 
-A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
+A CBOR object encoding the specified date fields according to the conversion type used to create this date converter.
 
 <b>Exceptions:</b>
 
@@ -152,7 +152,7 @@ Converts a date/time in the form of a year, month, day, hour, minute, second, fr
 
 <b>Return Value:</b>
 
-A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
+A CBOR object encoding the specified date fields according to the conversion type used to create this date converter.
 
 <b>Exceptions:</b>
 
@@ -180,7 +180,7 @@ Converts a date/time in the form of a year, month, day, hour, minute, second, fr
 
 <b>Return Value:</b>
 
-A CBOR object encoding the given date fields according to the conversion type used to create this date converter.
+A CBOR object encoding the specified date fields according to the conversion type used to create this date converter.
 
 <b>Exceptions:</b>
 

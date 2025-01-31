@@ -16,7 +16,7 @@ namespace CBORDocs {
         return;
       }
       PeterO.DocGen.DocGenerator.Generate(args[args.Length - 2],
-  args[args.Length - 1]);
+        args[args.Length - 1]);
     }
   }
 }

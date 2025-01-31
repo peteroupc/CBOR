@@ -13,17 +13,16 @@ namespace PeterO.Cbor {
   {
     /// <summary>This property is no longer used.</summary>
     [Obsolete("Since version 4.0, CBORObject.Type no longer returns this" +
-"\u0020value for any CBOR object - this is a breaking change from " +
-"earlier versions." +
-"\u0020Instead, use the IsNumber property of CBORObject to determine" +
-" whether a CBOR object represents a number, or use the two " +
-"new CBORType values instead. CBORType.Integer " +
-"covers CBOR objects representing" +
-"\u0020integers of" +
-"\u0020major type 0 and 1. " +
-"CBORType.FloatingPoint covers CBOR objects representing " +
-"16-, 32-, and 64-bit floating-point numbers. CBORType.Number " +
-"may be removed in version 5.0 or later.")]
+        "\u0020value for any CBOR object - this is a breaking change from " +
+        "earlier versions." +
+        "\u0020Instead, use the IsNumber property of CBORObject to determine" +
+        " whether a CBOR object represents a number, or use the two " +
+        "new CBORType values instead. CBORType.Integer " +
+        "covers CBOR objects representing" + "\u0020integers of" +
+        "\u0020major type 0 and 1. " +
+        "CBORType.FloatingPoint covers CBOR objects representing " +
+        "16-, 32-, and 64-bit floating-point numbers. CBORType.Number " +
+        "may be removed in version 5.0 or later.")]
     Number,
 
     /// <summary>The simple values true and false.</summary>

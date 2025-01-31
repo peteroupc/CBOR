@@ -113,8 +113,7 @@ namespace PeterO.Cbor {
       "CA1036",
       Justification = "Mutable in some cases, and arbitrary size.")]
   public sealed partial class CBORObject : IComparable<CBORObject>,
-    IEquatable<CBORObject>
-  {
+    IEquatable<CBORObject> {
     private static CBORObject ConstructSimpleValue(int v) {
       return new CBORObject(CBORObjectTypeSimpleValue, v);
     }
@@ -124,12 +123,12 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Represents the value false.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Security",
         "CA2104",
         Justification = "This CBORObject is immutable")]
-#endif
+    #endif
     public static readonly CBORObject False =
       CBORObject.ConstructSimpleValue(20);
 
@@ -141,12 +140,12 @@ namespace PeterO.Cbor {
       FromDouble(double.NegativeInfinity);
 
     /// <summary>Represents the value null.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Security",
         "CA2104",
         Justification = "This CBORObject is immutable")]
-#endif
+    #endif
     public static readonly CBORObject Null =
       CBORObject.ConstructSimpleValue(22);
 
@@ -155,22 +154,22 @@ namespace PeterO.Cbor {
       FromDouble(double.PositiveInfinity);
 
     /// <summary>Represents the value true.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Security",
         "CA2104",
         Justification = "This CBORObject is immutable")]
-#endif
+    #endif
     public static readonly CBORObject True =
       CBORObject.ConstructSimpleValue(21);
 
     /// <summary>Represents the value undefined.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Security",
         "CA2104",
         Justification = "This CBORObject is immutable")]
-#endif
+    #endif
     public static readonly CBORObject Undefined =
       CBORObject.ConstructSimpleValue(23);
 
@@ -244,7 +243,7 @@ namespace PeterO.Cbor {
     }
 
     internal CBORObject(int type, object item) {
-#if DEBUG
+      #if DEBUG
       if (type == CBORObjectTypeDouble) {
         if (!(item is long)) {
           throw new ArgumentException("expected long for item type");
@@ -253,7 +252,7 @@ namespace PeterO.Cbor {
       // Check range in debug mode to ensure that Integer and EInteger
       // are unambiguous
       if ((type == CBORObjectTypeEInteger) &&
-((EInteger)item).CanFitInInt64()) {
+        ((EInteger)item).CanFitInInt64()) {
         throw new ArgumentException("arbitrary-precision integer is within" +
           "\u0020range for Integer");
       }
@@ -265,7 +264,7 @@ namespace PeterO.Cbor {
       if (type == CBORObjectTypeArray && !(item is IList<CBORObject>)) {
         throw new InvalidOperationException();
       }
-#endif
+      #endif
       this.itemtypeValue = type;
       this.itemValue = item;
       this.tagLow = 0;
@@ -279,7 +278,7 @@ namespace PeterO.Cbor {
     /// this array, or 0 if this item is neither an array nor a
     /// map.</value>
     public int Count => (this.Type == CBORType.Array) ? this.AsList().Count :
-          ((this.Type == CBORType.Map) ? this.AsMap().Count : 0);
+    ((this.Type == CBORType.Map) ? this.AsMap().Count : 0);
 
     /// <summary>Gets the last defined tag for this CBOR data item, or -1
     /// if the item is untagged.</summary>
@@ -311,16 +310,16 @@ namespace PeterO.Cbor {
     /// <value><c>true</c> if this value is a CBOR false value; otherwise,
     /// <c>false</c>.</value>
     public bool IsFalse => this.ItemType == CBORObjectTypeSimpleValue &&
-(int)this.ThisItem
-          == 20;
+    (int)this.ThisItem
+    == 20;
 
     /// <summary>Gets a value indicating whether this CBOR object is a CBOR
     /// null value, whether tagged or not.</summary>
     /// <value><c>true</c> if this value is a CBOR null value; otherwise,
     /// <c>false</c>.</value>
     public bool IsNull => this.ItemType == CBORObjectTypeSimpleValue &&
-(int)this.ThisItem
-          == 22;
+    (int)this.ThisItem
+    == 22;
 
     /// <summary>Gets a value indicating whether this data item has at
     /// least one tag.</summary>
@@ -333,16 +332,16 @@ namespace PeterO.Cbor {
     /// <value><c>true</c> if this value is a CBOR true value; otherwise,
     /// <c>false</c>.</value>
     public bool IsTrue => this.ItemType == CBORObjectTypeSimpleValue &&
-(int)this.ThisItem
-          == 21;
+    (int)this.ThisItem
+    == 21;
 
     /// <summary>Gets a value indicating whether this value is a CBOR
     /// undefined value, whether tagged or not.</summary>
     /// <value><c>true</c> if this value is a CBOR undefined value;
     /// otherwise, <c>false</c>.</value>
     public bool IsUndefined => this.ItemType == CBORObjectTypeSimpleValue &&
-(int)this.ThisItem
-          == 23;
+    (int)this.ThisItem
+    == 23;
 
     /// <summary>Gets a collection of the keys of this CBOR object. In
     /// general, the order in which those keys occur is undefined unless
@@ -369,11 +368,11 @@ namespace PeterO.Cbor {
     /// <value>The outermost tag for this CBOR data item, or -1 if the item
     /// is untagged.</value>
     public EInteger MostOuterTag => !this.IsTagged ?
-          EInteger.FromInt32(-1) : this.tagHigh == 0 &&
-          this.tagLow >= 0 && this.tagLow < 0x10000 ?
-          (EInteger)this.tagLow : LowHighToEInteger(
-            this.tagLow,
-            this.tagHigh);
+    EInteger.FromInt32(-1) : this.tagHigh == 0 &&
+    this.tagLow >= 0 && this.tagLow < 0x10000 ?
+    (EInteger)this.tagLow : LowHighToEInteger(
+      this.tagLow,
+      this.tagHigh);
 
     /// <summary>Gets the simple value ID of this CBOR object, or -1 if the
     /// object is not a simple value. In this method, objects with a CBOR
@@ -382,7 +381,7 @@ namespace PeterO.Cbor {
     /// <value>The simple value ID of this object if it's a simple value,
     /// or -1 if this object is not a simple value.</value>
     public int SimpleValue => (this.ItemType == CBORObjectTypeSimpleValue) ?
-          ((int)this.ThisItem) : -1;
+    ((int)this.ThisItem) : -1;
 
     /// <summary>Gets a value indicating whether this CBOR object stores a
     /// number (including infinity or a not-a-number or NaN value).
@@ -420,7 +419,8 @@ namespace PeterO.Cbor {
           case CBORObjectTypeTextStringUtf8:
           case CBORObjectTypeTextStringAscii:
             return CBORType.TextString;
-          default: throw new InvalidOperationException("Unexpected data type");
+          default:
+            throw new InvalidOperationException("Unexpected data type");
         }
       }
     }
@@ -436,7 +436,7 @@ namespace PeterO.Cbor {
     /// over the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
-    public ICollection<KeyValuePair<CBORObject, CBORObject>> Entries
+    public ICollection<KeyValuePair<CBORObject, CBORObject >> Entries
     {
       get
       {
@@ -507,11 +507,11 @@ namespace PeterO.Cbor {
     /// <summary>Gets the value of a CBOR object by integer index in this
     /// array or by integer key in this map.</summary>
     /// <param name='index'>Index starting at 0 of the element, or the
-    /// integer key to this map. (If this is a map, the given index can be
-    /// any 32-bit signed integer, even a negative one.).</param>
+    /// integer key to this map. (If this is a map, the specified index can
+    /// be any 32-bit signed integer, even a negative one.).</param>
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns <c>null</c> (not
-    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// <c>CBORObject.Null</c> ) if an item with the specified key doesn't
     /// exist (but this behavior may change to throwing an exception in
     /// version 5.0 or later).</returns>
     /// <exception cref='InvalidOperationException'>This object is not an
@@ -527,7 +527,7 @@ namespace PeterO.Cbor {
         if (this.Type == CBORType.Array) {
           IList<CBORObject> list = this.AsList();
           return index < 0 || index >= list.Count ? throw new
-ArgumentOutOfRangeException(nameof(index)) : list[index];
+            ArgumentOutOfRangeException(nameof(index)) : list[index];
         }
         if (this.Type == CBORType.Map) {
           IDictionary<CBORObject, CBORObject> map = this.AsMap();
@@ -569,15 +569,15 @@ ArgumentOutOfRangeException(nameof(index)) : list[index];
     /// the size of the array, and may be any object convertible to a CBOR
     /// integer.</param>
     /// <param name='defaultValue'>A value to return if an item with the
-    /// given key doesn't exist, or if the CBOR object is an array and the
-    /// key is not an integer 0 or greater and less than the size of the
-    /// array.</param>
+    /// specified key doesn't exist, or if the CBOR object is an array and
+    /// the key is not an integer 0 or greater and less than the size of
+    /// the array.</param>
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns <c>null</c> (not
-    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// <c>CBORObject.Null</c> ) if an item with the specified key doesn't
     /// exist.</returns>
     public CBORObject GetOrDefault(CBORObject cborkey, CBORObject
-defaultValue) {
+      defaultValue) {
       if (this.Type == CBORType.Array) {
         if (!cborkey.IsNumber || !cborkey.AsNumber().CanFitInInt32()) {
           return defaultValue;
@@ -603,12 +603,12 @@ defaultValue) {
     /// size of the array, and may be any object convertible to a CBOR
     /// integer.</param>
     /// <param name='defaultValue'>A value to return if an item with the
-    /// given key doesn't exist, or if the CBOR object is an array and the
-    /// key is not an integer 0 or greater and less than the size of the
-    /// array.</param>
+    /// specified key doesn't exist, or if the CBOR object is an array and
+    /// the key is not an integer 0 or greater and less than the size of
+    /// the array.</param>
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns <c>null</c> (not
-    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// <c>CBORObject.Null</c> ) if an item with the specified key doesn't
     /// exist.</returns>
     public CBORObject GetOrDefault(int key, CBORObject defaultValue) {
       if (this.Type == CBORType.Array) {
@@ -620,9 +620,9 @@ defaultValue) {
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return PropertyMap.GetOrDefault(
-          map,
-          FromInt32(key),
-          defaultValue);
+            map,
+            FromInt32(key),
+            defaultValue);
       }
       return defaultValue;
     }
@@ -634,10 +634,11 @@ defaultValue) {
     /// map or index to the array, and can be null. If this is a CBOR
     /// array, defaultValue is returned.</param>
     /// <param name='defaultValue'>A value to return if an item with the
-    /// given key doesn't exist, or if the CBOR object is an array.</param>
+    /// specified key doesn't exist, or if the CBOR object is an
+    /// array.</param>
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns <c>null</c> (not
-    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// <c>CBORObject.Null</c> ) if an item with the specified key doesn't
     /// exist.</returns>
     public CBORObject GetOrDefault(string key, CBORObject defaultValue) {
       if (this.Type == CBORType.Array) {
@@ -646,9 +647,9 @@ defaultValue) {
       if (this.Type == CBORType.Map) {
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         return PropertyMap.GetOrDefault(
-          map,
-          FromString(key),
-          defaultValue);
+            map,
+            FromString(key),
+            defaultValue);
       }
       return defaultValue;
     }
@@ -660,7 +661,7 @@ defaultValue) {
     /// integer 0 or greater and less than the size of the array.</param>
     /// <returns>The CBOR object referred to by index or key in this array
     /// or map. If this is a CBOR map, returns <c>null</c> (not
-    /// <c>CBORObject.Null</c> ) if an item with the given key doesn't
+    /// <c>CBORObject.Null</c> ) if an item with the specified key doesn't
     /// exist.</returns>
     /// <exception cref='ArgumentNullException'>The key is null (as opposed
     /// to CBORObject.Null); or the set method is called and the value is
@@ -705,7 +706,7 @@ defaultValue) {
           IList<CBORObject> list = this.AsList();
           int index = key.AsNumber().ToInt32Checked();
           return index < 0 || index >= list.Count ? throw new
-ArgumentOutOfRangeException(nameof(key)) : list[index];
+            ArgumentOutOfRangeException(nameof(key)) : list[index];
         }
         throw new InvalidOperationException("Not an array or map");
       }
@@ -745,7 +746,8 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     /// string as the key.</summary>
     /// <param name='key'>A key that points to the desired value.</param>
     /// <returns>The CBOR object referred to by key in this map. Returns
-    /// <c>null</c> if an item with the given key doesn't exist.</returns>
+    /// <c>null</c> if an item with the specified key doesn't
+    /// exist.</returns>
     /// <exception cref='ArgumentNullException'>The key is
     /// null.</exception>
     /// <exception cref='InvalidOperationException'>This object is not a
@@ -782,7 +784,8 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     /// bytes.</para></summary>
     /// <param name='data'>A byte array in which a single CBOR object is
     /// encoded.</param>
-    /// <returns>A CBOR object decoded from the given byte array.</returns>
+    /// <returns>A CBOR object decoded from the specified byte
+    /// array.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
@@ -803,7 +806,7 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     /// <param name='data'>A byte array in which any number of CBOR objects
     /// (including zero) are encoded, one after the other. Can be empty,
     /// but cannot be null.</param>
-    /// <returns>An array of CBOR objects decoded from the given byte
+    /// <returns>An array of CBOR objects decoded from the specified byte
     /// array. Returns an empty array if <paramref name='data'/> is
     /// empty.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
@@ -826,7 +829,7 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     /// <see cref='PeterO.Cbor.CBOREncodeOptions'/> for more information.
     /// In this method, the AllowEmpty property is treated as always set
     /// regardless of that value as specified in this parameter.</param>
-    /// <returns>An array of CBOR objects decoded from the given byte
+    /// <returns>An array of CBOR objects decoded from the specified byte
     /// array. Returns an empty array if <paramref name='data'/> is
     /// empty.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
@@ -871,7 +874,8 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     /// encoded.</param>
     /// <returns>A list of CBOR objects read from the JSON sequence.
     /// Objects that could not be parsed are replaced with <c>null</c> (as
-    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// opposed to <c>CBORObject.Null</c> ) in the specified
+    /// list.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
@@ -933,7 +937,8 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     /// decoding process.</param>
     /// <returns>A list of CBOR objects read from the JSON sequence.
     /// Objects that could not be parsed are replaced with <c>null</c> (as
-    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// opposed to <c>CBORObject.Null</c> ) in the specified
+    /// list.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>The byte array is not
@@ -962,23 +967,24 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
     }
 
     /// <summary>Generates a CBOR object from an array of CBOR-encoded
-    /// bytes, using the given <c>CBOREncodeOptions</c>
-    ///  object to control
-    /// the decoding process.</summary>
+    /// bytes, using the specified <c>CBOREncodeOptions</c>
+    ///  object to
+    /// control the decoding process.</summary>
     /// <param name='data'>A byte array in which a single CBOR object is
     /// encoded.</param>
     /// <param name='options'>Specifies options to control how the CBOR
     /// object is decoded. See <see cref='PeterO.Cbor.CBOREncodeOptions'/>
     /// for more information.</param>
-    /// <returns>A CBOR object decoded from the given byte array. Returns
-    /// null (as opposed to CBORObject.Null) if <paramref name='data'/> is
-    /// empty and the AllowEmpty property is set on the given options
-    /// object.</returns>
+    /// <returns>A CBOR object decoded from the specified byte array.
+    /// Returns null (as opposed to CBORObject.Null) if <paramref
+    /// name='data'/> is empty and the AllowEmpty property is set on the
+    /// specified options object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object.</exception>
+    /// AllowEmpty property is set on the specified options
+    /// object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='options'/>
     /// is null.</exception>
@@ -1006,7 +1012,7 @@ ArgumentOutOfRangeException(nameof(key)) : list[index];
       }
       if (data.Length == 0) {
         return options.AllowEmpty ? (CBORObject)null : throw new
-CBORException("data is empty.");
+          CBORException("data is empty.");
       }
       int firstbyte = data[0] & 0xff;
       int expectedLength = ValueExpectedLengths[firstbyte];
@@ -1073,7 +1079,7 @@ CBORException("data is empty.");
     /// <paramref name='count'/>.</exception>
     public static CBORObject FromJSONString(string str, int offset, int count) {
       return str == null ? throw new ArgumentNullException(nameof(str)) :
-FromJSONString(str, offset, count, JSONOptions.Default);
+        FromJSONString(str, offset, count, JSONOptions.Default);
     }
 
     /// <summary>Generates a CBOR object from a text string in JavaScript
@@ -1101,7 +1107,7 @@ FromJSONString(str, offset, count, JSONOptions.Default);
       return str == null ?
         throw new ArgumentNullException(nameof(str)) :
         jsonoptions == null ? throw new
-          ArgumentNullException(nameof(jsonoptions)) :
+        ArgumentNullException(nameof(jsonoptions)) :
         FromJSONString(str, 0, str.Length, jsonoptions);
     }
 
@@ -1168,7 +1174,7 @@ FromJSONString(str, offset, count, JSONOptions.Default);
         count > 0 && str[offset] == 0xfeff ? throw new CBORException(
           "JSON object began with a byte order mark (U+FEFF) (offset 0)") :
         count == 0 ? throw new CBORException("String is empty") :
-CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
+        CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
     }
 
     /// <summary>Converts this CBOR object to an object of an arbitrary
@@ -1192,8 +1198,8 @@ CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
     /// <returns>The converted object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>The given type
     /// <paramref name='t'/> , or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='t'/> is null.</exception>
     /// <example>
@@ -1242,14 +1248,16 @@ CBORJson3.ParseJSONValue(str, offset, offset + count, jsonoptions);
     /// <returns>The converted object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>The given type
     /// <paramref name='t'/>, or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='t'/> is null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, CBORTypeMapper mapper) {
       return mapper == null ? throw new
-ArgumentNullException(nameof(mapper)) : this.ToObject(t, mapper, null, 0);
+        ArgumentNullException(nameof(mapper)) : this.ToObject(t, mapper,
+        null,
+        0);
     }
 
     /// <summary>Converts this CBOR object to an object of an arbitrary
@@ -1282,7 +1290,9 @@ ArgumentNullException(nameof(mapper)) : this.ToObject(t, mapper, null, 0);
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, PODOptions options) {
       return options == null ? throw new
-ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
+        ArgumentNullException(nameof(options)) : this.ToObject(t, null,
+        options,
+        0);
     }
 
     /// <summary><para>Converts this CBOR object to an object of an
@@ -1292,17 +1302,17 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     ///  <list><item>If the type is
     /// <c>CBORObject</c>
     ///  , return this object.</item>
-    ///  <item>If the given
-    /// object is <c>CBORObject.Null</c>
-    ///  (with or without tags), returns
-    /// <c>null</c>
+    ///  <item>If the
+    /// specified object is <c>CBORObject.Null</c>
+    ///  (with or without tags),
+    /// returns <c>null</c>
     ///  .</item>
-    ///  <item>If the object is of a type corresponding
-    /// to a type converter mentioned in the <paramref name='mapper'/>
-    /// parameter, that converter will be used to convert the CBOR object
-    /// to an object of the given type. Type converters can be used to
-    /// override the default conversion behavior of almost any
-    /// object.</item>
+    ///  <item>If the object is of a type
+    /// corresponding to a type converter mentioned in the <paramref
+    /// name='mapper'/> parameter, that converter will be used to convert
+    /// the CBOR object to an object of the specified type. Type converters
+    /// can be used to override the default conversion behavior of almost
+    /// any object.</item>
     ///  <item>If the type is <c>object</c>
     ///  , return this
     /// object.</item>
@@ -1402,10 +1412,10 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     ///  artifact (in Java), or if the type is <c>BigInteger</c>
     ///  or
     /// <c>BigDecimal</c>
-    ///  in the Java version, converts the given object to
-    /// a number of the corresponding type and throws an exception
-    /// (currently InvalidOperationException) if the object does not
-    /// represent a number (for this purpose, infinity and not-a-number
+    ///  in the Java version, converts the specified
+    /// object to a number of the corresponding type and throws an
+    /// exception (currently InvalidOperationException) if the object does
+    /// not represent a number (for this purpose, infinity and not-a-number
     /// values, but not <c>CBORObject.Null</c>
     ///  , are considered numbers).
     /// Currently, this is equivalent to the result of <c>AsEFloat()</c>
@@ -1491,9 +1501,9 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     ///  <item>If the type is
     /// an enumeration constant ("enum"), and this CBOR object is an
     /// integer or text string, returns the enumeration constant with the
-    /// given number or name, respectively. (Enumeration constants made up
-    /// of multiple enumeration constants, as allowed by .NET, can only be
-    /// matched by number this way.)</item>
+    /// specified number or name, respectively. (Enumeration constants made
+    /// up of multiple enumeration constants, as allowed by .NET, can only
+    /// be matched by number this way.)</item>
     ///  <item>If the type is
     /// <c>DateTime</c>
     ///  (or <c>Date</c>
@@ -1530,33 +1540,34 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// specially handled above, the type includes a zero-parameter
     /// constructor (default or not), this CBOR object is a CBOR map, and
     /// the "mapper" parameter (if any) allows this type to be eligible for
-    /// Plain-Old-Data deserialization, then this method checks the given
-    /// type for eligible setters as follows:</item>
-    ///  <item>(*) In the .NET
-    /// version, eligible setters are the public, nonstatic setters of
-    /// properties with a public, nonstatic getter. Eligible setters also
-    /// include public, nonstatic, non- <c>const</c>
-    ///  , non- <c>readonly</c>
-    /// fields. If a class has two properties and/or fields of the form "X"
-    /// and "IsX", where "X" is any name, or has multiple properties and/or
-    /// fields with the same name, those properties and fields are
-    /// ignored.</item>
-    ///  <item>(*) In the Java version, eligible setters are
-    /// public, nonstatic methods starting with "set" followed by a
-    /// character other than a basic digit or lowercase letter, that is,
-    /// other than "a" to "z" or "0" to "9", that take one parameter. The
-    /// class containing an eligible setter must have a public, nonstatic
-    /// method with the same name, but starting with "get" or "is" rather
-    /// than "set", that takes no parameters and does not return void. (For
-    /// example, if a class has "public setValue(String)" and "public
-    /// getValue()", "setValue" is an eligible setter. However,
+    /// Plain-Old-Data deserialization, then this method checks the
+    /// specified type for eligible setters as follows:</item>
+    ///  <item>(*) In
+    /// the .NET version, eligible setters are the public, nonstatic
+    /// setters of properties with a public, nonstatic getter. Eligible
+    /// setters also include public, nonstatic, non- <c>const</c>
+    ///  , non-
+    /// <c>readonly</c>
+    ///  fields. If a class has two properties and/or fields
+    /// of the form "X" and "IsX", where "X" is any name, or has multiple
+    /// properties and/or fields with the same name, those properties and
+    /// fields are ignored.</item>
+    ///  <item>(*) In the Java version, eligible
+    /// setters are public, nonstatic methods starting with "set" followed
+    /// by a character other than a basic digit or lowercase letter, that
+    /// is, other than "a" to "z" or "0" to "9", that take one parameter.
+    /// The class containing an eligible setter must have a public,
+    /// nonstatic method with the same name, but starting with "get" or
+    /// "is" rather than "set", that takes no parameters and does not
+    /// return void. (For example, if a class has "public setValue(String)"
+    /// and "public getValue()", "setValue" is an eligible setter. However,
     /// "setValue()" and "setValue(String, int)" are not eligible setters.)
     /// In addition, public, nonstatic, nonfinal fields are also eligible
     /// setters. If a class has two or more otherwise eligible setters
     /// (methods and/or fields) with the same name, but different parameter
     /// type, they are not eligible setters.</item>
     ///  <item>Then, the method
-    /// creates an object of the given type and invokes each eligible
+    /// creates an object of the specified type and invokes each eligible
     /// setter with the corresponding value in the CBOR map, if any. Key
     /// names in the map are matched to eligible setters according to the
     /// rules described in the <see cref='PeterO.Cbor.PODOptions'/>
@@ -1588,8 +1599,8 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// <returns>The converted object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>The given type
     /// <paramref name='t'/> , or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='t'/> or <paramref name='options'/> is null.</exception>
     /// <example>
@@ -1628,8 +1639,8 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     }
 
     /// <summary>Generates an object of an arbitrary type from an array of
-    /// CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
-    /// to control the decoding process. It is equivalent to
+    /// CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c>
+    /// object to control the decoding process. It is equivalent to
     /// DecodeFromBytes followed by ToObject. See the documentation for
     /// those methods for more information.</summary>
     /// <param name='data'>A byte array in which a single CBOR object is
@@ -1654,18 +1665,19 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
     /// null.</param>
     /// <param name='pod'>Specifies options for controlling deserialization
     /// of CBOR objects.</param>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type <paramref name='t'/>, or this object's CBOR
-    /// type, is not supported, or the given object's nesting is too deep,
-    /// or another error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type <paramref name='t'/>, or this
+    /// object's CBOR type, is not supported, or the specified object's
+    /// nesting is too deep, or another error occurred when serializing the
+    /// object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter <paramref name='t'/> or <paramref
@@ -1679,12 +1691,12 @@ ArgumentNullException(nameof(options)) : this.ToObject(t, null, options, 0);
       PODOptions pod) {
       return pod == null ? throw new ArgumentNullException(nameof(pod)) :
         enc == null ? throw new ArgumentNullException(nameof(enc)) :
-DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
+        DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
     }
 
     /// <summary>Generates an object of an arbitrary type from an array of
-    /// CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
-    /// to control the decoding process. It is equivalent to
+    /// CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c>
+    /// object to control the decoding process. It is equivalent to
     /// DecodeFromBytes followed by ToObject. See the documentation for
     /// those methods for more information.</summary>
     /// <param name='data'>A byte array in which a single CBOR object is
@@ -1703,18 +1715,19 @@ DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
     /// either criterion given earlier.</param>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type <paramref name='t'/>, or this object's CBOR
-    /// type, is not supported, or the given object's nesting is too deep,
-    /// or another error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type <paramref name='t'/>, or this
+    /// object's CBOR type, is not supported, or the specified object's
+    /// nesting is too deep, or another error occurred when serializing the
+    /// object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter <paramref name='t'/> is null.</exception>
@@ -1748,18 +1761,19 @@ DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
     /// null.</param>
     /// <param name='pod'>Specifies options for controlling deserialization
     /// of CBOR objects.</param>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type <paramref name='t'/>, or this object's CBOR
-    /// type, is not supported, or the given object's nesting is too deep,
-    /// or another error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type <paramref name='t'/>, or this
+    /// object's CBOR type, is not supported, or the specified object's
+    /// nesting is too deep, or another error occurred when serializing the
+    /// object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='t'/> or
     /// <paramref name='pod'/> is null.</exception>
@@ -1770,7 +1784,7 @@ DecodeFromBytes(data, enc).ToObject(t, mapper, pod);
       CBORTypeMapper mapper,
       PODOptions pod) {
       return
-DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
+        DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     }
 
     /// <summary>Generates an object of an arbitrary type from an array of
@@ -1789,18 +1803,19 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// the control of the application. If the plain-old-data type
     /// references other data types, those types should likewise meet
     /// either criterion given earlier.</param>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type <paramref name='t'/>, or this object's CBOR
-    /// type, is not supported, or the given object's nesting is too deep,
-    /// or another error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type <paramref name='t'/>, or this
+    /// object's CBOR type, is not supported, or the specified object's
+    /// nesting is too deep, or another error occurred when serializing the
+    /// object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='t'/> is
     /// null.</exception>
@@ -1857,13 +1872,14 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
       if (t.Equals(typeof(EFloat))) {
         var cn = CBORNumber.FromCBORObject(this);
         return cn == null ? throw new InvalidOperationException("Not a" +
-"\u0020number type") : (object)cn.GetNumberInterface().AsEFloat(cn.GetValue());
+            "\u0020number type") :
+          (object)cn.GetNumberInterface().AsEFloat(cn.GetValue());
       }
       if (t.Equals(typeof(EInteger))) {
         var cn = CBORNumber.FromCBORObject(this);
         return cn == null ? throw new InvalidOperationException("Not a" +
-"\u0020number type") :
-(object)cn.GetNumberInterface().AsEInteger(cn.GetValue());
+            "\u0020number type") :
+          (object)cn.GetNumberInterface().AsEInteger(cn.GetValue());
       }
       if (t.Equals(typeof(ERational))) {
         // NOTE: Will likely be simplified in version 5.0 and later
@@ -1875,8 +1891,8 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         }
         var cn = CBORNumber.FromCBORObject(this);
         return cn == null ? throw new InvalidOperationException("Not a" +
-"\u0020number type") :
-(object)cn.GetNumberInterface().AsERational(cn.GetValue());
+            "\u0020number type") :
+          (object)cn.GetNumberInterface().AsERational(cn.GetValue());
       }
       return t.Equals(typeof(string)) ? this.AsString() :
         PropertyMap.TypeToObject(this, t, mapper, options, depth);
@@ -1890,7 +1906,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     public static CBORObject FromInt64(long value) {
       return value >= 0L && value < 24L ? FixedObjects[(int)value] :
         (value >= -24L && value < 0L) ? FixedObjects[0x20 - (int)(value +
-              1L)] : new CBORObject(CBORObjectTypeInteger, value);
+        1L)] : new CBORObject(CBORObjectTypeInteger, value);
     }
 
     /// <summary>Generates a CBOR object from a 64-bit signed
@@ -1907,7 +1923,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
     /// <returns>Same as <paramref name='value'/>, or "CBORObject.Null" is
     /// <paramref name='value'/> is null.</returns>
     [Obsolete("Don't use a function and use Nullable Reference Types to" +
-"\u0020guard against nulls.")]
+        "\u0020guard against nulls.")]
     public static CBORObject FromObject(CBORObject value) {
       return value ?? Null;
     }
@@ -1917,7 +1933,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         intValue = -(intValue + 1);
       }
       return intValue > 0xffff ? 5 : intValue > 0xff ? 3 : (intValue > 23) ?
-2 : 1;
+        2 : 1;
     }
 
     private static int IntegerByteLength(long longValue) {
@@ -1925,7 +1941,7 @@ DecodeObjectFromBytes(data, CBOREncodeOptions.Default, t, mapper, pod);
         longValue = -(longValue + 1);
       }
       return longValue > 0xffffffffL ? 9 : longValue > 0xffffL ? 5 :
-longValue > 0xffL ? 3 : (longValue > 23L) ? 2 : 1;
+        longValue > 0xffL ? 3 : (longValue > 23L) ? 2 : 1;
     }
 
     /// <summary>Calculates the number of bytes this CBOR object takes when
@@ -1948,7 +1964,7 @@ longValue > 0xffL ? 3 : (longValue > 23L) ? 2 : 1;
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
-      // DebugUtility.Log("type="+this.Type+" depth="+depth);
+      // Console.WriteLine("type="+this.Type+" depth="+depth);
       long size = 0L;
       CBORObject cbor = this;
       while (cbor.IsTagged) {
@@ -1973,24 +1989,23 @@ longValue > 0xffL ? 3 : (longValue > 23L) ? 2 : 1;
       }
       switch (cbor.Type) {
         case CBORType.Integer:
-          {
-            if (cbor.CanValueFitInInt64()) {
-              long tag = cbor.AsInt64Value();
-              size = checked(size + IntegerByteLength(tag));
-              return size;
-            } else {
-              return checked(size + 9);
-            }
+        {
+          if (cbor.CanValueFitInInt64()) {
+            long tag = cbor.AsInt64Value();
+            size = checked(size + IntegerByteLength(tag));
+            return size;
+          } else {
+            return checked(size + 9);
           }
+        }
         case CBORType.FloatingPoint:
-          {
-            long valueBits = cbor.AsDoubleBits();
-            int bits =
-CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
-            return bits != -1 ? size + 3 :
-              CBORUtilities.DoubleRetainsSameValueInSingle(valueBits) ?
-              checked(size + 5) : checked(size + 9);
-          }
+        {
+          long valueBits = cbor.AsDoubleBits();
+          int bits = CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
+          return bits != -1 ? size + 3 :
+            CBORUtilities.DoubleRetainsSameValueInSingle(valueBits) ?
+            checked(size + 5) : checked(size + 9);
+        }
         case CBORType.Array:
           size = checked(size + IntegerByteLength(cbor.Count));
           for (int i = 0; i < cbor.Count; ++i) {
@@ -1999,43 +2014,44 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
           }
           return size;
         case CBORType.Map:
-          {
-            ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
-              this.Entries;
-            size = checked(size + IntegerByteLength(entries.Count));
-            try {
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
-                CBORObject key = entry.Key;
-                CBORObject value = entry.Value;
-                size = checked(size + key.CalcEncodedSize(depth + 1));
-                size = checked(size + value.CalcEncodedSize(depth + 1));
-              }
-            } catch (InvalidOperationException ex) {
-              // Additional error that may occur in iteration
-              throw new CBORException(ex.Message, ex);
-            } catch (ArgumentException ex) {
-              // Additional error that may occur in iteration
-              throw new CBORException(ex.Message, ex);
+        {
+          ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
+            this.Entries;
+          size = checked(size + IntegerByteLength(entries.Count));
+          try {
+            foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
+              CBORObject key = entry.Key;
+              CBORObject value = entry.Value;
+              size = checked(size + key.CalcEncodedSize(depth + 1));
+              size = checked(size + value.CalcEncodedSize(depth + 1));
             }
-            return size;
+          } catch (InvalidOperationException ex) {
+            // Additional error that may occur in iteration
+            throw new CBORException(ex.Message, ex);
+          } catch (ArgumentException ex) {
+            // Additional error that may occur in iteration
+            throw new CBORException(ex.Message, ex);
           }
+          return size;
+        }
         case CBORType.TextString:
-          {
-            long ulength = DataUtilities.GetUtf8Length(this.AsString(), false);
-            size = checked(size + IntegerByteLength(ulength));
-            return checked(size + ulength);
-          }
+        {
+          long ulength = DataUtilities.GetUtf8Length(this.AsString(), false);
+          size = checked(size + IntegerByteLength(ulength));
+          return checked(size + ulength);
+        }
         case CBORType.ByteString:
-          {
-            byte[] bytes = cbor.GetByteString();
-            size = checked(size + IntegerByteLength(bytes.Length));
-            return checked(size + bytes.Length);
-          }
+        {
+          byte[] bytes = cbor.GetByteString();
+          size = checked(size + IntegerByteLength(bytes.Length));
+          return checked(size + bytes.Length);
+        }
         case CBORType.Boolean:
           return checked(size + 1);
         case CBORType.SimpleValue:
           return checked(size + (cbor.SimpleValue >= 24 ? 2 : 1));
-        default: throw new InvalidOperationException();
+        default:
+          throw new InvalidOperationException();
       }
     }
 
@@ -2080,7 +2096,7 @@ CBORUtilities.DoubleToHalfPrecisionIfSameValue(valueBits);
     /// null.</returns>
     [Obsolete("Use FromEInteger instead.")]
     public static CBORObject FromObject(EInteger bigintValue) =>
-FromEInteger(bigintValue);
+    FromEInteger(bigintValue);
 
     /// <summary>Generates a CBOR object from an arbitrary-precision binary
     /// floating-point number. The CBOR object is generated as follows
@@ -2147,7 +2163,7 @@ FromEInteger(bigintValue);
     /// <returns>The given number encoded as a CBOR object.</returns>
     [Obsolete("Use FromEFloat instead.")]
     public static CBORObject FromObject(EFloat bigValue) =>
-FromEFloat(bigValue);
+    FromEFloat(bigValue);
 
     /// <summary>Generates a CBOR object from an arbitrary-precision
     /// rational number. The CBOR object is generated as follows (this is a
@@ -2181,14 +2197,14 @@ FromEFloat(bigValue);
         if (bigValue.IsSignalingNaN()) {
           options += 6;
         }
-#if DEBUG
+        #if DEBUG
         if (!(!bigValue.IsInfinity() || bigValue.UnsignedNumerator.IsZero)) {
           throw new InvalidOperationException("doesn't satisfy" +
             "\u0020!bigValue.IsInfinity() ||" +
             "\u0020bigValue.UnsignedNumerator.IsZero");
         }
         if (!(!bigValue.IsInfinity() || bigValue.Denominator.CompareTo(1) ==
-            0)) {
+          0)) {
           throw new InvalidOperationException("doesn't satisfy" +
             "\u0020!bigValue.IsInfinity() ||" +
             "\u0020bigValue.Denominator.CompareTo(1)==0");
@@ -2198,7 +2214,7 @@ FromEFloat(bigValue);
             "\u0020!bigValue.IsNaN() ||" +
             "\u0020bigValue.Denominator.CompareTo(1)==0");
         }
-#endif
+        #endif
 
         cbor = NewArray(
             FromEInteger(bigValue.UnsignedNumerator),
@@ -2221,7 +2237,7 @@ FromEFloat(bigValue);
     /// <returns>The given number encoded as a CBOR object.</returns>
     [Obsolete("Use FromERational instead.")]
     public static CBORObject FromObject(ERational bigValue) =>
-FromERational(bigValue);
+    FromERational(bigValue);
 
     /// <summary>Generates a CBOR object from a decimal number. The CBOR
     /// object is generated as follows (this is a change in version 4.0):
@@ -2286,7 +2302,7 @@ FromERational(bigValue);
     /// <returns>The given number encoded as a CBOR object.</returns>
     [Obsolete("Use FromEDecimal instead.")]
     public static CBORObject FromObject(EDecimal bigValue) =>
-FromEDecimal(bigValue);
+    FromEDecimal(bigValue);
 
     /// <summary>Generates a CBOR object from a text string.</summary>
     /// <param name='strValue'>A text string value. Can be null.</param>
@@ -2305,8 +2321,9 @@ FromEDecimal(bigValue);
       return utf8Length < 0 ?
         throw new ArgumentException("String contains an unpaired " +
           "surrogate code point.") : new CBORObject(
-            strValue.Length == utf8Length ? CBORObjectTypeTextStringAscii : CBORObjectTypeTextString,
-            strValue);
+          strValue.Length == utf8Length ? CBORObjectTypeTextStringAscii :
+          CBORObjectTypeTextString,
+          strValue);
     }
 
     /// <summary>Generates a CBOR object from a text string.</summary>
@@ -2315,7 +2332,7 @@ FromEDecimal(bigValue);
     /// if stringValue is null.</returns>
     [Obsolete("Use FromString instead.")]
     public static CBORObject FromObject(string strValue) =>
-FromString(strValue);
+    FromString(strValue);
 
     /// <summary>Generates a CBOR object from a 32-bit signed
     /// integer.</summary>
@@ -2325,7 +2342,7 @@ FromString(strValue);
     public static CBORObject FromInt32(int value) {
       return value >= 0 && value < 24 ? FixedObjects[value] :
         (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
-          FromInt64((long)value);
+        FromInt64((long)value);
     }
 
     /// <summary>Generates a CBOR object from a Guid.</summary>
@@ -2333,7 +2350,7 @@ FromString(strValue);
     /// Guid.</param>
     /// <returns>A CBOR object.</returns>
     public static CBORObject FromGuid(Guid value) => new
-CBORUuidConverter().ToCBORObject(value);
+    CBORUuidConverter().ToCBORObject(value);
 
     /// <summary>Generates a CBOR object from a 32-bit signed
     /// integer.</summary>
@@ -2347,17 +2364,19 @@ CBORUuidConverter().ToCBORObject(value);
     /// integer.</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 16-bit signed integer.</param>
-    /// <returns>A CBOR object generated from the given integer.</returns>
+    /// <returns>A CBOR object generated from the specified
+    /// integer.</returns>
     public static CBORObject FromInt16(short value) {
       return value >= 0 && value < 24 ? FixedObjects[value] :
         (value >= -24 && value < 0) ? FixedObjects[0x20 - (value + 1)] :
-          FromInt64((long)value);
+        FromInt64((long)value);
     }
 
     /// <summary>Generates a CBOR object from a 16-bit signed
     /// integer.</summary>
     /// <param name='value'>A 16-bit signed integer.</param>
-    /// <returns>A CBOR object generated from the given integer.</returns>
+    /// <returns>A CBOR object generated from the specified
+    /// integer.</returns>
     [Obsolete("Use FromInt16 instead.")]
     public static CBORObject FromObject(short value) => FromInt16(value);
 
@@ -2381,7 +2400,8 @@ CBORUuidConverter().ToCBORObject(value);
     /// <summary>Generates a CBOR object from a byte (0 to 255).</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// byte (from 0 to 255).</param>
-    /// <returns>A CBOR object generated from the given integer.</returns>
+    /// <returns>A CBOR object generated from the specified
+    /// integer.</returns>
     public static CBORObject FromByte(byte value) {
       return FromInt32(value & 0xff);
     }
@@ -2406,7 +2426,8 @@ CBORUuidConverter().ToCBORObject(value);
     /// in DotNet, but positive in Java).</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 32-bit floating-point number.</param>
-    /// <returns>A CBOR object generated from the given number.</returns>
+    /// <returns>A CBOR object generated from the specified
+    /// number.</returns>
     public static CBORObject FromSingle(float value) {
       long doubleBits = CBORUtilities.SingleToDoublePrecision(
           CBORUtilities.SingleToInt32Bits(value));
@@ -2432,7 +2453,8 @@ CBORUuidConverter().ToCBORObject(value);
     /// positive in Java).</summary>
     /// <param name='value'>The parameter <paramref name='value'/> is a
     /// 64-bit floating-point number.</param>
-    /// <returns>A CBOR object generated from the given number.</returns>
+    /// <returns>A CBOR object generated from the specified
+    /// number.</returns>
     public static CBORObject FromDouble(double value) {
       long doubleBits = CBORUtilities.DoubleToInt64Bits(value);
       return new CBORObject(CBORObjectTypeDouble, doubleBits);
@@ -2441,7 +2463,8 @@ CBORUuidConverter().ToCBORObject(value);
     /// <summary>Generates a CBOR object from a 64-bit floating-point
     /// number.</summary>
     /// <param name='value'>A 64-bit floating-point number.</param>
-    /// <returns>A CBOR object generated from the given number.</returns>
+    /// <returns>A CBOR object generated from the specified
+    /// number.</returns>
     [Obsolete("Use FromDouble instead.")]
     public static CBORObject FromObject(double value) => FromDouble(value);
 
@@ -2450,8 +2473,8 @@ CBORUuidConverter().ToCBORObject(value);
     /// method can't be used to decode CBOR data from a byte array; for
     /// that, use the <b>DecodeFromBytes</b> method instead.).</summary>
     /// <param name='bytes'>An array of 8-bit bytes; can be null.</param>
-    /// <returns>A CBOR object where each element of the given byte array
-    /// is copied to a new array, or CBORObject.Null if the value is
+    /// <returns>A CBOR object where each element of the specified byte
+    /// array is copied to a new array, or CBORObject.Null if the value is
     /// null.</returns>
     public static CBORObject FromByteArray(byte[] bytes) {
       if (bytes == null) {
@@ -2465,8 +2488,8 @@ CBORUuidConverter().ToCBORObject(value);
     /// <summary>Generates a CBOR object from an array of 8-bit
     /// bytes.</summary>
     /// <param name='bytes'>An array of 8-bit bytes; can be null.</param>
-    /// <returns>A CBOR object where each element of the given byte array
-    /// is copied to a new array, or CBORObject.Null if the value is
+    /// <returns>A CBOR object where each element of the specified byte
+    /// array is copied to a new array, or CBORObject.Null if the value is
     /// null.</returns>
     [Obsolete("Use FromByteArray instead.")]
     public static CBORObject FromObject(byte[] bytes) => FromByteArray(bytes);
@@ -2474,7 +2497,7 @@ CBORUuidConverter().ToCBORObject(value);
     /// <summary>Generates a CBOR object from an array of CBOR
     /// objects.</summary>
     /// <param name='array'>An array of CBOR objects.</param>
-    /// <returns>A CBOR object where each element of the given array is
+    /// <returns>A CBOR object where each element of the specified array is
     /// copied to a new array, or CBORObject.Null if the value is
     /// null.</returns>
     public static CBORObject FromCBORArray(CBORObject[] array) {
@@ -2494,7 +2517,7 @@ CBORUuidConverter().ToCBORObject(value);
     /// <returns>A CBOR object.</returns>
     [Obsolete("Use FromCBORArray instead.")]
     public static CBORObject FromObject(CBORObject[] array) =>
-FromCBORArray(array);
+    FromCBORArray(array);
 
     internal static CBORObject FromArrayBackedObject(CBORObject[] array) {
       if (array == null) {
@@ -2507,8 +2530,8 @@ FromCBORArray(array);
     /// <summary>Generates a CBOR object from an array of 32-bit
     /// integers.</summary>
     /// <param name='array'>An array of 32-bit integers.</param>
-    /// <returns>A CBOR array object where each element of the given array
-    /// is copied to a new array, or CBORObject.Null if the value is
+    /// <returns>A CBOR array object where each element of the specified
+    /// array is copied to a new array, or CBORObject.Null if the value is
     /// null.</returns>
     public static CBORObject FromObject(int[] array) {
       if (array == null) {
@@ -2525,8 +2548,8 @@ FromCBORArray(array);
     /// <summary>Generates a CBOR object from an array of 64-bit
     /// integers.</summary>
     /// <param name='array'>An array of 64-bit integers.</param>
-    /// <returns>A CBOR array object where each element of the given array
-    /// is copied to a new array, or CBORObject.Null if the value is
+    /// <returns>A CBOR array object where each element of the specified
+    /// array is copied to a new array, or CBORObject.Null if the value is
     /// null.</returns>
     public static CBORObject FromObject(long[] array) {
       if (array == null) {
@@ -2554,8 +2577,8 @@ FromCBORArray(array);
     /// application. If the plain-old-data type references other data
     /// types, those types should likewise meet either criterion given
     /// earlier.</para>.</param>
-    /// <returns>A CBOR object corresponding to the given object. Returns
-    /// CBORObject.Null if the object is null.</returns>
+    /// <returns>A CBOR object corresponding to the specified object.
+    /// Returns CBORObject.Null if the object is null.</returns>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObject(object obj) {
       return FromObject(obj, PODOptions.Default);
@@ -2577,8 +2600,8 @@ FromCBORArray(array);
     /// earlier.</para>.</param>
     /// <param name='options'>An object containing options to control how
     /// certain objects are converted to CBOR objects.</param>
-    /// <returns>A CBOR object corresponding to the given object. Returns
-    /// CBORObject.Null if the object is null.</returns>
+    /// <returns>A CBOR object corresponding to the specified object.
+    /// Returns CBORObject.Null if the object is null.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='options'/> is null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
@@ -2604,8 +2627,8 @@ FromCBORArray(array);
     /// earlier.</para>.</param>
     /// <param name='mapper'>An object containing optional converters to
     /// convert objects of certain types to CBOR objects.</param>
-    /// <returns>A CBOR object corresponding to the given object. Returns
-    /// CBORObject.Null if the object is null.</returns>
+    /// <returns>A CBOR object corresponding to the specified object.
+    /// Returns CBORObject.Null if the object is null.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='mapper'/> is null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
@@ -2618,7 +2641,7 @@ FromCBORArray(array);
     }
 
     /// <summary><para>Generates a CBORObject from an arbitrary object,
-    /// using the given options to control how certain objects are
+    /// using the specified options to control how certain objects are
     /// converted to CBOR objects. The following cases are checked in the
     /// logical order given (rather than the strict order in which they are
     /// implemented by this library):</para>
@@ -2779,7 +2802,7 @@ FromCBORArray(array);
     ///  ) constants could also have been
     /// converted to text strings with <c>ToString()</c>
     ///  , but that method
-    /// will return multiple names if the given Enum object is a
+    /// will return multiple names if the specified Enum object is a
     /// combination of Enum objects (for example if the object is
     /// <c>FileAccess.Read | FileAccess.Write</c>
     ///  ). More generally, if
@@ -2808,12 +2831,12 @@ FromCBORArray(array);
     /// null.</param>
     /// <param name='options'>An object containing options to control how
     /// certain objects are converted to CBOR objects.</param>
-    /// <returns>A CBOR object corresponding to the given object. Returns
-    /// CBORObject.Null if the object is null.</returns>
+    /// <returns>A CBOR object corresponding to the specified object.
+    /// Returns CBORObject.Null if the object is null.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='options'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred while
-    /// converting the given object to a CBOR object.</exception>
+    /// converting the specified object to a CBOR object.</exception>
     /// <example>
     /// <para>The following example (originally written in C# for the
     /// DotNet version) uses a CBORTypeMapper to change how DateTime
@@ -2845,7 +2868,9 @@ FromCBORArray(array);
       CBORTypeMapper mapper,
       PODOptions options) {
       return mapper == null ? throw new
-ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
+        ArgumentNullException(nameof(mapper)) : FromObject(obj, options,
+        mapper,
+        0);
     }
 
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
@@ -2957,11 +2982,11 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         objret = CBORObject.NewArray();
         foreach (object element in (System.Collections.IEnumerable)obj) {
           _ = objret.Add(
-            CBORObject.FromObject(
-              element,
-              options,
-              mapper,
-              depth + 1));
+              CBORObject.FromObject(
+                element,
+                options,
+                mapper,
+                depth + 1));
         }
         return objret;
       }
@@ -3080,10 +3105,10 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
         throw new ArgumentNullException(nameof(bigintTag)) :
         bigintTag.Sign < 0 ?
         throw new ArgumentException("tagEInt's sign(" + bigintTag.Sign +
-          ") is less than 0") : bigintTag.CompareTo(UInt64MaxValue) > 0 ?
+        ") is less than 0") : bigintTag.CompareTo(UInt64MaxValue) > 0 ?
         throw new ArgumentException(
           "tag more than 18446744073709551615") :
-          cborObj.WithTag(bigintTag);
+        cborObj.WithTag(bigintTag);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
@@ -3098,8 +3123,8 @@ ArgumentNullException(nameof(mapper)) : FromObject(obj, options, mapper, 0);
     [Obsolete("Use FromCBORObjectAndTag instead.")]
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(object valueObValue, EInteger
-bigintTag) =>
-      FromCBORObjectAndTag(FromObject(valueObValue), bigintTag);
+      bigintTag) =>
+    FromCBORObjectAndTag(FromObject(valueObValue), bigintTag);
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag in addition to its existing tags (the
@@ -3118,7 +3143,7 @@ bigintTag) =>
     /// name='smallTag'/> is less than 0.</exception>
     public CBORObject WithTag(int smallTag) {
       return smallTag < 0 ? throw new ArgumentException("smallTag(" + smallTag +
-          ") is less than 0") : new CBORObject(this, smallTag, 0);
+        ") is less than 0") : new CBORObject(this, smallTag, 0);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
@@ -3144,7 +3169,7 @@ bigintTag) =>
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='cborObj'/>
     /// is given the tag <paramref name='smallTag'/>. If "valueOb" is
-    /// null, returns a version of CBORObject.Null with the given
+    /// null, returns a version of CBORObject.Null with the specified
     /// tag.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='smallTag'/> is less than 0.</exception>
@@ -3152,7 +3177,7 @@ bigintTag) =>
       CBORObject cborObj,
       int smallTag) {
       return smallTag < 0 ? throw new ArgumentException("smallTag(" + smallTag +
-          ") is less than 0") : cborObj.WithTag(smallTag);
+        ") is less than 0") : cborObj.WithTag(smallTag);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
@@ -3170,8 +3195,8 @@ bigintTag) =>
     [Obsolete("Use FromCBORObjectAndTag instead.")]
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromObjectAndTag(object valueObValue, int
-smallTag) =>
-      FromCBORObjectAndTag(FromObject(valueObValue), smallTag);
+      smallTag) =>
+    FromCBORObjectAndTag(FromObject(valueObValue), smallTag);
 
     /// <summary>Creates a CBOR object from a simple value
     /// number.</summary>
@@ -3238,7 +3263,7 @@ smallTag) =>
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject FromMap(
-      IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
+      IEnumerable<Tuple<CBORObject, CBORObject >> keysAndValues) {
       var sd = new SortedDictionary<CBORObject, CBORObject>();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
         sd.Add(kv.Item1, kv.Item2);
@@ -3262,7 +3287,7 @@ smallTag) =>
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject FromOrderedMap(
-      IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
+      IEnumerable<Tuple<CBORObject, CBORObject >> keysAndValues) {
       IDictionary<CBORObject, CBORObject> oDict;
       oDict = PropertyMap.NewOrderedDict();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
@@ -3427,7 +3452,8 @@ smallTag) =>
     /// record separator byte (0x1e).</param>
     /// <returns>A list of CBOR objects read from the JSON sequence.
     /// Objects that could not be parsed are replaced with <c>null</c> (as
-    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// opposed to <c>CBORObject.Null</c> ) in the specified
+    /// list.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
@@ -3456,7 +3482,8 @@ smallTag) =>
     /// class.</param>
     /// <returns>A list of CBOR objects read from the JSON sequence.
     /// Objects that could not be parsed are replaced with <c>null</c> (as
-    /// opposed to <c>CBORObject.Null</c> ) in the given list.</returns>
+    /// opposed to <c>CBORObject.Null</c> ) in the specified
+    /// list.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
@@ -3617,7 +3644,7 @@ smallTag) =>
         jsonoptions == null ?
         throw new ArgumentNullException(nameof(jsonoptions)) :
         bytes.Length == 0 ? throw new CBORException("Byte array is empty") :
-FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
+        FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     }
 
     /// <summary>
@@ -3767,7 +3794,8 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     }
 
     /// <summary>Writes a text string in CBOR format to a data stream,
-    /// using the given options to control the encoding process.</summary>
+    /// using the specified options to control the encoding
+    /// process.</summary>
     /// <param name='str'>The string to write. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='options'>Options for encoding the data to
@@ -4024,7 +4052,8 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default: stream.WriteByte((datatype == 0) ?
+          default:
+            stream.WriteByte ((datatype == 0) ?
               (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -4156,10 +4185,10 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
         throw new ArgumentNullException(nameof(stream));
       }
       _ = WriteFloatingPointBits(
-        stream,
-        CBORUtilities.SingleToInt32Bits(value),
-        4,
-        true);
+          stream,
+          CBORUtilities.SingleToInt32Bits(value),
+          4,
+          true);
     }
 
     /// <summary>Writes a 64-bit floating-point number in CBOR format to a
@@ -4177,10 +4206,10 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
         throw new ArgumentNullException(nameof(stream));
       }
       _ = WriteFloatingPointBits(
-        stream,
-        CBORUtilities.DoubleToInt64Bits(value),
-        8,
-        true);
+          stream,
+          CBORUtilities.DoubleToInt64Bits(value),
+          8,
+          true);
     }
 
     /// <summary>Writes a CBOR object to a CBOR data stream.</summary>
@@ -4476,7 +4505,7 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     public double AsDouble() {
       var cn = CBORNumber.FromCBORObject(this);
       return cn == null ? throw new InvalidOperationException("Not a number" +
-"\u0020type") : cn.GetNumberInterface().AsDouble(cn.GetValue());
+          "\u0020type") : cn.GetNumberInterface().AsDouble(cn.GetValue());
     }
 
     /// <summary>Converts this object to a 32-bit signed integer if this
@@ -4501,15 +4530,16 @@ FromJSONBytes(bytes, 0, bytes.Length, jsonoptions);
     public int AsInt32Value() {
       switch (this.ItemType) {
         case CBORObjectTypeInteger: {
-            var longValue = (long)this.ThisItem;
-            return longValue < Int32.MinValue || longValue > Int32.MaxValue ?
-throw new OverflowException() : (int)longValue;
-          }
+          var longValue = (long)this.ThisItem;
+          return longValue < Int32.MinValue || longValue > Int32.MaxValue ?
+            throw new OverflowException() : (int)longValue;
+        }
         case CBORObjectTypeEInteger: {
-            var ei = (EInteger)this.ThisItem;
-            return ei.ToInt32Checked();
-          }
-        default: throw new InvalidOperationException("Not an integer type");
+          var ei = (EInteger)this.ThisItem;
+          return ei.ToInt32Checked();
+        }
+        default:
+          throw new InvalidOperationException("Not an integer type");
       }
     }
 
@@ -4538,10 +4568,11 @@ throw new OverflowException() : (int)longValue;
         case CBORObjectTypeInteger:
           return (long)this.ThisItem;
         case CBORObjectTypeEInteger: {
-            var ei = (EInteger)this.ThisItem;
-            return ei.ToInt64Checked();
-          }
-        default: throw new InvalidOperationException("Not an integer type");
+          var ei = (EInteger)this.ThisItem;
+          return ei.ToInt64Checked();
+        }
+        default:
+          throw new InvalidOperationException("Not an integer type");
       }
     }
 
@@ -4556,10 +4587,11 @@ throw new OverflowException() : (int)longValue;
         case CBORObjectTypeInteger:
           return true;
         case CBORObjectTypeEInteger: {
-            var ei = (EInteger)this.ThisItem;
-            return ei.CanFitInInt64();
-          }
-        default: return false;
+          var ei = (EInteger)this.ThisItem;
+          return ei.CanFitInInt64();
+        }
+        default:
+          return false;
       }
     }
 
@@ -4572,14 +4604,15 @@ throw new OverflowException() : (int)longValue;
     public bool CanValueFitInInt32() {
       switch (this.ItemType) {
         case CBORObjectTypeInteger: {
-            var elong = (long)this.ThisItem;
-            return elong >= Int32.MinValue && elong <= Int32.MaxValue;
-          }
+          var elong = (long)this.ThisItem;
+          return elong >= Int32.MinValue && elong <= Int32.MaxValue;
+        }
         case CBORObjectTypeEInteger: {
-            var ei = (EInteger)this.ThisItem;
-            return ei.CanFitInInt32();
-          }
-        default: return false;
+          var ei = (EInteger)this.ThisItem;
+          return ei.CanFitInInt32();
+        }
+        default:
+          return false;
       }
     }
 
@@ -4596,7 +4629,8 @@ throw new OverflowException() : (int)longValue;
           return EInteger.FromInt64((long)this.ThisItem);
         case CBORObjectTypeEInteger:
           return (EInteger)this.ThisItem;
-        default: throw new InvalidOperationException("Not an integer type");
+        default:
+          throw new InvalidOperationException("Not an integer type");
       }
     }
 
@@ -4617,7 +4651,8 @@ throw new OverflowException() : (int)longValue;
       switch (this.Type) {
         case CBORType.FloatingPoint:
           return (long)this.ThisItem;
-        default: throw new InvalidOperationException("Not a floating-point" +
+        default:
+          throw new InvalidOperationException ("Not a floating-point" +
             "\u0020type");
       }
     }
@@ -4633,7 +4668,8 @@ throw new OverflowException() : (int)longValue;
       switch (this.Type) {
         case CBORType.FloatingPoint:
           return CBORUtilities.Int64BitsToDouble((long)this.ThisItem);
-        default: throw new InvalidOperationException("Not a floating-point" +
+        default:
+          throw new InvalidOperationException ("Not a floating-point" +
             "\u0020type");
       }
     }
@@ -4729,11 +4765,11 @@ throw new OverflowException() : (int)longValue;
       switch (type) {
         case CBORObjectTypeTextString:
         case CBORObjectTypeTextStringAscii: {
-            return (string)this.ThisItem;
-          }
+          return (string)this.ThisItem;
+        }
         case CBORObjectTypeTextStringUtf8: {
-            return DataUtilities.GetUtf8String((byte[])this.ThisItem, false);
-          }
+          return DataUtilities.GetUtf8String((byte[])this.ThisItem, false);
+        }
         default:
           throw new InvalidOperationException("Not a text string type");
       }
@@ -4799,75 +4835,75 @@ throw new OverflowException() : (int)longValue;
       int typeB = other.itemtypeValue;
       object objA = this.itemValue;
       object objB = other.itemValue;
-      // DebugUtility.Log("typeA=" + typeA);
-      // DebugUtility.Log("typeB=" + typeB);
-      // DebugUtility.Log("objA=" + Chop(this.ItemType ==
+      // Console.WriteLine("typeA=" + typeA);
+      // Console.WriteLine("typeB=" + typeB);
+      // Console.WriteLine("objA=" + Chop(this.ItemType ==
       // CBORObjectTypeMap ? "(map)" :
       // this.ToString()));
-      // DebugUtility.Log("objB=" + Chop(other.ItemType ==
+      // Console.WriteLine("objB=" + Chop(other.ItemType ==
       // CBORObjectTypeMap ? "(map)" :
       // other.ToString()));
       int cmp;
       if (typeA == typeB) {
         switch (typeA) {
           case CBORObjectTypeInteger: {
-              var a = (long)objA;
-              var b = (long)objB;
-              if (a >= 0 && b >= 0) {
-                cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
-              } else if (a <= 0 && b <= 0) {
-                cmp = (a == b) ? 0 : ((a < b) ? 1 : -1);
-              } else if (a < 0 && b >= 0) {
-                // NOTE: Negative integers sort after
-                // nonnegative integers in the bytewise
-                // ordering of CBOR encodings
-                cmp = 1;
-              } else {
-#if DEBUG
-                if (!(a >= 0 && b < 0)) {
-                  throw new InvalidOperationException(
-                "doesn't satisfy a>= 0" + "\u0020b<0");
-                }
-#endif
-                cmp = -1;
+            var a = (long)objA;
+            var b = (long)objB;
+            if (a >= 0 && b >= 0) {
+              cmp = (a == b) ? 0 : ((a < b) ? -1 : 1);
+            } else if (a <= 0 && b <= 0) {
+              cmp = (a == b) ? 0 : ((a < b) ? 1 : -1);
+            } else if (a < 0 && b >= 0) {
+              // NOTE: Negative integers sort after
+              // nonnegative integers in the bytewise
+              // ordering of CBOR encodings
+              cmp = 1;
+            } else {
+              #if DEBUG
+              if (!(a >= 0 && b < 0)) {
+                throw new InvalidOperationException(
+                  "doesn't satisfy a>= 0" + "\u0020b<0");
               }
-              break;
+              #endif
+              cmp = -1;
             }
+            break;
+          }
           case CBORObjectTypeEInteger: {
-              cmp = CBORUtilities.ByteArrayCompare(
-                  this.EncodeToBytes(),
-                  other.EncodeToBytes());
-              break;
-            }
+            cmp = CBORUtilities.ByteArrayCompare(
+                this.EncodeToBytes(),
+                other.EncodeToBytes());
+            break;
+          }
           case CBORObjectTypeByteString:
           case CBORObjectTypeTextStringUtf8: {
-              cmp = CBORUtilities.ByteArrayCompareLengthFirst((byte[])objA,
-                  (byte[])objB);
-              break;
-            }
+            cmp = CBORUtilities.ByteArrayCompareLengthFirst((byte[])objA,
+              (byte[])objB);
+            break;
+          }
           case CBORObjectTypeTextStringAscii: {
-              var strA = (string)objA;
-              var strB = (string)objB;
-              int alen = strA.Length;
-              int blen = strB.Length;
-              cmp = (alen < blen) ? (-1) : ((alen > blen) ? 1 :
-  String.CompareOrdinal(strA, strB));
-              break;
-            }
+            var strA = (string)objA;
+            var strB = (string)objB;
+            int alen = strA.Length;
+            int blen = strB.Length;
+            cmp = (alen < blen) ? (-1) : ((alen > blen) ? 1 :
+              String.CompareOrdinal(strA, strB));
+            break;
+          }
           case CBORObjectTypeTextString: {
-              var strA = (string)objA;
-              var strB = (string)objB;
-              cmp = CBORUtilities.CompareStringsAsUtf8LengthFirst(
-                  strA,
-                  strB);
-              break;
-            }
+            var strA = (string)objA;
+            var strB = (string)objB;
+            cmp = CBORUtilities.CompareStringsAsUtf8LengthFirst(
+                strA,
+                strB);
+            break;
+          }
           case CBORObjectTypeArray: {
-              cmp = ListCompare(
-                  (List<CBORObject>)objA,
-                  (List<CBORObject>)objB);
-              break;
-            }
+            cmp = ListCompare(
+                (List<CBORObject>)objA,
+                (List<CBORObject>)objB);
+            break;
+          }
           case CBORObjectTypeMap:
             cmp = MapCompare(
                 (IDictionary<CBORObject, CBORObject>)objA,
@@ -4880,65 +4916,64 @@ throw new OverflowException() : (int)longValue;
             }
             break;
           case CBORObjectTypeSimpleValue: {
-              var valueA = (int)objA;
-              var valueB = (int)objB;
-              cmp = (valueA == valueB) ? 0 : ((valueA < valueB) ? -1 : 1);
-              break;
-            }
+            var valueA = (int)objA;
+            var valueB = (int)objB;
+            cmp = (valueA == valueB) ? 0 : ((valueA < valueB) ? -1 : 1);
+            break;
+          }
           case CBORObjectTypeDouble: {
-              cmp = CBORUtilities.ByteArrayCompare(
-                  GetDoubleBytes(this.AsDoubleBits(), 0),
-                  GetDoubleBytes(other.AsDoubleBits(), 0));
-              break;
-            }
-          default: throw new InvalidOperationException("Unexpected data " +
+            cmp = CBORUtilities.ByteArrayCompare(
+                GetDoubleBytes(this.AsDoubleBits(), 0),
+                GetDoubleBytes(other.AsDoubleBits(), 0));
+            break;
+          }
+          default:
+            throw new InvalidOperationException ("Unexpected data " +
               "type");
         }
       } else if ((typeB == CBORObjectTypeInteger && typeA ==
-          CBORObjectTypeEInteger) || (typeA == CBORObjectTypeInteger && typeB ==
+        CBORObjectTypeEInteger) || (typeA == CBORObjectTypeInteger && typeB ==
           CBORObjectTypeEInteger)) {
         cmp = CBORUtilities.ByteArrayCompare(
             this.EncodeToBytes(),
             other.EncodeToBytes());
       } else if ((typeB == CBORObjectTypeTextString || typeB ==
-CBORObjectTypeTextStringAscii) && typeA ==
+        CBORObjectTypeTextStringAscii) && typeA ==
         CBORObjectTypeTextStringUtf8) {
         cmp = -CBORUtilities.CompareUtf16Utf8LengthFirst(
             (string)objB,
             (byte[])objA);
       } else if ((typeA == CBORObjectTypeTextString || typeA ==
-CBORObjectTypeTextStringAscii) && typeB ==
+        CBORObjectTypeTextStringAscii) && typeB ==
         CBORObjectTypeTextStringUtf8) {
         cmp = CBORUtilities.CompareUtf16Utf8LengthFirst(
             (string)objA,
             (byte[])objB);
       } else if ((typeA == CBORObjectTypeTextString && typeB ==
-CBORObjectTypeTextStringAscii) ||
-         (typeB == CBORObjectTypeTextString && typeA ==
-CBORObjectTypeTextStringAscii)) {
+        CBORObjectTypeTextStringAscii) ||
+        (typeB == CBORObjectTypeTextString && typeA ==
+          CBORObjectTypeTextStringAscii)) {
         cmp = -CBORUtilities.CompareStringsAsUtf8LengthFirst(
             (string)objB,
             (string)objA);
       } else if ((typeA == CBORObjectTypeTextString || typeA ==
-CBORObjectTypeTextStringAscii) && typeB ==
+        CBORObjectTypeTextStringAscii) && typeB ==
         CBORObjectTypeTextStringUtf8) {
         cmp = CBORUtilities.CompareUtf16Utf8LengthFirst(
             (string)objA,
             (byte[])objB);
       } else {
         int ta = (typeA == CBORObjectTypeTextStringUtf8 || typeA ==
-CBORObjectTypeTextStringAscii) ?
-          CBORObjectTypeTextString : typeA;
+            CBORObjectTypeTextStringAscii) ? CBORObjectTypeTextString : typeA;
         int tb = (typeB == CBORObjectTypeTextStringUtf8 || typeB ==
-CBORObjectTypeTextStringAscii) ?
-          CBORObjectTypeTextString : typeB;
+            CBORObjectTypeTextStringAscii) ? CBORObjectTypeTextString : typeB;
         /* NOTE: itemtypeValue numbers are ordered such that they
         // correspond to the lexicographical order of their CBOR encodings
         // (with the exception of Integer and EInteger together,
         // and TextString/TextStringUtf8) */
         cmp = (ta < tb) ? -1 : 1;
       }
-      // DebugUtility.Log(" -> " + (cmp));
+      // Console.WriteLine(" -> " + (cmp));
       return cmp;
     }
 
@@ -4952,27 +4987,29 @@ CBORObjectTypeTextStringAscii) ?
     /// null.</returns>
     public int CompareToIgnoreTags(CBORObject other) {
       return (other == null) ? 1 : ((this == other) ? 0 :
-          this.Untag().CompareTo(other.Untag()));
+        this.Untag().CompareTo(other.Untag()));
     }
 
-    /// <summary>Determines whether a value of the given key exists in this
-    /// object.</summary>
+    /// <summary>Determines whether a value of the specified key exists in
+    /// this object.</summary>
     /// <param name='objKey'>The parameter <paramref name='objKey'/> is an
     /// arbitrary object.</param>
-    /// <returns><c>true</c> if the given key is found, or <c>false</c> if
-    /// the given key is not found or this object is not a map.</returns>
+    /// <returns><c>true</c> if the specified key is found, or <c>false</c>
+    /// if the specified key is not found or this object is not a
+    /// map.</returns>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public bool ContainsKey(object objKey) {
       return (this.Type == CBORType.Map) &&
-this.ContainsKey(CBORObject.FromObject(objKey));
+        this.ContainsKey(CBORObject.FromObject(objKey));
     }
 
-    /// <summary>Determines whether a value of the given key exists in this
-    /// object.</summary>
+    /// <summary>Determines whether a value of the specified key exists in
+    /// this object.</summary>
     /// <param name='key'>An object that serves as the key. If this is
     /// <c>null</c>, checks for <c>CBORObject.Null</c>.</param>
-    /// <returns><c>true</c> if the given key is found, or <c>false</c> if
-    /// the given key is not found or this object is not a map.</returns>
+    /// <returns><c>true</c> if the specified key is found, or <c>false</c>
+    /// if the specified key is not found or this object is not a
+    /// map.</returns>
     public bool ContainsKey(CBORObject key) {
       key = key ?? CBORObject.Null;
       if (this.Type == CBORType.Map) {
@@ -4982,13 +5019,13 @@ this.ContainsKey(CBORObject.FromObject(objKey));
       return false;
     }
 
-    /// <summary>Determines whether a value of the given key exists in this
-    /// object.</summary>
+    /// <summary>Determines whether a value of the specified key exists in
+    /// this object.</summary>
     /// <param name='key'>A text string that serves as the key. If this is
     /// <c>null</c>, checks for <c>CBORObject.Null</c>.</param>
-    /// <returns><c>true</c> if the given key (as a CBOR object) is found,
-    /// or <c>false</c> if the given key is not found or this object is not
-    /// a map.</returns>
+    /// <returns><c>true</c> if the specified key (as a CBOR object) is
+    /// found, or <c>false</c> if the specified key is not found or this
+    /// object is not a map.</returns>
     public bool ContainsKey(string key) {
       if (this.Type == CBORType.Map) {
         CBORObject ckey = key == null ? Null : FromString(key);
@@ -5007,12 +5044,12 @@ this.ContainsKey(CBORObject.FromObject(objKey));
         (byte)((valueBits >> 24) & 0xff), (byte)((valueBits >> 16) & 0xff),
         (byte)((valueBits >> 8) & 0xff), (byte)(valueBits & 0xff),
       } : new[] {
-   (byte)0xfb, (byte)((valueBits >> 56) & 0xff),
-   (byte)((valueBits >> 48) & 0xff), (byte)((valueBits >> 40) & 0xff),
-   (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
-   (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
-   (byte)(valueBits & 0xff),
- };
+        (byte)0xfb, (byte)((valueBits >> 56) & 0xff),
+        (byte)((valueBits >> 48) & 0xff), (byte)((valueBits >> 40) & 0xff),
+        (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
+        (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
+        (byte)(valueBits & 0xff),
+      };
     }
 
     private static byte[] GetDoubleBytes(long valueBits, int tagbyte) {
@@ -5022,9 +5059,9 @@ this.ContainsKey(CBORObject.FromObject(objKey));
           (byte)tagbyte, (byte)0xf9,
           (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
         } : new[] {
-   (byte)0xf9, (byte)((bits >> 8) & 0xff),
-   (byte)(bits & 0xff),
- };
+          (byte)0xf9, (byte)((bits >> 8) & 0xff),
+          (byte)(bits & 0xff),
+        };
       }
       if (CBORUtilities.DoubleRetainsSameValueInSingle(valueBits)) {
         bits = CBORUtilities.DoubleToRoundedSinglePrecision(valueBits);
@@ -5033,10 +5070,10 @@ this.ContainsKey(CBORObject.FromObject(objKey));
           (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
           (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
         } : new[] {
-   (byte)0xfa, (byte)((bits >> 24) & 0xff),
-   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-   (byte)(bits & 0xff),
- };
+          (byte)0xfa, (byte)((bits >> 24) & 0xff),
+          (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+          (byte)(bits & 0xff),
+        };
       }
       return GetDoubleBytes64(valueBits, tagbyte);
     }
@@ -5097,74 +5134,74 @@ this.ContainsKey(CBORObject.FromObject(objKey));
         switch (this.ItemType) {
           case CBORObjectTypeTextString:
           case CBORObjectTypeTextStringAscii: {
-              byte[] ret = GetOptimizedBytesIfShortAscii(
+            byte[] ret = GetOptimizedBytesIfShortAscii(
                 this.AsString(),
                 tagged ? (tagbyte & 0xff) : -1);
-              if (ret != null) {
-                return ret;
-              }
-              break;
+            if (ret != null) {
+              return ret;
             }
+            break;
+          }
           case CBORObjectTypeTextStringUtf8: {
-              if (!tagged && !options.UseIndefLengthStrings) {
-                byte[] bytes = (byte[])this.ThisItem;
-                return SerializeUtf8(bytes);
-              }
-              break;
+            if (!tagged && !options.UseIndefLengthStrings) {
+              byte[] bytes = (byte[])this.ThisItem;
+              return SerializeUtf8(bytes);
             }
+            break;
+          }
           case CBORObjectTypeSimpleValue: {
-              if (tagged) {
-                if (this.IsFalse) {
-                  return new[] { (byte)tagbyte, (byte)0xf4 };
-                }
-                if (this.IsTrue) {
-                  return new[] { (byte)tagbyte, (byte)0xf5 };
-                }
-                if (this.IsNull) {
-                  return new[] { (byte)tagbyte, (byte)0xf6 };
-                }
-                if (this.IsUndefined) {
-                  return new[] { (byte)tagbyte, (byte)0xf7 };
-                }
-              } else {
-                if (this.IsFalse) {
-                  return new[] { (byte)0xf4 };
-                }
-                if (this.IsTrue) {
-                  return new[] { (byte)0xf5 };
-                }
-                if (this.IsNull) {
-                  return new[] { (byte)0xf6 };
-                }
-                if (this.IsUndefined) {
-                  return new[] { (byte)0xf7 };
-                }
+            if (tagged) {
+              if (this.IsFalse) {
+                return new[] { (byte)tagbyte, (byte)0xf4 };
               }
-              break;
+              if (this.IsTrue) {
+                return new[] { (byte)tagbyte, (byte)0xf5 };
+              }
+              if (this.IsNull) {
+                return new[] { (byte)tagbyte, (byte)0xf6 };
+              }
+              if (this.IsUndefined) {
+                return new[] { (byte)tagbyte, (byte)0xf7 };
+              }
+            } else {
+              if (this.IsFalse) {
+                return new[] { (byte)0xf4 };
+              }
+              if (this.IsTrue) {
+                return new[] { (byte)0xf5 };
+              }
+              if (this.IsNull) {
+                return new[] { (byte)0xf6 };
+              }
+              if (this.IsUndefined) {
+                return new[] { (byte)0xf7 };
+              }
             }
+            break;
+          }
           case CBORObjectTypeInteger: {
-              var value = (long)this.ThisItem;
-              byte[] intBytes;
-              if (value >= 0) {
-                intBytes = GetPositiveInt64Bytes(0, value);
-              } else {
-                ++value;
-                value = -value; // Will never overflow
-                intBytes = GetPositiveInt64Bytes(1, value);
-              }
-              if (!tagged) {
-                return intBytes;
-              }
-              var ret2 = new byte[intBytes.Length + 1];
-              Array.Copy(intBytes, 0, ret2, 1, intBytes.Length);
-              ret2[0] = tagbyte;
-              return ret2;
+            var value = (long)this.ThisItem;
+            byte[] intBytes;
+            if (value >= 0) {
+              intBytes = GetPositiveInt64Bytes(0, value);
+            } else {
+              ++value;
+              value = -value; // Will never overflow
+              intBytes = GetPositiveInt64Bytes(1, value);
             }
+            if (!tagged) {
+              return intBytes;
+            }
+            var ret2 = new byte[intBytes.Length + 1];
+            Array.Copy(intBytes, 0, ret2, 1, intBytes.Length);
+            ret2[0] = tagbyte;
+            return ret2;
+          }
           case CBORObjectTypeDouble: {
-              return options.Float64 ?
-                GetDoubleBytes64(this.AsDoubleBits(), tagbyte & 0xff) :
-                GetDoubleBytes(this.AsDoubleBits(), tagbyte & 0xff);
-            }
+            return options.Float64 ?
+              GetDoubleBytes64(this.AsDoubleBits(), tagbyte & 0xff) :
+              GetDoubleBytes(this.AsDoubleBits(), tagbyte & 0xff);
+          }
           default:
             break;
         }
@@ -5188,9 +5225,9 @@ this.ContainsKey(CBORObject.FromObject(objKey));
     /// other than array or map).</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>Thrown if the pointer
     /// is null, or if the pointer is invalid, or if there is no object at
-    /// the given pointer, or the special key "-" appears in the pointer in
-    /// the context of an array (not a map), or if the pointer is nonempty
-    /// and this object has a CBOR type other than array or
+    /// the specified pointer, or the special key "-" appears in the
+    /// pointer in the context of an array (not a map), or if the pointer
+    /// is nonempty and this object has a CBOR type other than array or
     /// map.</exception>
     public CBORObject AtJSONPointer(string pointer) {
       CBORObject ret = this.AtJSONPointer(pointer, null);
@@ -5220,7 +5257,7 @@ this.ContainsKey(CBORObject.FromObject(objKey));
     /// object if pointer is the empty string (even if this object has a
     /// CBOR type other than array or map). Returns <paramref
     /// name='defaultValue'/> if the pointer is null, or if the pointer is
-    /// invalid, or if there is no object at the given pointer, or the
+    /// invalid, or if there is no object at the specified pointer, or the
     /// special key "-" appears in the pointer in the context of an array
     /// (not a map), or if the pointer is nonempty and this object has a
     /// CBOR type other than array or map.</returns>
@@ -5288,23 +5325,24 @@ this.ContainsKey(CBORObject.FromObject(objKey));
         return true;
       }
       if ((this.itemtypeValue == CBORObjectTypeTextString ||
-this.itemtypeValue == CBORObjectTypeTextStringAscii) &&
+        this.itemtypeValue == CBORObjectTypeTextStringAscii) &&
         otherValue.itemtypeValue == CBORObjectTypeTextStringUtf8) {
         return CBORUtilities.StringEqualsUtf8(
             (string)this.itemValue,
             (byte[])otherValue.itemValue);
       }
       if ((otherValue.itemtypeValue == CBORObjectTypeTextString ||
-otherValue.itemtypeValue == CBORObjectTypeTextStringAscii) &&
+        otherValue.itemtypeValue == CBORObjectTypeTextStringAscii) &&
         this.itemtypeValue == CBORObjectTypeTextStringUtf8) {
         return CBORUtilities.StringEqualsUtf8(
             (string)otherValue.itemValue,
             (byte[])this.itemValue);
       }
       if ((otherValue.itemtypeValue == CBORObjectTypeTextString &&
-this.itemtypeValue == CBORObjectTypeTextStringAscii) || (this.itemtypeValue
-== CBORObjectTypeTextString && otherValue.itemtypeValue ==
-CBORObjectTypeTextStringAscii)) {
+        this.itemtypeValue == CBORObjectTypeTextStringAscii) ||
+        (this.itemtypeValue
+          == CBORObjectTypeTextString && otherValue.itemtypeValue ==
+          CBORObjectTypeTextStringAscii)) {
         return Object.Equals(this.itemValue, otherValue.itemValue);
       }
       if (this.itemtypeValue != otherValue.itemtypeValue) {
@@ -5317,10 +5355,10 @@ CBORObjectTypeTextStringAscii)) {
               (byte[])this.itemValue,
               otherValue.itemValue as byte[]);
         case CBORObjectTypeMap: {
-            return CBORMapEquals(
+          return CBORMapEquals(
               this.AsMap(),
               otherValue.itemValue as IDictionary<CBORObject, CBORObject>);
-          }
+        }
         case CBORObjectTypeArray:
           return CBORArrayEquals(
               this.AsList(),
@@ -5331,7 +5369,8 @@ CBORObjectTypeTextStringAscii)) {
             Object.Equals(this.itemValue, otherValue.itemValue);
         case CBORObjectTypeDouble:
           return this.AsDoubleBits() == otherValue.AsDoubleBits();
-        default: return Object.Equals(this.itemValue, otherValue.itemValue);
+        default:
+          return Object.Equals(this.itemValue, otherValue.itemValue);
       }
     }
 
@@ -5345,8 +5384,8 @@ CBORObjectTypeTextStringAscii)) {
     /// byte string.</exception>
     public byte[] GetByteString() {
       return this.ItemType == CBORObjectTypeByteString ?
-(byte[])this.ThisItem : throw new InvalidOperationException("Not a byte" +
-"\u0020string");
+        (byte[])this.ThisItem : throw new InvalidOperationException("Not a" +
+        "\u0020 byte" + "\u0020string");
     }
 
     /// <summary>Calculates the hash code of this object. The hash code for
@@ -5439,10 +5478,10 @@ CBORObjectTypeTextStringAscii)) {
     }
 
     /// <summary>Returns whether this object has only one tag and that tag
-    /// is the given number.</summary>
+    /// is the specified number.</summary>
     /// <param name='tagValue'>The tag number.</param>
     /// <returns><c>true</c> if this object has only one tag and that tag
-    /// is the given number; otherwise, <c>false</c>.</returns>
+    /// is the specified number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='tagValue'/> is less than 0.</exception>
     public bool HasOneTag(int tagValue) {
@@ -5450,11 +5489,11 @@ CBORObjectTypeTextStringAscii)) {
     }
 
     /// <summary>Returns whether this object has only one tag and that tag
-    /// is the given number, expressed as an arbitrary-precision
+    /// is the specified number, expressed as an arbitrary-precision
     /// integer.</summary>
     /// <param name='bigTagValue'>An arbitrary-precision integer.</param>
     /// <returns><c>true</c> if this object has only one tag and that tag
-    /// is the given number; otherwise, <c>false</c>.</returns>
+    /// is the specified number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigTagValue'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -5480,24 +5519,24 @@ CBORObjectTypeTextStringAscii)) {
     }
 
     /// <summary>Returns whether this object has an innermost tag and that
-    /// tag is of the given number.</summary>
+    /// tag is of the specified number.</summary>
     /// <param name='tagValue'>The tag number.</param>
     /// <returns><c>true</c> if this object has an innermost tag and that
-    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// tag is of the specified number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='tagValue'/> is less than 0.</exception>
     public bool HasMostInnerTag(int tagValue) {
       return tagValue < 0 ? throw new ArgumentException("tagValue(" + tagValue +
-          ") is less than 0") : this.IsTagged && this.HasMostInnerTag(
+        ") is less than 0") : this.IsTagged && this.HasMostInnerTag(
           EInteger.FromInt32(tagValue));
     }
 
     /// <summary>Returns whether this object has an innermost tag and that
-    /// tag is of the given number, expressed as an arbitrary-precision
+    /// tag is of the specified number, expressed as an arbitrary-precision
     /// number.</summary>
     /// <param name='bigTagValue'>The tag number.</param>
     /// <returns><c>true</c> if this object has an innermost tag and that
-    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// tag is of the specified number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigTagValue'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -5507,28 +5546,28 @@ CBORObjectTypeTextStringAscii)) {
         throw new ArgumentNullException(nameof(bigTagValue)) :
         bigTagValue.Sign < 0 ?
         throw new ArgumentException("bigTagValue(" + bigTagValue +
-          ") is less than 0") :
+        ") is less than 0") :
         this.IsTagged && this.MostInnerTag.Equals(bigTagValue);
     }
 
     /// <summary>Returns whether this object has an outermost tag and that
-    /// tag is of the given number.</summary>
+    /// tag is of the specified number.</summary>
     /// <param name='tagValue'>The tag number.</param>
     /// <returns><c>true</c> if this object has an outermost tag and that
-    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// tag is of the specified number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='tagValue'/> is less than 0.</exception>
     public bool HasMostOuterTag(int tagValue) {
       return tagValue < 0 ? throw new ArgumentException("tagValue(" + tagValue +
-          ") is less than 0") :
+        ") is less than 0") :
         this.IsTagged && this.tagHigh == 0 && this.tagLow == tagValue;
     }
 
     /// <summary>Returns whether this object has an outermost tag and that
-    /// tag is of the given number.</summary>
+    /// tag is of the specified number.</summary>
     /// <param name='bigTagValue'>The tag number.</param>
     /// <returns><c>true</c> if this object has an outermost tag and that
-    /// tag is of the given number; otherwise, <c>false</c>.</returns>
+    /// tag is of the specified number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigTagValue'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -5538,15 +5577,15 @@ CBORObjectTypeTextStringAscii)) {
         throw new ArgumentNullException(nameof(bigTagValue)) :
         bigTagValue.Sign < 0 ?
         throw new ArgumentException("bigTagValue(" + bigTagValue +
-          ") is less than 0") :
+        ") is less than 0") :
         this.IsTagged && this.MostOuterTag.Equals(bigTagValue);
     }
 
-    /// <summary>Returns whether this object has a tag of the given
+    /// <summary>Returns whether this object has a tag of the specified
     /// number.</summary>
     /// <param name='tagValue'>The tag value to search for.</param>
-    /// <returns><c>true</c> if this object has a tag of the given number;
-    /// otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if this object has a tag of the specified
+    /// number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='tagValue'/> is less than 0.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -5565,19 +5604,19 @@ CBORObjectTypeTextStringAscii)) {
           return true;
         }
         obj = (CBORObject)obj.itemValue;
-#if DEBUG
+        #if DEBUG
         if (obj == null) {
           throw new ArgumentNullException(nameof(tagValue));
         }
-#endif
+        #endif
       }
     }
 
-    /// <summary>Returns whether this object has a tag of the given
+    /// <summary>Returns whether this object has a tag of the specified
     /// number.</summary>
     /// <param name='bigTagValue'>The tag value to search for.</param>
-    /// <returns><c>true</c> if this object has a tag of the given number;
-    /// otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if this object has a tag of the specified
+    /// number; otherwise, <c>false</c>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigTagValue'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -5676,8 +5715,8 @@ CBORObjectTypeTextStringAscii)) {
 
     /// <summary>If this object is an array, removes the first instance of
     /// the specified item (once converted to a CBOR object) from the
-    /// array. If this object is a map, removes the item with the given key
-    /// (once converted to a CBOR object) from the map.</summary>
+    /// array. If this object is a map, removes the item with the specified
+    /// key (once converted to a CBOR object) from the map.</summary>
     /// <param name='obj'>The item or key (once converted to a CBOR object)
     /// to remove.</param>
     /// <returns><c>true</c> if the item was removed; otherwise,
@@ -5691,13 +5730,13 @@ CBORObjectTypeTextStringAscii)) {
       return this.Remove(CBORObject.FromObject(obj));
     }
 
-    /// <summary>Removes the item at the given index of this CBOR
+    /// <summary>Removes the item at the specified index of this CBOR
     /// array.</summary>
     /// <param name='index'>The index, starting at 0, of the item to
     /// remove.</param>
     /// <returns>Returns "true" if the object was removed. Returns "false"
-    /// if the given index is less than 0, or is at least as high as the
-    /// number of items in the array.</returns>
+    /// if the specified index is less than 0, or is at least as high as
+    /// the number of items in the array.</returns>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// CBOR array.</exception>
     public bool RemoveAt(int index) {
@@ -5714,7 +5753,7 @@ CBORObjectTypeTextStringAscii)) {
 
     /// <summary>If this object is an array, removes the first instance of
     /// the specified item from the array. If this object is a map, removes
-    /// the item with the given key from the map.</summary>
+    /// the item with the specified key from the map.</summary>
     /// <param name='obj'>The item or key to remove.</param>
     /// <returns><c>true</c> if the item was removed; otherwise,
     /// <c>false</c>.</returns>
@@ -5739,7 +5778,8 @@ CBORObjectTypeTextStringAscii)) {
 
     /// <summary>Maps an object to a key in this CBOR map, or adds the
     /// value if the key doesn't exist. If this is a CBOR array, instead
-    /// sets the value at the given index to the given value.</summary>
+    /// sets the value at the specified index to the specified
+    /// value.</summary>
     /// <param name='key'>If this instance is a CBOR map, this parameter is
     /// an object representing the key, which will be converted to a
     /// CBORObject; in this case, this parameter can be null, in which case
@@ -5827,8 +5867,8 @@ CBORObjectTypeTextStringAscii)) {
       return this;
     }
 
-    /// <summary>Sets the value of a CBORObject of type Array at the given
-    /// index to the given value.</summary>
+    /// <summary>Sets the value of a CBORObject of type Array at the
+    /// specified index to the specified value.</summary>
     /// <param name='key'>This parameter must be a 32-bit signed integer(
     /// <c>int</c> ) identifying the index (starting from 0) of the item to
     /// set in the array.</param>
@@ -5991,33 +6031,33 @@ CBORObjectTypeTextStringAscii)) {
       switch (type) {
         case CBORType.Boolean:
         case CBORType.SimpleValue:
-          {
-            return this.IsTrue ? "true" : (this.IsFalse ? "false" : "null");
-          }
+        {
+          return this.IsTrue ? "true" : (this.IsFalse ? "false" : "null");
+        }
         case CBORType.Integer:
-          {
-            return this.AsEIntegerValue().ToString();
-          }
+        {
+          return this.AsEIntegerValue().ToString();
+        }
         case CBORType.FloatingPoint:
-          {
-            long dblbits = this.AsDoubleBits();
-            return CBORUtilities.DoubleBitsFinite(dblbits) ?
-                 CBORUtilities.DoubleBitsToString(dblbits) : "null";
-          }
+        {
+          long dblbits = this.AsDoubleBits();
+          return CBORUtilities.DoubleBitsFinite(dblbits) ?
+            CBORUtilities.DoubleBitsToString(dblbits) : "null";
+        }
         default:
-          {
-            var sb = new StringBuilder();
-            try {
-              CBORJsonWriter.WriteJSONToInternal(
-                this,
-                new StringOutput(sb),
-                options);
-            } catch (IOException ex) {
-              // This is truly exceptional
-              throw new InvalidOperationException("Internal error", ex);
-            }
-            return sb.ToString();
+        {
+          var sb = new StringBuilder();
+          try {
+            CBORJsonWriter.WriteJSONToInternal(
+              this,
+              new StringOutput(sb),
+              options);
+          } catch (IOException ex) {
+            // This is truly exceptional
+            throw new InvalidOperationException("Internal error", ex);
           }
+          return sb.ToString();
+        }
       }
     }
 
@@ -6163,11 +6203,12 @@ CBORObjectTypeTextStringAscii)) {
 
     /// <summary>Converts this object to a text string in JavaScript Object
     /// Notation (JSON) format, as in the ToJSONString method, and writes
-    /// that string to a data stream in UTF-8, using the given JSON options
-    /// to control the encoding process. If the CBOR object contains CBOR
-    /// maps, or is a CBOR map, the order in which the keys to the map are
-    /// written out to the JSON string is undefined unless the map was
-    /// created using the NewOrderedMap method. The example code given in
+    /// that string to a data stream in UTF-8, using the specified JSON
+    /// options to control the encoding process. If the CBOR object
+    /// contains CBOR maps, or is a CBOR map, the order in which the keys
+    /// to the map are written out to the JSON string is undefined unless
+    /// the map was created using the NewOrderedMap method. The example
+    /// code given in
     /// <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b>
     /// can be used to write out certain keys of a CBOR map in a given
     /// order to a JSON string.</summary>
@@ -6204,7 +6245,7 @@ CBORObjectTypeTextStringAscii)) {
     /// number in IEEE 754r binary32 format; or 8 if "floatingBits"
     /// identifies the floating point number in IEEE 754r binary64 format.
     /// Any other values for this parameter are invalid.</param>
-    /// <returns>A CBOR object storing the given floating-point
+    /// <returns>A CBOR object storing the specified floating-point
     /// number.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='byteCount'/> is other than 2, 4, or 8.</exception>
@@ -6224,7 +6265,8 @@ CBORObjectTypeTextStringAscii)) {
           return new CBORObject(CBORObjectTypeDouble, value);
         case 8:
           return new CBORObject(CBORObjectTypeDouble, floatingBits);
-        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default:
+          throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -6348,7 +6390,8 @@ CBORObjectTypeTextStringAscii)) {
           };
           outputStream.Write(bytes, 0, 9);
           return 9;
-        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default:
+          throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -6392,7 +6435,8 @@ CBORObjectTypeTextStringAscii)) {
         case 8:
           bits = CBORUtilities.DoubleToInt64Bits(doubleVal);
           return WriteFloatingPointBits(outputStream, bits, 8);
-        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default:
+          throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -6443,7 +6487,8 @@ CBORObjectTypeTextStringAscii)) {
               0);
           longbits = CBORUtilities.SingleToDoublePrecision(bits);
           return WriteFloatingPointBits(outputStream, longbits, 8);
-        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default:
+          throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -6451,8 +6496,8 @@ CBORObjectTypeTextStringAscii)) {
     /// greater associated with it to a data stream, where that integer is
     /// passed to this method as a 64-bit signed integer. This is a
     /// low-level method that is useful for implementing custom CBOR
-    /// encoding methodologies. This method encodes the given major type
-    /// and value in the shortest form allowed for the major
+    /// encoding methodologies. This method encodes the specified major
+    /// type and value in the shortest form allowed for the major
     /// type.</summary>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <param name='majorType'>The CBOR major type to write. This is a
@@ -6525,8 +6570,8 @@ CBORObjectTypeTextStringAscii)) {
     /// greater associated with it to a data stream, where that integer is
     /// passed to this method as a 32-bit signed integer. This is a
     /// low-level method that is useful for implementing custom CBOR
-    /// encoding methodologies. This method encodes the given major type
-    /// and value in the shortest form allowed for the major
+    /// encoding methodologies. This method encodes the specified major
+    /// type and value in the shortest form allowed for the major
     /// type.</summary>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <param name='majorType'>The CBOR major type to write. This is a
@@ -6623,8 +6668,8 @@ CBORObjectTypeTextStringAscii)) {
     /// greater associated with it to a data stream, where that integer is
     /// passed to this method as an arbitrary-precision integer. This is a
     /// low-level method that is useful for implementing custom CBOR
-    /// encoding methodologies. This method encodes the given major type
-    /// and value in the shortest form allowed for the major
+    /// encoding methodologies. This method encodes the specified major
+    /// type and value in the shortest form allowed for the major
     /// type.</summary>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <param name='majorType'>The CBOR major type to write. This is a
@@ -6881,65 +6926,65 @@ CBORObjectTypeTextStringAscii)) {
       int type = this.ItemType;
       switch (type) {
         case CBORObjectTypeInteger: {
-            Write((long)this.ThisItem, stream);
-            break;
-          }
+          Write((long)this.ThisItem, stream);
+          break;
+        }
         case CBORObjectTypeEInteger: {
-            Write((EInteger)this.ThisItem, stream);
-            break;
-          }
+          Write((EInteger)this.ThisItem, stream);
+          break;
+        }
         case CBORObjectTypeByteString:
         case CBORObjectTypeTextStringUtf8: {
-            byte[] arr = (byte[])this.ThisItem;
-            WritePositiveInt(
-              (this.Type == CBORType.ByteString) ? 2 : 3,
-              arr.Length,
-              stream);
-            stream.Write(arr, 0, arr.Length);
-            break;
-          }
+          byte[] arr = (byte[])this.ThisItem;
+          WritePositiveInt(
+            (this.Type == CBORType.ByteString) ? 2 : 3,
+            arr.Length,
+            stream);
+          stream.Write(arr, 0, arr.Length);
+          break;
+        }
         case CBORObjectTypeTextString:
         case CBORObjectTypeTextStringAscii: {
-            Write((string)this.ThisItem, stream, options);
-            break;
-          }
+          Write((string)this.ThisItem, stream, options);
+          break;
+        }
         case CBORObjectTypeArray: {
-            WriteObjectArray(this.AsList(), stream, options);
-            break;
-          }
+          WriteObjectArray(this.AsList(), stream, options);
+          break;
+        }
         case CBORObjectTypeMap: {
-            WriteObjectMap(this.AsMap(), stream, options);
-            break;
-          }
+          WriteObjectMap(this.AsMap(), stream, options);
+          break;
+        }
         case CBORObjectTypeSimpleValue: {
-            int value = this.SimpleValue;
-            if (value < 24) {
-              stream.WriteByte((byte)(0xe0 + value));
-            } else {
-#if DEBUG
-              if (value < 32) {
-                throw new ArgumentException("value(" + value +
-                  ") is less than " + "32");
-              }
-#endif
-
-              stream.WriteByte(0xf8);
-              stream.WriteByte((byte)value);
+          int value = this.SimpleValue;
+          if (value < 24) {
+            stream.WriteByte((byte)(0xe0 + value));
+          } else {
+            #if DEBUG
+            if (value < 32) {
+              throw new ArgumentException("value(" + value +
+                ") is less than " + "32");
             }
+            #endif
 
-            break;
+            stream.WriteByte(0xf8);
+            stream.WriteByte((byte)value);
           }
+
+          break;
+        }
         case CBORObjectTypeDouble: {
-            WriteFloatingPointBits(
-               stream,
-               this.AsDoubleBits(),
-               8,
-               !options.Float64);
-            break;
-          }
+          WriteFloatingPointBits(
+            stream,
+            this.AsDoubleBits(),
+            8,
+            !options.Float64);
+          break;
+        }
         default: {
-            throw new ArgumentException("Unexpected data type");
-          }
+          throw new ArgumentException("Unexpected data type");
+        }
       }
     }
 
@@ -6952,11 +6997,11 @@ CBORObjectTypeTextStringAscii)) {
     }
 
     internal static CBORObject FromRaw(string str) {
-#if DEBUG
+      #if DEBUG
       if (!CBORUtilities.CheckUtf16(str)) {
         throw new InvalidOperationException();
       }
-#endif
+      #endif
       return new CBORObject(CBORObjectTypeTextString, str);
     }
 
@@ -7011,7 +7056,8 @@ CBORObjectTypeTextStringAscii)) {
             uadditional |= (data[7] & 0xffL) << 8;
             uadditional |= data[8] & 0xffL;
             break;
-          default: throw new CBORException("Unexpected data encountered");
+          default:
+            throw new CBORException("Unexpected data encountered");
         }
         switch (majortype) {
           case 0:
@@ -7061,7 +7107,8 @@ CBORObjectTypeTextStringAscii)) {
                   (int)uadditional);
             }
             throw new CBORException("Unexpected data encountered");
-          default: throw new CBORException("Unexpected data encountered");
+          default:
+            throw new CBORException("Unexpected data encountered");
         }
       }
       if (majortype == 2) { // short byte string
@@ -7203,7 +7250,7 @@ CBORObjectTypeTextStringAscii)) {
       }
       if (actualLength > expectedLength) {
         throw new CBORException(
-            "Too many bytes. There is data beyond the decoded CBOR object.");
+          "Too many bytes. There is data beyond the decoded CBOR object.");
       }
     }
 
@@ -7214,13 +7261,13 @@ CBORObjectTypeTextStringAscii)) {
       }
       if (actualLength > expectedLength) {
         throw new CBORException(
-            "Too many bytes. There is data beyond the decoded CBOR object.");
+          "Too many bytes. There is data beyond the decoded CBOR object.");
       }
     }
 
     private static string ExtendedToString(EFloat ef) {
       if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
-          ef.Exponent.CompareTo((EInteger)(-2500)) < 0)) {
+        ef.Exponent.CompareTo((EInteger)(-2500)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal string, so do this instead
         return ef.Mantissa + "p" + ef.Exponent;
@@ -7338,39 +7385,38 @@ CBORObjectTypeTextStringAscii)) {
           "0");
       }
       return value < 24 ? new[] { (byte)((byte)value | (byte)(type << 5)) } :
-        value <= 0xffL ? new[] {
-          (byte)(24 | (type << 5)), (byte)(value & 0xff),
-        } : value <= 0xffffL ? new[] {
-   (byte)(25 | (type << 5)),
-   (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
- } : value <= 0xffffffffL ? new[] {
-   (byte)(26 | (type << 5)),
-   (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
-   (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
- } : new[] {
-   (byte)(27 | (type << 5)), (byte)((value >> 56) & 0xff),
-   (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
-   (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
-   (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-   (byte)(value & 0xff),
- };
+      value <= 0xffL ? new[] {
+        (byte)(24 | (type << 5)), (byte)(value & 0xff),
+      } : value <= 0xffffL ? new[] {
+        (byte)(25 | (type << 5)),
+        (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
+      } : value <= 0xffffffffL ? new[] {
+        (byte)(26 | (type << 5)),
+        (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
+        (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
+      } : new[] {
+        (byte)(27 | (type << 5)), (byte)((value >> 56) & 0xff),
+        (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
+        (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
+        (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+        (byte)(value & 0xff),
+      };
     }
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       return value < 0 ?
         throw new ArgumentException("value(" + value + ") is less than " +
-          "0") : value < 24 ?
-        new[] { (byte)((byte)value | (byte)(type << 5)) } :
-        value <= 0xff ? new[] {
-          (byte)(24 | (type << 5)), (byte)(value & 0xff),
-        } : value <= 0xffff ? new[] {
-   (byte)(25 | (type << 5)),
-   (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
- } : new[] {
-   (byte)(26 | (type << 5)), (byte)((value >> 24) & 0xff),
-   (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-   (byte)(value & 0xff),
- };
+        "0") : value < 24 ? new[] { (byte)((byte)value | (byte)(type << 5)) } :
+      value <= 0xff ? new[] {
+        (byte)(24 | (type << 5)), (byte)(value & 0xff),
+      } : value <= 0xffff ? new[] {
+        (byte)(25 | (type << 5)),
+        (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
+      } : new[] {
+        (byte)(26 | (type << 5)), (byte)((value >> 24) & 0xff),
+        (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+        (byte)(value & 0xff),
+      };
     }
 
     // Initialize fixed values for certain
@@ -7478,19 +7524,19 @@ CBORObjectTypeTextStringAscii)) {
       }
       var sortedASet = new List<CBORObject>(PropertyMap.GetSortedKeys(mapA));
       var sortedBSet = new List<CBORObject>(PropertyMap.GetSortedKeys(mapB));
-      // DebugUtility.Log("---done sorting");
+      // Console.WriteLine("---done sorting");
       listACount = sortedASet.Count;
       _ = sortedBSet.Count;
       // Compare the keys
       /* for (var i = 0; i < listACount; ++i) {
         string str = sortedASet[i].ToString();
         str = str.Substring(0, Math.Min(100, str.Length));
-        DebugUtility.Log("A " + i + "=" + str);
+        Console.WriteLine("A " + i + "=" + str);
       }
       for (var i = 0; i < listBCount; ++i) {
         string str = sortedBSet[i].ToString();
         str = str.Substring(0, Math.Min(100, str.Length));
-        DebugUtility.Log("B " + i + "=" + str);
+        Console.WriteLine("B " + i + "=" + str);
       }*/
       for (int i = 0; i < listACount; ++i) {
         CBORObject itemA = sortedASet[i];
@@ -7502,14 +7548,14 @@ CBORObjectTypeTextStringAscii)) {
         // string ot = itemA + "/" +
         // (cmp != 0 ? itemB.ToString() : "~") +
         // " -> cmp=" + (cmp);
-        // DebugUtility.Log(ot);
+        // Console.WriteLine(ot);
         if (cmp != 0) {
           return cmp;
         }
         // Both maps have the same key, so compare
         // the value under that key
         cmp = mapA[itemA].CompareTo(mapB[itemB]);
-        // DebugUtility.Log(itemA + "/~" +
+        // Console.WriteLine(itemA + "/~" +
         // " -> "+mapA[itemA]+", "+(cmp != 0 ? mapB[itemB].ToString() :
         // "~") + " -> cmp=" + cmp);
         if (cmp != 0) {
@@ -7754,9 +7800,9 @@ CBORObjectTypeTextStringAscii)) {
       return cn == null ?
         throw new InvalidOperationException("not a number type") :
         cn.GetNumberInterface().AsInt32(
-          cn.GetValue(),
-          minValue,
-          maxValue);
+        cn.GetValue(),
+        minValue,
+        maxValue);
     }
 
     private void WriteTags(Stream s) {

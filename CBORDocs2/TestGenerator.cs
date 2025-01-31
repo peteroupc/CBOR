@@ -18,7 +18,7 @@ namespace PeterO.DocGen {
       _ = builder.Append("using System.Text;\n");
       _ = builder.Append("using " + type.Namespace + ";\n");
       _ = builder.Append("using" +
-"\u0020Microsoft.VisualStudio.TestTools.UnitTesting;\n");
+          "\u0020Microsoft.VisualStudio.TestTools.UnitTesting;\n");
       _ = builder.Append("namespace Test {\n");
       _ = builder.Append(" [TestClass]\n");
       _ = builder.Append(" public partial class " + name + "Test {\n");
@@ -59,7 +59,7 @@ namespace PeterO.DocGen {
           continue;
         }
         methodName = PeterO.DataUtilities.ToUpperCaseAscii(
-          methodName[..1]) + methodName[1..];
+            methodName[..1]) + methodName[1..];
         _ = methods.Add(methodName);
       }
       if (methods.Count == 0) {

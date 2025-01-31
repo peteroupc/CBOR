@@ -13,8 +13,7 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET version of the library.
   public sealed partial class CBORDateConverter :
-ICBORToFromConverter<DateTime>
-  {
+    ICBORToFromConverter<DateTime> {
     /// <summary>Tries to extract the fields of a date and time in the form
     /// of a CBOR object.</summary>
     /// <param name='obj'>A CBOR object that specifies a date/time

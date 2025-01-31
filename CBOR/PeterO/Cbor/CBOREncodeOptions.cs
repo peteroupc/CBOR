@@ -103,11 +103,11 @@ namespace PeterO.Cbor {
       this.ResolveReferences = parser.GetBoolean("resolvereferences",
           false);
       this.UseIndefLengthStrings = parser.GetBoolean(
-        "useindeflengthstrings",
-        false);
+          "useindeflengthstrings",
+          false);
       this.Float64 = parser.GetBoolean(
-        "float64",
-        false);
+          "float64",
+          false);
       this.AllowDuplicateKeys = parser.GetBoolean("allowduplicatekeys",
           false);
       this.KeepKeyOrder = parser.GetBoolean("keepkeyorder",

@@ -17,14 +17,18 @@ namespace PeterO.DocGen {
       public TypeLinkAndBuilder(Type type) {
         string typeName = DocVisitor.FormatType(type);
         typeName = "[" + DocGenUtil.HtmlEscape(typeName) + "](" +
-DocVisitor.GetTypeID(type) + ".md)";
+          DocVisitor.GetTypeID(type) + ".md)";
         this.TypeLink = typeName;
         this.Builder = new StringBuilder();
       }
 
-      public string TypeLink { get; }
+      public string TypeLink {
+        get;
+      }
 
-      public StringBuilder Builder { get; }
+      public StringBuilder Builder {
+        get;
+      }
     }
 
     private readonly SortedDictionary<string, TypeLinkAndBuilder> docs;
@@ -45,29 +49,29 @@ DocVisitor.GetTypeID(type) + ".md)";
         _ = sb.Append(finalString + "\n");
       }
       finalString = DocGenUtil.NormalizeLines(
-              sb.ToString());
+          sb.ToString());
       DocGenUtil.FileEdit(this.filename, finalString);
     }
 
     internal static string GetSummary(MemberInfo info, XmlDoc xdoc, string
-memberName) {
+      memberName) {
       string summary;
       var attr = info?.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-                  ObsoleteAttribute;
+        ObsoleteAttribute;
       summary = (attr != null) ?
-         ("<b>Obsolete:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
-         xdoc?.GetSummary(memberName);
+        ("<b>Obsolete:</b> " + DocGenUtil.HtmlEscape(attr.Message)) :
+        xdoc?.GetSummary(memberName);
       if (summary != null && attr == null &&
         summary.IndexOf(".", StringComparison.Ordinal) >= 0) {
         summary = summary[
-..(summary.IndexOf(".", StringComparison.Ordinal) + 1)];
+            ..(summary.IndexOf(".", StringComparison.Ordinal) + 1)];
       }
       return summary;
     }
 
     public void HandleType(Type currentType, XmlDoc xdoc) {
       if (!(currentType.IsNested ? currentType.IsNestedPublic :
-currentType.IsPublic)) {
+        currentType.IsPublic)) {
         return;
       }
       string typeFullName = currentType.FullName;
@@ -76,14 +80,14 @@ currentType.IsPublic)) {
         this.docs[typeFullName] = docVisitor;
       }
       string summary = GetSummary(
-        currentType,
-        xdoc,
-        TypeNameUtil.XmlDocMemberName(currentType));
+          currentType,
+          xdoc,
+          TypeNameUtil.XmlDocMemberName(currentType));
       if (summary == null) {
         Console.WriteLine("no summary for " + typeFullName);
       } else {
         _ = this.docs[typeFullName].Builder.Append(summary)
-            .Append("\r\n");
+          .Append("\r\n");
       }
     }
   }

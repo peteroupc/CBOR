@@ -27,9 +27,9 @@ namespace PeterO {
       int delimLength = delimiter.Length;
       while (true) {
         int index2 = stringToSplit.IndexOf(
-          delimiter,
-          index,
-          StringComparison.Ordinal);
+            delimiter,
+            index,
+            StringComparison.Ordinal);
         if (index2 < 0) {
           if (first) {
             return new string[] { stringToSplit };
@@ -51,7 +51,7 @@ namespace PeterO {
 
     private static int ToHexNumber(int c) {
       return c is >= 'A' and <= 'Z' ? 10 + c - 'A' : c is >= 'a' and <= 'z' ?
-10 + c - 'a' : (c is >= '0' and <= '9') ? (c - '0') : (-1);
+        10 + c - 'a' : (c is >= '0' and <= '9') ? (c - '0') : (-1);
     }
     private static string PercentDecodeUTF8(string str) {
       int len = str.Length;
@@ -136,9 +136,9 @@ namespace PeterO {
                   }
                 } else {
                   _ = retString.Append((char)((((ret - 0x10000) >> 10) &
-                        0x3ff) | 0xd800));
+                    0x3ff) | 0xd800));
                   _ = retString.Append((char)(((ret - 0x10000) & 0x3ff) |
-                      0xdc00));
+                    0xdc00));
                 }
                 continue;
               }
@@ -404,7 +404,7 @@ namespace PeterO {
           }
         }
         if (leaf != null) {
-          string last = path[^1];
+          string last = path[ ^ 1];
           if (leaf.ContainsKey(last)) {
             throw new InvalidOperationException();
           }

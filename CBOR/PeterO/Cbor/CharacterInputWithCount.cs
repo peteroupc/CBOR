@@ -1,8 +1,7 @@
 using System;
 
 namespace PeterO.Cbor {
-  internal class CharacterInputWithCount : ICharacterInput
-  {
+  internal class CharacterInputWithCount : ICharacterInput {
     private readonly ICharacterInput ci;
     private int offset;
 
@@ -21,12 +20,12 @@ namespace PeterO.Cbor {
     public void RaiseError(Exception ex) {
       if (ex.InnerException == null) {
         throw new CBORException(
-            this.NewErrorString(ex.Message),
-            ex);
+          this.NewErrorString(ex.Message),
+          ex);
       } else {
         throw new CBORException(
-            this.NewErrorString(ex.Message),
-            ex.InnerException);
+          this.NewErrorString(ex.Message),
+          ex.InnerException);
       }
     }
 

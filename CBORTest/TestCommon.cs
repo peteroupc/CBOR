@@ -39,7 +39,7 @@ namespace Test {
           if (ret == 2147483640) {
             if (neg && x == 8) {
               return i != str.Length ? throw new FormatException() :
-Int32.MinValue;
+                Int32.MinValue;
             }
             if (x > 7) {
               throw new FormatException();
@@ -79,7 +79,7 @@ Int32.MinValue;
           if (ret == 9223372036854775800L) {
             if (neg && x == 8) {
               return i != str.Length ? throw new FormatException() :
-Int64.MinValue;
+                Int64.MinValue;
             }
             if (x > 7) {
               throw new FormatException();
@@ -106,12 +106,12 @@ Int64.MinValue;
       int length,
       byte[] arr2) {
       if (!ByteArraysEqual(
-         arr1,
-         offset,
-         length,
-         arr2,
-         0,
-         arr2 == null ? 0 : arr2.Length)) {
+        arr1,
+        offset,
+        length,
+        arr2,
+        0,
+        arr2 == null ? 0 : arr2.Length)) {
         Assert.Fail("Expected " + ToByteArrayString(arr1) + ",\ngot..... " +
           ToByteArrayString(arr2));
       }
@@ -153,9 +153,9 @@ Int64.MinValue;
       }
       if (o.Equals(o2)) {
         string str = msg + "\r\n" + ObjectMessages(
-          o,
-          o2,
-          "Unexpectedly equal");
+            o,
+            o2,
+            "Unexpectedly equal");
         Assert.Fail(str);
       }
     }
@@ -175,9 +175,9 @@ Int64.MinValue;
       }
       if (o.Equals(o2)) {
         string str = ObjectMessages(
-          o,
-          o2,
-          "Unexpectedly equal");
+            o,
+            o2,
+            "Unexpectedly equal");
         Assert.Fail(str);
       }
     }
@@ -263,9 +263,9 @@ Int64.MinValue;
     {
       if (CompareTestReciprocal(o1, o2) == 0) {
         Assert.Fail(ObjectMessages(
-            o1,
-            o2,
-            "Unexpectedly equal: " + CompareTestReciprocal(o1, o2)));
+          o1,
+          o2,
+          "Unexpectedly equal: " + CompareTestReciprocal(o1, o2)));
       }
     }
 
@@ -286,9 +286,9 @@ Int64.MinValue;
     {
       if (CompareTestReciprocal(o1, o2) != 0) {
         Assert.Fail(ObjectMessages(
-            o1,
-            o2,
-            "Not equal: " + CompareTestReciprocal(o1, o2)));
+          o1,
+          o2,
+          "Not equal: " + CompareTestReciprocal(o1, o2)));
       }
     }
 
@@ -344,9 +344,9 @@ Int64.MinValue;
     {
       if (CompareTestReciprocal(o1, o2) >= 0) {
         Assert.Fail(ObjectMessages(
-            o1,
-            o2,
-            "Not less: " + CompareTestReciprocal(o1, o2)));
+          o1,
+          o2,
+          "Not less: " + CompareTestReciprocal(o1, o2)));
       }
     }
 
@@ -361,9 +361,9 @@ Int64.MinValue;
     {
       if (CompareTestReciprocal(o1, o2) > 0) {
         Assert.Fail(ObjectMessages(
-            o1,
-            o2,
-            "Not less or equal: " + CompareTestReciprocal(o1, o2)));
+          o1,
+          o2,
+          "Not less or equal: " + CompareTestReciprocal(o1, o2)));
       }
     }
 
@@ -607,7 +607,7 @@ Int64.MinValue;
     public static string Repeat(char c, int num) {
       if (num < 0) {
         throw new ArgumentException("num (" + num +
-           ") is not greater or equal to 0");
+          ") is not greater or equal to 0");
       }
       var sb = new StringBuilder(num);
       if (num > RepeatDivideThreshold) {
@@ -631,7 +631,7 @@ Int64.MinValue;
     public static string Repeat(string str, int num) {
       if (num < 0) {
         throw new ArgumentException("num (" + num +
-           ") is not greater or equal to 0");
+          ") is not greater or equal to 0");
       }
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
@@ -648,15 +648,15 @@ Int64.MinValue;
 
     public static string ToByteArrayString(byte[] bytes) {
       return (bytes == null) ? "null" : ToByteArrayString(
-         bytes,
-         0,
-         bytes.Length);
+        bytes,
+        0,
+        bytes.Length);
     }
 
     public static string ToByteArrayString(
-       byte[] bytes,
-       int offset,
-       int length) {
+      byte[] bytes,
+      int offset,
+      int length) {
       if (bytes == null) {
         return "null";
       }
@@ -665,24 +665,24 @@ Int64.MinValue;
       }
       if (offset < 0) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (offset > bytes.Length) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
-"\u0020or equal to " + bytes.Length);
+          "\u0020or equal to " + bytes.Length);
       }
       if (length < 0) {
         throw new ArgumentException(" (" + length + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (length > bytes.Length) {
         throw new ArgumentException(" (" + length + ") is not less or equal" +
-"\u0020to " + bytes.Length);
+          "\u0020to " + bytes.Length);
       }
       if (bytes.Length - offset < length) {
         throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
-"\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
-length);
+          "\u0020offset (" + (bytes.Length - offset) + ") is not greater or" +
+          "\u0020 equal to " + length);
       }
       var sb = new System.Text.StringBuilder();
       const string ValueHex = "0123456789ABCDEF";
@@ -717,48 +717,48 @@ length);
       }
       if (offset < 0) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (offset > arr1.Length) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
-"\u0020or equal to " + arr1.Length);
+          "\u0020or equal to " + arr1.Length);
       }
       if (length < 0) {
         throw new ArgumentException(" (" + length + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (length > arr1.Length) {
         throw new ArgumentException(" (" + length + ") is not less or equal" +
-"\u0020to " + arr1.Length);
+          "\u0020to " + arr1.Length);
       }
       if (arr1.Length - offset < length) {
         throw new ArgumentException("\"arr1\" + \"'s length minus \" +" +
-"\u0020offset (" + (arr1.Length - offset) + ") is not greater or equal to " +
-length);
+          "\u0020offset (" + (arr1.Length - offset) + ") is not greater or" +
+          "\u0020 equal to " + length);
       }
       if (arr2 == null) {
         throw new ArgumentNullException(nameof(arr2));
       }
       if (offset2 < 0) {
         throw new ArgumentException("\"offset2\" (" + offset2 + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (offset2 > arr2.Length) {
         throw new ArgumentException("\"offset2\" (" + offset2 + ") is not" +
-"\u0020less or equal to " + arr2.Length);
+          "\u0020less or equal to " + arr2.Length);
       }
       if (length2 < 0) {
         throw new ArgumentException(" (" + length2 + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (length2 > arr2.Length) {
         throw new ArgumentException(" (" + length2 + ") is not less or equal" +
-"\u0020to " + arr2.Length);
+          "\u0020to " + arr2.Length);
       }
       if (arr2.Length - offset2 < length2) {
         throw new ArgumentException("\"arr2\"'s length minus " +
-"\u0020offset2 (" + (arr2.Length - offset2) + ") is not greater or equal to " +
-length2);
+          "\u0020offset2 (" + (arr2.Length - offset2) + ") is not greater or" +
+          "\u0020 equal to " + length2);
       }
       if (length != length2) {
         return false;

@@ -62,8 +62,8 @@ namespace PeterO {
       string delimiter) {
       // Convert array-like dictionaries to ILists
       return
-ConvertListsToCBOR(QueryStringHelper.QueryStringToDictInternal(query,
-  delimiter));
+        ConvertListsToCBOR(QueryStringHelper.QueryStringToDictInternal(query,
+        delimiter));
     }
   }
 }

@@ -6,10 +6,10 @@ licensed under the Unlicense: https://unlicense.org/
 
  */
 using System;
+using PeterO;
 
 namespace PeterO.Cbor {
-  internal class CBORUriConverter : ICBORToFromConverter<Uri>
-  {
+  internal class CBORUriConverter : ICBORToFromConverter<Uri> {
     private static CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI/IRI must be a text string");
@@ -21,9 +21,9 @@ namespace PeterO.Cbor {
           URIUtility.ParseMode.IRIStrict) ?
         throw new CBORException("String is not a valid IRI Reference") :
         isiri && (!URIUtility.IsValidIRI(
-            obj.AsString(),
-            URIUtility.ParseMode.IRIStrict) ||
-          !URIUtility.HasScheme(obj.AsString())) ?
+        obj.AsString(),
+        URIUtility.ParseMode.IRIStrict) ||
+        !URIUtility.HasScheme(obj.AsString())) ?
         throw new CBORException("String is not a valid IRI") :
         !URIUtility.IsValidIRI(
           obj.AsString(),
@@ -35,8 +35,8 @@ namespace PeterO.Cbor {
 
     public Uri FromCBORObject(CBORObject obj) {
       if (obj.HasMostOuterTag(32) ||
-             obj.HasMostOuterTag(266) ||
-             obj.HasMostOuterTag(267)) {
+        obj.HasMostOuterTag(266) ||
+        obj.HasMostOuterTag(267)) {
         _ = ValidateObject(obj);
         try {
           return new Uri(obj.AsString());

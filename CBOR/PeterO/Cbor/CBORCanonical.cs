@@ -75,7 +75,8 @@ namespace PeterO.Cbor {
             return 4;
           case CBORType.Map:
             return 5;
-          default: throw new InvalidOperationException();
+          default:
+            throw new InvalidOperationException();
         }
       }
 
@@ -99,8 +100,8 @@ namespace PeterO.Cbor {
         if (amt != bmt) {
           return amt < bmt ? -1 : 1;
         }
-        // DebugUtility.Log("a="+a);
-        // DebugUtility.Log("b="+b);
+        // Console.WriteLine("a="+a);
+        // Console.WriteLine("b="+b);
         if (amt == 2) {
           // Both objects are byte strings
           abs = a.GetByteString();

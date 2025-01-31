@@ -29,8 +29,8 @@ namespace Test {
       }
       string yearString = year.ToString();
       string fieldsString = yearString + "," + lesserFields[0] + "," +
-lesserFields[1] + "," + lesserFields[2] + "," + lesserFields[3] + "," +
-lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6];
+        lesserFields[1] + "," + lesserFields[2] + "," + lesserFields[3] + "," +
+        lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6];
       try {
         if (dtc == null) {
           throw new ArgumentNullException(nameof(dtc));
@@ -71,9 +71,8 @@ lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6];
         bigYear = bigYear.Add(400);
       }
       return ((bigYear.Remainder(4).Sign == 0) &&
-(bigYear.Remainder(100).Sign !=
-0)) ||
-          (bigYear.Remainder(400).Sign == 0);
+        (bigYear.Remainder(100).Sign != 0)) ||
+        (bigYear.Remainder(400).Sign == 0);
     }
 
     private static readonly int[] ValueNormalDays = {
@@ -89,10 +88,10 @@ lesserFields[4] + "," + lesserFields[5] + "," + lesserFields[6];
     };
 
     private static int[] RandomLesserFields(IRandomGenExtended irg, EInteger
-year) {
+      year) {
       int month = irg.GetInt32(12) + 1;
       int days = IsLeapYear(year) ? ValueLeapDays[month] :
-ValueNormalDays[month];
+        ValueNormalDays[month];
       return new int[] {
         month,
         irg.GetInt32(days) + 1,

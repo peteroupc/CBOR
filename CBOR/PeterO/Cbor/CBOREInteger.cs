@@ -9,8 +9,7 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBOREInteger : ICBORNumber
-  {
+  internal class CBOREInteger : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return false;
     }
@@ -50,7 +49,7 @@ namespace PeterO.Cbor {
     public long AsInt64(object obj) {
       var bi = (EInteger)obj;
       return !bi.CanFitInInt64() ? throw new OverflowException("This" +
-"\u0020object's value is out of range") : (long)bi;
+        "\u0020object's value is out of range") : (long)bi;
     }
 
     public bool CanFitInSingle(object obj) {

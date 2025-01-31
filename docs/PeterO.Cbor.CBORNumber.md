@@ -32,7 +32,7 @@ An instance of a number that CBOR or certain CBOR tags can represent. For this p
 * <code>[IsPositiveInfinity()](#IsPositiveInfinity)</code> - Gets a value indicating whether this object represents positive infinity.
 * <code>[IsZero()](#IsZero)</code> - Gets a value indicating whether this object's value equals 0.
 * <code>[Kind](#Kind)</code> - Gets the underlying form of this CBOR number object.
-* <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the given number.
+* <code>[Multiply(PeterO.Cbor.CBORNumber)](#Multiply_PeterO_Cbor_CBORNumber)</code> - Returns a CBOR number expressing the product of this number and the specified number.
 * <code>[Negate()](#Negate)</code> - Returns a CBOR number with the same value as this one but with the sign reversed.
 * <code>[bool operator &gt;(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThan)</code> - Returns whether one object's value is greater than another's.
 * <code>[bool operator &gt;=(PeterO.Cbor.CBORNumber, PeterO.Cbor.CBORNumber)](#op_GreaterThanOrEqual)</code> - Returns whether one object's value is at least another's.
@@ -332,7 +332,7 @@ Creates a CBOR number object from a CBOR object representing a number (that is, 
 
 <b>Return Value:</b>
 
-A CBOR number object, or null if the given CBOR object is null or does not represent a number.
+A CBOR number object, or null if the specified CBOR object is null or does not represent a number.
 
 <a id="FromInt16_short"></a>
 ### FromInt16
@@ -444,7 +444,7 @@ Gets a value indicating whether this object's value equals 0.
     public PeterO.Cbor.CBORNumber Multiply(
         PeterO.Cbor.CBORNumber b);
 
-Returns a CBOR number expressing the product of this number and the given number.
+Returns a CBOR number expressing the product of this number and the specified number.
 
 <b>Parameters:</b>
 
@@ -452,7 +452,7 @@ Returns a CBOR number expressing the product of this number and the given number
 
 <b>Return Value:</b>
 
-A number expressing the product of this number and the given number.
+A number expressing the product of this number and the specified number.
 
 <b>Exceptions:</b>
 
@@ -613,7 +613,7 @@ Returns a number that expresses this number minus another.
 
 <b>Return Value:</b>
 
-A CBOR number that expresses this number minus the given number.
+A CBOR number that expresses this number minus the specified number.
 
 <b>Exceptions:</b>
 

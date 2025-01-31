@@ -7,8 +7,7 @@ namespace PeterO {
   ///   href='http://xorshift.di.unimi.it/xorshift128plus.c'>xorshift128+</a>
   /// RNG as the underlying implementation. This class is safe for
   /// concurrent use among multiple threads.</summary>
-  public class XorShift128Plus : IRandomGen
-  {
+  public class XorShift128Plus : IRandomGen {
     private readonly long[] s = new long[2];
     private readonly object syncRoot = new();
 

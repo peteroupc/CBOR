@@ -22,7 +22,10 @@ namespace Test {
         return this;
       }
 
-      public int ByteLength { get; set; }
+      public int ByteLength {
+        get;
+        set;
+      }
 
       public byte[] ToBytes() {
         var newbytes = new byte[this.ByteLength];
@@ -110,8 +113,8 @@ namespace Test {
     }
 
     private static void GenerateJsonNumber(
-        IRandomGenExtended ra,
-        ByteWriter bs) {
+      IRandomGenExtended ra,
+      ByteWriter bs) {
       if (ra.GetInt32(2) == 0) {
         _ = bs.Write('-');
       }
@@ -123,7 +126,7 @@ namespace Test {
       } else {
         // Integer part
         len = shortLen ? ra.GetInt32(10) + 1 :
-           (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
+          (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
         _ = bs.Write(0x31 + ra.GetInt32(9));
         for (int i = 0; i < len; ++i) {
           _ = bs.Write(0x30 + ra.GetInt32(10));
@@ -133,7 +136,7 @@ namespace Test {
       if (ra.GetInt32(2) == 0) {
         _ = bs.Write(0x2e);
         len = shortLen ? ra.GetInt32(10) + 1 :
-         (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
+          (ra.GetInt32(2000) * ra.GetInt32(2000) / 2000) + 1;
         for (int i = 0; i < len; ++i) {
           _ = bs.Write(0x30 + ra.GetInt32(10));
         }
@@ -325,8 +328,8 @@ namespace Test {
           case 2:
 
             _ = bs.Write('f').Write('a').Write('l').Write(
-  's').Write(
-                    'e');
+              's').Write(
+                'e');
             break;
         }
       } else if (majorType == 3) {

@@ -9,8 +9,7 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORDoubleBits : ICBORNumber
-  {
+  internal class CBORDoubleBits : ICBORNumber {
     public bool IsPositiveInfinity(object obj) {
       return ((long)obj) == (0x7ffL << 52);
     }
@@ -41,7 +40,7 @@ namespace PeterO.Cbor {
 
     public float AsSingle(object obj) {
       return CBORUtilities.Int32BitsToSingle(
-        CBORUtilities.DoubleToRoundedSinglePrecision((long)obj));
+          CBORUtilities.DoubleToRoundedSinglePrecision((long)obj));
     }
 
     public EInteger AsEInteger(object obj) {
@@ -81,7 +80,7 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       return this.IsNaN(obj) ||
-CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
+        CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
     }
 
     public bool CanFitInDouble(object obj) {
@@ -177,7 +176,7 @@ CBORUtilities.DoubleRetainsSameValueInSingle((long)obj);
         mant = -mant;
       }
       return mant < minValue || mant > maxValue ? throw new
-OverflowException("This object's value is out of range") : (int)mant;
+        OverflowException("This object's value is out of range") : (int)mant;
     }
 
     public bool IsNumberZero(object obj) {

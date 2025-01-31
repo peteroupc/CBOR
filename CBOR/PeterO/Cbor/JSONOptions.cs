@@ -150,23 +150,23 @@ namespace PeterO.Cbor {
       }
       var parser = new OptionsParser(paramString);
       this.PreserveNegativeZero = parser.GetBoolean(
-        "preservenegativezero",
-        true);
+          "preservenegativezero",
+          true);
       this.AllowDuplicateKeys = parser.GetBoolean(
-        "allowduplicatekeys",
-        false);
+          "allowduplicatekeys",
+          false);
       this.KeepKeyOrder = parser.GetBoolean(
-        "keepkeyorder",
-        false);
+          "keepkeyorder",
+          false);
       this.ReplaceSurrogates = parser.GetBoolean(
-        "replacesurrogates",
-        false);
+          "replacesurrogates",
+          false);
       this.NumberConversion = ToNumberConversion(parser.GetLCString(
         "numberconversion",
         null));
       this.WriteBasic = parser.GetBoolean(
-        "writebasic",
-        false);
+          "writebasic",
+          false);
     }
 
     /// <summary>Gets the values of this options object's properties in
@@ -199,7 +199,7 @@ namespace PeterO.Cbor {
         kind == ConversionMode.Decimal128 ? "decimal128" :
         kind == ConversionMode.IntOrFloat ? "intorfloat" :
         (kind == ConversionMode.IntOrFloatFromDouble) ?
-"intorfloatfromdouble" : "full";
+        "intorfloatfromdouble" : "full";
     }
 
     private static ConversionMode ToNumberConversion(string str) {

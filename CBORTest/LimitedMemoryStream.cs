@@ -4,8 +4,7 @@ using System.IO;
 namespace Test {
   /// <summary>Writable stream with a maximum supported byte
   /// size.</summary>
-  public sealed class LimitedMemoryStream : Stream
-  {
+  public sealed class LimitedMemoryStream : Stream {
     private readonly Test.DelayingStream ms;
     private readonly int maxSize;
 

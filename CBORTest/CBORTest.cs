@@ -123,7 +123,7 @@ namespace Test {
       var bytes2 = new byte[bytes.Length + 2];
       bytes2[0] = 0x22;
       Array.Copy(bytes, 0, bytes2, 1, bytes.Length);
-      bytes2[^1] = 0x22;
+      bytes2[ ^ 1] = 0x22;
       string str2 = CBORObject.FromJSONBytes(bytes2)
         .AsString();
       if (!str.Equals(str2, StringComparison.Ordinal)) {
@@ -290,7 +290,7 @@ namespace Test {
       var cbor = CBORObject.NewMap();
       _ = cbor.Add(1, 2);
       Assert.IsTrue(cbor.ContainsKey(
-          ToObjectTest.TestToFromObjectRoundTrip(1)));
+        ToObjectTest.TestToFromObjectRoundTrip(1)));
       {
         int varintTemp2 = cbor[
             ToObjectTest.TestToFromObjectRoundTrip(1)]
@@ -307,7 +307,7 @@ namespace Test {
       Assert.IsTrue(cbor.ContainsKey("hello"));
 
       Assert.IsTrue(cbor.ContainsKey(ToObjectTest.TestToFromObjectRoundTrip(
-            "hello")));
+        "hello")));
       Assert.AreEqual(2, cbor["hello"].AsInt32Value());
       _ = cbor.Set(1, CBORObject.FromInt32(3));
       CBORObject cborone = ToObjectTest.TestToFromObjectRoundTrip(1);
@@ -366,7 +366,7 @@ namespace Test {
         CBORTestCommon.AssertRoundTrip(
           ToObjectTest.TestToFromObjectRoundTrip(bi));
         CBORTestCommon.AssertRoundTrip(ToObjectTest.TestToFromObjectRoundTrip(
-            EDecimal.FromString(bi.ToString() + "e1")));
+          EDecimal.FromString(bi.ToString() + "e1")));
       }
       EInteger[] ranges = {
         EInteger.FromString("-9223372036854776320"),
@@ -457,7 +457,7 @@ namespace Test {
     [Timeout(30000)]
     public void TestByteStringStream() {
       _ = CBORTestCommon.FromBytesTestAB(
-        new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, 0xff });
+          new byte[] { 0x5f, 0x41, 0x20, 0x41, 0x20, 0xff });
     }
 
     [Test]
@@ -857,7 +857,7 @@ namespace Test {
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(String.Empty)
-        .Remove(CBORObject.True);
+          .Remove(CBORObject.True);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -912,7 +912,7 @@ namespace Test {
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
-          String.Empty).ToObject(typeof(EFloat));
+            String.Empty).ToObject(typeof(EFloat));
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -947,7 +947,7 @@ namespace Test {
       Assert.IsTrue(bval);
 
       Assert.IsTrue(ToObjectTest.TestToFromObjectRoundTrip(
-          CBORTestCommon.RatPosInf).AsNumber().IsInfinity());
+        CBORTestCommon.RatPosInf).AsNumber().IsInfinity());
 
       Assert.IsTrue(
         ToObjectTest.TestToFromObjectRoundTrip(CBORTestCommon.FloatNegInf)
@@ -1062,7 +1062,7 @@ namespace Test {
       cbor2 = CBORDataUtilities.ParseJSONNumber(str, jsoptions);
       cbor3 = CBORObject.FromJSONString(str, jsoptions);
       cbored = (ed.Exponent.CompareTo(0) == 0 && !(ed.IsNegative && ed.Sign
-            == 0)) ?
+        == 0)) ?
         CBORObject.FromEInteger(ed.Mantissa) : CBORObject.FromEDecimal(ed);
       Assert.AreEqual(cbor, cbor2, "[" + str + "] cbor2");
       Assert.AreEqual(cbor, cbor3, "[" + str + "] cbor3");
@@ -1502,7 +1502,7 @@ namespace Test {
           new byte[] { 0xc5, 0x82, 0x3, 0xc2, 0x41, 1 });
       {
         long numberTemp = EFloat.FromString("8").CompareTo(
-            (EFloat)o.ToObject(typeof(EFloat)));
+          (EFloat)o.ToObject(typeof(EFloat)));
 
         Assert.AreEqual(0, numberTemp);
       }
@@ -1551,25 +1551,25 @@ namespace Test {
     [Timeout(30000)]
     public void TestDouble() {
       if (!ToObjectTest.TestToFromObjectRoundTrip(
-          double.PositiveInfinity).AsNumber().IsPositiveInfinity()) {
+        double.PositiveInfinity).AsNumber().IsPositiveInfinity()) {
         Assert.Fail("Not positive infinity");
       }
 
       Assert.IsTrue(
         (
           (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-            double.PositiveInfinity)
+        double.PositiveInfinity)
           .ToObject(typeof(EDecimal))).IsPositiveInfinity());
 
       Assert.IsTrue(
         (
           (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-            double.NegativeInfinity)
+        double.NegativeInfinity)
           .ToObject(typeof(EDecimal))).IsNegativeInfinity());
       Assert.IsTrue(
         ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(double.NaN)
 
-          .ToObject(typeof(EDecimal))).IsNaN());
+        .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((double)i);
         Assert.IsTrue(o.AsNumber().CanFitInDouble());
@@ -1650,17 +1650,17 @@ namespace Test {
       Assert.IsTrue(
         (
           (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-            float.PositiveInfinity)
+        float.PositiveInfinity)
           .ToObject(typeof(EDecimal))).IsPositiveInfinity());
       Assert.IsTrue(
         (
           (EDecimal)ToObjectTest.TestToFromObjectRoundTrip(
-            float.NegativeInfinity)
+        float.NegativeInfinity)
           .ToObject(typeof(EDecimal))).IsNegativeInfinity());
       Assert.IsTrue(
         ((EDecimal)ToObjectTest.TestToFromObjectRoundTrip(float.NaN)
 
-          .ToObject(typeof(EDecimal))).IsNaN());
+        .ToObject(typeof(EDecimal))).IsNaN());
       for (int i = -65539; i <= 65539; ++i) {
         CBORObject o = ToObjectTest.TestToFromObjectRoundTrip((float)i);
         // Console.Write("jsonser i=" + (// i) + " o=" + (o.ToString()) + " json=" +
@@ -1771,37 +1771,37 @@ namespace Test {
       {
         object objectTemp = doublennan;
         object objectTemp2 = CBORObject.FromFloatingPointBits(doublennan,
-          8).AsDoubleBits();
+            8).AsDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = doublepnan;
         object objectTemp2 = CBORObject.FromFloatingPointBits(doublepnan,
-          8).AsDoubleBits();
+            8).AsDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = doublennan;
         object objectTemp2 = CBORObject.FromFloatingPointBits(singlennan,
-          4).AsDoubleBits();
+            4).AsDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = doublepnan;
         object objectTemp2 = CBORObject.FromFloatingPointBits(singlepnan,
-          4).AsDoubleBits();
+            4).AsDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = doublennan;
         object objectTemp2 = CBORObject.FromFloatingPointBits(halfnnan,
-          2).AsDoubleBits();
+            2).AsDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
       {
         object objectTemp = doublepnan;
         object objectTemp2 = CBORObject.FromFloatingPointBits(halfpnan,
-          2).AsDoubleBits();
+            2).AsDoubleBits();
         Assert.AreEqual(objectTemp, objectTemp2);
       }
     }
@@ -1973,14 +1973,14 @@ namespace Test {
             ToObjectTest.TestToFromObjectRoundTrip(j),
             ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromInt64(j)));
           var obj = CBORObject.FromJSONString(
-            "[" + l2s + "]",
-            jso);
+              "[" + l2s + "]",
+              jso);
           CBORTestCommon.AssertJSONSer(
             ToObjectTest.TestToFromObjectRoundTrip(j),
             l2s);
           CBORTestCommon.AssertJSONSer(
-              obj,
-              "[" + l2s + "]");
+            obj,
+            "[" + l2s + "]");
           if (j == ranges[i + 1]) {
             break;
           }
@@ -2039,20 +2039,20 @@ namespace Test {
     public void TestMapInMap() {
       CBORObject oo;
       oo = CBORObject.NewArray().Add(CBORObject.NewMap()
-          .Add(
-            ERational.Create(EInteger.One, EInteger.FromString("2")),
-            3).Add(4, false)).Add(true);
+        .Add(
+          ERational.Create(EInteger.One, EInteger.FromString("2")),
+          3).Add(4, false)).Add(true);
       CBORTestCommon.AssertRoundTrip(oo);
       oo = CBORObject.NewArray();
       _ = oo.Add(ToObjectTest.TestToFromObjectRoundTrip(0));
       var oo2 = CBORObject.NewMap();
       _ = oo2.Add(
-        ToObjectTest.TestToFromObjectRoundTrip(1),
-        ToObjectTest.TestToFromObjectRoundTrip(1368));
+          ToObjectTest.TestToFromObjectRoundTrip(1),
+          ToObjectTest.TestToFromObjectRoundTrip(1368));
       var oo3 = CBORObject.NewMap();
       _ = oo3.Add(
-        ToObjectTest.TestToFromObjectRoundTrip(2),
-        ToObjectTest.TestToFromObjectRoundTrip(1625));
+          ToObjectTest.TestToFromObjectRoundTrip(2),
+          ToObjectTest.TestToFromObjectRoundTrip(1625));
       var oo4 = CBORObject.NewMap();
       _ = oo4.Add(oo2, CBORObject.True);
       _ = oo4.Add(oo3, CBORObject.True);
@@ -2061,7 +2061,7 @@ namespace Test {
     }
 
     private static readonly JSONOptions FullJsonOptions = new
-("numberconversion=full;preservenegativezero=false");
+    ("numberconversion=full;preservenegativezero=false");
 
     public static void TestParseDecimalStringsOne(string r) {
       CBORObject o = ToObjectTest.TestToFromObjectRoundTrip(
@@ -2145,7 +2145,7 @@ namespace Test {
       var root = CBORObject.NewArray();
       CBORObject arr = CBORObject.NewArray().Add("xxx").Add("yyy");
       _ = arr.Add("zzz")
-      .Add("wwww").Add("iiiiiii").Add("aaa").Add("bbb").Add("ccc");
+        .Add("wwww").Add("iiiiiii").Add("aaa").Add("bbb").Add("ccc");
       arr = CBORObject.FromCBORObjectAndTag(arr, 28);
       _ = root.Add(arr);
       CBORObject refobj;
@@ -2507,7 +2507,7 @@ namespace Test {
 
     public static EInteger UnsignedLongToEInteger(long v) {
       return v >= 0 ? EInteger.FromInt64(v) :
-EInteger.FromInt32(1).ShiftLeft(64).Add(v);
+        EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     }
 
     public static void TestUnsignedLongOne(long v, string expectedStr) {
@@ -3029,7 +3029,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         TestCommon.AssertEqualsHashCode(o, o2);
         o =
           ToObjectTest.TestToFromObjectRoundTrip(EInteger.FromString(
-              "999999999999999999999999999999999"));
+          "999999999999999999999999999999999"));
         o2 = CBORObject.FromCBORObjectAndTag(o, i);
         TestCommon.AssertEqualsHashCode(o, o2);
         o = CBORObject.FromCBORObjectAndTag(o, i + 1);
@@ -3145,7 +3145,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
             }
           }
           var obj = CBORObject.FromCBORObjectAndTag(CBORObject.FromInt32(0),
-  bigintTemp);
+            bigintTemp);
           if (!obj.IsTagged) {
             Assert.Fail("obj not tagged");
           }
@@ -3907,12 +3907,12 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         Assert.AreEqual(7, lesserFields.Length, String.Empty + i);
         if (lesserFields[3] == 0 && lesserFields[4] == 0 &&
           lesserFields[5] == 0 && lesserFields[6] == 0 && lesserFields[2] ==
-0) {
+          0) {
           try {
             _ = conv.DateTimeFieldsToCBORObject(
-              2000,
-              lesserFields[0],
-              lesserFields[1]);
+                2000,
+                lesserFields[0],
+                lesserFields[1]);
             Assert.Fail(
               "Should have failed: " + lesserFields[0] + " " + lesserFields[1]);
           } catch (CBORException) {
@@ -3925,12 +3925,12 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         if (lesserFields[5] == 0 && lesserFields[6] == 0) {
           try {
             _ = conv.DateTimeFieldsToCBORObject(
-              2000,
-              lesserFields[0],
-              lesserFields[1],
-              lesserFields[2],
-              lesserFields[3],
-              lesserFields[4]);
+                2000,
+                lesserFields[0],
+                lesserFields[1],
+                lesserFields[2],
+                lesserFields[3],
+                lesserFields[4]);
             Assert.Fail("Should have failed");
           } catch (CBORException) {
             // NOTE: Intentionally empty
@@ -4141,17 +4141,17 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       _ = TestTextStringStreamOne(TestCommon.Repeat('\u3000', 200000));
       _ = TestTextStringStreamOne(TestCommon.Repeat("\ud800\udc00", 200000));
       _ = TestTextStringStreamOne(
-        "A" + TestCommon.Repeat('\u00e0', 200000));
+          "A" + TestCommon.Repeat('\u00e0', 200000));
       _ = TestTextStringStreamOne(
-        "A" + TestCommon.Repeat('\u3000', 200000));
+          "A" + TestCommon.Repeat('\u3000', 200000));
       _ = TestTextStringStreamOne(
-        "AA" + TestCommon.Repeat('\u3000', 200000));
+          "AA" + TestCommon.Repeat('\u3000', 200000));
       _ = TestTextStringStreamOne(
-        "A" + TestCommon.Repeat("\ud800\udc00", 200000));
+          "A" + TestCommon.Repeat("\ud800\udc00", 200000));
       _ = TestTextStringStreamOne(
-        "AA" + TestCommon.Repeat("\ud800\udc00", 200000));
+          "AA" + TestCommon.Repeat("\ud800\udc00", 200000));
       _ = TestTextStringStreamOne(
-        "AAA" + TestCommon.Repeat("\ud800\udc00", 200000));
+          "AAA" + TestCommon.Repeat("\ud800\udc00", 200000));
     }
 
     [Test]
@@ -4171,7 +4171,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       cbor = CBORObject.NewMap();
       _ = cbor.Set(0, CBORObject.FromString("testzero"));
       _ = cbor.Set(CBORObject.FromDouble(0.0),
-  CBORObject.FromString("testpointzero"));
+        CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
         string stringTemp = cbor[CBORObject.FromInt32(0)].AsString();
@@ -4188,7 +4188,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       }
       cbor = CBORObject.NewMap();
       _ = cbor.Set(CBORObject.FromDouble(0.0),
-  CBORObject.FromString("testpointzero"));
+        CBORObject.FromString("testpointzero"));
       _ = cbor.Set(0, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
@@ -4208,7 +4208,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       cbor = CBORObject.NewMap();
       _ = cbor.Set(3, CBORObject.FromString("testzero"));
       _ = cbor.Set(CBORObject.FromDouble(3.0),
-  CBORObject.FromString("testpointzero"));
+        CBORObject.FromString("testpointzero"));
       Assert.AreEqual(2, cbor.Count);
       {
         string stringTemp = cbor[CBORObject.FromInt32(3)].AsString();
@@ -4225,7 +4225,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
       }
       cbor = CBORObject.NewMap();
       _ = cbor.Set(CBORObject.FromDouble(3.0),
-  CBORObject.FromString("testpointzero"));
+        CBORObject.FromString("testpointzero"));
       _ = cbor.Set(3, CBORObject.FromString("testzero"));
       Assert.AreEqual(2, cbor.Count);
       {
@@ -4363,7 +4363,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     public void TestRationalJSONSpecificA() {
       var er =
 
-  ERational.FromString("1088692579850251977918382727683876451288883451475551838663907953515213777772897669/734154292316019508508581520803142368704146796235662433292652");
+        ERational.FromString("1088692579850251977918382727683876451288883451475551838663907953515213777772897669/734154292316019508508581520803142368704146796235662433292652");
       _ = CBORObject.FromERational(er).ToJSONString();
     }
     [Test]
@@ -4371,7 +4371,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     public void TestRationalJSONSpecificB() {
       var er2 =
 
-  ERational.FromString("1117037884940373468269515037592447741921166676191625235424/13699696515096285881634845839085271311137");
+        ERational.FromString("1117037884940373468269515037592447741921166676191625235424/13699696515096285881634845839085271311137");
       _ = CBORObject.FromERational(er2).ToJSONString();
     }
     [Test]
@@ -4379,7 +4379,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     public void TestRationalJSONSpecificC() {
       var er2 =
 
-  ERational.FromString("42595158956667/1216724793801972483341765319799605241541780250657492435");
+        ERational.FromString("42595158956667/1216724793801972483341765319799605241541780250657492435");
       _ = CBORObject.FromERational(er2).ToJSONString();
     }
 
@@ -4741,10 +4741,10 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
     public void TestRationalJsonString() {
       string s1 =
 
-  "2314185985457202732189984229086860275536452482912712559300364012538811890519021609896348772904852567130731662638662357113651250315642348662481229868556065813139982071069333964882192144997551182445870403177326619887472161149361459394237531679153467064950578633985038857850930553390675215926785522674620921221013857844957579079905210161700278381169854796455676266121858525817919848944985101521416062436650605384179954486013171983603514573732843973878942460661051122207994787725632035785836247773451399551083190779512400561839577794870702499681043124072992405732619348558204728800270899359780143357389476977840367320292768181094717788094551212489822736249585469244387735363318078783976724668392554429679443922755068135350076319909649622682466354980725423633530350364989945871920048447230307815643527525431336201627641891131614532527580497256382071436840494627668584005384127077683035880018530366999707415485257695504047147523521952194384880231172509079788316925500613704258819197092976088140216280520582313645747413451716685429138670645309423396623806701594839731451445336814620082926910150739091172178600865482539725012429775997863264496120844788653020449046903816363344201802799558922359223708825558520103859838244276323990910167216851809090120320961066908102124848129364767874532700083684330840078660557364044159387179646160035386030868471110043830522222249658101959143096323641704675830142899751696476007503506009598273729872080504917363964684006707667515610753851782851579370526135223570019729110932882718719";
+        "2314185985457202732189984229086860275536452482912712559300364012538811890519021609896348772904852567130731662638662357113651250315642348662481229868556065813139982071069333964882192144997551182445870403177326619887472161149361459394237531679153467064950578633985038857850930553390675215926785522674620921221013857844957579079905210161700278381169854796455676266121858525817919848944985101521416062436650605384179954486013171983603514573732843973878942460661051122207994787725632035785836247773451399551083190779512400561839577794870702499681043124072992405732619348558204728800270899359780143357389476977840367320292768181094717788094551212489822736249585469244387735363318078783976724668392554429679443922755068135350076319909649622682466354980725423633530350364989945871920048447230307815643527525431336201627641891131614532527580497256382071436840494627668584005384127077683035880018530366999707415485257695504047147523521952194384880231172509079788316925500613704258819197092976088140216280520582313645747413451716685429138670645309423396623806701594839731451445336814620082926910150739091172178600865482539725012429775997863264496120844788653020449046903816363344201802799558922359223708825558520103859838244276323990910167216851809090120320961066908102124848129364767874532700083684330840078660557364044159387179646160035386030868471110043830522222249658101959143096323641704675830142899751696476007503506009598273729872080504917363964684006707667515610753851782851579370526135223570019729110932882718719";
       string s2 =
 
-  "6662791484278690594826817847881545965329948329731867968121995135273120814985447625408875010164308165523077008393040907448927095816668472183767306507621988644226927007049807896601977790621449471807224544610921018712323247068196141241260970690722422573836727986751170029846748991630865560108915742912790575418880931905841405752318207096850143527159053198029648842245667818442862752212319584591326350903220882410151458427571245209321776934621224736963318933098990162346637307854541301688032696173626360523085187457965260167140087021479260407414362314681927575639118779628079152745063483804212029391314516551540082552323766393935679162832149309343521979435765872081112730566874916857979923774605127048865566043423311513224206112727810624953812129189407444425723013814542858953773303224750083748214186967592731457750110532337407558719554095585903998079748001889804344632924251379769721367766565683489037136792018541299840911134792202457550460405605363852082703644386814261111315827747899661812006358141505684436007974039689212221755906535319187254965909243842599581550882694985174561192357511545227109515529785121078195397742875082523296406527673130136841581998940369597346610553537051630040762759128694436878055285011408511186930096142698312900789328008870013582608819840691525856150433351282368061590406881127142805435230013505013582096402814554965693562771980924387951907732638686068565579913844909487962223859043024131114445573057517284388114134555750443506173757889119715387627461644374462498045130424821914143893279013612002227413094709860042079542320696728791055885208451681839380238306841352325674806804434188273228678316889664118537421135644047836961335665043472528998461372064871916691003281042407296035913958087310042321020211485879442799018303005446353339317990963540";
+        "6662791484278690594826817847881545965329948329731867968121995135273120814985447625408875010164308165523077008393040907448927095816668472183767306507621988644226927007049807896601977790621449471807224544610921018712323247068196141241260970690722422573836727986751170029846748991630865560108915742912790575418880931905841405752318207096850143527159053198029648842245667818442862752212319584591326350903220882410151458427571245209321776934621224736963318933098990162346637307854541301688032696173626360523085187457965260167140087021479260407414362314681927575639118779628079152745063483804212029391314516551540082552323766393935679162832149309343521979435765872081112730566874916857979923774605127048865566043423311513224206112727810624953812129189407444425723013814542858953773303224750083748214186967592731457750110532337407558719554095585903998079748001889804344632924251379769721367766565683489037136792018541299840911134792202457550460405605363852082703644386814261111315827747899661812006358141505684436007974039689212221755906535319187254965909243842599581550882694985174561192357511545227109515529785121078195397742875082523296406527673130136841581998940369597346610553537051630040762759128694436878055285011408511186930096142698312900789328008870013582608819840691525856150433351282368061590406881127142805435230013505013582096402814554965693562771980924387951907732638686068565579913844909487962223859043024131114445573057517284388114134555750443506173757889119715387627461644374462498045130424821914143893279013612002227413094709860042079542320696728791055885208451681839380238306841352325674806804434188273228678316889664118537421135644047836961335665043472528998461372064871916691003281042407296035913958087310042321020211485879442799018303005446353339317990963540";
 
       var er = ERational.Create(
           EInteger.FromString(s1),
@@ -4788,7 +4788,7 @@ EInteger.FromInt32(1).ShiftLeft(64).Add(v);
         for (int j = 0; j < json.Length; ++j) {
           char c = json[j];
           if (c is (< (char)0x20 and not (char)0x09 and not (char)0x0a and
-not (char)0x0d) or >= (char)0x7f) {
+            not (char)0x0d) or >= (char)0x7f) {
             Assert.Fail(rts);
           }
         }
@@ -4901,7 +4901,7 @@ not (char)0x0d) or >= (char)0x7f) {
         cc += "=";
         cc += "true";
         string strTemp2 = CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
-              new CBOREncodeOptions(cc))).AsString();
+          new CBOREncodeOptions(cc))).AsString();
         Assert.AreEqual(longString, strTemp2);
       }
       {
@@ -4911,7 +4911,7 @@ not (char)0x0d) or >= (char)0x7f) {
         cc += "=";
         cc += "true";
         string strTemp2 = CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
-              new CBOREncodeOptions(cc))).AsString();
+          new CBOREncodeOptions(cc))).AsString();
         Assert.AreEqual(longString, strTemp2);
       }
       TestCommon.AssertEqualsHashCode(cbor, cbor2);

@@ -30,24 +30,24 @@ namespace Test {
       }
       if (offset < 0) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (offset > bytes.Length) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
-"\u0020or equal to " + bytes.Length);
+          "\u0020or equal to " + bytes.Length);
       }
       if (count < 0) {
         throw new ArgumentException(" (" + count + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (count > bytes.Length) {
         throw new ArgumentException(" (" + count + ") is not less or equal" +
-"\u0020to " + bytes.Length);
+          "\u0020to " + bytes.Length);
       }
       if (bytes.Length - offset < count) {
         throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
-"\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
-count);
+          "\u0020offset (" + (bytes.Length - offset) + ") is not greater or" +
+          "\u0020 equal to " + count);
       }
       int t = count;
       int tpos = offset;
@@ -171,7 +171,7 @@ count);
       if (kind == 0x18) {
         int b = stream.ReadByte();
         return b < 0 ? throw new IOException("Premature end of stream") :
-(headByte != 0x38) ? b : -1 - b;
+          (headByte != 0x38) ? b : -1 - b;
       }
       if (kind == 0x19) {
         var bytes = new byte[2];
@@ -192,14 +192,14 @@ count);
         b <<= 8;
         b |= ((long)bytes[3]) & 0xff;
         return check32bit && (b >> 31) != 0 ? throw new IOException("Not a" +
-"\u002032-bit integer") : (headByte != 0x3a) ? b : -1 - b;
+          "\u002032-bit integer") : (headByte != 0x3a) ? b : -1 - b;
       }
       if (headByte is 0x1b or 0x3b) {
         var bytes = new byte[8];
         ReadHelper(stream, bytes, 0, bytes.Length);
         long b;
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 ||
-            bytes[3] != 0)) {
+          bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
         }
         b = ((long)bytes[4]) & 0xff;
@@ -210,7 +210,7 @@ count);
         b <<= 8;
         b |= ((long)bytes[7]) & 0xff;
         return check32bit && (b >> 31) != 0 ? throw new IOException("Not a" +
-"\u002032-bit integer") : (headByte != 0x3b) ? b : -1 - b;
+          "\u002032-bit integer") : (headByte != 0x3b) ? b : -1 - b;
       }
       throw new IOException("Not a 32-bit integer");
     }
@@ -363,10 +363,10 @@ count);
         }
         dbl = (dbl < 0) ? Math.Ceiling(dbl) : Math.Floor(dbl);
         return dbl is < Int32.MinValue or > Int32.MaxValue ? throw new
-IOException("Not a 32-bit integer") : (int)dbl;
+          IOException("Not a 32-bit integer") : (int)dbl;
       }
       return (b & 0xdc) == 0x18 ? (int)ReadInteger(stream, b, true) : throw
-new IOException("Not a 32-bit integer");
+        new IOException("Not a 32-bit integer");
     }
 
     public static int ReadInt32MajorType1Or2(Stream stream) {
@@ -391,8 +391,8 @@ new IOException("Not a 32-bit integer");
       }
       if (b is 0x19 or 0x39 or 0x1a or 0x3a) {
         if ((b & 0x1f) == 0x1a && (stream.ReadByte() != 0 ||
-            stream.ReadByte() != 0 || stream.ReadByte() != 0 ||
-            stream.ReadByte() != 0)) {
+          stream.ReadByte() != 0 || stream.ReadByte() != 0 ||
+          stream.ReadByte() != 0)) {
           throw new IOException();
         }
         int b1 = stream.ReadByte();

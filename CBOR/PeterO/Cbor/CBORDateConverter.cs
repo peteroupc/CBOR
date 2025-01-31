@@ -23,8 +23,7 @@ namespace PeterO.Cbor {
   /// differences or transitions from other calendars to the
   /// Gregorian).</para></summary>
   public sealed partial class CBORDateConverter :
-ICBORToFromConverter<DateTime>
-  {
+    ICBORToFromConverter<DateTime> {
     /// <summary>A converter object where FromCBORObject accepts CBOR
     /// objects with tag 0 (date/time strings) and tag 1 (number of seconds
     /// since the start of 1970), and ToCBORObject converts date/time
@@ -104,7 +103,9 @@ ICBORToFromConverter<DateTime>
     /// <summary>Gets the conversion type for this date
     /// converter.</summary>
     /// <value>The conversion type for this date converter.</value>
-    public ConversionType Type { get; }
+    public ConversionType Type {
+      get;
+    }
 
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORDateConverter'/> class.</summary>
@@ -137,7 +138,7 @@ ICBORToFromConverter<DateTime>
           outYear,
           lesserFields);
       return str == null ? PropertyMap.BuildUpDateTime(outYear[0],
-  lesserFields) : throw new CBORException(str);
+          lesserFields) : throw new CBORException(str);
     }
 
     /// <summary>Tries to extract the fields of a date and time in the form
@@ -301,14 +302,15 @@ ICBORToFromConverter<DateTime>
     /// <param name='month'>Month of the year, from 1 (January) through 12
     /// (December).</param>
     /// <param name='day'>Day of the month, from 1 through 31.</param>
-    /// <returns>A CBOR object encoding the given date fields according to
-    /// the conversion type used to create this date converter.</returns>
+    /// <returns>A CBOR object encoding the specified date fields according
+    /// to the conversion type used to create this date
+    /// converter.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred in
     /// conversion.</exception>
     public CBORObject DateTimeFieldsToCBORObject(int smallYear, int month, int
       day) {
       return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(smallYear),
-          new int[] { month, day, 0, 0, 0, 0, 0 });
+        new int[] { month, day, 0, 0, 0, 0, 0 });
     }
 
     /// <summary>Converts a date/time in the form of a year, month, day,
@@ -322,8 +324,9 @@ ICBORToFromConverter<DateTime>
     /// <param name='minute'>Minute of the hour, from 0 through 59.</param>
     /// <param name='second'>Second of the minute, from 0 through
     /// 59.</param>
-    /// <returns>A CBOR object encoding the given date fields according to
-    /// the conversion type used to create this date converter.</returns>
+    /// <returns>A CBOR object encoding the specified date fields according
+    /// to the conversion type used to create this date
+    /// converter.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred in
     /// conversion.</exception>
     public CBORObject DateTimeFieldsToCBORObject(
@@ -334,7 +337,7 @@ ICBORToFromConverter<DateTime>
       int minute,
       int second) {
       return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(smallYear),
-          new int[] { month, day, hour, minute, second, 0, 0 });
+        new int[] { month, day, hour, minute, second, 0, 0 });
     }
 
     /// <summary>Converts a date/time in the form of a year, month, day,
@@ -345,8 +348,9 @@ ICBORToFromConverter<DateTime>
     /// (other than the year) of the date and time. See the
     /// TryGetDateTimeFields method for information on the "lesserFields"
     /// parameter.</param>
-    /// <returns>A CBOR object encoding the given date fields according to
-    /// the conversion type used to create this date converter.</returns>
+    /// <returns>A CBOR object encoding the specified date fields according
+    /// to the conversion type used to create this date
+    /// converter.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='lesserFields'/> is null.</exception>
     /// <exception cref='PeterO.Cbor.CBORException'>An error occurred in
@@ -354,7 +358,7 @@ ICBORToFromConverter<DateTime>
     public CBORObject DateTimeFieldsToCBORObject(int year, int[]
       lesserFields) {
       return this.DateTimeFieldsToCBORObject(EInteger.FromInt32(year),
-  lesserFields);
+        lesserFields);
     }
 
     /// <summary>Converts a date/time in the form of a year, month, day,
@@ -365,8 +369,9 @@ ICBORToFromConverter<DateTime>
     /// (other than the year) of the date and time. See the
     /// TryGetDateTimeFields method for information on the "lesserFields"
     /// parameter.</param>
-    /// <returns>A CBOR object encoding the given date fields according to
-    /// the conversion type used to create this date converter.</returns>
+    /// <returns>A CBOR object encoding the specified date fields according
+    /// to the conversion type used to create this date
+    /// converter.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigYear'/> or <paramref name='lesserFields'/> is
     /// null.</exception>
@@ -390,11 +395,11 @@ ICBORToFromConverter<DateTime>
         ConversionType thisType = this.Type;
         switch (thisType) {
           case ConversionType.TaggedString:
-            {
-              string str = CBORUtilities.ToAtomDateTimeString(bigYear,
-                  lesserFields);
-              return CBORObject.FromString(str).WithTag(0);
-            }
+          {
+            string str = CBORUtilities.ToAtomDateTimeString(bigYear,
+                lesserFields);
+            return CBORObject.FromString(str).WithTag(0);
+          }
           case ConversionType.TaggedNumber:
           case ConversionType.UntaggedNumber:
             try {
@@ -405,23 +410,25 @@ ICBORToFromConverter<DateTime>
                   status);
               switch (status[0]) {
                 case 0: {
-                    CBORObject cbor = CBORObject.FromEInteger(ef.ToEInteger());
-                    return thisType == ConversionType.TaggedNumber ?
-                      CBORObject.FromCBORObjectAndTag(cbor, 1) :
-                      cbor;
-                  }
+                  CBORObject cbor = CBORObject.FromEInteger(ef.ToEInteger());
+                  return thisType == ConversionType.TaggedNumber ?
+                    CBORObject.FromCBORObjectAndTag(cbor, 1) :
+                    cbor;
+                }
                 case 1:
                   return thisType == ConversionType.TaggedNumber ?
                     CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8)
                     .WithTag(1) :
                     CBORObject.FromFloatingPointBits(ef.ToDoubleBits(), 8);
-                default: throw new CBORException("Too big or small to fit an" +
+                default:
+                  throw new CBORException ("Too big or small to fit an" +
                     "\u0020integer" + "\u0020or floating-point number");
               }
             } catch (ArgumentException ex) {
               throw new CBORException(ex.Message, ex);
             }
-          default: throw new CBORException("Internal error");
+          default:
+            throw new CBORException ("Internal error");
         }
       } catch (ArgumentException ex) {
         throw new CBORException(ex.Message, ex);

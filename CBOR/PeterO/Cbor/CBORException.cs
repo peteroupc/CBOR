@@ -17,11 +17,10 @@ namespace PeterO.Cbor {
   /// be parsed by computer programs, and the exact text of the messages
   /// may change at any time between versions of this
   /// library.</para></summary>
-#if NET20 || NET40
-[Serializable]
-#endif
-  public sealed class CBORException : Exception
-  {
+  #if NET20 || NET40
+  [Serializable]
+  #endif
+  public sealed class CBORException : Exception {
     /// <summary>Initializes a new instance of the
     /// <see cref='PeterO.Cbor.CBORException'/> class.</summary>
     public CBORException() {
@@ -35,7 +34,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Initializes a new instance of the
-    /// <see cref='PeterO.Cbor.CBORException'/> class. Uses the given
+    /// <see cref='PeterO.Cbor.CBORException'/> class. Uses the specified
     /// message and inner exception.</summary>
     /// <param name='message'>The parameter <paramref name='message'/> is a
     /// text string.</param>
@@ -45,12 +44,12 @@ namespace PeterO.Cbor {
       : base(message, innerException) {
     }
 
-#if NET20 || NET40
+    #if NET20 || NET40
     private CBORException(
       System.Runtime.Serialization.SerializationInfo info,
       System.Runtime.Serialization.StreamingContext context)
       : base(info, context) {
     }
-#endif
+    #endif
   }
 }

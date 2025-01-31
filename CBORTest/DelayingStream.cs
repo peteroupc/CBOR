@@ -4,8 +4,7 @@ using System.IO;
 namespace Test {
   /// <summary>Stream that can return fewer bytes than
   /// requested.</summary>
-  public sealed class DelayingStream : Stream
-  {
+  public sealed class DelayingStream : Stream {
     private readonly Stream ms;
 
     /// <summary>Initializes a new instance of the
@@ -90,24 +89,24 @@ namespace Test {
       }
       if (offset < 0) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not" +
-"\u0020greater or equal to 0");
+          "\u0020greater or equal to 0");
       }
       if (offset > bytes.Length) {
         throw new ArgumentException("\"offset\" (" + offset + ") is not less" +
-"\u0020or equal to " + bytes.Length);
+          "\u0020or equal to " + bytes.Length);
       }
       if (count < 0) {
         throw new ArgumentException(" (" + count + ") is not greater or" +
-"\u0020equal to 0");
+          "\u0020equal to 0");
       }
       if (count > bytes.Length) {
         throw new ArgumentException(" (" + count + ") is not less or equal" +
-"\u0020to " + bytes.Length);
+          "\u0020to " + bytes.Length);
       }
       if (bytes.Length - offset < count) {
         throw new ArgumentException("\"bytes\" + \"'s length minus \" +" +
-"\u0020offset (" + (bytes.Length - offset) + ") is not greater or equal to " +
-count);
+          "\u0020offset (" + (bytes.Length - offset) + ") is not greater or" +
+          "\u0020 equal to " + count);
       }
       if (count == 0) {
         return 0;

@@ -81,112 +81,112 @@ namespace PeterO.Cbor {
           _ = sb.Append(simvalue);
           break;
         case CBORType.FloatingPoint:
-          {
-            long bits = obj.AsDoubleBits();
-            simvalue = bits == DoubleNegInfinity ? "-Infinity" : (
-                bits == DoublePosInfinity ? "Infinity" : (
-                  CBORUtilities.DoubleBitsNaN(bits) ? "NaN" :
-  obj.Untag().ToJSONString()));
-            if (sb == null) {
-              return simvalue;
-            }
-            _ = sb.Append(simvalue);
-            break;
+        {
+          long bits = obj.AsDoubleBits();
+          simvalue = bits == DoubleNegInfinity ? "-Infinity" : (
+              bits == DoublePosInfinity ? "Infinity" : (
+                CBORUtilities.DoubleBitsNaN(bits) ? "NaN" :
+                obj.Untag().ToJSONString()));
+          if (sb == null) {
+            return simvalue;
           }
+          _ = sb.Append(simvalue);
+          break;
+        }
         case CBORType.ByteString:
-          {
-            sb = sb ?? new StringBuilder();
-            _ = sb.Append("h'");
-            byte[] data = obj.GetByteString();
-            int length = data.Length;
-            for (int i = 0; i < length; ++i) {
-              _ = sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
-              _ = sb.Append(HexAlphabet[data[i] & 15]);
-            }
-            _ = sb.Append((char)0x27);
-            break;
+        {
+          sb = sb ?? new StringBuilder();
+          _ = sb.Append("h'");
+          byte[] data = obj.GetByteString();
+          int length = data.Length;
+          for (int i = 0; i < length; ++i) {
+            _ = sb.Append(HexAlphabet[(data[i] >> 4) & 15]);
+            _ = sb.Append(HexAlphabet[data[i] & 15]);
           }
+          _ = sb.Append((char)0x27);
+          break;
+        }
         case CBORType.TextString:
-          {
-            sb = sb ?? new StringBuilder();
-            _ = sb.Append('\"');
-            string ostring = obj.AsString();
-            int length = ostring.Length;
-            for (int i = 0; i < length; ++i) {
-              int cp = DataUtilities.CodePointAt(ostring, i, 0);
-              if (cp >= 0x10000) {
-                _ = sb.Append("\\U");
-                _ = sb.Append(HexAlphabet[(cp >> 20) & 15]);
-                _ = sb.Append(HexAlphabet[(cp >> 16) & 15]);
-                _ = sb.Append(HexAlphabet[(cp >> 12) & 15]);
-                _ = sb.Append(HexAlphabet[(cp >> 8) & 15]);
-                _ = sb.Append(HexAlphabet[(cp >> 4) & 15]);
-                _ = sb.Append(HexAlphabet[cp & 15]);
-                ++i;
-              } else if (cp >= 0x7F || cp < 0x20 || cp == '\\' || cp ==
-  '\"') {
-                _ = sb.Append("\\u");
-                _ = sb.Append(HexAlphabet[(cp >> 12) & 15]);
-                _ = sb.Append(HexAlphabet[(cp >> 8) & 15]);
-                _ = sb.Append(HexAlphabet[(cp >> 4) & 15]);
-                _ = sb.Append(HexAlphabet[cp & 15]);
-              } else {
-                _ = sb.Append((char)cp);
-              }
+        {
+          sb = sb ?? new StringBuilder();
+          _ = sb.Append('\"');
+          string ostring = obj.AsString();
+          int length = ostring.Length;
+          for (int i = 0; i < length; ++i) {
+            int cp = DataUtilities.CodePointAt(ostring, i, 0);
+            if (cp >= 0x10000) {
+              _ = sb.Append("\\U");
+              _ = sb.Append(HexAlphabet[(cp >> 20) & 15]);
+              _ = sb.Append(HexAlphabet[(cp >> 16) & 15]);
+              _ = sb.Append(HexAlphabet[(cp >> 12) & 15]);
+              _ = sb.Append(HexAlphabet[(cp >> 8) & 15]);
+              _ = sb.Append(HexAlphabet[(cp >> 4) & 15]);
+              _ = sb.Append(HexAlphabet[cp & 15]);
+              ++i;
+            } else if (cp >= 0x7F || cp < 0x20 || cp == '\\' || cp ==
+              '\"') {
+              _ = sb.Append("\\u");
+              _ = sb.Append(HexAlphabet[(cp >> 12) & 15]);
+              _ = sb.Append(HexAlphabet[(cp >> 8) & 15]);
+              _ = sb.Append(HexAlphabet[(cp >> 4) & 15]);
+              _ = sb.Append(HexAlphabet[cp & 15]);
+            } else {
+              _ = sb.Append((char)cp);
             }
-            _ = sb.Append('\"');
-            break;
           }
+          _ = sb.Append('\"');
+          break;
+        }
         case CBORType.Array:
-          {
-            sb = sb ?? new StringBuilder();
-            var first = true;
-            _ = sb.Append('[');
-            if (depth >= 50) {
-              _ = sb.Append("...");
-            } else {
-              for (int i = 0; i < obj.Count; ++i) {
-                if (!first) {
-                  _ = sb.Append(", ");
-                }
-                _ = sb.Append(ToStringHelper(obj[i], depth + 1));
-                first = false;
+        {
+          sb = sb ?? new StringBuilder();
+          var first = true;
+          _ = sb.Append('[');
+          if (depth >= 50) {
+            _ = sb.Append("...");
+          } else {
+            for (int i = 0; i < obj.Count; ++i) {
+              if (!first) {
+                _ = sb.Append(", ");
               }
+              _ = sb.Append(ToStringHelper(obj[i], depth + 1));
+              first = false;
             }
-            _ = sb.Append(']');
-            break;
           }
+          _ = sb.Append(']');
+          break;
+        }
         case CBORType.Map:
-          {
-            sb = sb ?? new StringBuilder();
-            var first = true;
-            _ = sb.Append('{');
-            if (depth >= 50) {
-              _ = sb.Append("...");
-            } else {
-              ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
-                obj.Entries;
-              foreach (KeyValuePair<CBORObject, CBORObject> entry
-                in entries) {
-                CBORObject key = entry.Key;
-                CBORObject value = entry.Value;
-                if (!first) {
-                  _ = sb.Append(", ");
-                }
-                _ = sb.Append(ToStringHelper(key, depth + 1));
-                _ = sb.Append(": ");
-                _ = sb.Append(ToStringHelper(value, depth + 1));
-                first = false;
+        {
+          sb = sb ?? new StringBuilder();
+          var first = true;
+          _ = sb.Append('{');
+          if (depth >= 50) {
+            _ = sb.Append("...");
+          } else {
+            ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
+              obj.Entries;
+            foreach (KeyValuePair<CBORObject, CBORObject> entry
+              in entries) {
+              CBORObject key = entry.Key;
+              CBORObject value = entry.Value;
+              if (!first) {
+                _ = sb.Append(", ");
               }
+              _ = sb.Append(ToStringHelper(key, depth + 1));
+              _ = sb.Append(": ");
+              _ = sb.Append(ToStringHelper(value, depth + 1));
+              first = false;
             }
-            _ = sb.Append('}');
-            break;
           }
+          _ = sb.Append('}');
+          break;
+        }
         default: {
-            sb = sb ?? new StringBuilder();
-            _ = sb.Append("???");
-            break;
-          }
+          sb = sb ?? new StringBuilder();
+          _ = sb.Append("???");
+          break;
+        }
       }
       // Append closing tags if needed
       curobject = obj;
@@ -286,18 +286,18 @@ namespace PeterO.Cbor {
     internal static CBORObject ParseSmallNumberAsNegative(
       int digit,
       JSONOptions options) {
-#if DEBUG
+      #if DEBUG
       if (digit <= 0) {
         throw new ArgumentException("digit (" + digit + ") is not greater" +
           "\u0020than 0");
       }
-#endif
+      #endif
 
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
         return CBORObject.FromFloatingPointBits(
-           CBORUtilities.IntegerToDoubleBits(-digit),
-           8);
+            CBORUtilities.IntegerToDoubleBits(-digit),
+            8);
       } else if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Decimal128) {
         return CBORObject.FromEDecimal(EDecimal.FromInt32(-digit));
@@ -310,18 +310,18 @@ namespace PeterO.Cbor {
 
     internal static CBORObject ParseSmallNumber(int digit, JSONOptions
       options) {
-#if DEBUG
+      #if DEBUG
       if (digit < 0) {
         throw new ArgumentException("digit (" + digit + ") is not greater" +
           "\u0020or equal to 0");
       }
-#endif
+      #endif
 
       if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Double) {
         return CBORObject.FromFloatingPointBits(
-           CBORUtilities.IntegerToDoubleBits(digit),
-           8);
+            CBORUtilities.IntegerToDoubleBits(digit),
+            8);
       } else if (options != null && options.NumberConversion ==
         JSONOptions.ConversionMode.Decimal128) {
         return CBORObject.FromEDecimal(EDecimal.FromInt32(digit));
@@ -365,11 +365,11 @@ namespace PeterO.Cbor {
       int count,
       JSONOptions options) {
       return CBORDataUtilitiesTextString.ParseJSONNumber(
-        str,
-        offset,
-        count,
-        options,
-        null);
+          str,
+          offset,
+          count,
+          options,
+          null);
     }
 
     /// <summary>Parses a number from a byte sequence whose format follows
@@ -407,11 +407,11 @@ namespace PeterO.Cbor {
       int count,
       JSONOptions options) {
       return CBORDataUtilitiesByteArrayString.ParseJSONNumber(
-        bytes,
-        offset,
-        count,
-        options,
-        null);
+          bytes,
+          offset,
+          count,
+          options,
+          null);
     }
 
     /// <summary>Parses a number from a byte sequence whose format follows
@@ -531,11 +531,11 @@ namespace PeterO.Cbor {
       int count,
       JSONOptions options) {
       return CBORDataUtilitiesCharArrayString.ParseJSONNumber(
-        chars,
-        offset,
-        count,
-        options,
-        null);
+          chars,
+          offset,
+          count,
+          options,
+          null);
     }
 
     /// <summary>Parses a number from a sequence of <c>char</c> s whose

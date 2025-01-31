@@ -71,7 +71,7 @@ namespace PeterO.Cbor {
     [CLSCompliant(false)]
     public sbyte ToSByteChecked() {
       return !this.IsFinite() ? throw new OverflowException("Value is" +
-"\u0020infinity or NaN") : this.ToEInteger().ToSByteChecked();
+        "\u0020infinity or NaN") : this.ToEInteger().ToSByteChecked();
     }
 
     /// <summary>Converts this number's value to a CLR decimal.</summary>
@@ -107,8 +107,7 @@ namespace PeterO.Cbor {
     public sbyte ToSByteIfExact() {
       return !this.IsFinite() ?
         throw new OverflowException("Value is infinity or NaN") :
-        this.IsZero() ? ((sbyte)0) :
-this.ToEIntegerIfExact().ToSByteChecked();
+        this.IsZero() ? ((sbyte)0) : this.ToEIntegerIfExact().ToSByteChecked();
     }
 
     /// <summary>Converts this number's value to a 16-bit unsigned integer
@@ -123,7 +122,7 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public ushort ToUInt16Checked() {
       return !this.IsFinite() ? throw new OverflowException("Value is" +
-"\u0020infinity or NaN") : this.ToEInteger().ToUInt16Checked();
+        "\u0020infinity or NaN") : this.ToEInteger().ToUInt16Checked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -134,7 +133,7 @@ this.ToEIntegerIfExact().ToSByteChecked();
     [CLSCompliant(false)]
     public ushort ToUInt16Unchecked() {
       return this.IsFinite() ? this.ToEInteger().ToUInt16Unchecked() :
-(ushort)0;
+        (ushort)0;
     }
 
     /// <summary>Converts this number's value to a 16-bit unsigned integer
@@ -150,8 +149,8 @@ this.ToEIntegerIfExact().ToSByteChecked();
       return !this.IsFinite() ?
         throw new OverflowException("Value is infinity or NaN") :
         this.IsZero() ? (ushort)0 : this.IsNegative() ? throw new
-OverflowException("Value out of range") :
-this.ToEIntegerIfExact().ToUInt16Checked();
+        OverflowException("Value out of range") :
+        this.ToEIntegerIfExact().ToUInt16Checked();
     }
 
     /// <summary>Converts this number's value to a 32-bit signed integer if
@@ -166,7 +165,7 @@ this.ToEIntegerIfExact().ToUInt16Checked();
     [CLSCompliant(false)]
     public uint ToUInt32Checked() {
       return !this.IsFinite() ? throw new OverflowException("Value is" +
-"\u0020infinity or NaN") : this.ToEInteger().ToUInt32Checked();
+        "\u0020infinity or NaN") : this.ToEInteger().ToUInt32Checked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -191,8 +190,8 @@ this.ToEIntegerIfExact().ToUInt16Checked();
       return !this.IsFinite() ?
         throw new OverflowException("Value is infinity or NaN") :
         this.IsZero() ? 0U : this.IsNegative() ? throw new
-OverflowException("Value out of range") :
-this.ToEIntegerIfExact().ToUInt32Checked();
+        OverflowException("Value out of range") :
+        this.ToEIntegerIfExact().ToUInt32Checked();
     }
 
     /// <summary>Converts this number's value to a 64-bit unsigned integer
@@ -207,7 +206,7 @@ this.ToEIntegerIfExact().ToUInt32Checked();
     [CLSCompliant(false)]
     public ulong ToUInt64Checked() {
       return !this.IsFinite() ? throw new OverflowException("Value is" +
-"\u0020infinity or NaN") : this.ToEInteger().ToUInt64Checked();
+        "\u0020infinity or NaN") : this.ToEInteger().ToUInt64Checked();
     }
 
     /// <summary>Converts this number's value to an integer by discarding
@@ -233,8 +232,8 @@ this.ToEIntegerIfExact().ToUInt32Checked();
       return !this.IsFinite() ?
         throw new OverflowException("Value is infinity or NaN") :
         this.IsZero() ? 0UL : this.IsNegative() ? throw new
-OverflowException("Value out of range") :
-this.ToEIntegerIfExact().ToUInt64Checked();
+        OverflowException("Value out of range") :
+        this.ToEIntegerIfExact().ToUInt64Checked();
     }
   }
 }

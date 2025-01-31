@@ -26,7 +26,7 @@ namespace Test {
       {
         CBORNumber objectTemp = ToCN(EDecimal.FromString("6.63"));
         CBORNumber objectTemp2 = ToCN(EDecimal.FromString(
-              "-6.63")).Abs();
+          "-6.63")).Abs();
         TestCommon.CompareTestEqual(objectTemp, objectTemp2);
       }
       {
@@ -130,12 +130,12 @@ namespace Test {
         CBORObject.FromDouble(99.0).AsNumber().CanTruncatedIntFitInUInt64(),
         "99.0");
       Assert.IsTrue(CBORObject.FromDouble(
-          -0.0).AsNumber().CanTruncatedIntFitInUInt64());
+        -0.0).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.FromInt32(-99).AsNumber().CanTruncatedIntFitInUInt64());
       bool b =
-CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
+        CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         .CanTruncatedIntFitInUInt64();
       Assert.IsFalse(b);
 
@@ -146,9 +146,9 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       Assert.IsTrue(
         CBORObject.FromDouble(0.1).AsNumber().CanTruncatedIntFitInUInt64());
       Assert.IsTrue(CBORObject.FromDouble(
-          -0.1).AsNumber().CanTruncatedIntFitInUInt64());
+        -0.1).AsNumber().CanTruncatedIntFitInUInt64());
       Assert.IsTrue(CBORObject.FromDouble(
-          99.1).AsNumber().CanTruncatedIntFitInUInt64());
+        99.1).AsNumber().CanTruncatedIntFitInUInt64());
 
       Assert.IsFalse(
         CBORObject.PositiveInfinity.AsNumber()
@@ -303,7 +303,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     public void TestAsEInteger() {
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
-          null).AsNumber().ToEInteger();
+            null).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -371,7 +371,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
         string numberString = numberinfo["number"].AsString();
         CBORObject cbornumber =
           ToObjectTest.TestToFromObjectRoundTrip(EDecimal.FromString(
-              numberString));
+          numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.AreEqual(
             numberinfo["integer"].AsString(),
@@ -501,7 +501,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(float.PositiveInfinity)
-        .AsNumber().ToEInteger();
+          .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -511,7 +511,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(float.NegativeInfinity)
-        .AsNumber().ToEInteger();
+          .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -521,7 +521,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
-          float.NaN).AsNumber().ToEInteger();
+            float.NaN).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -531,7 +531,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(double.PositiveInfinity)
-        .AsNumber().ToEInteger();
+          .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -541,7 +541,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(double.NegativeInfinity)
-        .AsNumber().ToEInteger();
+          .AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -551,7 +551,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
-          double.NaN).AsNumber().ToEInteger();
+            double.NaN).AsNumber().ToEInteger();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
         // NOTE: Intentionally empty
@@ -650,7 +650,7 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
       }
       try {
         _ = ToObjectTest.TestToFromObjectRoundTrip(
-          String.Empty).AsNumber().ToEDecimal();
+            String.Empty).AsNumber().ToEDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
@@ -739,51 +739,51 @@ CBORObject.FromEInteger(EInteger.FromInt32(1).ShiftLeft(65)).AsNumber()
     [Test]
     [Timeout(30000)]
     public void TestEncodingZeros() {
-        TestCommon.CompareTestEqual(ToCN(0.0), ToCN(-0.0).Abs());
-        TestCommon.CompareTestEqual(ToCN(0.0f), ToCN(-0.0f).Abs());
+      TestCommon.CompareTestEqual(ToCN(0.0), ToCN(-0.0).Abs());
+      TestCommon.CompareTestEqual(ToCN(0.0f), ToCN(-0.0f).Abs());
 
-        if (!CBORObject.FromDouble(0.0).AsNumber().CanFitInSingle()) {
-          Assert.Fail();
-        }
-        if (!CBORObject.FromDouble(-0.0).AsNumber().CanFitInSingle()) {
-          Assert.Fail();
-        }
-        if (!CBORObject.FromSingle(0.0f).AsNumber().CanFitInSingle()) {
-          Assert.Fail();
-        }
-        if (!CBORObject.FromSingle(-0.0f).AsNumber().CanFitInSingle()) {
-          Assert.Fail();
-        }
+      if (!CBORObject.FromDouble(0.0).AsNumber().CanFitInSingle()) {
+        Assert.Fail();
+      }
+      if (!CBORObject.FromDouble(-0.0).AsNumber().CanFitInSingle()) {
+        Assert.Fail();
+      }
+      if (!CBORObject.FromSingle(0.0f).AsNumber().CanFitInSingle()) {
+        Assert.Fail();
+      }
+      if (!CBORObject.FromSingle(-0.0f).AsNumber().CanFitInSingle()) {
+        Assert.Fail();
+      }
 
-        ToObjectTest.TestToFromObjectRoundTrip(0.0);
-        ToObjectTest.TestToFromObjectRoundTrip(0.0f);
-        ToObjectTest.TestToFromObjectRoundTrip(-0.0);
-        ToObjectTest.TestToFromObjectRoundTrip(-0.0f);
+      ToObjectTest.TestToFromObjectRoundTrip(0.0);
+      ToObjectTest.TestToFromObjectRoundTrip(0.0f);
+      ToObjectTest.TestToFromObjectRoundTrip(-0.0);
+      ToObjectTest.TestToFromObjectRoundTrip(-0.0f);
 
-        TestCommon.CompareTestEqual(
-          ToCN(0.0),
-          CBORObject.FromDouble(-0.0).AsNumber().Negate());
-        TestCommon.CompareTestEqual(ToCN(-0.0),
-  CBORObject.FromDouble(0.0).AsNumber().Negate());
-        TestCommon.CompareTestEqual(
-          ToCN(0.0f),
-          CBORObject.FromSingle(-0.0f).AsNumber().Negate());
-        TestCommon.CompareTestEqual(ToCN(-0.0f),
-  CBORObject.FromSingle(0.0f).AsNumber().Negate());
+      TestCommon.CompareTestEqual(
+        ToCN(0.0),
+        CBORObject.FromDouble(-0.0).AsNumber().Negate());
+      TestCommon.CompareTestEqual(ToCN(-0.0),
+        CBORObject.FromDouble(0.0).AsNumber().Negate());
+      TestCommon.CompareTestEqual(
+        ToCN(0.0f),
+        CBORObject.FromSingle(-0.0f).AsNumber().Negate());
+      TestCommon.CompareTestEqual(ToCN(-0.0f),
+        CBORObject.FromSingle(0.0f).AsNumber().Negate());
 
-        byte[] bytes;
-        bytes = CBORObject.FromSingle(1.0f).EncodeToBytes();
-        Assert.AreEqual(3, bytes.Length);
-        bytes = CBORObject.FromSingle(0.0f).EncodeToBytes();
-        Assert.AreEqual(3, bytes.Length);
-        bytes = CBORObject.FromSingle(-0.0f).EncodeToBytes();
-        Assert.AreEqual(3, bytes.Length);
-        bytes = CBORObject.FromDouble(1.0).EncodeToBytes();
-        Assert.AreEqual(3, bytes.Length);
-        bytes = CBORObject.FromDouble(0.0).EncodeToBytes();
-        Assert.AreEqual(3, bytes.Length);
-        bytes = CBORObject.FromDouble(-0.0).EncodeToBytes();
-        Assert.AreEqual(3, bytes.Length);
+      byte[] bytes;
+      bytes = CBORObject.FromSingle(1.0f).EncodeToBytes();
+      Assert.AreEqual(3, bytes.Length);
+      bytes = CBORObject.FromSingle(0.0f).EncodeToBytes();
+      Assert.AreEqual(3, bytes.Length);
+      bytes = CBORObject.FromSingle(-0.0f).EncodeToBytes();
+      Assert.AreEqual(3, bytes.Length);
+      bytes = CBORObject.FromDouble(1.0).EncodeToBytes();
+      Assert.AreEqual(3, bytes.Length);
+      bytes = CBORObject.FromDouble(0.0).EncodeToBytes();
+      Assert.AreEqual(3, bytes.Length);
+      bytes = CBORObject.FromDouble(-0.0).EncodeToBytes();
+      Assert.AreEqual(3, bytes.Length);
     }
   }
 }

@@ -38,9 +38,9 @@ namespace PeterO.Cbor {
           }
           ++index;
           var value = new int[] { 0 };
-          // DebugUtility.Log("index parse 0: " + (pointer.Substring(index)));
+          // Console.WriteLine("index parse 0: " + (pointer.Substring(index)));
           int newIndex = ReadPositiveInteger(pointer, index, value);
-          // DebugUtility.Log("index parse 1: " + (pointer.Substring(newIndex)));
+          // Console.WriteLine("index parse 1: " + (pointer.Substring(newIndex)));
           if (value[0] < 0) {
             if (index < pointer.Length && pointer[index] == '-' &&
               (index + 1 == pointer.Length || pointer[index + 1] == '/')) {
@@ -59,22 +59,22 @@ namespace PeterO.Cbor {
               throw new CBORException("Invalid array index in pointer");
           } else {
             obj = obj[value[0]];
-#if DEBUG
+            #if DEBUG
             if (obj == null) {
               throw new ArgumentNullException(nameof(obj));
             }
-#endif
+            #endif
 
             index = newIndex;
           }
           index = newIndex;
         } else if (obj.Type == CBORType.Map) {
-          // DebugUtility.Log("Parsing map key(0) " + (pointer.Substring(index)));
+          // Console.WriteLine("Parsing map key(0) " + (pointer.Substring(index)));
           if (index >= pointer.Length || pointer[index] != '/') {
             throw new CBORException("Invalid pointer");
           }
           ++index;
-          // DebugUtility.Log("Parsing map key " + (pointer.Substring(index)));
+          // Console.WriteLine("Parsing map key " + (pointer.Substring(index)));
           string key = null;
           int oldIndex = index;
           var tilde = false;
@@ -91,8 +91,8 @@ namespace PeterO.Cbor {
           }
           if (!tilde) {
             key = pointer.Substring(
-              oldIndex,
-              index - oldIndex);
+                oldIndex,
+                index - oldIndex);
           } else {
             index = oldIndex;
             var sb = new StringBuilder();
@@ -174,7 +174,7 @@ namespace PeterO.Cbor {
         return index + 1;
       }
       if (str.Length - 1 > index && str[index] == '0' && str[index + 1] !=
-'0') {
+        '0') {
         result[0] = 0;
         return index + 1;
       }
@@ -207,15 +207,15 @@ namespace PeterO.Cbor {
     }
 
     private JSONPointer(CBORObject jsonobj, string refValue)
-        : this(jsonobj, refValue, false) {
+      : this(jsonobj, refValue, false) {
     }
 
     private JSONPointer(CBORObject jsonobj, string refValue, bool isRoot) {
-#if DEBUG
+      #if DEBUG
       if (!(refValue != null)) {
         throw new InvalidOperationException("doesn't satisfy refValue!=null");
       }
-#endif
+      #endif
       this.isRoot = isRoot;
       this.jsonobj = jsonobj;
       this.refValue = refValue;
@@ -236,7 +236,7 @@ namespace PeterO.Cbor {
           eivalue.CompareTo(EInteger.FromInt32(icount)) < 0;
       } else {
         return this.jsonobj.Type == CBORType.Map ?
-this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
+          this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
       }
     }
 
@@ -252,9 +252,9 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
         var value = EInteger.FromString(this.refValue);
         int icount = this.jsonobj.Count;
         return (value.Sign < 0) ? (-1) :
-((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
+          ((value.CompareTo(EInteger.FromInt32(icount)) > 0) ? (-1) :
 
-            value.ToInt32Unchecked());
+          value.ToInt32Unchecked());
       } else {
         return -1;
       }
@@ -283,7 +283,7 @@ this.jsonobj.ContainsKey(this.refValue) : this.refValue.Length == 0;
           return null;
         }
       } else if (this.jsonobj.Type == CBORType.Map) {
-        // DebugUtility.Log("jsonobj=" + this.jsonobj + " refValue=[" + this.refValue
+        // Console.WriteLine("jsonobj=" + this.jsonobj + " refValue=[" + this.refValue
         // + "]");
         tmpcbor = this.jsonobj;
         return tmpcbor.GetOrDefault(this.refValue, null);

@@ -19,7 +19,7 @@ namespace PeterO.Cbor {
       consistent with Equals, for two reasons: (1) This type is mutable in
     certain cases, which can cause different results when comparing with another
       object. (2) Objects with this type can have arbitrary size (for
-example, they
+    example, they
     can be byte strings, text strings, arrays, or maps of arbitrary size), and
     comparing
       two of them for equality can be much more complicated and take much
@@ -78,8 +78,8 @@ example, they
     /// greater associated with it to a data stream, where that integer is
     /// passed to this method as a 32-bit unsigned integer. This is a
     /// low-level method that is useful for implementing custom CBOR
-    /// encoding methodologies. This method encodes the given major type
-    /// and value in the shortest form allowed for the major
+    /// encoding methodologies. This method encodes the specified major
+    /// type and value in the shortest form allowed for the major
     /// type.</summary>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <param name='majorType'>The CBOR major type to write. This is a
@@ -112,8 +112,8 @@ example, they
     /// greater associated with it to a data stream, where that integer is
     /// passed to this method as a 64-bit unsigned integer. This is a
     /// low-level method that is useful for implementing custom CBOR
-    /// encoding methodologies. This method encodes the given major type
-    /// and value in the shortest form allowed for the major
+    /// encoding methodologies. This method encodes the specified major
+    /// type and value in the shortest form allowed for the major
     /// type.</summary>
     /// <param name='outputStream'>A writable data stream.</param>
     /// <param name='majorType'>The CBOR major type to write. This is a
@@ -159,7 +159,7 @@ example, they
         }
         byte[] bytes = {
           (byte)(27 | (majorType << 5)), (byte)((value >>
-          56) & 0xff),
+            56) & 0xff),
           (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
           (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
           (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
@@ -216,7 +216,7 @@ example, they
     /// <returns>A CBORObject object with the same value as the.NET
     /// decimal.</returns>
     public static CBORObject FromDecimal(decimal value) =>
-FromEDecimal((EDecimal)value);
+    FromEDecimal((EDecimal)value);
 
     /// <summary>Converts a.NET decimal to a CBOR object.</summary>
     /// <param name='value'>A Decimal.</param>
@@ -355,7 +355,8 @@ FromEDecimal((EDecimal)value);
     /// <i>iana.org/assignments/cbor-tags</i> ).</param>
     /// <returns>A CBOR object where the object <paramref name='o'/> is
     /// given the tag <paramref name='tag'/>. If "valueOb" is null,
-    /// returns a version of CBORObject.Null with the given tag.</returns>
+    /// returns a version of CBORObject.Null with the specified
+    /// tag.</returns>
     [CLSCompliant(false)]
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static CBORObject FromCBORObjectAndTag(CBORObject o, ulong tag) {
@@ -461,8 +462,8 @@ FromEDecimal((EDecimal)value);
     }
 
     /// <summary>Generates an object of an arbitrary type from an array of
-    /// CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
-    /// to control the decoding process. It is equivalent to
+    /// CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c>
+    /// object to control the decoding process. It is equivalent to
     /// DecodeFromBytes followed by ToObject. See the documentation for
     /// those methods for more information.</summary>
     /// <param name='data'>A byte array in which a single CBOR object is
@@ -487,18 +488,18 @@ FromEDecimal((EDecimal)value);
     /// POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
     /// likewise meet either criterion given earlier.</typeparam>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type "T", or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type "T", or this object's CBOR type, is
+    /// not supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null, or the parameter "T" or <paramref name='pod'/> is
@@ -513,8 +514,8 @@ FromEDecimal((EDecimal)value);
     }
 
     /// <summary>Generates an object of an arbitrary type from an array of
-    /// CBOR-encoded bytes, using the given <c>CBOREncodeOptions</c> object
-    /// to control the decoding process. It is equivalent to
+    /// CBOR-encoded bytes, using the specified <c>CBOREncodeOptions</c>
+    /// object to control the decoding process. It is equivalent to
     /// DecodeFromBytes followed by ToObject. See the documentation for
     /// those methods for more information.</summary>
     /// <param name='data'>A byte array in which a single CBOR object is
@@ -532,24 +533,24 @@ FromEDecimal((EDecimal)value);
     /// (POCO or POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
     /// likewise meet either criterion given earlier.</typeparam>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type "T", or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type "T", or this object's CBOR type, is
+    /// not supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter <paramref name='enc'/> is
     /// null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static T DecodeObjectFromBytes<T>(byte[] data, CBOREncodeOptions
-enc) {
+      enc) {
       return (T)DecodeObjectFromBytes(data, enc, typeof(T));
     }
 
@@ -575,18 +576,18 @@ enc) {
     /// POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
     /// likewise meet either criterion given earlier.</typeparam>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type "T", or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type "T", or this object's CBOR type, is
+    /// not supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null, or the parameter "T" or <paramref
     /// name='pod'/> is null.</exception>
@@ -614,18 +615,18 @@ enc) {
     /// POJO type) within the control of the application. If the
     /// plain-old-data type references other data types, those types should
     /// likewise meet either criterion given earlier.</typeparam>
-    /// <returns>An object of the given type decoded from the given byte
-    /// array. Returns null (as opposed to CBORObject.Null) if <paramref
-    /// name='data'/> is empty and the AllowEmpty property is set on the
-    /// given CBOREncodeOptions object.</returns>
+    /// <returns>An object of the specified type decoded from the specified
+    /// byte array. Returns null (as opposed to CBORObject.Null) if
+    /// <paramref name='data'/> is empty and the AllowEmpty property is set
+    /// on the specified CBOREncodeOptions object.</returns>
     /// <exception cref='PeterO.Cbor.CBORException'>There was an error in
     /// reading or parsing the data. This includes cases where not all of
     /// the byte array represents a CBOR object. This exception is also
     /// thrown if the parameter <paramref name='data'/> is empty unless the
-    /// AllowEmpty property is set on the given options object. Also thrown
-    /// if the given type "T", or this object's CBOR type, is not
-    /// supported, or the given object's nesting is too deep, or another
-    /// error occurred when serializing the object.</exception>
+    /// AllowEmpty property is set on the specified options object. Also
+    /// thrown if the specified type "T", or this object's CBOR type, is
+    /// not supported, or the specified object's nesting is too deep, or
+    /// another error occurred when serializing the object.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null.</exception>
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]

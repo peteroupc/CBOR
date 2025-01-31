@@ -21,19 +21,19 @@ namespace PeterO.Cbor {
       if (path.Length == 0) {
         o = value;
       } else {
-        // DebugUtility.Log("pointer--->"+path);
+        // Console.WriteLine("pointer--->"+path);
         var pointer = JSONPointer.FromPointer(o, path);
         CBORObject parent = pointer.GetParent();
-        // DebugUtility.Log("addop pointer "+path+" ["+parent+"]");
+        // Console.WriteLine("addop pointer "+path+" ["+parent+"]");
         if (pointer.GetParent().Type == CBORType.Array) {
           int index = pointer.GetIndex();
-          // DebugUtility.Log("index "+index);
+          // Console.WriteLine("index "+index);
           if (index < 0) {
             throw new CBORException("Patch " + valueOpStr + " path");
           }
-          // DebugUtility.Log("before "+parent+"");
+          // Console.WriteLine("before "+parent+"");
           _ = parent.Insert(index, value);
-          // DebugUtility.Log("after "+parent+"");
+          // Console.WriteLine("after "+parent+"");
         } else if (pointer.GetParent().Type == CBORType.Map) {
           string key = pointer.GetKey();
           _ = parent.Set(CBORObject.FromString(key), value);
@@ -50,24 +50,25 @@ namespace PeterO.Cbor {
         case CBORType.Map:
         case CBORType.Array:
           return CBORObject.DecodeFromBytes(o.EncodeToBytes());
-        default: return o;
+        default:
+          return o;
       }
     }
 
     private static string GetString(CBORObject o, string str) {
-#if DEBUG
+      #if DEBUG
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
       }
       if (str == null) {
         throw new ArgumentNullException(nameof(str));
       }
-#endif
+      #endif
 
       CBORObject co = o.GetOrDefault(str, null);
       return co == null ? throw new CBORException(str + " not found") :
         co.Type != CBORType.TextString ? throw new CBORException("Not a" +
-"\u0020text string type") : co.AsString();
+          "\u0020text string type") : co.AsString();
     }
 
     public static CBORObject Patch(CBORObject o, CBORObject ptch) {
@@ -84,11 +85,11 @@ namespace PeterO.Cbor {
       o = CloneCbor(o);
       for (int i = 0; i < ptch.Count; ++i) {
         CBORObject patchOp = ptch[i];
-#if DEBUG
+        #if DEBUG
         if (patchOp == null) {
           throw new ArgumentNullException(nameof(patchOp));
         }
-#endif
+        #endif
 
         // NOTE: This algorithm requires "op" to exist
         // only once; the CBORObject, however, does not
@@ -112,11 +113,11 @@ namespace PeterO.Cbor {
           if (value == null) {
             throw new CBORException("Patch " + valueOpStr + " value");
           }
-#if DEBUG
+          #if DEBUG
           if (o == null) {
             throw new ArgumentNullException(nameof(o));
           }
-#endif
+          #endif
 
           o = ReplaceOperation(
               o,
@@ -234,11 +235,11 @@ namespace PeterO.Cbor {
       if (path == null) {
         throw new CBORException("Patch " + valueOpStr);
       }
-#if DEBUG
+      #if DEBUG
       if (o == null) {
         throw new ArgumentNullException(nameof(o));
       }
-#endif
+      #endif
 
       if (path.Length == 0) {
         o = value;

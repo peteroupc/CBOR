@@ -74,9 +74,9 @@ namespace PeterO.Cbor {
       CBORObject cbor,
       Type type) {
       ConverterInfo convinfo = PropertyMap.GetOrDefault(
-        this.converters,
-        type,
-        null);
+          this.converters,
+          type,
+          null);
       return convinfo == null ? null : (convinfo.FromObject == null) ? null :
         PropertyMap.CallFromObject(convinfo, cbor);
     }
@@ -84,20 +84,20 @@ namespace PeterO.Cbor {
     internal CBORObject ConvertWithConverter(object obj) {
       object type = obj.GetType();
       ConverterInfo convinfo = PropertyMap.GetOrDefault(
-        this.converters,
-        type,
-        null);
+          this.converters,
+          type,
+          null);
       return (convinfo == null) ? null :
         PropertyMap.CallToObject(convinfo, obj);
     }
 
-    /// <summary>Returns whether the given Java or.NET type name fits the
-    /// filters given in this mapper.</summary>
+    /// <summary>Returns whether the specified Java or.NET type name fits
+    /// the filters given in this mapper.</summary>
     /// <param name='typeName'>The fully qualified name of a Java or.NET
     /// class (for example, <c>java.math.BigInteger</c> or
     /// <c>System.Globalization.CultureInfo</c> ).</param>
-    /// <returns>Either <c>true</c> if the given Java or.NET type name fits
-    /// the filters given in this mapper, or <c>false</c>
+    /// <returns>Either <c>true</c> if the specified Java or.NET type name
+    /// fits the filters given in this mapper, or <c>false</c>
     /// otherwise.</returns>
     public bool FilterTypeName(string typeName) {
       if (String.IsNullOrEmpty(typeName)) {
@@ -106,7 +106,7 @@ namespace PeterO.Cbor {
       foreach (string prefix in this.typePrefixes) {
         if (typeName.Length >= prefix.Length &&
           typeName.Substring(0, prefix.Length).Equals(prefix,
-            StringComparison.Ordinal)) {
+          StringComparison.Ordinal)) {
           return true;
         }
       }
