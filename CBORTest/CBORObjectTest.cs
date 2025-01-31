@@ -3247,7 +3247,7 @@ namespace Test {
       IDictionary<string, string> dict = new Dictionary<string, string>
       {
         ["TestKey"] = "TestValue",
-        ["TestKey2"] = "TestValue2",
+          ["TestKey2"] = "TestValue2",
       };
       var c = CBORObject.FromObject(dict);
       CheckKeyValue(c, "TestKey", "TestValue");

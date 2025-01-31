@@ -365,8 +365,7 @@ namespace PeterO.DocGen {
         StringComparison.Ordinal) ?
         "bool" : (name.Equals("System.Single", StringComparison.Ordinal) ?
         "float" : (name.Equals("System.Double", StringComparison.Ordinal) ?
-        "double" :
-        name))))))))))))));
+        "double" : name))))))))))))));
     }
 
     public static string FormatTypeSig(Type typeInfo) {
