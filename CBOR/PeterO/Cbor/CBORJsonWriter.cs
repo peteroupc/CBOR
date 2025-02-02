@@ -237,7 +237,7 @@ namespace PeterO.Cbor {
         {
           var first = true;
           var hasNonStringKeys = false;
-          ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
+          ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
             obj.Entries;
           foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
             CBORObject key = entry.Key;
@@ -293,8 +293,7 @@ namespace PeterO.Cbor {
                   str = sb.ToString();
                   break;
                 }
-                default:
-                  str = key.ToJSONString (options);
+                default: str = key.ToJSONString(options);
                   break;
               }
               if (stringMap.ContainsKey(str)) {

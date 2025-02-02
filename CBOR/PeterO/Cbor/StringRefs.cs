@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
   /// <summary>Implements CBOR string references, described at
   /// <c>http://cbor.schmorp.de/stringref</c>.</summary>
   internal class StringRefs {
-    private readonly List<List<CBORObject >> stack;
+    private readonly List<List<CBORObject>> stack;
 
     public StringRefs() {
       this.stack = new List<List<CBORObject>>();

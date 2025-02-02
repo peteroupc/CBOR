@@ -164,7 +164,7 @@ namespace PeterO.Cbor {
           if (depth >= 50) {
             _ = sb.Append("...");
           } else {
-            ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
+            ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
               obj.Entries;
             foreach (KeyValuePair<CBORObject, CBORObject> entry
               in entries) {

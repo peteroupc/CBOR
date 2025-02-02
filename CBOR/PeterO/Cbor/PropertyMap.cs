@@ -165,7 +165,7 @@ namespace PeterO.Cbor {
       public ICollection<TValue> Values => new ValueWrapper<TKey,
              TValue>(this.dict, this.list);
 
-      private IEnumerable<KeyValuePair<TKey, TValue >> Iterate() {
+      private IEnumerable<KeyValuePair<TKey, TValue>> Iterate() {
         foreach (TKey k in this.list) {
           // Console.WriteLine("Enumerating: " + (k.GetHashCode()) + " [Type=" + ((k as
           // CBORObject).Type) + "]");
@@ -178,7 +178,7 @@ namespace PeterO.Cbor {
         }
       }
 
-      public IEnumerator<KeyValuePair<TKey, TValue >> GetEnumerator() {
+      public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() {
         return this.Iterate().GetEnumerator();
       }
       IEnumerator IEnumerable.GetEnumerator() {
@@ -493,7 +493,7 @@ namespace PeterO.Cbor {
 
     // Give each thread its own version of propertyLists using ThreadStatic
     [ThreadStatic]
-    private static IDictionary<Type, IList<PropertyData >>
+    private static IDictionary<Type, IList<PropertyData>>
     propertyLists;
 
     private static string RemoveIsPrefix(string pn) {
@@ -839,7 +839,7 @@ namespace PeterO.Cbor {
           "\u0020support sorted keys");
     }
 
-    public static ICollection<KeyValuePair<TKey, TValue >>
+    public static ICollection<KeyValuePair<TKey, TValue>>
     GetEntries<TKey, TValue>(
       IDictionary<TKey, TValue> dict) {
       var c = (ICollection<KeyValuePair<TKey, TValue>>)dict;
@@ -1320,7 +1320,7 @@ namespace PeterO.Cbor {
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public static object ObjectWithProperties(
       Type t,
-      IEnumerable<KeyValuePair<string, CBORObject >> keysValues,
+      IEnumerable<KeyValuePair<string, CBORObject>> keysValues,
       CBORTypeMapper mapper,
       PODOptions options,
       int depth) {

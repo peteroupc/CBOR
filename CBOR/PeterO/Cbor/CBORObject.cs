@@ -436,7 +436,7 @@ namespace PeterO.Cbor {
     /// over the returned collection.</value>
     /// <exception cref='InvalidOperationException'>This object is not a
     /// map.</exception>
-    public ICollection<KeyValuePair<CBORObject, CBORObject >> Entries
+    public ICollection<KeyValuePair<CBORObject, CBORObject>> Entries
     {
       get
       {
@@ -2015,7 +2015,7 @@ namespace PeterO.Cbor {
           return size;
         case CBORType.Map:
         {
-          ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
+          ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
             this.Entries;
           size = checked(size + IntegerByteLength(entries.Count));
           try {
@@ -2050,8 +2050,7 @@ namespace PeterO.Cbor {
           return checked(size + 1);
         case CBORType.SimpleValue:
           return checked(size + (cbor.SimpleValue >= 24 ? 2 : 1));
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
     }
 
@@ -2321,9 +2320,8 @@ namespace PeterO.Cbor {
       return utf8Length < 0 ?
         throw new ArgumentException("String contains an unpaired " +
           "surrogate code point.") : new CBORObject(
-          strValue.Length == utf8Length ? CBORObjectTypeTextStringAscii :
-          CBORObjectTypeTextString,
-          strValue);
+            strValue.Length == utf8Length ? CBORObjectTypeTextStringAscii : CBORObjectTypeTextString,
+            strValue);
     }
 
     /// <summary>Generates a CBOR object from a text string.</summary>
@@ -3263,7 +3261,7 @@ namespace PeterO.Cbor {
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject FromMap(
-      IEnumerable<Tuple<CBORObject, CBORObject >> keysAndValues) {
+      IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
       var sd = new SortedDictionary<CBORObject, CBORObject>();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
         sd.Add(kv.Item1, kv.Item2);
@@ -3287,7 +3285,7 @@ namespace PeterO.Cbor {
     /// <param name='keysAndValues'>A sequence of key-value pairs.</param>
     /// <returns>A new CBOR map.</returns>
     public static CBORObject FromOrderedMap(
-      IEnumerable<Tuple<CBORObject, CBORObject >> keysAndValues) {
+      IEnumerable<Tuple<CBORObject, CBORObject>> keysAndValues) {
       IDictionary<CBORObject, CBORObject> oDict;
       oDict = PropertyMap.NewOrderedDict();
       foreach (Tuple<CBORObject, CBORObject> kv in keysAndValues) {
@@ -4052,8 +4050,7 @@ namespace PeterO.Cbor {
             stream.WriteByte((byte)((datatype << 5) | 27));
             stream.Write(bytes, 0, byteCount);
             break;
-          default:
-            stream.WriteByte ((datatype == 0) ?
+          default: stream.WriteByte((datatype == 0) ?
               (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
@@ -4571,8 +4568,7 @@ namespace PeterO.Cbor {
           var ei = (EInteger)this.ThisItem;
           return ei.ToInt64Checked();
         }
-        default:
-          throw new InvalidOperationException("Not an integer type");
+        default: throw new InvalidOperationException("Not an integer type");
       }
     }
 
@@ -4590,8 +4586,7 @@ namespace PeterO.Cbor {
           var ei = (EInteger)this.ThisItem;
           return ei.CanFitInInt64();
         }
-        default:
-          return false;
+        default: return false;
       }
     }
 
@@ -4629,8 +4624,7 @@ namespace PeterO.Cbor {
           return EInteger.FromInt64((long)this.ThisItem);
         case CBORObjectTypeEInteger:
           return (EInteger)this.ThisItem;
-        default:
-          throw new InvalidOperationException("Not an integer type");
+        default: throw new InvalidOperationException("Not an integer type");
       }
     }
 
@@ -4651,8 +4645,7 @@ namespace PeterO.Cbor {
       switch (this.Type) {
         case CBORType.FloatingPoint:
           return (long)this.ThisItem;
-        default:
-          throw new InvalidOperationException ("Not a floating-point" +
+        default: throw new InvalidOperationException("Not a floating-point" +
             "\u0020type");
       }
     }
@@ -4668,8 +4661,7 @@ namespace PeterO.Cbor {
       switch (this.Type) {
         case CBORType.FloatingPoint:
           return CBORUtilities.Int64BitsToDouble((long)this.ThisItem);
-        default:
-          throw new InvalidOperationException ("Not a floating-point" +
+        default: throw new InvalidOperationException("Not a floating-point" +
             "\u0020type");
       }
     }
@@ -4927,8 +4919,7 @@ namespace PeterO.Cbor {
                 GetDoubleBytes(other.AsDoubleBits(), 0));
             break;
           }
-          default:
-            throw new InvalidOperationException ("Unexpected data " +
+          default: throw new InvalidOperationException("Unexpected data " +
               "type");
         }
       } else if ((typeB == CBORObjectTypeInteger && typeA ==
@@ -5044,12 +5035,12 @@ namespace PeterO.Cbor {
         (byte)((valueBits >> 24) & 0xff), (byte)((valueBits >> 16) & 0xff),
         (byte)((valueBits >> 8) & 0xff), (byte)(valueBits & 0xff),
       } : new[] {
-        (byte)0xfb, (byte)((valueBits >> 56) & 0xff),
-        (byte)((valueBits >> 48) & 0xff), (byte)((valueBits >> 40) & 0xff),
-        (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
-        (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
-        (byte)(valueBits & 0xff),
-      };
+   (byte)0xfb, (byte)((valueBits >> 56) & 0xff),
+   (byte)((valueBits >> 48) & 0xff), (byte)((valueBits >> 40) & 0xff),
+   (byte)((valueBits >> 32) & 0xff), (byte)((valueBits >> 24) & 0xff),
+   (byte)((valueBits >> 16) & 0xff), (byte)((valueBits >> 8) & 0xff),
+   (byte)(valueBits & 0xff),
+ };
     }
 
     private static byte[] GetDoubleBytes(long valueBits, int tagbyte) {
@@ -5059,9 +5050,9 @@ namespace PeterO.Cbor {
           (byte)tagbyte, (byte)0xf9,
           (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
         } : new[] {
-          (byte)0xf9, (byte)((bits >> 8) & 0xff),
-          (byte)(bits & 0xff),
-        };
+   (byte)0xf9, (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
       }
       if (CBORUtilities.DoubleRetainsSameValueInSingle(valueBits)) {
         bits = CBORUtilities.DoubleToRoundedSinglePrecision(valueBits);
@@ -5070,10 +5061,10 @@ namespace PeterO.Cbor {
           (byte)((bits >> 24) & 0xff), (byte)((bits >> 16) & 0xff),
           (byte)((bits >> 8) & 0xff), (byte)(bits & 0xff),
         } : new[] {
-          (byte)0xfa, (byte)((bits >> 24) & 0xff),
-          (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
-          (byte)(bits & 0xff),
-        };
+   (byte)0xfa, (byte)((bits >> 24) & 0xff),
+   (byte)((bits >> 16) & 0xff), (byte)((bits >> 8) & 0xff),
+   (byte)(bits & 0xff),
+ };
       }
       return GetDoubleBytes64(valueBits, tagbyte);
     }
@@ -5369,8 +5360,7 @@ namespace PeterO.Cbor {
             Object.Equals(this.itemValue, otherValue.itemValue);
         case CBORObjectTypeDouble:
           return this.AsDoubleBits() == otherValue.AsDoubleBits();
-        default:
-          return Object.Equals(this.itemValue, otherValue.itemValue);
+        default: return Object.Equals(this.itemValue, otherValue.itemValue);
       }
     }
 
@@ -6265,8 +6255,7 @@ namespace PeterO.Cbor {
           return new CBORObject(CBORObjectTypeDouble, value);
         case 8:
           return new CBORObject(CBORObjectTypeDouble, floatingBits);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -6435,8 +6424,7 @@ namespace PeterO.Cbor {
         case 8:
           bits = CBORUtilities.DoubleToInt64Bits(doubleVal);
           return WriteFloatingPointBits(outputStream, bits, 8);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -6487,8 +6475,7 @@ namespace PeterO.Cbor {
               0);
           longbits = CBORUtilities.SingleToDoublePrecision(bits);
           return WriteFloatingPointBits(outputStream, longbits, 8);
-        default:
-          throw new ArgumentOutOfRangeException(nameof(byteCount));
+        default: throw new ArgumentOutOfRangeException(nameof(byteCount));
       }
     }
 
@@ -7107,8 +7094,7 @@ namespace PeterO.Cbor {
                   (int)uadditional);
             }
             throw new CBORException("Unexpected data encountered");
-          default:
-            throw new CBORException("Unexpected data encountered");
+          default: throw new CBORException("Unexpected data encountered");
         }
       }
       if (majortype == 2) { // short byte string
@@ -7388,19 +7374,19 @@ namespace PeterO.Cbor {
       value <= 0xffL ? new[] {
         (byte)(24 | (type << 5)), (byte)(value & 0xff),
       } : value <= 0xffffL ? new[] {
-        (byte)(25 | (type << 5)),
-        (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
-      } : value <= 0xffffffffL ? new[] {
-        (byte)(26 | (type << 5)),
-        (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
-        (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
-      } : new[] {
-        (byte)(27 | (type << 5)), (byte)((value >> 56) & 0xff),
-        (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
-        (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
-        (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-        (byte)(value & 0xff),
-      };
+   (byte)(25 | (type << 5)),
+   (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
+ } : value <= 0xffffffffL ? new[] {
+   (byte)(26 | (type << 5)),
+   (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff),
+   (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
+ } : new[] {
+   (byte)(27 | (type << 5)), (byte)((value >> 56) & 0xff),
+   (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
+   (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
+   (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+   (byte)(value & 0xff),
+ };
     }
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
@@ -7410,13 +7396,13 @@ namespace PeterO.Cbor {
       value <= 0xff ? new[] {
         (byte)(24 | (type << 5)), (byte)(value & 0xff),
       } : value <= 0xffff ? new[] {
-        (byte)(25 | (type << 5)),
-        (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
-      } : new[] {
-        (byte)(26 | (type << 5)), (byte)((value >> 24) & 0xff),
-        (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
-        (byte)(value & 0xff),
-      };
+   (byte)(25 | (type << 5)),
+   (byte)((value >> 8) & 0xff), (byte)(value & 0xff),
+ } : new[] {
+   (byte)(26 | (type << 5)), (byte)((value >> 24) & 0xff),
+   (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+   (byte)(value & 0xff),
+ };
     }
 
     // Initialize fixed values for certain

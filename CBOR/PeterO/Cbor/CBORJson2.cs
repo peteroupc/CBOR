@@ -718,8 +718,7 @@ namespace PeterO.Cbor {
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-          default:
-            this.RaiseError ("Expected a ',' or '}'");
+          default: this.RaiseError("Expected a ',' or '}'");
             break;
         }
       }
@@ -758,8 +757,7 @@ namespace PeterO.Cbor {
             break;
           case ']':
             return CBORObject.FromRaw(myArrayList);
-          default:
-            this.RaiseError ("Expected a ',' or ']'");
+          default: this.RaiseError("Expected a ',' or ']'");
             break;
         }
       }

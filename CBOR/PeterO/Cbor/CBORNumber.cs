@@ -243,8 +243,7 @@ namespace PeterO.Cbor {
                 options >= 6,
                 options == 5 || options == 7);
             break;
-          default:
-            return null; // "Invalid options");
+          default: return null; // "Invalid options");
         }
         return CBORNumber.FromERational(erat);
       } else {
@@ -1605,8 +1604,7 @@ namespace PeterO.Cbor {
               (ERational)objB);
             break;
           }
-          default:
-            throw new InvalidOperationException (
+          default: throw new InvalidOperationException(
               "Unexpected data type");
         }
       } else {
