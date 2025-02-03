@@ -1255,9 +1255,11 @@ namespace PeterO.Cbor {
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, CBORTypeMapper mapper) {
       return mapper == null ? throw new
-        ArgumentNullException(nameof(mapper)) : this.ToObject(t, mapper,
-        null,
-        0);
+        ArgumentNullException(nameof(mapper)) : this.ToObject(
+          t,
+          mapper,
+          null,
+          0);
     }
 
     /// <summary>Converts this CBOR object to an object of an arbitrary
@@ -1290,9 +1292,11 @@ namespace PeterO.Cbor {
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
     public object ToObject(Type t, PODOptions options) {
       return options == null ? throw new
-        ArgumentNullException(nameof(options)) : this.ToObject(t, null,
-        options,
-        0);
+        ArgumentNullException(nameof(options)) : this.ToObject(
+          t,
+          null,
+          options,
+          0);
     }
 
     /// <summary><para>Converts this CBOR object to an object of an
@@ -2866,9 +2870,11 @@ namespace PeterO.Cbor {
       CBORTypeMapper mapper,
       PODOptions options) {
       return mapper == null ? throw new
-        ArgumentNullException(nameof(mapper)) : FromObject(obj, options,
-        mapper,
-        0);
+        ArgumentNullException(nameof(mapper)) : FromObject(
+          obj,
+          options,
+          mapper,
+          0);
     }
 
     [RequiresUnreferencedCode("Do not use in AOT or reflection-free contexts.")]
