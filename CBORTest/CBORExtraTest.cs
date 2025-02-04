@@ -176,16 +176,14 @@ namespace Test {
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Microsoft.Design",
-        "CA1034",
-        Justification = "Testing whether serialization works " +
-          "on nested public types")]
+      "Microsoft.Design",
+      "CA1034",
+      Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomCollectionContainer {
       [System.Diagnostics.CodeAnalysis.SuppressMessage(
-          "Microsoft.Usage",
-          "CA2227",
-          Justification = "Testing whether serialization works " +
-            "on public properties of nested public types")]
+        "Microsoft.Usage",
+        "CA2227",
+        Justification = "Testing whether serialization works " + "on public properties of nested public types")]
       public CustomCollection CList {
         get;
         set;
@@ -193,10 +191,9 @@ namespace Test {
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Microsoft.Design",
-        "CA1034",
-        Justification = "Testing whether serialization works " +
-          "on nested public types")]
+      "Microsoft.Design",
+      "CA1034",
+      Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomCollection : IList<CustomEnum> {
       private readonly List<CustomEnum> w = new();
 
@@ -268,21 +265,22 @@ namespace Test {
       }
 
       /// <inheritdoc/>
-      public System.Collections.Generic.IEnumerator<CustomEnum> GetEnumerator() {
+      public System.Collections.Generic.IEnumerator<CustomEnum>
+GetEnumerator() {
         return ((IList<CustomEnum>)this.w).GetEnumerator();
       }
 
       /// <inheritdoc/>
-      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+      System.Collections.IEnumerator
+System.Collections.IEnumerable.GetEnumerator() {
         return ((IList<CustomEnum>)this.w).GetEnumerator();
       }
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Microsoft.Design",
-        "CA1034",
-        Justification = "Testing whether serialization works " +
-          "on nested public types")]
+      "Microsoft.Design",
+      "CA1034",
+      Justification = "Testing whether serialization works " + "on nested public types")]
     public sealed class CustomByteCollection : IList<byte> {
       private readonly List<byte> w = new();
 
@@ -359,7 +357,8 @@ namespace Test {
       }
 
       /// <inheritdoc/>
-      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+      System.Collections.IEnumerator
+System.Collections.IEnumerable.GetEnumerator() {
         return ((IList<byte>)this.w).GetEnumerator();
       }
     }
@@ -496,8 +495,8 @@ namespace Test {
         "propC");
       #if !NET20
       var queryao =
-        from x in arrao
-        select x;
+from x in arrao
+ select x;
       co = CBORObject.FromObject(queryao, valueCcTF);
       CBORObjectTest.CheckArrayPropertyNames(
         CBORObject.FromObject(queryao, valueCcTF),
@@ -644,9 +643,9 @@ namespace Test {
       #if !NET20
       // Select all even numbers
       IEnumerable<int> query =
-        from i in RangeExclusive(0, 10)
+from i in RangeExclusive(0, 10)
         where i % 2 == 0
-        select i;
+ select i;
       obj = CBORObject.FromObject(query);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
@@ -654,9 +653,9 @@ namespace Test {
       CBORTestCommon.AssertRoundTrip(obj);
       // Select all even numbers
       var query2 =
-        from i in RangeExclusive(0, 10)
+from i in RangeExclusive(0, 10)
         where i % 2 == 0
-      select new {
+ select new {
         A = i, B = i + 1,
       };
       obj = CBORObject.FromObject(query2);
@@ -708,8 +707,7 @@ namespace Test {
       try {
         _ = cbor.ToObject<ReadOnlyDictionary<int, int>>();
         Assert.Fail("Should have failed");
-      }
-      catch (CBORException) {
+      } catch (CBORException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -729,8 +727,7 @@ namespace Test {
       try {
         _ = cbor.ToObject<ReadOnlyCollection<string>>();
         Assert.Fail("Should have failed");
-      }
-      catch (InvalidOperationException) {
+      } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -748,8 +745,7 @@ namespace Test {
       try {
         _ = cbor.ToObject<IReadOnlyCollection<string>>();
         Assert.Fail("Should have failed");
-      }
-      catch (InvalidOperationException) {
+      } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -763,8 +759,8 @@ namespace Test {
       var dict = new Dictionary<string, int>
       {
         ["a"] = 1,
-          ["b"] = 2,
-            ["c"] = 3,
+        ["b"] = 2,
+        ["c"] = 3,
       };
       IReadOnlyDictionary<string, int> roc = new
       ReadOnlyDictionary<string, int>(dict);
@@ -788,8 +784,7 @@ namespace Test {
       try {
         _ = cbor.ToObject<ReadOnlyDictionary<int, int>>();
         Assert.Fail("Should have failed");
-      }
-      catch (InvalidOperationException) {
+      } catch (InvalidOperationException) {
         // NOTE: Intentionally empty
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());

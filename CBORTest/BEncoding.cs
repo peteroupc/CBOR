@@ -141,7 +141,7 @@ namespace PeterO {
           stream,
           numlength.ToInt32Checked(),
           builder,
-      false) switch {
+          false) switch {
         -2 => throw new CBORException("Premature end of data"),
           -1 => throw new CBORException("Invalid UTF-8"),
           _ => CBORObject.FromString(builder.ToString()),

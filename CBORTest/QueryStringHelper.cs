@@ -404,7 +404,7 @@ namespace PeterO {
           }
         }
         if (leaf != null) {
-          string last = path[ ^ 1];
+          string last = path[^ 1];
           if (leaf.ContainsKey(last)) {
             throw new InvalidOperationException();
           }

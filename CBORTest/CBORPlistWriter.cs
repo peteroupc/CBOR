@@ -277,7 +277,7 @@ namespace Test {
         case CBORType.Map:
         {
           var hasNonStringKeys = false;
-          ICollection<KeyValuePair<CBORObject, CBORObject >> entries =
+          ICollection<KeyValuePair<CBORObject, CBORObject>> entries =
             obj.Entries;
           foreach (KeyValuePair<CBORObject, CBORObject> entry in entries) {
             CBORObject key = entry.Key;
@@ -355,8 +355,7 @@ namespace Test {
           }
           break;
         }
-        default:
-          throw new InvalidOperationException ("Unexpected item" +
+        default: throw new InvalidOperationException("Unexpected item" +
             "\u0020type");
       }
     }
