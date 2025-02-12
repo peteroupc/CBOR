@@ -792,7 +792,7 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         var edec =
 
-          EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
+  EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
         CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(edec);
         bool isdouble;
         isdouble = numberinfo["double"].AsBoolean();
@@ -921,7 +921,7 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         var edec =
 
-          EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
+  EDecimal.FromString((string)numberinfo["number"].ToObject(typeof(string)));
         CBORObject cbornumber = ToObjectTest.TestToFromObjectRoundTrip(edec);
         bool isdouble;
         isdouble = numberinfo["double"].AsBoolean();

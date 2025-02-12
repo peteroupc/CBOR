@@ -35,8 +35,8 @@ namespace PeterO.Cbor {
 
     public Uri FromCBORObject(CBORObject obj) {
       if (obj.HasMostOuterTag(32) ||
-        obj.HasMostOuterTag(266) ||
-        obj.HasMostOuterTag(267)) {
+             obj.HasMostOuterTag(266) ||
+             obj.HasMostOuterTag(267)) {
         _ = ValidateObject(obj);
         try {
           return new Uri(obj.AsString());

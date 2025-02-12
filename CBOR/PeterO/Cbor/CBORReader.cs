@@ -472,8 +472,7 @@ namespace PeterO.Cbor {
             }
             return cbor;
           }
-          default:
-            throw new CBORException("Unexpected data encountered");
+          default: throw new CBORException("Unexpected data encountered");
         }
       }
 

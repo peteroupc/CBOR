@@ -187,8 +187,7 @@ namespace Test {
           // Parse a nonnegative number
           return this.NextJSONNumber(nextChar);
         }
-        default:
-          this.RaiseError("Value can't be parsed.");
+        default: this.RaiseError("Value can't be parsed.");
           break;
       }
       return null;

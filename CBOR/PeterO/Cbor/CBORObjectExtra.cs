@@ -159,7 +159,7 @@ namespace PeterO.Cbor {
         }
         byte[] bytes = {
           (byte)(27 | (majorType << 5)), (byte)((value >>
-            56) & 0xff),
+          56) & 0xff),
           (byte)((value >> 48) & 0xff), (byte)((value >> 40) & 0xff),
           (byte)((value >> 32) & 0xff), (byte)((value >> 24) & 0xff),
           (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),

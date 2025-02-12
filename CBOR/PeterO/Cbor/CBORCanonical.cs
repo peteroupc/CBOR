@@ -75,8 +75,7 @@ namespace PeterO.Cbor {
             return 4;
           case CBORType.Map:
             return 5;
-          default:
-            throw new InvalidOperationException();
+          default: throw new InvalidOperationException();
         }
       }
 

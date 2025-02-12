@@ -1049,9 +1049,7 @@ namespace PeterO.Cbor {
         } else if (i == 10) {
           bad |= str[i] != 'T';
           /*lowercase t not used to separate date/time,
-          following RFC 4287 sec. 3.3*/
-        }
-        else {
+          following RFC 4287 sec. 3.3*/ } else {
           bad |= str[i] < '0' || str[i] > '9';
         }
       }
@@ -1171,8 +1169,8 @@ namespace PeterO.Cbor {
         .Add(EDecimal.FromEInteger(seconds));
       double dbl = d.ToDouble();
       if (double.IsPositiveInfinity(dbl) ||
-        double.IsNegativeInfinity(dbl) ||
-        double.IsNaN(dbl)) {
+             double.IsNegativeInfinity(dbl) ||
+             double.IsNaN(dbl)) {
         status[0] = 2;
         return null;
       }

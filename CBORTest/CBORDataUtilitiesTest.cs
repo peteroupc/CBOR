@@ -87,7 +87,7 @@ namespace Test {
     public void TestParseJSONNumberSubstring() {
       string tstr =
 
-        "-3.00931381333368754713014659613049757554804012787921371662913692598770508705049030832574634419795955864174175076186656951904296875000E-49";
+  "-3.00931381333368754713014659613049757554804012787921371662913692598770508705049030832574634419795955864174175076186656951904296875000E-49";
       try {
         _ = CBORDataUtilities.ParseJSONNumber(
             "xyzxyz" + tstr,
@@ -112,7 +112,7 @@ namespace Test {
         var jsonDecimal = (EDecimal)CBORDataUtilities
           .ParseJSONNumber(strings[i], new
 
-            JSONOptions("numberconversion=full;preservenegativezero=false")).ToObject(
+  JSONOptions("numberconversion=full;preservenegativezero=false")).ToObject(
             typeof(EDecimal));
         Assert.AreEqual(
           strings[i + 1],

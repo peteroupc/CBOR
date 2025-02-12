@@ -50,8 +50,7 @@ namespace PeterO.Cbor {
         case CBORType.Map:
         case CBORType.Array:
           return CBORObject.DecodeFromBytes(o.EncodeToBytes());
-        default:
-          return o;
+        default: return o;
       }
     }
 
