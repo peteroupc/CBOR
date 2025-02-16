@@ -7321,7 +7321,7 @@ namespace Test {
         }
 
         for (int i = 0; i < 50; ++i) {
-          EFloat ef = RandomObjects.RandomEFloat(fr);
+          EFloat ef = RandomNumerics.RandomEFloat(fr);
           if (!ef.IsNaN()) {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ef);
             CBORObject cborTemp2 = ToObjectTest.TestToFromObjectRoundTrip(ef);
@@ -7348,8 +7348,8 @@ namespace Test {
           }
 
           ef = EFloat.Create(
-              RandomObjects.RandomEInteger(fr),
-              RandomObjects.RandomEInteger(fr));
+              RandomNumerics.RandomEInteger(fr),
+              RandomNumerics.RandomEInteger(fr));
           {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ef);
             CBORObject cborTemp2 = ToObjectTest.TestToFromObjectRoundTrip(ef);
@@ -7381,7 +7381,7 @@ namespace Test {
           }
         }
         for (int i = 0; i < 50; ++i) {
-          EDecimal ed = RandomObjects.RandomEDecimal(fr);
+          EDecimal ed = RandomNumerics.RandomEDecimal(fr);
           if (!ed.IsNaN()) {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ed);
             CBORObject cborTemp2 = ToObjectTest.TestToFromObjectRoundTrip(ed);
@@ -7416,8 +7416,8 @@ namespace Test {
           }
 
           ed = EDecimal.Create(
-              RandomObjects.RandomEInteger(fr),
-              RandomObjects.RandomEInteger(fr));
+              RandomNumerics.RandomEInteger(fr),
+              RandomNumerics.RandomEInteger(fr));
           {
             CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(ed);
             CBORObject cborTemp2 = ToObjectTest.TestToFromObjectRoundTrip(ed);
@@ -7533,7 +7533,7 @@ namespace Test {
           TestWriteObj(er, null);
         }
         do {
-          er = RandomObjects.RandomERational(fr);
+          er = RandomNumerics.RandomERational(fr);
         } while (er.IsNegative && er.IsZero);
         {
           CBORObject cborTemp1 = ToObjectTest.TestToFromObjectRoundTrip(er);
@@ -9907,7 +9907,7 @@ namespace Test {
       var rg = new RandomGenerator();
       for (int i = 0; i < 2000; ++i) {
         var decstring = new string[1];
-        EDecimal ed = RandomObjects.RandomEDecimal(rg, decstring);
+        EDecimal ed = RandomNumerics.RandomEDecimal(rg, decstring);
         if (decstring[0] == null) {
           Assert.Fail();
         }

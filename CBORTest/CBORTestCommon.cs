@@ -26,7 +26,7 @@ namespace Test {
 
     private static EFloat RandomEFloatLowExponent(IRandomGenExtended rand) {
       while (true) {
-        EFloat ef = RandomObjects.RandomEFloat(rand);
+        EFloat ef = RandomNumerics.RandomEFloat(rand);
         if (
           ef.Exponent.CompareTo(-20000) >= 0 &&
           ef.Exponent.CompareTo(20000) <= 0) {
@@ -37,7 +37,7 @@ namespace Test {
 
     private static EDecimal RandomEDecimalLowExponent(IRandomGenExtended rand) {
       while (true) {
-        EDecimal ef = RandomObjects.RandomEDecimal(rand);
+        EDecimal ef = RandomNumerics.RandomEDecimal(rand);
         if (
           ef.Exponent.CompareTo(-20000) >= 0 &&
           ef.Exponent.CompareTo(20000) <= 0) {
@@ -66,14 +66,14 @@ namespace Test {
           return CBORObject.FromObject(o);
         case 2:
           return CBORObject.FromEInteger(
-              RandomObjects.RandomEInteger(rand));
+              RandomNumerics.RandomEInteger(rand));
         case 3:
           o = lowExponent ? RandomEFloatLowExponent(rand) :
-            RandomObjects.RandomEFloat(rand);
+            RandomNumerics.RandomEFloat(rand);
           return CBORObject.FromObject(o);
         case 4:
           o = lowExponent ? RandomEDecimalLowExponent(rand) :
-            RandomObjects.RandomEDecimal(rand);
+            RandomNumerics.RandomEDecimal(rand);
           return CBORObject.FromObject(o);
         case 5:
           o = RandomObjects.RandomInt64(rand);
@@ -98,18 +98,18 @@ namespace Test {
           return CBORObject.FromObject(o);
         case 2:
           return CBORObject.FromEInteger(
-              RandomObjects.RandomEInteger(rand));
+              RandomNumerics.RandomEInteger(rand));
         case 3:
           return CBORObject.FromEFloat(
-              RandomObjects.RandomEFloat(rand));
+              RandomNumerics.RandomEFloat(rand));
         case 4:
-          o = RandomObjects.RandomEDecimal(rand);
+          o = RandomNumerics.RandomEDecimal(rand);
           return CBORObject.FromObject(o);
         case 5:
           o = RandomObjects.RandomInt64(rand);
           return CBORObject.FromObject(o);
         case 6:
-          o = RandomObjects.RandomERational(rand);
+          o = RandomNumerics.RandomERational(rand);
           return CBORObject.FromObject(o);
         default:
           throw new InvalidOperationException();
@@ -187,15 +187,15 @@ namespace Test {
           cbor = CBORObject.FromObject(o);
         } else if (tag is 4 or 5) {
           cbor = CBORObject.NewArray();
-          object o = RandomObjects.RandomSmallIntegral(rand);
+          object o = RandomNumerics.RandomSmallIntegral(rand);
           _ = cbor.Add(o);
-          o = RandomObjects.RandomEInteger(rand);
+          o = RandomNumerics.RandomEInteger(rand);
           _ = cbor.Add(o);
         } else if (tag == 30) {
           cbor = CBORObject.NewArray();
-          object o = RandomObjects.RandomSmallIntegral(rand);
+          object o = RandomNumerics.RandomSmallIntegral(rand);
           _ = cbor.Add(o);
-          o = RandomObjects.RandomEInteger(rand);
+          o = RandomNumerics.RandomEInteger(rand);
           _ = cbor.Add(o);
         } else {
           cbor = RandomCBORObject(rand, depth + 1);
