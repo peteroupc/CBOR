@@ -91,6 +91,7 @@ namespace Test {
       "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
       "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
       "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05",
+      "2", "3", "4", "5", "6", "7", "8", "9",
     };
 
     private static readonly JSONOptions ValueNoDuplicateKeys = new
@@ -302,7 +303,7 @@ namespace Test {
         }
         return obj;
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString() + "\n" + str);
+        // Assert.Fail(ex.ToString() + "\n" + str);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
@@ -3831,6 +3832,14 @@ namespace Test {
       }).AsNumber().IsInfinity());
     }
 
+[Test]
+[Timeout(30000)]
+public void TestValidJsonOverflowedExponent() {
+  CBORObject cbo = CBORObject.FromJSONString("5137.46038043E+8235685134",
+    new JSONOptions("numberconversion=intorfloat"));
+  Assert.IsTrue(cbo.AsNumber().IsInfinity());
+}
+
     [Test]
     [Timeout(10001)]
     public void TestIsIntegral() {
@@ -4555,6 +4564,19 @@ namespace Test {
       bytes = new byte[] { 0x31, 0, 0, 0, 0x31, 0, 0, 0 };
       cbor = CBORObject.FromJSONBytes(bytes);
       Assert.AreEqual(CBORObject.FromObject(11), cbor);
+    }
+
+    [Test]
+    [Timeout(30000)]
+    public void TestNonUtf8FromJSONBytes2() {
+      byte[] bytes;
+      CBORObject cbor;
+      bytes = new byte[] { 0x39, 0 };
+      cbor = CBORObject.FromJSONBytes(bytes);
+      Assert.AreEqual(CBORObject.FromObject(9), cbor);
+      bytes = new byte[] { 0, 0x39 };
+      cbor = CBORObject.FromJSONBytes(bytes);
+      Assert.AreEqual(CBORObject.FromObject(9), cbor);
     }
 
     [Test]

@@ -275,7 +275,7 @@ namespace Test {
       int len = ra.GetInt32(1000) * ra.GetInt32(1000);
       len /= 1000;
       if (ra.GetInt32(50) == 0 && depth < 2) {
-        // Exponential curve that strongly favors small numbers
+        // Curve that strongly favors small numbers
         var v = (long)ra.GetInt32(1000000) * ra.GetInt32(1000000);
         len = (int)(v / 1000000);
       }

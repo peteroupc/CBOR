@@ -134,6 +134,21 @@ namespace Test {
       }
     }
 
+public void JsonTestSuiteTest(string fn, byte[] jsonBytes) {
+              CBORObject json = null;
+              try {
+                 json = CBORObject.FromJSONBytes(jsonBytes, new
+JSONOptions("allowduplicatekeys=1"));
+              } catch (CBORException) {
+                 json = null;
+              }
+              if (fn.StartsWith("y_") && json == null) {
+                 Assert.Fail("should have succeeded: " + fn);
+              } else if (fn.StartsWith("n_") && json != null) {
+                 Assert.Fail("should have failed: " + fn);
+              }
+}
+
     [Test]
     [Timeout(30000)]
     public void TestCorrectUtf8() {
@@ -1013,27 +1028,31 @@ namespace Test {
       var cbo2 = CBORObject.FromJSONString(cbo.ToJSONString());
       Assert.IsTrue(cbo2 != null);
       if (!cbo.Equals(cbo2)) {
-        Console.Write("jsonstring");
-        Console.Write(TestCommon.ToByteArrayString(bytes));
-        Console.Write(DataUtilities.GetUtf8String(bytes, true));
-        Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
-        Console.Write(cbo.ToJSONString());
-        Console.Write("new " +
+        if (bytes.Length < 16) {
+        Console.WriteLine("jsonstring");
+        Console.WriteLine(TestCommon.ToByteArrayString(bytes));
+        Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
+        Console.WriteLine("old " +
+TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+        Console.WriteLine(cbo.ToJSONString());
+        Console.WriteLine("new " +
           TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
-        Console.Write(cbo2.ToJSONString());
+        Console.WriteLine(cbo2.ToJSONString());
+        }
         Assert.AreEqual(cbo, cbo2);
       }
       cbo2 = CBORObject.FromJSONBytes(cbo.ToJSONBytes());
       Assert.IsTrue(cbo2 != null);
       if (!cbo.Equals(cbo2)) {
-        Console.Write("jsonbytes");
-        Console.Write(TestCommon.ToByteArrayString(bytes));
-        Console.Write(DataUtilities.GetUtf8String(bytes, true));
-        Console.Write("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
-        Console.Write(cbo.ToJSONString());
-        Console.Write("new " +
-          TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
-        Console.Write(cbo2.ToJSONString());
+        if (bytes.Length < 16) {
+          Console.WriteLine("jsonbytes");
+        Console.WriteLine(TestCommon.ToByteArrayString(bytes));
+      Console.WriteLine(DataUtilities.GetUtf8String(bytes, true));
+    Console.WriteLine("old " + TestCommon.ToByteArrayString(cbo.ToJSONBytes()));
+  Console.WriteLine(cbo.ToJSONString());
+  Console.WriteLine("new " + TestCommon.ToByteArrayString(cbo2.ToJSONBytes()));
+  Console.WriteLine(cbo2.ToJSONString());
+        }
         Assert.AreEqual(cbo, cbo2);
       }
       return true;

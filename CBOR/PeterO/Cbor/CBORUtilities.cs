@@ -519,18 +519,8 @@ namespace PeterO.Cbor {
           0);
     }
 
-    [Obsolete]
-    public static string DoubleToString(double dbl) {
-      return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary64);
-    }
-
     public static string DoubleBitsToString(long dblbits) {
       return EFloat.FromDoubleBits(dblbits).ToShortestString(EContext.Binary64);
-    }
-
-    [Obsolete]
-    public static string SingleToString(float sing) {
-      return EFloat.FromSingle(sing).ToShortestString(EContext.Binary32);
     }
 
     public static string LongToString(long longValue) {
@@ -1429,13 +1419,6 @@ namespace PeterO.Cbor {
       mant |= 1L << 52;
       int shift = 52 - (exp - 0x3ff);
       return (mant >> shift) * sgn;
-    }
-
-    [Obsolete]
-    public static EInteger EIntegerFromDouble(double dbl) {
-      return EIntegerFromDoubleBits(BitConverter.ToInt64(
-        BitConverter.GetBytes((double)dbl),
-        0));
     }
 
     public static EInteger EIntegerFromDoubleBits(long lvalue) {
