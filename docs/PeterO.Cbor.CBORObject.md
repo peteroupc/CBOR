@@ -8,7 +8,7 @@ Represents an object in Concise Binary Object Representation (CBOR) and contains
 
 <b>Converting CBOR objects</b>
 
-There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
+There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described later.
 
 <b>To and from byte arrays:</b> The CBORObject.DecodeFromBytes method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes method converts a CBOR object to its corresponding byte array in CBOR format.
 
@@ -630,7 +630,7 @@ This object is not an array.
     public PeterO.Cbor.CBORObject ApplyJSONPatch(
         PeterO.Cbor.CBORObject patch);
 
-Returns a copy of this object after applying the operations in a JSON patch, in the form of a CBOR object. JSON patches are specified in RFC 6902 and their format is summarized in the remarks below.
+Returns a copy of this object after applying the operations in a JSON patch, in the form of a CBOR object. JSON patches are specified in RFC 6902 and their format is summarized in the remarks given later.
 
 <b>Remarks:</b> A JSON patch is an array with one or more maps. Each map has the following keys:
 
@@ -2527,7 +2527,7 @@ Generates a CBORObject from an arbitrary object, using the specified options to 
 
  * (*) In the Java version, eligible getters are public, nonstatic methods starting with "get" or "is" (either word followed by a character other than a basic digit or lowercase letter, that is, other than "a" to "z" or "0" to "9"), that take no parameters and do not return void, except that methods named "getClass" are not eligible getters. In addition, public, nonstatic, nonfinal fields are also eligible getters. If a class has two otherwise eligible getters (methods and/or fields) of the form "isX" and "getX", where "X" is the same in both, or two such getters with the same name but different return type, they are not eligible getters.
 
- * Then, the method returns a CBOR map with each eligible getter's name or property name as each key, and with the corresponding value returned by that getter as that key's value. Before adding a key-value pair to the map, the key's name is adjusted according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) documentation. Note that for security reasons, certain types are not supported even if they contain eligible getters.
+ * Then, the method returns a CBOR map with each eligible getter's name or property name as each key, and with the corresponding value returned by that getter as that key's value. Before adding a key-value pair to the map, the key's name adjusts according to the rules described in the [PeterO.Cbor.PODOptions](PeterO.Cbor.PODOptions.md) documentation. Note that for security reasons, certain types are not supported even if they contain eligible getters.
 
 <b>REMARK:</b> .NET enumeration (  `Enum`  ) constants could also have been converted to text strings with  `ToString()`  , but that method will return multiple names if the specified Enum object is a combination of Enum objects (for example if the object is  `FileAccess.Read | FileAccess.Write`  ). More generally, if Enums are converted to text strings, constants from Enum types with the  `Flags`  attribute, and constants from the same Enum type that share an underlying value, should not be passed to this method.
 

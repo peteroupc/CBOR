@@ -1799,7 +1799,7 @@
             <remarks>
             <para><b>Converting CBOR objects</b></para>
             <para>There are many ways to get a CBOR object, including from
-            bytes, objects, streams and JSON, as described below.</para>
+            bytes, objects, streams and JSON, as described later.</para>
             <para><b>To and from byte arrays:</b> The
             CBORObject.DecodeFromBytes method converts a byte array in CBOR
             format to a CBOR object. The EncodeToBytes method converts a CBOR
@@ -1980,7 +1980,7 @@
             <summary>Returns a copy of this object after applying the
             operations in a JSON patch, in the form of a CBOR object. JSON
             patches are specified in RFC 6902 and their format is summarized in
-            the remarks below.</summary>
+            the remarks given later.</summary>
             <param name='patch'>A JSON patch in the form of a CBOR object; it
             has the form summarized in the remarks.</param>
             <returns>The result of the patch operation.</returns>
@@ -3983,8 +3983,7 @@
             <item>Then, the method returns a CBOR map with each eligible
             getter's name or property name as each key, and with the
             corresponding value returned by that getter as that key's value.
-            Before adding a key-value pair to the map, the key's name is
-            adjusted according to the rules described in the <see cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
+            Before adding a key-value pair to the map, the key's name adjusts according to the rules described in the <see cref='PeterO.Cbor.PODOptions'/> documentation. Note that for
             security reasons, certain types are not supported even if they
             contain eligible getters.</item>
              </list>
