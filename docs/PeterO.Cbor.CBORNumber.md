@@ -130,7 +130,7 @@ The parameter  <i>b</i>
  is null.
 
  * System.OutOfMemoryException:
-The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+The exact result of the operation might be too big to fit in system memory (or might require more than 2 gigabytes of system memory to store).
 
 <a id="CanFitInDouble"></a>
 ### CanFitInDouble
@@ -300,7 +300,7 @@ The parameter  <i>b</i>
  is null.
 
  * System.OutOfMemoryException:
-The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+The exact result of the operation might be too big to fit in system memory (or might require more than 2 gigabytes of system memory to store).
 
 <a id="FromByte_byte"></a>
 ### FromByte
@@ -461,7 +461,7 @@ The parameter  <i>b</i>
  is null.
 
  * System.OutOfMemoryException:
-The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+The exact result of the operation might be too big to fit in system memory (or might require more than 2 gigabytes of system memory to store).
 
 <a id="Negate"></a>
 ### Negate
@@ -597,7 +597,7 @@ The parameter  <i>b</i>
  is null.
 
  * System.OutOfMemoryException:
-The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+The exact result of the operation might be too big to fit in system memory (or might require more than 2 gigabytes of system memory to store).
 
 <a id="Subtract_PeterO_Cbor_CBORNumber"></a>
 ### Subtract
@@ -622,7 +622,7 @@ The parameter  <i>b</i>
  is null.
 
  * System.OutOfMemoryException:
-The exact result of the operation might be too big to fit in memory (or might require more than 2 gigabytes of memory to store).
+The exact result of the operation might be too big to fit in system memory (or might require more than 2 gigabytes of system memory to store).
 
 <a id="ToByteChecked"></a>
 ### ToByteChecked

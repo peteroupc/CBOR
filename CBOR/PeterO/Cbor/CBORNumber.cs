@@ -1127,8 +1127,9 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
     /// <exception cref='OutOfMemoryException'>The exact result of the
-    /// operation might be too big to fit in memory (or might require more
-    /// than 2 gigabytes of memory to store).</exception>
+    /// operation might be too big to fit in system memory (or might
+    /// require more than 2 gigabytes of system memory to
+    /// store).</exception>
     public CBORNumber Add(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -1201,8 +1202,9 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
     /// <exception cref='OutOfMemoryException'>The exact result of the
-    /// operation might be too big to fit in memory (or might require more
-    /// than 2 gigabytes of memory to store).</exception>
+    /// operation might be too big to fit in system memory (or might
+    /// require more than 2 gigabytes of system memory to
+    /// store).</exception>
     public CBORNumber Subtract(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -1269,8 +1271,9 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
     /// <exception cref='OutOfMemoryException'>The exact result of the
-    /// operation might be too big to fit in memory (or might require more
-    /// than 2 gigabytes of memory to store).</exception>
+    /// operation might be too big to fit in system memory (or might
+    /// require more than 2 gigabytes of system memory to
+    /// store).</exception>
     public CBORNumber Multiply(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -1334,8 +1337,9 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
     /// <exception cref='OutOfMemoryException'>The exact result of the
-    /// operation might be too big to fit in memory (or might require more
-    /// than 2 gigabytes of memory to store).</exception>
+    /// operation might be too big to fit in system memory (or might
+    /// require more than 2 gigabytes of system memory to
+    /// store).</exception>
     public CBORNumber Divide(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));
@@ -1445,8 +1449,9 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='b'/> is null.</exception>
     /// <exception cref='OutOfMemoryException'>The exact result of the
-    /// operation might be too big to fit in memory (or might require more
-    /// than 2 gigabytes of memory to store).</exception>
+    /// operation might be too big to fit in system memory (or might
+    /// require more than 2 gigabytes of system memory to
+    /// store).</exception>
     public CBORNumber Remainder(CBORNumber b) {
       if (b == null) {
         throw new ArgumentNullException(nameof(b));

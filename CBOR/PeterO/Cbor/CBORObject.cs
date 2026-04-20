@@ -1057,7 +1057,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONString</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='str'>A text string in JSON format. The entire string
     /// must contain a single JSON object and not multiple objects. The
@@ -1089,7 +1089,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONString</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='str'>A text string in JSON format. The entire string
     /// must contain a single JSON object and not multiple objects. The
@@ -1120,7 +1120,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONString</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='str'>A text string in JSON format. The entire string
     /// must contain a single JSON object and not multiple objects. The
@@ -1141,7 +1141,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONString</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='str'>The parameter <paramref name='str'/> is a text
     /// string.</param>
@@ -2707,7 +2707,7 @@ namespace PeterO.Cbor {
     ///  if the nullable's value is <c>null</c>
     ///  , or
     /// converted according to the nullable's underlying type, if that type
-    /// is supported by this method.</item>
+    /// is allowed for this method.</item>
     ///  <item>In the Java version, a
     /// number of type <c>BigInteger</c>
     ///  or <c>BigDecimal</c>
@@ -3591,7 +3591,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONBytes</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='bytes'>A byte array in JSON format. The entire byte
     /// array must contain a single JSON object and not multiple objects.
@@ -3620,7 +3620,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONBytes</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='bytes'>A byte array in JSON format. The entire byte
     /// array must contain a single JSON object and not multiple objects.
@@ -3660,7 +3660,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONBytes</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='bytes'>A byte array, the specified portion of which is
     /// in JSON format. The specified portion of the byte array must
@@ -3699,7 +3699,7 @@ namespace PeterO.Cbor {
     /// <c>ToJSONBytes</c>, then the JSON is converted back to CBOR with
     /// this method, the new CBOR object will not necessarily be the same
     /// as the old CBOR object, especially if the old CBOR object uses data
-    /// types not supported in JSON, such as integers in map
+    /// types not available in JSON, such as integers in map
     /// keys.</para></summary>
     /// <param name='bytes'>A byte array, the specified portion of which is
     /// in JSON format. The specified portion of the byte array must
@@ -5908,7 +5908,7 @@ namespace PeterO.Cbor {
     /// order to a JSON string, or to write out a CBOR object as part of a
     /// JSON text sequence.</para>
     /// <para><b>Warning:</b> In general, if this CBOR object contains
-    /// integer map keys or uses other features not supported in JSON, and
+    /// integer map keys or uses other features not available in JSON, and
     /// the application converts this CBOR object to JSON and back to CBOR,
     /// the application
     /// <i>should not</i> expect the new CBOR object to be exactly the same
@@ -5982,7 +5982,7 @@ namespace PeterO.Cbor {
     ///  </list>
     /// <para><b>Warning:</b>
     ///  In general, if this CBOR object contains
-    /// integer map keys or uses other features not supported in JSON, and
+    /// integer map keys or uses other features not available in JSON, and
     /// the application converts this CBOR object to JSON and back to CBOR,
     /// the application <i>should not</i>
     ///  expect the new CBOR object to be
@@ -7212,7 +7212,7 @@ namespace PeterO.Cbor {
           return false;
         }
         if (kvp.Value == null) {
-          // Null (as opposed to CBORObject.Null) values not supported in CBOR maps.
+          // Null (as opposed to CBORObject.Null) values not available in CBOR maps.
           throw new InvalidOperationException();
         }
         if (!kvp.Value.Equals(valueB)) {

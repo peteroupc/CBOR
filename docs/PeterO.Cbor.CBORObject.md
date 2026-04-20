@@ -1941,7 +1941,7 @@ A CBOR object.
         int count,
         PeterO.Cbor.JSONOptions jsonoptions);
 
-Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -1991,7 +1991,7 @@ Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) f
 
 If a JSON object has duplicate keys, a CBORException is thrown.
 
-Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2033,7 +2033,7 @@ Either  <i>offset</i>
         byte[] bytes,
         PeterO.Cbor.JSONOptions jsonoptions);
 
-Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2065,7 +2065,7 @@ Generates a CBOR object from a byte array in JavaScript Object Notation (JSON) f
 
 If a JSON object has duplicate keys, a CBORException is thrown.
 
-Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Note that if a CBOR object is converted to JSON with  `ToJSONBytes` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2150,7 +2150,7 @@ The byte array is not empty and does not begin with a record separator byte (0x1
         int count,
         PeterO.Cbor.JSONOptions jsonoptions);
 
-Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2202,7 +2202,7 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
 If a JSON object has duplicate keys, a CBORException is thrown. This is a change in version 4.0.
 
-Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2244,7 +2244,7 @@ Either  <i>offset</i>
         string str,
         PeterO.Cbor.JSONOptions jsonoptions);
 
-Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Generates a CBOR object from a text string in JavaScript Object Notation (JSON) format, using the specified options to control the decoding process. Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2276,7 +2276,7 @@ Generates a CBOR object from a text string in JavaScript Object Notation (JSON) 
 
 If a JSON object has duplicate keys, a CBORException is thrown. This is a change in version 4.0.
 
-Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not supported in JSON, such as integers in map keys.
+Note that if a CBOR object is converted to JSON with  `ToJSONString` , then the JSON is converted back to CBOR with this method, the new CBOR object will not necessarily be the same as the old CBOR object, especially if the old CBOR object uses data types not available in JSON, such as integers in map keys.
 
 <b>Parameters:</b>
 
@@ -2502,7 +2502,7 @@ Generates a CBORObject from an arbitrary object, using the specified options to 
 
  * A  `String`  is converted to a CBOR text string. To create a CBOR byte string object from  `String`  , see the example given in **M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])**.
 
- * In the.NET version, a nullable is converted to  `CBORObject.Null`  if the nullable's value is  `null`  , or converted according to the nullable's underlying type, if that type is supported by this method.
+ * In the.NET version, a nullable is converted to  `CBORObject.Null`  if the nullable's value is  `null`  , or converted according to the nullable's underlying type, if that type is allowed for this method.
 
  * In the Java version, a number of type  `BigInteger`  or  `BigDecimal`  is converted to the corresponding CBOR number.
 
@@ -4000,7 +4000,7 @@ A byte array containing the converted in JSON format.
 
  * Infinity and not-a-number will be converted to null.
 
-<b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not supported in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
+<b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not available in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
 
 The example code given below (originally written in C# for the.NET version) can be used to write out certain keys of a CBOR map in a given order to a JSON string.
 
@@ -4045,7 +4045,7 @@ The parameter  <i>options</i>
 
 Converts this object to a text string in JavaScript Object Notation (JSON) format. See the overload to ToJSONString taking a JSONOptions argument for further information. If the CBOR object contains CBOR maps, or is a CBOR map itself, the order in which the keys to the map are written out to the JSON string is undefined unless the map was created using the NewOrderedMap method. Map keys other than untagged text strings are converted to JSON strings before writing them out (for example,  `22("Test")`  is converted to  `"Test"`  and  `true`  is converted to  `"true"`  ). After such conversion, if two or more keys for the same map are identical, this method throws a CBORException. The example code given in <b>PeterO.Cbor.CBORObject.ToJSONString(PeterO.Cbor.JSONOptions)</b> can be used to write out certain keys of a CBOR map in a given order to a JSON string, or to write out a CBOR object as part of a JSON text sequence.
 
-<b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not supported in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
+<b>Warning:</b> In general, if this CBOR object contains integer map keys or uses other features not available in JSON, and the application converts this CBOR object to JSON and back to CBOR, the application <i>should not</i> expect the new CBOR object to be exactly the same as the original. This is because the conversion in many cases may have to convert unsupported features in JSON to supported features which correspond to a different feature in CBOR (such as converting integer map keys, which are supported in CBOR but not JSON, to text strings, which are supported in both).
 
 <b>Return Value:</b>
 
